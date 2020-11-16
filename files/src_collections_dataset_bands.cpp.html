@@ -142,8 +142,11 @@ void DatasetBands::Initialize(Local&lt;Object&gt; target) {
 
   Nan::SetPrototypeMethod(lcons, &quot;toString&quot;, toString);
   Nan::SetPrototypeMethod(lcons, &quot;count&quot;, count);
+  Nan::SetPrototypeMethod(lcons, &quot;countAsync&quot;, count);
   Nan::SetPrototypeMethod(lcons, &quot;create&quot;, create);
+  Nan::SetPrototypeMethod(lcons, &quot;createAsync&quot;, create);
   Nan::SetPrototypeMethod(lcons, &quot;get&quot;, get);
+  Nan::SetPrototypeMethod(lcons, &quot;getAsync&quot;, get);
 
   ATTR_DONT_ENUM(lcons, &quot;ds&quot;, dsGetter, READ_ONLY_SETTER);
 
@@ -209,6 +212,15 @@ NAN_METHOD(DatasetBands::toString) {
  * Returns the band with the given ID.
  *
  * @method get
+ * @param {Integer} id
+ * @return {gdal.RasterBand}
+ */
+
+/**
+ * Returns the band with the given ID.
+ *
+ * @method getAsync
+ * {{#async}}
  * @param {Integer} id
  * @return {gdal.RasterBand}
  */

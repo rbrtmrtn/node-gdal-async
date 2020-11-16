@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Constants (OFT) - node-gdal-next</title>
+    <title>src/async.hpp - node-gdal-next</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -118,408 +118,167 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>Constants (OFT)</h1>
+    <h1>src/async.hpp <small>File</small></h1>
 </div>
 
+<div class="file">
+    <pre class="prettyprint linenums">
+#ifndef __NODE_GDAL_ASYNC_WORKER_H__
+#define __NODE_GDAL_ASYNC_WORKER_H__
 
+#include &lt;functional&gt;
+#include &quot;nan-wrapper.h&quot;
 
+namespace node_gdal {
 
+// This generates method definitions for 2 methods: sync and async version and a hidden common block
+#define GDAL_ASYNCABLE_DEFINE(method)                                                                                  \
+  NAN_METHOD(method) {                                                                                                 \
+    method##_do(info, false);                                                                                          \
+  }                                                                                                                    \
+  NAN_METHOD(method##Async) {                                                                                          \
+    method##_do(info, true);                                                                                           \
+  }                                                                                                                    \
+  void method##_do(const Nan::FunctionCallbackInfo&lt;v8::Value&gt; &amp;info, bool _gdal_async)
 
+// This generates method declarations for 2 methods: sync and async version and a hidden common block
+#define GDAL_ASYNCABLE_DECLARE(method)                                                                                 \
+  static NAN_METHOD(method);                                                                                           \
+  static NAN_METHOD(method##Async);                                                                                    \
+  static void method##_do(const Nan::FunctionCallbackInfo&lt;v8::Value&gt; &amp;info, bool _gdal_async)
 
+/**
+ * An asyncable method has to define the following lambdas
+ */
 
-<!-- table of contents -->
+// Main execution block
+#define GDAL_ASYNCABLE_MAIN(gdaltype) std::function&lt;gdaltype()&gt; _gdal_doit
 
-<div id="class-toc" class="page-section">
-	<h2>Table of Contents</h2>
-    <ul>
+// Generate JS object to be returned to the userland
+// Local&lt;Object&gt; is essentially a pointer and can be trivially copied
+#define GDAL_ASYNCABLE_OBJS std::vector&lt;v8::Local&lt;v8::Object&gt;&gt;
+#define GDAL_ASYNCABLE_RVAL(gdaltype) std::function&lt;v8::Local&lt;v8::Value&gt;(gdaltype, GDAL_ASYNCABLE_OBJS)&gt; _gdal_rval
 
-		<li>
-			<strong>Properties</strong>
-			<ul>
-				<li><a href="#prop-gdal.OFTBinary"><span class="ip">gdal.OFTBinary</span></a></li>
-				<li><a href="#prop-gdal.OFTDate"><span class="ip">gdal.OFTDate</span></a></li>
-				<li><a href="#prop-gdal.OFTDateTime"><span class="ip">gdal.OFTDateTime</span></a></li>
-				<li><a href="#prop-gdal.OFTInteger"><span class="ip">gdal.OFTInteger</span></a></li>
-				<li><a href="#prop-gdal.OFTInteger64"><span class="ip">gdal.OFTInteger64</span></a></li>
-				<li><a href="#prop-gdal.OFTInteger64List"><span class="ip">gdal.OFTInteger64List</span></a></li>
-				<li><a href="#prop-gdal.OFTIntegerList"><span class="ip">gdal.OFTIntegerList</span></a></li>
-				<li><a href="#prop-gdal.OFTReal"><span class="ip">gdal.OFTReal</span></a></li>
-				<li><a href="#prop-gdal.OFTRealList"><span class="ip">gdal.OFTRealList</span></a></li>
-				<li><a href="#prop-gdal.OFTString"><span class="ip">gdal.OFTString</span></a></li>
-				<li><a href="#prop-gdal.OFTStringList"><span class="ip">gdal.OFTStringList</span></a></li>
-				<li><a href="#prop-gdal.OFTTime"><span class="ip">gdal.OFTTime</span></a></li>
-				<li><a href="#prop-gdal.OFTWideString"><span class="ip">gdal.OFTWideString</span></a></li>
-				<li><a href="#prop-gdal.OFTWideStringList"><span class="ip">gdal.OFTWideStringList</span></a></li>
-			</ul>
-		</li>
+// List of objects to be protected from the GC
+#define GDAL_ASYNCABLE_PERSIST(...) std::vector&lt;v8::Local&lt;v8::Object&gt;&gt; _gdal_persist = {__VA_ARGS__};
 
+// Execute the lambdas, either synchronously or asynchronously
+#define GDAL_ASYNCABLE_EXECUTE(arg, gdaltype)                                                                          \
+  if (_gdal_async) {                                                                                                   \
+    Nan::Callback *callback;                                                                                           \
+    NODE_ARG_CB(arg, &quot;callback&quot;, callback);                                                                            \
+    Nan::AsyncQueueWorker(new GDALAsyncWorker&lt;gdaltype&gt;(callback, _gdal_doit, _gdal_rval, _gdal_persist));             \
+    return;                                                                                                            \
+  }                                                                                                                    \
+  try {                                                                                                                \
+    gdaltype _gdal_obj = _gdal_doit();                                                                                 \
+    info.GetReturnValue().Set(_gdal_rval(_gdal_obj, _gdal_persist));                                                   \
+  } catch (const char *err) { Nan::ThrowError(err); }                                                                  \
+  return
 
-	</ul>
+#define GDAL_ISASYNC _gdal_async
+
+// Handle locking
+#define GDAL_TRYLOCK_PARENT(p)                                                                                         \
+  uv_mutex_t *async_lock = ptr_manager.tryLockDataset((p)-&gt;parent_uid);                                                \
+  if (async_lock == nullptr) {                                                                                         \
+    Nan::ThrowError(&quot;Parent Dataset object has already been destroyed&quot;);                                               \
+    return;                                                                                                            \
+  }
+
+#define GDAL_UNLOCK_PARENT uv_mutex_unlock(async_lock)
+#define GDAL_ASYNCABLE_LOCK(uid)                                                                                       \
+  uv_mutex_t *async_lock = ptr_manager.tryLockDataset(uid);                                                            \
+  if (async_lock == nullptr) { throw &quot;Parent Dataset object has already been destroyed&quot;; }
+
+/**
+ * This class handles async operations
+ *
+ * It takes the lambdas as input
+ * gdaltype is the type of the object that will be carred from
+ * the aux thread to the main thread
+ *
+ * JS-visible object creation is possible only in the main thread while
+ * ths JS world is stopped
+ *
+ * The caller must ensure that all the lambdas can be executed in
+ * another thread (no automatic variables)
+ */
+template &lt;class gdaltype&gt; class GDALAsyncWorker : public Nan::AsyncWorker {
+    private:
+  const std::function&lt;gdaltype()&gt; doit;
+  const std::function&lt;v8::Local&lt;v8::Value&gt;(gdaltype, GDAL_ASYNCABLE_OBJS)&gt; rval;
+  std::vector&lt;Nan::Persistent&lt;v8::Object&gt; *&gt; persistent;
+  gdaltype raw;
+
+    public:
+  explicit GDALAsyncWorker(
+    Nan::Callback *pCallback,
+    const std::function&lt;gdaltype()&gt; doit,
+    const std::function&lt;v8::Local&lt;v8::Value&gt;(gdaltype, GDAL_ASYNCABLE_OBJS)&gt; rval,
+    std::vector&lt;v8::Local&lt;v8::Object&gt;&gt; objects);
+
+  void Finally();
+  void Execute();
+  void HandleOKCallback();
+  void HandleErrorCallback();
+};
+
+template &lt;class gdaltype&gt;
+GDALAsyncWorker&lt;gdaltype&gt;::GDALAsyncWorker(
+  Nan::Callback *pCallback,
+  const std::function&lt;gdaltype()&gt; doit,
+  std::function&lt;v8::Local&lt;v8::Value&gt;(gdaltype, GDAL_ASYNCABLE_OBJS)&gt; rval,
+  std::vector&lt;v8::Local&lt;v8::Object&gt;&gt; objects)
+  : Nan::AsyncWorker(pCallback, &quot;node-gdal:GDALAsyncWorker&quot;), doit(doit), rval(rval), persistent(objects.size()) {
+  // Main thread with the JS world stopped
+  // Get persistent handles
+  for (long unsigned i = 0; i &lt; objects.size(); i++) {
+    persistent[i] = new Nan::Persistent&lt;v8::Object&gt;(objects[i]);
+    persistent[i]-&gt;ClearWeak();
+  }
+}
+
+template &lt;class gdaltype&gt; void GDALAsyncWorker&lt;gdaltype&gt;::Execute() {
+  // Aux thread with the JS world running
+  // V8 objects are not acessible here
+  try {
+    raw = doit();
+  } catch (const char *err) { this-&gt;SetErrorMessage(err); }
+}
+
+template &lt;class gdaltype&gt; void GDALAsyncWorker&lt;gdaltype&gt;::Finally() {
+  // Release the persistent handles
+  for (long unsigned i = 0; i &lt; persistent.size(); i++) {
+    persistent[i]-&gt;Reset();
+    delete persistent[i];
+  }
+}
+
+template &lt;class gdaltype&gt; void GDALAsyncWorker&lt;gdaltype&gt;::HandleOKCallback() {
+  // Back to the main thread with the JS world stopped
+  Nan::HandleScope scope;
+  GDAL_ASYNCABLE_OBJS original_obj(persistent.size());
+
+  // Get pointers to the original objects that were persisted
+  for (long unsigned i = 0; i &lt; persistent.size(); i++) { original_obj[i] = Nan::New(*persistent[i]); }
+
+  v8::Local&lt;v8::Value&gt; argv[] = {Nan::Undefined(), rval(raw, original_obj)};
+  Finally();
+  Nan::Call(callback-&gt;GetFunction(), Nan::GetCurrentContext()-&gt;Global(), 2, argv);
+}
+
+template &lt;class gdaltype&gt; void GDALAsyncWorker&lt;gdaltype&gt;::HandleErrorCallback() {
+  // Back to the main thread with the JS world stopped
+  v8::Local&lt;v8::Value&gt; argv[] = {Nan::New(this-&gt;ErrorMessage()).ToLocalChecked(), Nan::Undefined()};
+  Finally();
+  Nan::Call(callback-&gt;GetFunction(), Nan::GetCurrentContext()-&gt;Global(), 2, argv);
+}
+
+} // namespace node_gdal
+#endif
+    </pre>
 </div>
-
-<!-- details -->
-
-
-
-    <div id="properties" class="page-section">
-        <h2 class="off-left">Properties</h2>
-
-        <div class="item-list">
-<div id="prop-gdal.OFTBinary" class="property item">
-    <h3 class="name"><code>gdal.OFTBinary</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1155"><code>src&#x2F;node_gdal.cpp:1155</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.OFTDate" class="property item">
-    <h3 class="name"><code>gdal.OFTDate</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1161"><code>src&#x2F;node_gdal.cpp:1161</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.OFTDateTime" class="property item">
-    <h3 class="name"><code>gdal.OFTDateTime</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1173"><code>src&#x2F;node_gdal.cpp:1173</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.OFTInteger" class="property item">
-    <h3 class="name"><code>gdal.OFTInteger</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1082"><code>src&#x2F;node_gdal.cpp:1082</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.OFTInteger64" class="property item">
-    <h3 class="name"><code>gdal.OFTInteger64</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1097"><code>src&#x2F;node_gdal.cpp:1097</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.OFTInteger64List" class="property item">
-    <h3 class="name"><code>gdal.OFTInteger64List</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1104"><code>src&#x2F;node_gdal.cpp:1104</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.OFTIntegerList" class="property item">
-    <h3 class="name"><code>gdal.OFTIntegerList</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1088"><code>src&#x2F;node_gdal.cpp:1088</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.OFTReal" class="property item">
-    <h3 class="name"><code>gdal.OFTReal</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1114"><code>src&#x2F;node_gdal.cpp:1114</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.OFTRealList" class="property item">
-    <h3 class="name"><code>gdal.OFTRealList</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1120"><code>src&#x2F;node_gdal.cpp:1120</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.OFTString" class="property item">
-    <h3 class="name"><code>gdal.OFTString</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1126"><code>src&#x2F;node_gdal.cpp:1126</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.OFTStringList" class="property item">
-    <h3 class="name"><code>gdal.OFTStringList</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1132"><code>src&#x2F;node_gdal.cpp:1132</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.OFTTime" class="property item">
-    <h3 class="name"><code>gdal.OFTTime</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1167"><code>src&#x2F;node_gdal.cpp:1167</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.OFTWideString" class="property item">
-    <h3 class="name"><code>gdal.OFTWideString</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1139"><code>src&#x2F;node_gdal.cpp:1139</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.OFTWideStringList" class="property item">
-    <h3 class="name"><code>gdal.OFTWideStringList</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1146"><code>src&#x2F;node_gdal.cpp:1146</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-        </div>
-    </div>
-
-
-
                     </div>
                 </div>
             </div>

@@ -154,6 +154,13 @@
             "fors": {},
             "namespaces": {}
         },
+        "src/async.hpp": {
+            "name": "src/async.hpp",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "src/gdal.hpp": {
             "name": "src/gdal.hpp",
             "modules": {},
@@ -433,7 +440,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/collections/dataset_bands.cpp",
-            "line": 36,
+            "line": 39,
             "description": "An encapsulation of a {{#crossLink \"gdal.Dataset\"}}Dataset{{/crossLink}}'s\nraster bands.\n\n```\nvar bands = dataset.bands;```"
         },
         "gdal.LayerFeatures": {
@@ -445,7 +452,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/collections/layer_features.cpp",
-            "line": 39,
+            "line": 45,
             "description": "An encapsulation of a {{#crossLink \"gdal.Layer\"}}Layer{{/crossLink}}'s\nfeatures."
         },
         "gdal.FeatureFields": {
@@ -576,7 +583,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 38,
+            "line": 52,
             "description": "A representation of a {{#crossLink\n\"gdal.RasterBand\"}}RasterBand{{/crossLink}}'s pixels.\n\n\nNote: Typed arrays should be created with an external ArrayBuffer for\nversions of node >= 0.11\n```\nvar n = 16*16;\nvar data = new Float32Array(new ArrayBuffer(n*4));\n//read data into the existing array\nband.pixels.read(0,0,16,16,data);```"
         },
         "gdal.CoordinateTransformation": {
@@ -628,7 +635,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/gdal_driver.cpp",
-            "line": 79,
+            "line": 83,
             "description": "Format specific driver.\n\nAn instance of this class is created for each supported format, and\nmanages information about the format.\n\nThis roughly corresponds to a file format, though some drivers may\nbe gateways to many formats through a secondary multi-library."
         },
         "gdal.Feature": {
@@ -872,7 +879,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 269
+            "line": 288
         },
         "Constants (CPL Error Levels)": {
             "name": "Constants (CPL Error Levels)",
@@ -883,7 +890,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 314
+            "line": 333
         },
         "Constants (CPL Error Codes)": {
             "name": "Constants (CPL Error Codes)",
@@ -894,7 +901,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 358
+            "line": 377
         },
         "Constants (DCAP)": {
             "name": "Constants (DCAP)",
@@ -905,7 +912,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 429
+            "line": 448
         },
         "Constants (OLC)": {
             "name": "Constants (OLC)",
@@ -916,7 +923,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 452
+            "line": 471
         },
         "Constants (ODsC)": {
             "name": "Constants (ODsC)",
@@ -927,7 +934,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 558
+            "line": 577
         },
         "Constants (GDT)": {
             "name": "Constants (GDT)",
@@ -938,7 +945,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 602,
+            "line": 621,
             "description": "Pixel data types."
         },
         "Constants (OJ)": {
@@ -950,7 +957,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 697
+            "line": 716
         },
         "Constants (GCI)": {
             "name": "Constants (GCI)",
@@ -961,7 +968,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 720
+            "line": 739
         },
         "Constants (wkbVariant)": {
             "name": "Constants (wkbVariant)",
@@ -972,7 +979,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 875
+            "line": 894
         },
         "Constants (wkbByteOrder)": {
             "name": "Constants (wkbByteOrder)",
@@ -983,7 +990,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 908
+            "line": 927
         },
         "Constants (wkbGeometryType)": {
             "name": "Constants (wkbGeometryType)",
@@ -994,7 +1001,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 925
+            "line": 944
         },
         "Constants (OFT)": {
             "name": "Constants (OFT)",
@@ -1005,7 +1012,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 1059
+            "line": 1078
         },
         "Constants (GRA)": {
             "name": "Constants (GRA)",
@@ -1016,7 +1023,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 1158,
+            "line": 1180,
             "description": "Resampling options that can be used with the gdal.reprojectImage() method."
         }
     },
@@ -1788,7 +1795,99 @@
         },
         {
             "file": "lib/gdal.js",
-            "line": 619,
+            "line": 589,
+            "description": "Standard async request callback",
+            "callback": "requestCallback",
+            "params": [
+                {
+                    "name": "error",
+                    "description": "error or undefined when the operation is successful",
+                    "type": "Error"
+                },
+                {
+                    "name": "result",
+                    "description": "result of the asynchronous operation or undefined on error",
+                    "type": "Object"
+                }
+            ],
+            "class": "gdal"
+        },
+        {
+            "file": "lib/gdal.js",
+            "line": 663,
+            "description": "Asynchronously creates or opens a dataset. Dataset should be explicitly closed with `dataset.close()` method if opened in `\"w\"` mode to flush any changes. Otherwise, datasets are closed when (and if) node decides to garbage collect them.\nIf the last parameter is a callback, then this callback is called on completion and undefined is returned. Otherwise the function returns a Promise resolved with the result.",
+            "example": [
+                "\n```\nvar dataset = await gdal.openAsync('./data.shp');```",
+                "\n```\ngdal.openAsync('./data.shp', (err, ds) => {...});```"
+            ],
+            "itemtype": "method",
+            "name": "openAsync",
+            "static": 1,
+            "params": [
+                {
+                    "name": "path",
+                    "description": "Path to dataset to open",
+                    "type": "String"
+                },
+                {
+                    "name": "mode",
+                    "description": "The mode to use to open the file: `\"r\"`, `\"r+\"`, or `\"w\"`",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": "\"r\""
+                },
+                {
+                    "name": "drivers",
+                    "description": "Driver name, or list of driver names to attempt to use.",
+                    "type": "String|Array",
+                    "optional": true
+                },
+                {
+                    "name": "x_size",
+                    "description": "Used when creating a raster dataset with the `\"w\"` mode.",
+                    "type": "Integer",
+                    "optional": true
+                },
+                {
+                    "name": "y_size",
+                    "description": "Used when creating a raster dataset with the `\"w\"` mode.",
+                    "type": "Integer",
+                    "optional": true
+                },
+                {
+                    "name": "band_count",
+                    "description": "Used when creating a raster dataset with the `\"w\"` mode.",
+                    "type": "Integer",
+                    "optional": true
+                },
+                {
+                    "name": "data_type",
+                    "description": "Used when creating a raster dataset with the `\"w\"` mode.",
+                    "type": "Integer",
+                    "optional": true
+                },
+                {
+                    "name": "creation_options",
+                    "description": "Used when creating a dataset with the `\"w\"` mode.",
+                    "type": "String[]|object",
+                    "optional": true
+                },
+                {
+                    "name": "callback",
+                    "description": "Promisifiable callback, always the last parameter, can be specified even if\ncertain optional parameters are omitted",
+                    "type": "RequestCallback",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "gdal.Dataset"
+            },
+            "class": "gdal"
+        },
+        {
+            "file": "lib/gdal.js",
+            "line": 805,
             "description": "Creates a LayerFields instance from an object of keys and values.",
             "itemtype": "method",
             "name": "fromJSON",
@@ -1810,7 +1909,7 @@
         },
         {
             "file": "src/collections/dataset_bands.cpp",
-            "line": 83,
+            "line": 86,
             "description": "Returns the band with the given ID.",
             "itemtype": "method",
             "name": "get",
@@ -1829,7 +1928,27 @@
         },
         {
             "file": "src/collections/dataset_bands.cpp",
-            "line": 121,
+            "line": 94,
+            "description": "Returns the band with the given ID.",
+            "itemtype": "method",
+            "name": "getAsync!~YUIDOC_LINE~!}",
+            "type": "#async",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "gdal.RasterBand"
+            },
+            "class": "gdal.DatasetBands"
+        },
+        {
+            "file": "src/collections/dataset_bands.cpp",
+            "line": 133,
             "description": "Adds a new band.",
             "itemtype": "method",
             "name": "create",
@@ -1851,7 +1970,7 @@
         },
         {
             "file": "src/collections/dataset_bands.cpp",
-            "line": 182,
+            "line": 194,
             "description": "Returns the number of bands.",
             "itemtype": "method",
             "name": "count",
@@ -1863,7 +1982,7 @@
         },
         {
             "file": "src/collections/dataset_bands.cpp",
-            "line": 211,
+            "line": 223,
             "description": "Parent dataset",
             "readonly": "",
             "itemtype": "attribute",
@@ -2289,7 +2408,7 @@
         },
         {
             "file": "src/collections/feature_fields.cpp",
-            "line": 600,
+            "line": 613,
             "description": "Parent feature",
             "readonly": "",
             "itemtype": "attribute",
@@ -2405,7 +2524,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 83,
+            "line": 89,
             "description": "Fetch a feature by its identifier.\n\n**Important:** The `id` argument is not an index. In most cases it will be\nzero-based, but in some cases it will not. If iterating, it's best to use the\n`next()` method.",
             "itemtype": "method",
             "name": "get",
@@ -2424,7 +2543,31 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 112,
+            "line": 101,
+            "description": "Fetch a feature by its identifier.\n\n**Important:** The `id` argument is not an index. In most cases it will be\nzero-based, but in some cases it will not. If iterating, it's best to use the\n`next()` method.",
+            "itemtype": "method",
+            "name": "getAsync",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "The feature ID of the feature to read.",
+                    "type": "Integer"
+                },
+                {
+                    "name": "callback",
+                    "description": "promisifiable callback",
+                    "type": "Callback"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "gdal.Feature"
+            },
+            "class": "gdal.LayerFeatures"
+        },
+        {
+            "file": "src/collections/layer_features.cpp",
+            "line": 139,
             "description": "Resets the feature pointer used by `next()` and\nreturns the first feature in the layer.",
             "itemtype": "method",
             "name": "first",
@@ -2436,7 +2579,26 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 136,
+            "line": 147,
+            "description": "Resets the feature pointer used by `next()` and\nreturns the first feature in the layer.",
+            "itemtype": "method",
+            "name": "firstAsync",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "promisifiable callback",
+                    "type": "Callback"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "gdal.Feature"
+            },
+            "class": "gdal.LayerFeatures"
+        },
+        {
+            "file": "src/collections/layer_features.cpp",
+            "line": 180,
             "description": "Returns the next feature in the layer. Returns null if no more features.",
             "example": [
                 "\n```\nwhile (feature = layer.features.next()) { ... }```"
@@ -2451,7 +2613,29 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 162,
+            "line": 191,
+            "description": "Returns the next feature in the layer. Returns null if no more features.",
+            "example": [
+                "\n```\nwhile (feature = layer.features.next()) { ... }```"
+            ],
+            "itemtype": "method",
+            "name": "nextAsync",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "promisifiable callback",
+                    "type": "Callback"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "gdal.Feature"
+            },
+            "class": "gdal.LayerFeatures"
+        },
+        {
+            "file": "src/collections/layer_features.cpp",
+            "line": 226,
             "description": "Adds a feature to the layer. The feature should be created using the current\nlayer as the definition.",
             "example": [
                 "\n```\nvar feature = new gdal.Feature(layer);\nfeature.setGeometry(new gdal.Point(0, 1));\nfeature.fields.set('name', 'somestring');\nlayer.features.add(feature);```"
@@ -2472,7 +2656,33 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 199,
+            "line": 242,
+            "description": "Adds a feature to the layer. The feature should be created using the current\nlayer as the definition.",
+            "example": [
+                "\n```\nvar feature = new gdal.Feature(layer);\nfeature.setGeometry(new gdal.Point(0, 1));\nfeature.fields.set('name', 'somestring');\nlayer.features.add(feature);```"
+            ],
+            "itemtype": "method",
+            "name": "addAsync",
+            "throws": {
+                "description": "Error"
+            },
+            "params": [
+                {
+                    "name": "feature",
+                    "description": "",
+                    "type": "gdal.Feature"
+                },
+                {
+                    "name": "callback",
+                    "description": "promisifiable callback",
+                    "type": "Callback"
+                }
+            ],
+            "class": "gdal.LayerFeatures"
+        },
+        {
+            "file": "src/collections/layer_features.cpp",
+            "line": 288,
             "description": "Returns the number of features in the layer.",
             "itemtype": "method",
             "name": "count",
@@ -2493,7 +2703,33 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 223,
+            "line": 296,
+            "description": "Returns the number of features in the layer.",
+            "itemtype": "method",
+            "name": "countAsync",
+            "params": [
+                {
+                    "name": "force",
+                    "description": "",
+                    "type": "Boolean",
+                    "optional": true,
+                    "optdefault": "true"
+                },
+                {
+                    "name": "callback",
+                    "description": "promisifiable callback",
+                    "type": "Callback"
+                }
+            ],
+            "return": {
+                "description": "Number of features in the layer.",
+                "type": "Integer"
+            },
+            "class": "gdal.LayerFeatures"
+        },
+        {
+            "file": "src/collections/layer_features.cpp",
+            "line": 340,
             "description": "Sets a feature in the layer.",
             "itemtype": "method",
             "name": "set",
@@ -2517,7 +2753,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 274,
+            "line": 391,
             "description": "Removes a feature from the layer.",
             "itemtype": "method",
             "name": "remove",
@@ -2535,7 +2771,30 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 303,
+            "line": 399,
+            "description": "Removes a feature from the layer.",
+            "itemtype": "method",
+            "name": "removeAsync",
+            "throws": {
+                "description": "Error"
+            },
+            "params": [
+                {
+                    "name": "id",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "callback",
+                    "description": "promisifiable callback",
+                    "type": "Callback"
+                }
+            ],
+            "class": "gdal.LayerFeatures"
+        },
+        {
+            "file": "src/collections/layer_features.cpp",
+            "line": 440,
             "description": "Parent layer",
             "itemtype": "attribute",
             "name": "layer",
@@ -2884,7 +3143,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 92,
+            "line": 106,
             "description": "Returns the value at the x, y coordinate.",
             "itemtype": "method",
             "name": "get",
@@ -2908,7 +3167,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 126,
+            "line": 137,
             "description": "Sets the value at the x, y coordinate.",
             "itemtype": "method",
             "name": "set",
@@ -2933,7 +3192,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 161,
+            "line": 169,
             "description": "Reads a region of pixels.",
             "itemtype": "method",
             "name": "read",
@@ -3015,7 +3274,92 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 273,
+            "line": 193,
+            "description": "Asynchronously reads a region of pixels.\nIf the last parameter is a callback, then this callback is called on completion and undefined is returned.\nAll optional parameters before the callback can be omitted so the callback parameter can be at any position as long\nas it is the last parameter. Otherwise the function returns a Promise resolved with the result.",
+            "itemtype": "method",
+            "name": "readAsync",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "width",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "height",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "[data] The\n[TypedArray]",
+                    "description": "(https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses)\nto put the data in. A new array is created if not given.",
+                    "type": "TypedArray"
+                },
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object",
+                    "optional": true,
+                    "props": [
+                        {
+                            "name": "buffer_width",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true,
+                            "optdefault": "x_size"
+                        },
+                        {
+                            "name": "buffer_height",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true,
+                            "optdefault": "y_size"
+                        },
+                        {
+                            "name": "data_type",
+                            "description": "See {{#crossLink \"Constants (GDT)\"}}GDT\nconstants{{/crossLink}}.",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "pixel_space",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true
+                        },
+                        {
+                            "name": "line_space",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "callback",
+                    "description": "Promisifiable callback, always the last parameter, can be specified even if\ncertain optional parameters are omitted",
+                    "type": "RequestCallback",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "A\n[TypedArray](https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses)\nof values.",
+                "type": "TypedArray"
+            },
+            "class": "gdal.RasterBandPixels"
+        },
+        {
+            "file": "src/collections/rasterband_pixels.cpp",
+            "line": 311,
             "description": "Writes a region of pixels.",
             "itemtype": "method",
             "name": "write",
@@ -3087,7 +3431,229 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 361,
+            "line": 330,
+            "description": "Asynchronously writes a region of pixels.\nIf the last parameter is a callback, then this callback is called on completion and undefined is returned.\nAll optional parameters before the callback can be omitted so the callback parameter can be at any position as long\nas it is the last parameter.\nOtherwise the function returns a Promise resolved with the result.",
+            "itemtype": "method",
+            "name": "writeAsync",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "width",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "height",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "data",
+                    "description": "The\n[TypedArray](https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses)\nto write to the band.",
+                    "type": "TypedArray"
+                },
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object",
+                    "optional": true,
+                    "props": [
+                        {
+                            "name": "buffer_width",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true,
+                            "optdefault": "x_size"
+                        },
+                        {
+                            "name": "buffer_height",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true,
+                            "optdefault": "y_size"
+                        },
+                        {
+                            "name": "pixel_space",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true
+                        },
+                        {
+                            "name": "line_space",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "callback",
+                    "description": "Promisifiable callback, always the last parameter, can be specified even if\ncertain optional parameters are omitted",
+                    "type": "RequestCallback",
+                    "optional": true
+                }
+            ],
+            "class": "gdal.RasterBandPixels"
+        },
+        {
+            "file": "src/collections/rasterband_pixels.cpp",
+            "line": 425,
+            "description": "Writes a region of pixels.",
+            "itemtype": "method",
+            "name": "write",
+            "throws": {
+                "description": "Error"
+            },
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "width",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "height",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "data",
+                    "description": "The\n[TypedArray](https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses)\nto write to the band.",
+                    "type": "TypedArray"
+                },
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object",
+                    "optional": true,
+                    "props": [
+                        {
+                            "name": "buffer_width",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true,
+                            "optdefault": "x_size"
+                        },
+                        {
+                            "name": "buffer_height",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true,
+                            "optdefault": "y_size"
+                        },
+                        {
+                            "name": "pixel_space",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true
+                        },
+                        {
+                            "name": "line_space",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "class": "gdal.RasterBandPixels"
+        },
+        {
+            "file": "src/collections/rasterband_pixels.cpp",
+            "line": 444,
+            "description": "Asynchronously writes a region of pixels.\nIf the last parameter is a callback, then this callback is called on completion and undefined is returned.\nAll optional parameters before the callback can be omitted so the callback parameter can be at any position as long\nas it is the last parameter.\nOtherwise the function returns a Promise resolved with the result.",
+            "itemtype": "method",
+            "name": "writeAsync",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "width",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "height",
+                    "description": "",
+                    "type": "Integer"
+                },
+                {
+                    "name": "data",
+                    "description": "The\n[TypedArray](https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses)\nto write to the band.",
+                    "type": "TypedArray"
+                },
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object",
+                    "optional": true,
+                    "props": [
+                        {
+                            "name": "buffer_width",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true,
+                            "optdefault": "x_size"
+                        },
+                        {
+                            "name": "buffer_height",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true,
+                            "optdefault": "y_size"
+                        },
+                        {
+                            "name": "pixel_space",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true
+                        },
+                        {
+                            "name": "line_space",
+                            "description": "",
+                            "type": "Integer",
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "callback",
+                    "description": "Promisifiable callback, always the last parameter, can be specified even if\ncertain optional parameters are omitted",
+                    "type": "RequestCallback",
+                    "optional": true
+                }
+            ],
+            "class": "gdal.RasterBandPixels"
+        },
+        {
+            "file": "src/collections/rasterband_pixels.cpp",
+            "line": 468,
             "description": "Reads a block of pixels.",
             "itemtype": "method",
             "name": "readBlock",
@@ -3119,7 +3685,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 422,
+            "line": 526,
             "description": "Writes a block of pixels.",
             "itemtype": "method",
             "name": "writeBlock",
@@ -3146,8 +3712,20 @@
             "class": "gdal.RasterBandPixels"
         },
         {
+            "file": "src/async.hpp",
+            "line": 25,
+            "description": "An asyncable method has to define the following lambdas",
+            "class": "gdal"
+        },
+        {
+            "file": "src/async.hpp",
+            "line": 69,
+            "description": "This class handles async operations\n\nIt takes the lambdas as input\ngdaltype is the type of the object that will be carred from\nthe aux thread to the main thread\n\nJS-visible object creation is possible only in the main thread while\nths JS world is stopped\n\nThe caller must ensure that all the lambdas can be executed in\nanother thread (no automatic variables)",
+            "class": "gdal"
+        },
+        {
             "file": "src/gdal.hpp",
-            "line": 111,
+            "line": 123,
             "description": "Convert decimal degrees to degrees, minutes, and seconds string",
             "static": 1,
             "itemtype": "method",
@@ -3480,7 +4058,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 181,
+            "line": 190,
             "description": "Fetch metadata.",
             "itemtype": "method",
             "name": "getMetadata",
@@ -3500,7 +4078,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 210,
+            "line": 221,
             "description": "Determines if the dataset supports the indicated operation.",
             "itemtype": "method",
             "name": "testCapability",
@@ -3519,7 +4097,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 243,
+            "line": 256,
             "description": "Get output projection for GCPs.",
             "itemtype": "method",
             "name": "getGCPProjection",
@@ -3531,7 +4109,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 269,
+            "line": 284,
             "description": "Closes the dataset to further operations.",
             "itemtype": "method",
             "name": "close",
@@ -3539,7 +4117,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 287,
+            "line": 302,
             "description": "Flushes all changes to disk.",
             "throws": {
                 "description": "Error"
@@ -3550,7 +4128,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 324,
+            "line": 341,
             "description": "Execute an SQL statement against the data store.",
             "throws": {
                 "description": "Error"
@@ -3586,7 +4164,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 378,
+            "line": 398,
             "description": "Fetch files forming dataset.\n\nReturns a list of files believed to be part of this dataset. If it returns an\nempty list of files it means there is believed to be no local file system\nfiles associated with the dataset (for instance a virtual dataset).\n\nReturns an empty array for vector datasets if GDAL version is below 2.0",
             "itemtype": "method",
             "name": "getFileList",
@@ -3598,7 +4176,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 431,
+            "line": 454,
             "description": "Fetches GCPs.",
             "itemtype": "method",
             "name": "getGCPs",
@@ -3610,7 +4188,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 485,
+            "line": 511,
             "description": "Sets GCPs.",
             "throws": {
                 "description": "Error"
@@ -3633,7 +4211,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 567,
+            "line": 595,
             "description": "Builds dataset overviews.",
             "throws": {
                 "description": "Error"
@@ -3662,7 +4240,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 653,
+            "line": 685,
             "readonly": "",
             "itemtype": "attribute",
             "name": "description",
@@ -3671,7 +4249,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 683,
+            "line": 717,
             "description": "Raster dimensions. An object containing `x` and `y` properties.",
             "readonly": "",
             "itemtype": "attribute",
@@ -3681,7 +4259,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 724,
+            "line": 761,
             "description": "Spatial reference associated with raster dataset",
             "throws": {
                 "description": "Error"
@@ -3693,7 +4271,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 767,
+            "line": 807,
             "description": "An affine transform which maps pixel/line coordinates into georeferenced\nspace using the following relationship:",
             "example": [
                 "\n```\nvar GT = dataset.geoTransform;\nvar Xgeo = GT[0] + Xpixel*GT[1] + Yline*GT[2];\nvar Ygeo = GT[3] + Xpixel*GT[4] + Yline*GT[5];```"
@@ -3705,7 +4283,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 817,
+            "line": 859,
             "readonly": "",
             "itemtype": "attribute",
             "name": "driver",
@@ -3714,7 +4292,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 927,
+            "line": 974,
             "readonly": "",
             "itemtype": "attribute",
             "name": "bands",
@@ -3723,7 +4301,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 937,
+            "line": 984,
             "readonly": "",
             "itemtype": "attribute",
             "name": "layers",
@@ -3732,7 +4310,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 153,
+            "line": 157,
             "readonly": "",
             "itemtype": "attribute",
             "name": "description",
@@ -3741,7 +4319,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 172,
+            "line": 176,
             "throws": {
                 "description": "Error"
             },
@@ -3758,7 +4336,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 204,
+            "line": 212,
             "description": "Create a new dataset with this driver.",
             "throws": {
                 "description": "Error"
@@ -3813,7 +4391,67 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 275,
+            "line": 231,
+            "description": "Asynchronously create a new dataset with this driver.",
+            "throws": {
+                "description": "Error"
+            },
+            "itemtype": "method",
+            "name": "createAsync",
+            "params": [
+                {
+                    "name": "filename",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "x_size",
+                    "description": "raster width in pixels (ignored for vector\ndatasets)",
+                    "type": "Integer",
+                    "optional": true,
+                    "optdefault": "0"
+                },
+                {
+                    "name": "y_size",
+                    "description": "raster height in pixels (ignored for vector\ndatasets)",
+                    "type": "Integer",
+                    "optional": true,
+                    "optdefault": "0"
+                },
+                {
+                    "name": "band_count",
+                    "description": "",
+                    "type": "Integer",
+                    "optional": true,
+                    "optdefault": "0"
+                },
+                {
+                    "name": "data_type",
+                    "description": "pixel data type (ignored for\nvector datasets) (see {{#crossLink \"Constants (GDT)\"}}data\ntypes{{/crossLink}})",
+                    "type": "Integer",
+                    "optional": true,
+                    "optdefault": "gdal.GDT_Byte"
+                },
+                {
+                    "name": "creation_options",
+                    "description": "An array or object containing\ndriver-specific dataset creation options",
+                    "type": "String[]|object",
+                    "optional": true
+                },
+                {
+                    "name": "callback",
+                    "description": "promisifiable callback",
+                    "type": "Callback"
+                }
+            ],
+            "return": {
+                "description": "gdal.Dataset"
+            },
+            "class": "gdal.Driver"
+        },
+        {
+            "file": "src/gdal_driver.cpp",
+            "line": 310,
             "description": "Create a copy of a dataset.",
             "throws": {
                 "description": "Error"
@@ -3853,7 +4491,52 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 357,
+            "line": 323,
+            "description": "Asynchronously create a copy of a dataset.",
+            "throws": {
+                "description": "Error"
+            },
+            "itemtype": "method",
+            "name": "createCopyAsync",
+            "params": [
+                {
+                    "name": "filename",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "src",
+                    "description": "",
+                    "type": "gdal.Dataset"
+                },
+                {
+                    "name": "strict",
+                    "description": "",
+                    "type": "Boolean",
+                    "optional": true,
+                    "optdefault": "false"
+                },
+                {
+                    "name": "options",
+                    "description": "An array or object containing\ndriver-specific dataset creation options",
+                    "type": "String[]|object",
+                    "optional": true,
+                    "optdefault": "null"
+                },
+                {
+                    "name": "callback",
+                    "description": "promisifiable callback",
+                    "type": "Callback"
+                }
+            ],
+            "return": {
+                "description": "gdal.Dataset"
+            },
+            "class": "gdal.Driver"
+        },
+        {
+            "file": "src/gdal_driver.cpp",
+            "line": 417,
             "description": "Copy the files of a dataset.",
             "throws": {
                 "description": "Error"
@@ -3876,7 +4559,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 390,
+            "line": 450,
             "description": "Renames the dataset.",
             "throws": {
                 "description": "Error"
@@ -3899,7 +4582,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 423,
+            "line": 483,
             "description": "Returns metadata about the driver.",
             "throws": {
                 "description": "Error"
@@ -3921,7 +4604,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 457,
+            "line": 517,
             "description": "Opens a dataset.",
             "throws": {
                 "description": "Error"
@@ -3940,6 +4623,40 @@
                     "type": "String",
                     "optional": true,
                     "optdefault": "`\"r\"`"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "gdal.Dataset"
+            },
+            "class": "gdal.Driver"
+        },
+        {
+            "file": "src/gdal_driver.cpp",
+            "line": 528,
+            "description": "Opens a dataset.",
+            "throws": {
+                "description": "Error"
+            },
+            "itemtype": "method",
+            "name": "openAsync",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "mode",
+                    "description": "The mode to use to open the file: `\"r\"` or\n`\"r+\"`",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": "`\"r\"`"
+                },
+                {
+                    "name": "callback",
+                    "description": "promisifiable callback",
+                    "type": "Callback"
                 }
             ],
             "return": {
@@ -4967,7 +5684,7 @@
         },
         {
             "file": "src/gdal_layer.cpp",
-            "line": 181,
+            "line": 183,
             "description": "Flush pending changes to disk.",
             "throws": {
                 "description": "Error"
@@ -4978,7 +5695,7 @@
         },
         {
             "file": "src/gdal_layer.cpp",
-            "line": 189,
+            "line": 191,
             "description": "Determines if the dataset supports the indicated operation.",
             "itemtype": "method",
             "name": "testCapability",
@@ -4997,7 +5714,7 @@
         },
         {
             "file": "src/gdal_layer.cpp",
-            "line": 199,
+            "line": 201,
             "description": "Fetch the extent of this layer.",
             "throws": {
                 "description": "Error"
@@ -5021,7 +5738,7 @@
         },
         {
             "file": "src/gdal_layer.cpp",
-            "line": 237,
+            "line": 239,
             "description": "This method returns the current spatial filter for this layer.",
             "throws": {
                 "description": "Error"
@@ -5036,7 +5753,7 @@
         },
         {
             "file": "src/gdal_layer.cpp",
-            "line": 256,
+            "line": 258,
             "description": "This method sets the geometry to be used as a spatial filter when fetching\nfeatures via the `layer.features.next()` method. Only features that\ngeometrically intersect the filter geometry will be returned.\n\nAlernatively you can pass it envelope bounds as individual arguments.",
             "example": [
                 "\n```\nlayer.setSpatialFilter(geometry);\nlayer.setSpatialFilter(minX, minY, maxX, maxY);```"
@@ -5057,7 +5774,7 @@
         },
         {
             "file": "src/gdal_layer.cpp",
-            "line": 306,
+            "line": 308,
             "description": "Sets the attribute query string to be used when fetching features via the\n`layer.features.next()` method. Only features for which the query evaluates\nas `true` will be returned.\n\nThe query string should be in the format of an SQL WHERE clause. For instance\n\"population > 1000000 and population < 5000000\" where `population` is an\nattribute in the layer. The query format is normally a restricted form of\nSQL WHERE clause as described in the \"WHERE\" section of the [OGR SQL\ntutorial](http://www.gdal.org/ogr_sql.html). In some cases (RDBMS backed\ndrivers) the native capabilities of the database may be used to interprete\nthe WHERE clause in which case the capabilities will be broader than those\nof OGR SQL.",
             "example": [
                 "\n```\nlayer.setAttributeFilter('population > 1000000 and population < 5000000');```"
@@ -5078,7 +5795,7 @@
         },
         {
             "file": "src/gdal_layer.cpp",
-            "line": 371,
+            "line": 373,
             "readonly": "",
             "itemtype": "attribute",
             "name": "ds",
@@ -5087,7 +5804,7 @@
         },
         {
             "file": "src/gdal_layer.cpp",
-            "line": 381,
+            "line": 383,
             "readonly": "",
             "itemtype": "attribute",
             "name": "srs",
@@ -5096,7 +5813,7 @@
         },
         {
             "file": "src/gdal_layer.cpp",
-            "line": 396,
+            "line": 398,
             "readonly": "",
             "itemtype": "attribute",
             "name": "name",
@@ -5105,7 +5822,7 @@
         },
         {
             "file": "src/gdal_layer.cpp",
-            "line": 411,
+            "line": 413,
             "readonly": "",
             "itemtype": "attribute",
             "name": "geomColumn",
@@ -5114,7 +5831,7 @@
         },
         {
             "file": "src/gdal_layer.cpp",
-            "line": 426,
+            "line": 428,
             "readonly": "",
             "itemtype": "attribute",
             "name": "fidColumn",
@@ -5123,7 +5840,7 @@
         },
         {
             "file": "src/gdal_layer.cpp",
-            "line": 441,
+            "line": 443,
             "readonly": "",
             "itemtype": "attribute",
             "name": "geomType",
@@ -5132,7 +5849,7 @@
         },
         {
             "file": "src/gdal_layer.cpp",
-            "line": 457,
+            "line": 459,
             "readonly": "",
             "itemtype": "attribute",
             "name": "features",
@@ -5141,7 +5858,7 @@
         },
         {
             "file": "src/gdal_layer.cpp",
-            "line": 467,
+            "line": 469,
             "readonly": "",
             "itemtype": "attribute",
             "name": "fields",
@@ -5313,7 +6030,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 167,
+            "line": 168,
             "description": "Saves changes to disk.",
             "itemtype": "method",
             "name": "flush",
@@ -5321,7 +6038,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 174,
+            "line": 175,
             "description": "Return the status flags of the mask band associated with the band.\n\nThe result will be a bitwise OR-ed set of status flags with the following\navailable definitions that may be extended in the future:\n\n  - `GMF_ALL_VALID` (`0x01`): There are no invalid pixels, all mask values\nwill be 255. When used this will normally be the only flag set.\n  - `GMF_PER_DATASET` (`0x02`): The mask band is shared between all bands on\nthe dataset.\n  - `GMF_ALPHA` (`0x04`): The mask band is actually an alpha band and may\nhave values other than 0 and 255.\n  - `GMF_NODATA` (`0x08`): Indicates the mask is actually being generated\nfrom nodata values. (mutually exclusive of `GMF_ALPHA`)",
             "itemtype": "method",
             "name": "getMaskFlags",
@@ -5333,7 +6050,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 196,
+            "line": 197,
             "description": "Adds a mask band to the current band.",
             "throws": {
                 "description": "Error"
@@ -5351,7 +6068,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 207,
+            "line": 208,
             "description": "Return the mask band associated with the band.",
             "itemtype": "method",
             "name": "getMaskBand",
@@ -5363,7 +6080,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 232,
+            "line": 235,
             "description": "Fill this band with a constant value.",
             "throws": {
                 "description": "Error"
@@ -5387,7 +6104,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 278,
+            "line": 283,
             "description": "Fetch image statistics.\n\nReturns the minimum, maximum, mean and standard deviation of all pixel values\nin this band. If approximate statistics are sufficient, the\n`allow_approximation` argument can be set to `true` in which case overviews,\nor a subset of image tiles may be used in computing the statistics.",
             "throws": {
                 "description": "Error"
@@ -5414,7 +6131,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 331,
+            "line": 338,
             "description": "Computes image statistics.\n\nReturns the minimum, maximum, mean and standard deviation of all pixel values\nin this band. If approximate statistics are sufficient, the\n`allow_approximation` argument can be set to `true` in which case overviews,\nor a subset of image tiles may be used in computing the statistics.",
             "throws": {
                 "description": "Error"
@@ -5436,7 +6153,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 377,
+            "line": 386,
             "description": "Set statistics on the band. This method can be used to store\nmin/max/mean/standard deviation statistics.",
             "throws": {
                 "description": "Error"
@@ -5469,7 +6186,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 412,
+            "line": 423,
             "description": "Returns band metadata",
             "itemtype": "method",
             "name": "getMetadata",
@@ -5485,7 +6202,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 433,
+            "line": 447,
             "readonly": "",
             "itemtype": "attribute",
             "name": "ds",
@@ -5494,7 +6211,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 443,
+            "line": 457,
             "readonly": "",
             "itemtype": "attribute",
             "name": "overviews",
@@ -5503,7 +6220,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 453,
+            "line": 467,
             "readonly": "",
             "itemtype": "attribute",
             "name": "pixels",
@@ -5512,7 +6229,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 463,
+            "line": 477,
             "readonly": "",
             "itemtype": "attribute",
             "name": "id",
@@ -5521,7 +6238,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 487,
+            "line": 503,
             "description": "Name of of band.",
             "readonly": "",
             "itemtype": "attribute",
@@ -5531,7 +6248,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 506,
+            "line": 525,
             "description": "Size object containing `\"x\"` and `\"y\"` properties.",
             "readonly": "",
             "itemtype": "attribute",
@@ -5541,7 +6258,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 527,
+            "line": 550,
             "description": "Size object containing `\"x\"` and `\"y\"` properties.",
             "readonly": "",
             "itemtype": "attribute",
@@ -5551,7 +6268,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 551,
+            "line": 576,
             "description": "Minimum value for this band.",
             "readonly": "",
             "itemtype": "attribute",
@@ -5561,7 +6278,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 571,
+            "line": 598,
             "description": "Maximum value for this band.",
             "readonly": "",
             "itemtype": "attribute",
@@ -5571,7 +6288,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 591,
+            "line": 620,
             "description": "Raster value offset.",
             "itemtype": "attribute",
             "name": "offset",
@@ -5580,7 +6297,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 610,
+            "line": 641,
             "description": "Raster value scale.",
             "itemtype": "attribute",
             "name": "scale",
@@ -5589,7 +6306,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 629,
+            "line": 662,
             "description": "No data value for this band.",
             "itemtype": "attribute",
             "name": "noDataValue",
@@ -5598,7 +6315,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 655,
+            "line": 690,
             "description": "Raster unit type (name for the units of this raster's values).\nFor instance, it might be `\"m\"` for an elevation model in meters,\nor `\"ft\"` for feet. If no units are available, a value of `\"\"`\nwill be returned.",
             "itemtype": "attribute",
             "name": "unitType",
@@ -5607,7 +6324,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 676,
+            "line": 713,
             "description": "Pixel data type ({{#crossLink \"Constants (GDT)\"}}see GDT\nconstants{{/crossLink}}) used for this band.",
             "readonly": "",
             "itemtype": "attribute",
@@ -5617,7 +6334,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 698,
+            "line": 737,
             "description": "Indicates if the band is read-only.",
             "readonly": "",
             "itemtype": "attribute",
@@ -5627,7 +6344,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 717,
+            "line": 758,
             "description": "An indicator if the underlying datastore can compute arbitrary overviews\nefficiently, such as is the case with OGDI over a network. Datastores with\narbitrary overviews don't generally have any fixed overviews, but GDAL's\n`RasterIO()` method can be used in downsampling mode to get overview\ndata efficiently.",
             "readonly": "",
             "itemtype": "attribute",
@@ -5637,7 +6354,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 740,
+            "line": 783,
             "description": "List of list of category names for this raster.",
             "itemtype": "attribute",
             "name": "categoryNames",
@@ -5646,7 +6363,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 769,
+            "line": 814,
             "description": "Color interpretation mode ({{#crossLink \"Constants (GCI)\"}}see GCI\nconstants{{/crossLink}}).",
             "itemtype": "attribute",
             "name": "colorInterpretation",
@@ -6499,7 +7216,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 93,
+            "line": 90,
             "itemtype": "attribute",
             "name": "lastError",
             "type": "Object",
@@ -6507,7 +7224,23 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 258,
+            "line": 197,
+            "description": "Set paths where proj will search it data.",
+            "static": 1,
+            "itemtype": "method",
+            "name": "setPROJSearchPaths",
+            "params": [
+                {
+                    "name": "Path",
+                    "description": "`c:\\ProjData`",
+                    "type": "String"
+                }
+            ],
+            "class": "gdal"
+        },
+        {
+            "file": "src/node_gdal.cpp",
+            "line": 277,
             "description": "The collection of all drivers registered with GDAL",
             "final": 1,
             "itemtype": "property",
@@ -6517,7 +7250,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 273,
+            "line": 292,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DMD_LONGNAME",
@@ -6526,7 +7259,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 279,
+            "line": 298,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DMD_MIMETYPE",
@@ -6535,7 +7268,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 285,
+            "line": 304,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DMD_HELPTOPIC",
@@ -6544,7 +7277,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 291,
+            "line": 310,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DMD_EXTENSION",
@@ -6553,7 +7286,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 297,
+            "line": 316,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DMD_CREATIONOPTIONLIST",
@@ -6562,7 +7295,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 306,
+            "line": 325,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DMD_CREATIONDATATYPES",
@@ -6571,7 +7304,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 318,
+            "line": 337,
             "description": "Error level: (no error)",
             "final": 1,
             "itemtype": "property",
@@ -6581,7 +7314,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 326,
+            "line": 345,
             "description": "Error level: Debug",
             "final": 1,
             "itemtype": "property",
@@ -6591,7 +7324,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 334,
+            "line": 353,
             "description": "Error level: Warning",
             "final": 1,
             "itemtype": "property",
@@ -6601,7 +7334,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 342,
+            "line": 361,
             "description": "Error level: Failure",
             "final": 1,
             "itemtype": "property",
@@ -6611,7 +7344,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 350,
+            "line": 369,
             "description": "Error level: Fatal",
             "itemtype": "property",
             "name": "gdal.CE_Fatal",
@@ -6620,7 +7353,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 362,
+            "line": 381,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_None",
@@ -6629,7 +7362,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 368,
+            "line": 387,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_AppDefined",
@@ -6638,7 +7371,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 374,
+            "line": 393,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_OutOfMemory",
@@ -6647,7 +7380,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 380,
+            "line": 399,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_FileIO",
@@ -6656,7 +7389,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 386,
+            "line": 405,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_OpenFailed",
@@ -6665,7 +7398,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 392,
+            "line": 411,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_IllegalArg",
@@ -6674,7 +7407,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 398,
+            "line": 417,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_NotSupported",
@@ -6683,7 +7416,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 404,
+            "line": 423,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_AssertionFailed",
@@ -6692,7 +7425,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 410,
+            "line": 429,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_NoWriteAccess",
@@ -6701,7 +7434,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 416,
+            "line": 435,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_UserInterrupt",
@@ -6710,7 +7443,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 422,
+            "line": 441,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_ObjectNull",
@@ -6719,7 +7452,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 433,
+            "line": 452,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DCAP_CREATE",
@@ -6728,7 +7461,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 439,
+            "line": 458,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DCAP_CREATECOPY",
@@ -6737,7 +7470,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 445,
+            "line": 464,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DCAP_VIRTUALIO",
@@ -6746,7 +7479,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 456,
+            "line": 475,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCRandomRead",
@@ -6755,7 +7488,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 462,
+            "line": 481,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCSequentialWrite",
@@ -6764,7 +7497,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 468,
+            "line": 487,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCRandomWrite",
@@ -6773,7 +7506,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 474,
+            "line": 493,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCFastSpatialFilter",
@@ -6782,7 +7515,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 480,
+            "line": 499,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCFastFeatureCount",
@@ -6791,7 +7524,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 486,
+            "line": 505,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCFastGetExtent",
@@ -6800,7 +7533,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 492,
+            "line": 511,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCCreateField",
@@ -6809,7 +7542,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 498,
+            "line": 517,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCDeleteField",
@@ -6818,7 +7551,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 504,
+            "line": 523,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCReorderFields",
@@ -6827,7 +7560,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 510,
+            "line": 529,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCAlterFieldDefn",
@@ -6836,7 +7569,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 516,
+            "line": 535,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCTransactions",
@@ -6845,7 +7578,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 522,
+            "line": 541,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCDeleteFeature",
@@ -6854,7 +7587,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 528,
+            "line": 547,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCFastSetNextByIndex",
@@ -6863,7 +7596,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 535,
+            "line": 554,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCStringsAsUTF8",
@@ -6872,7 +7605,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 541,
+            "line": 560,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCIgnoreFields",
@@ -6881,7 +7614,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 549,
+            "line": 568,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCCreateGeomField",
@@ -6890,7 +7623,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 562,
+            "line": 581,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.ODsCCreateLayer",
@@ -6899,7 +7632,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 568,
+            "line": 587,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.ODsCDeleteLayer",
@@ -6908,7 +7641,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 574,
+            "line": 593,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.ODsCCreateGeomFieldAfterCreateLayer",
@@ -6917,7 +7650,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 584,
+            "line": 603,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.ODrCCreateDataSource",
@@ -6926,7 +7659,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 590,
+            "line": 609,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.ODrCDeleteDataSource",
@@ -6935,7 +7668,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 608,
+            "line": 627,
             "description": "Unknown or unspecified type",
             "final": 1,
             "itemtype": "property",
@@ -6945,7 +7678,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 615,
+            "line": 634,
             "description": "Eight bit unsigned integer",
             "final": 1,
             "itemtype": "property",
@@ -6955,7 +7688,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 622,
+            "line": 641,
             "description": "Sixteen bit unsigned integer",
             "final": 1,
             "itemtype": "property",
@@ -6965,7 +7698,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 629,
+            "line": 648,
             "description": "Sixteen bit signed integer",
             "final": 1,
             "itemtype": "property",
@@ -6975,7 +7708,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 636,
+            "line": 655,
             "description": "Thirty two bit unsigned integer",
             "final": 1,
             "itemtype": "property",
@@ -6985,7 +7718,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 643,
+            "line": 662,
             "description": "Thirty two bit signed integer",
             "final": 1,
             "itemtype": "property",
@@ -6995,7 +7728,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 650,
+            "line": 669,
             "description": "Thirty two bit floating point",
             "final": 1,
             "itemtype": "property",
@@ -7005,7 +7738,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 658,
+            "line": 677,
             "description": "Sixty four bit floating point",
             "final": 1,
             "itemtype": "property",
@@ -7015,7 +7748,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 666,
+            "line": 685,
             "description": "Complex Int16",
             "final": 1,
             "itemtype": "property",
@@ -7025,7 +7758,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 673,
+            "line": 692,
             "description": "Complex Int32",
             "final": 1,
             "itemtype": "property",
@@ -7035,7 +7768,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 680,
+            "line": 699,
             "description": "Complex Float32",
             "final": 1,
             "itemtype": "property",
@@ -7045,7 +7778,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 688,
+            "line": 707,
             "description": "Complex Float64",
             "final": 1,
             "itemtype": "property",
@@ -7055,7 +7788,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 701,
+            "line": 720,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OJUndefined",
@@ -7064,7 +7797,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 707,
+            "line": 726,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OJLeft",
@@ -7073,7 +7806,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 713,
+            "line": 732,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OJRight",
@@ -7082,7 +7815,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 724,
+            "line": 743,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_Undefined",
@@ -7091,7 +7824,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 730,
+            "line": 749,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_GrayIndex",
@@ -7100,7 +7833,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 739,
+            "line": 758,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_PaletteIndex",
@@ -7109,7 +7842,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 748,
+            "line": 767,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_RedBand",
@@ -7118,7 +7851,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 757,
+            "line": 776,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_GreenBand",
@@ -7127,7 +7860,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 766,
+            "line": 785,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_BlueBand",
@@ -7136,7 +7869,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 775,
+            "line": 794,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_AlphaBand",
@@ -7145,7 +7878,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 784,
+            "line": 803,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_HueBand",
@@ -7154,7 +7887,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 793,
+            "line": 812,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_SaturationBand",
@@ -7163,7 +7896,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 802,
+            "line": 821,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_LightnessBand",
@@ -7172,7 +7905,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 811,
+            "line": 830,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_CyanBand",
@@ -7181,7 +7914,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 820,
+            "line": 839,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_MagentaBand",
@@ -7190,7 +7923,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 829,
+            "line": 848,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_YellowBand",
@@ -7199,7 +7932,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 838,
+            "line": 857,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_BlackBand",
@@ -7208,7 +7941,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 847,
+            "line": 866,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_YCbCr_YBand",
@@ -7217,7 +7950,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 856,
+            "line": 875,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_YCbCr_CbBand",
@@ -7226,7 +7959,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 865,
+            "line": 884,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_YCbCr_CrBand",
@@ -7235,7 +7968,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 879,
+            "line": 898,
             "description": "Old-style 99-402 extended dimension (Z) WKB types.\nSynonymous with 'wkbVariantOldOgc' (gdal >= 2.0)",
             "final": 1,
             "itemtype": "property",
@@ -7245,7 +7978,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 889,
+            "line": 908,
             "description": "Old-style 99-402 extended dimension (Z) WKB types.\nSynonymous with 'wkbVariantOgc' (gdal < 2.0)",
             "final": 1,
             "itemtype": "property",
@@ -7255,7 +7988,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 899,
+            "line": 918,
             "description": "SFSQL 1.2 and ISO SQL/MM Part 3 extended dimension (Z&M) WKB types.",
             "final": 1,
             "itemtype": "property",
@@ -7265,7 +7998,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 912,
+            "line": 931,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbXDR",
@@ -7274,7 +8007,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 918,
+            "line": 937,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbNDR",
@@ -7283,7 +8016,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 929,
+            "line": 948,
             "final": "The `wkb25DBit` constant can be used to convert between 2D types to 2.5D\ntypes",
             "example": [
                 "\n```\n// 2 -> 2.5D\nwkbPoint25D = gdal.wkbPoint | gdal.wkb25DBit\n\n// 2.5D -> 2D (same as wkbFlatten())\nwkbPoint = gdal.wkbPoint25D & (~gdal.wkb25DBit)```"
@@ -7295,7 +8028,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 950,
+            "line": 969,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbUnknown",
@@ -7304,7 +8037,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 956,
+            "line": 975,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbPoint",
@@ -7313,7 +8046,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 962,
+            "line": 981,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbLineString",
@@ -7322,7 +8055,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 968,
+            "line": 987,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbPolygon",
@@ -7331,7 +8064,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 974,
+            "line": 993,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbMultiPoint",
@@ -7340,7 +8073,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 980,
+            "line": 999,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbMultiLineString",
@@ -7349,7 +8082,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 986,
+            "line": 1005,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbMultiPolygon",
@@ -7358,7 +8091,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 992,
+            "line": 1011,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbGeometryCollection",
@@ -7367,7 +8100,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 998,
+            "line": 1017,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbNone",
@@ -7376,7 +8109,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1004,
+            "line": 1023,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbLinearRing",
@@ -7385,7 +8118,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1010,
+            "line": 1029,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbPoint25D",
@@ -7394,7 +8127,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1016,
+            "line": 1035,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbLineString25D",
@@ -7403,7 +8136,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1022,
+            "line": 1041,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbPolygon25D",
@@ -7412,7 +8145,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1028,
+            "line": 1047,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbMultiPoint25D",
@@ -7421,7 +8154,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1034,
+            "line": 1053,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbMultiLineString25D",
@@ -7430,7 +8163,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1040,
+            "line": 1059,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbMultiPolygon25D",
@@ -7439,7 +8172,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1046,
+            "line": 1065,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbGeometryCollection25D",
@@ -7448,7 +8181,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1052,
+            "line": 1071,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbLinearRing25D",
@@ -7457,7 +8190,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1063,
+            "line": 1082,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTInteger",
@@ -7466,7 +8199,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1069,
+            "line": 1088,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTIntegerList",
@@ -7475,7 +8208,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1078,
+            "line": 1097,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTInteger64",
@@ -7484,7 +8217,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1084,
+            "line": 1104,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTInteger64List",
@@ -7493,7 +8226,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1092,
+            "line": 1114,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTReal",
@@ -7502,7 +8235,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1098,
+            "line": 1120,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTRealList",
@@ -7511,7 +8244,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1104,
+            "line": 1126,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTString",
@@ -7520,7 +8253,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1110,
+            "line": 1132,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTStringList",
@@ -7529,7 +8262,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1117,
+            "line": 1139,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTWideString",
@@ -7538,7 +8271,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1124,
+            "line": 1146,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTWideStringList",
@@ -7547,7 +8280,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1133,
+            "line": 1155,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTBinary",
@@ -7556,7 +8289,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1139,
+            "line": 1161,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTDate",
@@ -7565,7 +8298,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1145,
+            "line": 1167,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTTime",
@@ -7574,7 +8307,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1151,
+            "line": 1173,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTDateTime",
@@ -7583,7 +8316,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1164,
+            "line": 1186,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GRA_NearestNeighbor",
@@ -7592,7 +8325,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1170,
+            "line": 1192,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GRA_Bilinear",
@@ -7601,7 +8334,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1176,
+            "line": 1198,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GRA_Cubic",
@@ -7610,7 +8343,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1182,
+            "line": 1204,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GRA_CubicSpline",
@@ -7619,7 +8352,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1188,
+            "line": 1210,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GRA_Lanczos",
@@ -7628,7 +8361,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1194,
+            "line": 1216,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GRA_Average",
@@ -7637,7 +8370,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1200,
+            "line": 1222,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GRA_Mode",
@@ -7646,7 +8379,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1207,
+            "line": 1229,
             "description": "GDAL version (not the binding version)",
             "final": 1,
             "itemtype": "property",
@@ -7656,7 +8389,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1217,
+            "line": 1239,
             "description": "Details about the last error that occurred. The property\nwill be null or an object containing three properties: \"number\",\n\"message\", and \"type\".",
             "final": 1,
             "itemtype": "property",
@@ -7666,7 +8399,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1235,
+            "line": 1257,
             "description": "Disables all output.",
             "static": 1,
             "itemtype": "method",
@@ -7675,7 +8408,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1244,
+            "line": 1266,
             "description": "Displays extra debugging information from GDAL.",
             "static": 1,
             "itemtype": "method",
@@ -7684,6 +8417,22 @@
         }
     ],
     "warnings": [
+        {
+            "message": "unknown tag: callback",
+            "line": " lib/gdal.js:589"
+        },
+        {
+            "message": "Missing item type\nStandard async request callback",
+            "line": " lib/gdal.js:589"
+        },
+        {
+            "message": "Missing item type\nAn asyncable method has to define the following lambdas",
+            "line": " src/async.hpp:25"
+        },
+        {
+            "message": "Missing item type\nThis class handles async operations\n\nIt takes the lambdas as input\ngdaltype is the type of the object that will be carred from\nthe aux thread to the main thread\n\nJS-visible object creation is possible only in the main thread while\nths JS world is stopped\n\nThe caller must ensure that all the lambdas can be executed in\nanother thread (no automatic variables)",
+            "line": " src/async.hpp:69"
+        },
         {
             "message": "Missing item type\nGDALReprojectImage() method with a ChunkAndWarpImage replaced with\nChunkAndWarpMulti",
             "line": " src/gdal_warper.cpp:14"
