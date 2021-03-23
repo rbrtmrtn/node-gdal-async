@@ -123,6 +123,7 @@
 
 <div class="file">
     <pre class="prettyprint linenums">
+#include &lt;memory&gt;
 #include &quot;gdal_driver.hpp&quot;
 #include &quot;gdal_common.hpp&quot;
 #include &quot;gdal_dataset.hpp&quot;
@@ -324,15 +325,14 @@ NAN_METHOD(Driver::deleteDataset) {
 
   CPLErr err = driver-&gt;getGDALDriver()-&gt;Delete(name.c_str());
   if (err) {
-    NODE_THROW_CPLERR(err);
+    NODE_THROW_LAST_CPLERR;
     return;
   }
   return;
 }
 
-// These are shared across all Driver functions
-GDAL_ASYNCABLE_RVAL(GDALDataset *) = [](GDALDataset *ds, GDAL_ASYNCABLE_OBJS) { return Dataset::New(ds); };
-GDAL_ASYNCABLE_PERSIST();
+// This is shared across all Driver functions
+auto DatasetRval = [](GDALDataset *ds, GDAL_ASYNCABLE_OBJS) { return Dataset::New(ds); };
 
 /**
  * Create a new dataset with this driver.
@@ -400,10 +400,7 @@ GDAL_ASYNCABLE_DEFINE(Driver::create) {
   }
 
 #if GDAL_VERSION_MAJOR &lt; 2
-  if (GDAL_ISASYNC) {
-    Nan::ThrowError(&quot;Asynchronous create not supported on GDAL 1.x&quot;);
-    return;
-  }
+  GDAL_ASYNCABLE_1x_UNSUPPORTED;
   if (driver-&gt;uses_ogr) {
     OGRSFDriver *raw = driver-&gt;getOGRSFDriver();
     OGRDataSource *ds = raw-&gt;CreateDataSource(filename.c_str(), options-&gt;get());
@@ -422,14 +419,16 @@ GDAL_ASYNCABLE_DEFINE(Driver::create) {
 
   // Very careful here
   // we can&#x27;t reference automatic variables, thus the *options object
-  GDAL_ASYNCABLE_MAIN(GDALDataset *) = [raw, filename, x_size, y_size, n_bands, type, options]() {
+  GDALAsyncableJob&lt;GDALDataset *&gt; job;
+  job.main = [raw, filename, x_size, y_size, n_bands, type, options]() {
+    std::unique_ptr&lt;StringList&gt; options_ptr(options);
     GDALDataset *ds = raw-&gt;Create(filename.c_str(), x_size, y_size, n_bands, type, options-&gt;get());
-    delete options;
     if (!ds) throw &quot;Error creating dataset&quot;;
     return ds;
   };
+  job.rval = DatasetRval;
 
-  GDAL_ASYNCABLE_EXECUTE(6, GDALDataset *);
+  job.run(info, async, 6);
 }
 
 /**
@@ -491,21 +490,19 @@ GDAL_ASYNCABLE_DEFINE(Driver::createCopy) {
     return; // error parsing string list
   }
 
-  uv_mutex_t *async_lock = ptr_manager.tryLockDataset(src_dataset-&gt;uid);
-  if (async_lock == nullptr) {
-    Nan::ThrowError(&quot;Dataset object has already been destroyed&quot;);
+  uv_sem_t *async_lock = nullptr;
+  try {
+    async_lock = ptr_manager.tryLockDataset(src_dataset-&gt;uid);
+  } catch (const char *err) {
+    Nan::ThrowError(err);
     return;
   }
 
 #if GDAL_VERSION_MAJOR &lt; 2
-  if (GDAL_ISASYNC) {
-    Nan::ThrowError(&quot;Asynchronous create not supported on GDAL 1.x&quot;);
-    uv_mutex_unlock(async_lock);
-    return;
-  }
+  GDAL_ASYNCABLE_1x_UNSUPPORTED;
   if (driver-&gt;uses_ogr != src_dataset-&gt;uses_ogr) {
     Nan::ThrowError(&quot;Driver unable to copy dataset&quot;);
-    uv_mutex_unlock(async_lock);
+    uv_sem_post(async_lock);
     return;
   }
   if (driver-&gt;uses_ogr) {
@@ -516,27 +513,28 @@ GDAL_ASYNCABLE_DEFINE(Driver::createCopy) {
 
     if (!ds) {
       Nan::ThrowError(&quot;Error copying dataset.&quot;);
-      uv_mutex_unlock(async_lock);
+      uv_sem_post(async_lock);
       return;
     }
 
     info.GetReturnValue().Set(Dataset::New(ds));
-    uv_mutex_unlock(async_lock);
+    uv_sem_post(async_lock);
     return;
   }
 #endif
 
   GDALDriver *raw = driver-&gt;getGDALDriver();
   GDALDataset *raw_ds = src_dataset-&gt;getDataset();
-  GDAL_ASYNCABLE_MAIN(GDALDataset *) = [raw, filename, raw_ds, strict, options, async_lock]() {
+  GDALAsyncableJob&lt;GDALDataset *&gt; job;
+  job.rval = DatasetRval;
+  job.main = [raw, filename, raw_ds, strict, options, async_lock]() {
+    std::unique_ptr&lt;StringList&gt; options_ptr(options);
     GDALDataset *ds = raw-&gt;CreateCopy(filename.c_str(), raw_ds, strict, options-&gt;get(), NULL, NULL);
-    uv_mutex_unlock(async_lock);
-    delete options;
+    uv_sem_post(async_lock);
     if (!ds) throw &quot;Error creating dataset&quot;;
     return ds;
   };
-
-  GDAL_ASYNCABLE_EXECUTE(3, GDALDataset*);
+  job.run(info, async, 3);
 }
 
 /**
@@ -565,7 +563,7 @@ NAN_METHOD(Driver::copyFiles) {
 
   CPLErr err = driver-&gt;getGDALDriver()-&gt;CopyFiles(new_name.c_str(), old_name.c_str());
   if (err) {
-    NODE_THROW_CPLERR(err);
+    NODE_THROW_LAST_CPLERR;
     return;
   }
 
@@ -598,7 +596,7 @@ NAN_METHOD(Driver::rename) {
 
   CPLErr err = driver-&gt;getGDALDriver()-&gt;Rename(new_name.c_str(), old_name.c_str());
   if (err) {
-    NODE_THROW_CPLERR(err);
+    NODE_THROW_LAST_CPLERR;
     return;
   }
 
@@ -682,10 +680,7 @@ GDAL_ASYNCABLE_DEFINE(Driver::open) {
   GDALDriver *raw = driver-&gt;getGDALDriver();
 
 #if GDAL_VERSION_MAJOR &lt; 2
-  if (GDAL_ISASYNC) {
-    Nan::ThrowError(&quot;Asynchronous opening is not supported on GDAL 1.x&quot;);
-    return;
-  }
+  GDAL_ASYNCABLE_1x_UNSUPPORTED;
   if (driver-&gt;uses_ogr) {
     OGRSFDriver *raw = driver-&gt;getOGRSFDriver();
     OGRDataSource *ds = raw-&gt;Open(path.c_str(), static_cast&lt;int&gt;(access));
@@ -705,14 +700,16 @@ GDAL_ASYNCABLE_DEFINE(Driver::open) {
   }
   info.GetReturnValue().Set(Dataset::New(ds));
 #else
-  GDAL_ASYNCABLE_MAIN(GDALDataset *) = [raw, path, access]() {
+  GDALAsyncableJob&lt;GDALDataset *&gt; job;
+  job.main = [raw, path, access]() {
     const char *driver_list[2] = {raw-&gt;GetDescription(), nullptr};
     GDALDataset *ds = (GDALDataset *)GDALOpenEx(path.c_str(), access, driver_list, NULL, NULL);
     return ds;
     if (!ds) throw &quot;Error opening dataset&quot;;
   };
+  job.rval = DatasetRval;
 
-  GDAL_ASYNCABLE_EXECUTE(2, GDALDataset*);
+  job.run(info, async, 2);
 #endif
 }
 

@@ -152,12 +152,15 @@ band.pixels.read(0,0,16,16,data);<code>&#x60;</code></code></pre>
 [TypedArray]</span><span class="ia">options</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-readBlock"><span class="im">readBlock</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">[data] The
 [TypedArray]</span>)</a></li>
+				<li><a href="#method-readBlockAsync"><span class="im">readBlockAsync</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">[data] The
+[TypedArray]</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-set"><span class="im">set</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">value</span>)</a></li>
 				<li><a href="#method-write"><span class="im">write</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">width</span><span class="ia">height</span><span class="ia">data</span><span class="ia">options</span>)</a></li>
 				<li><a href="#method-write"><span class="im">write</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">width</span><span class="ia">height</span><span class="ia">data</span><span class="ia">options</span>)</a></li>
 				<li><a href="#method-writeAsync"><span class="im">writeAsync</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">width</span><span class="ia">height</span><span class="ia">data</span><span class="ia">options</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-writeAsync"><span class="im">writeAsync</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">width</span><span class="ia">height</span><span class="ia">data</span><span class="ia">options</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-writeBlock"><span class="im">writeBlock</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">data</span>)</a></li>
+				<li><a href="#method-writeBlockAsync"><span class="im">writeBlockAsync</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">data</span><span class="ia">callback</span>)</a></li>
 			</ul>
 		</li>
 
@@ -199,7 +202,7 @@ band.pixels.read(0,0,16,16,data);<code>&#x60;</code></code></pre>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l106"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:106</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l108"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:108</code></a>
 		</p>
 
 
@@ -279,7 +282,7 @@ band.pixels.read(0,0,16,16,data);<code>&#x60;</code></code></pre>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l169"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:169</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l171"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:171</code></a>
 		</p>
 
 
@@ -443,7 +446,7 @@ of values.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l193"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:193</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l195"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:195</code></a>
 		</p>
 
 
@@ -609,7 +612,7 @@ of values.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l468"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:468</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l470"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:470</code></a>
 		</p>
 
 
@@ -664,6 +667,112 @@ of values.</p>
 		</div>
 
 </div>
+<div id="method-readBlockAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>readBlockAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>x</code>
+				</li>
+				<li class="arg">
+						<code>y</code>
+				</li>
+				<li class="arg">
+						<code>[data] The
+[TypedArray]</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">TypedArray</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l485"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:485</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Reads a block of pixels.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">x</code>
+						<span class="type">Integer</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">y</code>
+						<span class="type">Integer</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">[data] The
+[TypedArray]</code>
+						<span class="type">TypedArray</span>
+
+
+					<div class="param-description"><p>(<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>)
+to put the data in. A new array is created if not given.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">TypedArray</span>:
+					<p>A
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">TypedArray</a>
+of values.</p>
+
+			</div>
+		</div>
+
+</div>
 <div id="method-set" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>set</code></span>
@@ -691,7 +800,7 @@ of values.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l137"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:137</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l139"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:139</code></a>
 		</p>
 
 
@@ -767,7 +876,7 @@ of values.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l311"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:311</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l313"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:313</code></a>
 		</p>
 
 
@@ -903,7 +1012,7 @@ to write to the band.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l425"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:425</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l427"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:427</code></a>
 		</p>
 
 
@@ -1042,7 +1151,7 @@ to write to the band.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l330"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:330</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l332"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:332</code></a>
 		</p>
 
 
@@ -1196,7 +1305,7 @@ certain optional parameters are omitted</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l444"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:444</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l446"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:446</code></a>
 		</p>
 
 
@@ -1338,7 +1447,7 @@ certain optional parameters are omitted</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l526"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:526</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l552"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:552</code></a>
 		</p>
 
 
@@ -1374,6 +1483,97 @@ certain optional parameters are omitted</p>
 					<div class="param-description"><p>The
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">TypedArray</a>
 of values to write to the band.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+<div id="method-writeBlockAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>writeBlockAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>x</code>
+				</li>
+				<li class="arg">
+						<code>y</code>
+				</li>
+				<li class="arg">
+						<code>data</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l564"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:564</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Writes a block of pixels.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">x</code>
+						<span class="type">Integer</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">y</code>
+						<span class="type">Integer</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">data</code>
+						<span class="type">TypedArray</span>
+
+
+					<div class="param-description"><p>The
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">TypedArray</a>
+of values to write to the band.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted</p>
 </div>
 
 				</li>

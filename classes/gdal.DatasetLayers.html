@@ -142,12 +142,17 @@ vector layers.</p>
 			<strong>Methods</strong>
 			<ul>
 				<li><a href="#method-copy"><span class="im">copy</span>(<span class="ia">src_lyr_name</span><span class="ia">dst_lyr_name</span><span class="ia">options</span>)</a></li>
+				<li><a href="#method-copyAsync"><span class="im">copyAsync</span>(<span class="ia">src_lyr_name</span><span class="ia">dst_lyr_name</span><span class="ia">options</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-count"><span class="im">count</span>()</a></li>
+				<li><a href="#method-countAsync"><span class="im">countAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-create"><span class="im">create</span>(<span class="ia">name</span><span class="ia">srs</span><span class="ia">geomType</span><span class="ia">creation_options</span>)</a></li>
+				<li><a href="#method-createAsync"><span class="im">createAsync</span>(<span class="ia">name</span><span class="ia">srs</span><span class="ia">geomType</span><span class="ia">creation_options</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-forEach"><span class="im">forEach</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-get"><span class="im">get</span>(<span class="ia">key</span>)</a></li>
+				<li><a href="#method-getAsync"><span class="im">getAsync</span>(<span class="ia">key</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-map"><span class="im">map</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-remove"><span class="im">remove</span>(<span class="ia">index</span>)</a></li>
+				<li><a href="#method-removeAsync"><span class="im">removeAsync</span>(<span class="ia">index</span><span class="ia">callback</span>)</a></li>
 			</ul>
 		</li>
 
@@ -198,7 +203,7 @@ vector layers.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_dataset_layers.cpp.html#l233"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:233</code></a>
+		<a href="../files/src_collections_dataset_layers.cpp.html#l318"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:318</code></a>
 		</p>
 
 
@@ -248,6 +253,108 @@ vector layers.</p>
 		</div>
 
 </div>
+<div id="method-copyAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>copyAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>src_lyr_name</code>
+				</li>
+				<li class="arg">
+						<code>dst_lyr_name</code>
+				</li>
+				<li class="arg">
+						<code class="optional">options=null</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/gdal.Layer.html" class="crosslink">gdal.Layer</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_collections_dataset_layers.cpp.html#l328"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:328</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Copies a layer.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">src_lyr_name</code>
+						<span class="type">String</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">dst_lyr_name</code>
+						<span class="type">String</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[options=null]</code>
+						<span class="type">Object  | String[]</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>layer creation options</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/gdal.Layer.html" class="crosslink">gdal.Layer</a></span>
+			</div>
+		</div>
+
+</div>
 <div id="method-count" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>count</code></span>
@@ -266,7 +373,7 @@ vector layers.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_dataset_layers.cpp.html#l202"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:202</code></a>
+		<a href="../files/src_collections_dataset_layers.cpp.html#l265"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:265</code></a>
 		</p>
 
 
@@ -276,6 +383,75 @@ vector layers.</p>
 	<div class="description"><p>Returns the number of layers.</p>
 </div>
 
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Integer</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-countAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>countAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Integer</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_collections_dataset_layers.cpp.html#l272"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:272</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Returns the number of layers.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
 
 		<div class="returns">
 			<h4>Returns:</h4>
@@ -319,7 +495,7 @@ vector layers.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_dataset_layers.cpp.html#l136"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:136</code></a>
+		<a href="../files/src_collections_dataset_layers.cpp.html#l169"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:169</code></a>
 		</p>
 
 
@@ -391,6 +567,133 @@ options</p>
 			</div>
 		</div>
 </div>
+<div id="method-createAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>createAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>name</code>
+				</li>
+				<li class="arg">
+						<code>srs</code>
+				</li>
+				<li class="arg">
+						<code>geomType</code>
+				</li>
+				<li class="arg">
+						<code>creation_options</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/gdal.Layer.html" class="crosslink">gdal.Layer</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_collections_dataset_layers.cpp.html#l188"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:188</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Adds a new layer.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">name</code>
+						<span class="type">String</span>
+
+
+					<div class="param-description"><p>Layer name</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">srs</code>
+						<span class="type"><a href="../classes/gdal.SpatialReference.html" class="crosslink">gdal.SpatialReference</a>  |  Null</span>
+
+
+					<div class="param-description"><p>Layer projection</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">geomType</code>
+						<span class="type">Integer  |  Function</span>
+
+
+					<div class="param-description"><p>Geometry type or constructor (<a href="../classes/Constants (wkbGeometryType).html" class="crosslink">see geometry types</a>)</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">creation_options</code>
+						<span class="type">String[] |  Object</span>
+
+
+					<div class="param-description"><p>driver-specific layer creation
+options</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/gdal.Layer.html" class="crosslink">gdal.Layer</a></span>
+			</div>
+		</div>
+
+		<div class="example">
+			<h4>Example:</h4>
+
+			<div class="example-content">
+				<pre class="code prettyprint"><code>dataset.layers.createAsync('layername', null, gdal.Point);
+</code></pre>
+
+			</div>
+		</div>
+</div>
 <div id="method-forEach" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>forEach</code></span>
@@ -412,7 +715,7 @@ options</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/lib_gdal.js.html#l277"><code>lib&#x2F;gdal.js:277</code></a>
+		<a href="../files/lib_gdal.js.html#l300"><code>lib&#x2F;gdal.js:300</code></a>
 		</p>
 
 
@@ -472,7 +775,7 @@ options</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_dataset_layers.cpp.html#l87"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:87</code></a>
+		<a href="../files/src_collections_dataset_layers.cpp.html#l93"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:93</code></a>
 		</p>
 
 
@@ -492,6 +795,87 @@ options</p>
 
 
 					<div class="param-description"><p>Layer name or ID.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/gdal.Layer.html" class="crosslink">gdal.Layer</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-getAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>getAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>key</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/gdal.Layer.html" class="crosslink">gdal.Layer</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_collections_dataset_layers.cpp.html#l101"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:101</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Returns the layer with the given name or identifier.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">key</code>
+						<span class="type">String  |  Integer</span>
+
+
+					<div class="param-description"><p>Layer name or ID.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
 </div>
 
 				</li>
@@ -528,7 +912,7 @@ options</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/lib_gdal.js.html#l290"><code>lib&#x2F;gdal.js:290</code></a>
+		<a href="../files/lib_gdal.js.html#l313"><code>lib&#x2F;gdal.js:313</code></a>
 		</p>
 
 
@@ -588,7 +972,7 @@ an array of the returned values.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_dataset_layers.cpp.html#l285"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:285</code></a>
+		<a href="../files/src_collections_dataset_layers.cpp.html#l390"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:390</code></a>
 		</p>
 
 
@@ -607,6 +991,75 @@ an array of the returned values.</p>
 						<span class="type">Integer</span>
 
 
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+<div id="method-removeAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>removeAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>index</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_collections_dataset_layers.cpp.html#l398"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:398</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Removes a layer.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">index</code>
+						<span class="type">Integer</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
 
 				</li>
 			</ul>
@@ -637,7 +1090,7 @@ an array of the returned values.</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_collections_dataset_layers.cpp.html#l325"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:325</code></a>
+        <a href="../files/src_collections_dataset_layers.cpp.html#l448"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:448</code></a>
         </p>
 
 

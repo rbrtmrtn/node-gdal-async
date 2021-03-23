@@ -123,6 +123,7 @@
 
 <div class="file">
     <pre class="prettyprint linenums">
+#include &lt;memory&gt;
 #include &quot;dataset_bands.hpp&quot;
 #include &quot;../gdal_common.hpp&quot;
 #include &quot;../gdal_dataset.hpp&quot;
@@ -218,13 +219,15 @@ NAN_METHOD(DatasetBands::toString) {
 
 /**
  * Returns the band with the given ID.
+ * {{{async}}}
  *
  * @method getAsync
- * {{#async}}
+ *
  * @param {Integer} id
+ * @param {requestCallback} [callback] {{cb}}
  * @return {gdal.RasterBand}
  */
-NAN_METHOD(DatasetBands::get) {
+GDAL_ASYNCABLE_DEFINE(DatasetBands::get) {
   Nan::HandleScope scope;
 
   Local&lt;Object&gt; parent =
@@ -237,6 +240,7 @@ NAN_METHOD(DatasetBands::get) {
   }
 
 #if GDAL_VERSION_MAJOR &lt; 2
+  GDAL_ASYNCABLE_1x_UNSUPPORTED;
   if (ds-&gt;uses_ogr) {
     info.GetReturnValue().Set(Nan::Null());
     return;
@@ -245,13 +249,20 @@ NAN_METHOD(DatasetBands::get) {
   {
 #endif
     GDALDataset *raw = ds-&gt;getDataset();
+    long ds_uid = ds-&gt;uid;
     int band_id;
     NODE_ARG_INT(0, &quot;band id&quot;, band_id);
 
-    GDALRasterBand *band = raw-&gt;GetRasterBand(band_id);
-
-    info.GetReturnValue().Set(RasterBand::New(band, raw));
-    return;
+    GDALAsyncableJob&lt;GDALRasterBand *&gt; job;
+    job.persist(parent);
+    job.main = [ds_uid, raw, band_id]() {
+      GDAL_ASYNCABLE_LOCK(ds_uid);
+      GDALRasterBand *band = raw-&gt;GetRasterBand(band_id);
+      GDAL_UNLOCK_PARENT;
+      return band;
+    };
+    job.rval = [raw](GDALRasterBand *band, GDAL_ASYNCABLE_OBJS) { return RasterBand::New(band, raw); };
+    job.run(info, async, 1);
   }
 }
 
@@ -262,9 +273,24 @@ NAN_METHOD(DatasetBands::get) {
  * @throws Error
  * @param {Integer} dataType Type of band ({{#crossLink &quot;Constants (GDT)&quot;}}see
  * GDT constants{{/crossLink}}).
+ * @param {object} [options] Creation options
  * @return {gdal.RasterBand}
  */
-NAN_METHOD(DatasetBands::create) {
+
+/**
+ * Adds a new band.
+ * {{{async}}}
+ *
+ * @method createAsync
+ * @throws Error
+ * @param {Integer} dataType Type of band ({{#crossLink &quot;Constants (GDT)&quot;}}see
+ * GDT constants{{/crossLink}}).
+ * @param {object} [options] Creation options
+ * @param {requestCallback} [callback] {{cb}}
+ * @return {gdal.RasterBand}
+ */
+
+GDAL_ASYNCABLE_DEFINE(DatasetBands::create) {
   Nan::HandleScope scope;
 
   Local&lt;Object&gt; parent =
@@ -277,6 +303,7 @@ NAN_METHOD(DatasetBands::create) {
   }
 
 #if GDAL_VERSION_MAJOR &lt; 2
+  GDAL_ASYNCABLE_1x_UNSUPPORTED;
   if (ds-&gt;uses_ogr) {
     Nan::ThrowError(&quot;Dataset does not support getting creating bands&quot;);
     return;
@@ -285,7 +312,7 @@ NAN_METHOD(DatasetBands::create) {
 
   GDALDataset *raw = ds-&gt;getDataset();
   GDALDataType type;
-  StringList options;
+  StringList *options = new StringList;
 
   // NODE_ARG_ENUM(0, &quot;data type&quot;, GDALDataType, type);
   if (info.Length() &lt; 1) {
@@ -302,18 +329,26 @@ NAN_METHOD(DatasetBands::create) {
     return;
   }
 
-  if (info.Length() &gt; 1 &amp;&amp; options.parse(info[1])) {
+  if (info.Length() &gt; 1 &amp;&amp; options-&gt;parse(info[1])) {
     return; // error parsing creation options
   }
 
-  CPLErr err = raw-&gt;AddBand(type, options.get());
+  long ds_uid = ds-&gt;uid;
 
-  if (err) {
-    NODE_THROW_CPLERR(err);
-    return;
-  }
-
-  info.GetReturnValue().Set(RasterBand::New(raw-&gt;GetRasterBand(raw-&gt;GetRasterCount()), raw));
+  GDALAsyncableJob&lt;GDALRasterBand *&gt; job;
+  job.persist(parent);
+  job.main = [ds_uid, raw, type, options]() {
+    std::unique_ptr&lt;StringList&gt; options_ptr(options);
+    GDAL_ASYNCABLE_LOCK(ds_uid);
+    CPLErr err = raw-&gt;AddBand(type, options-&gt;get());
+    GDAL_UNLOCK_PARENT;
+    // This is not thread-safe, but mis-reporting the error message
+    // 0.01% of the time is probably acceptable
+    if (err != CE_None) { throw CPLGetLastErrorMsg(); }
+    return raw-&gt;GetRasterBand(raw-&gt;GetRasterCount());
+  };
+  job.rval = [raw](GDALRasterBand *r, GDAL_ASYNCABLE_OBJS) { return RasterBand::New(r, raw); };
+  job.run(info, async, 2);
 }
 
 /**
@@ -322,7 +357,7 @@ NAN_METHOD(DatasetBands::create) {
  * @method count
  * @return {Integer}
  */
-NAN_METHOD(DatasetBands::count) {
+GDAL_ASYNCABLE_DEFINE(DatasetBands::count) {
   Nan::HandleScope scope;
 
   Local&lt;Object&gt; parent =
@@ -335,14 +370,25 @@ NAN_METHOD(DatasetBands::count) {
   }
 
 #if GDAL_VERSION_MAJOR &lt; 2
+  GDAL_ASYNCABLE_1x_UNSUPPORTED;
   if (ds-&gt;uses_ogr) {
     info.GetReturnValue().Set(Nan::New&lt;Integer&gt;(0));
     return;
   }
 #endif
 
+  long ds_uid = ds-&gt;uid;
   GDALDataset *raw = ds-&gt;getDataset();
-  info.GetReturnValue().Set(Nan::New&lt;Integer&gt;(raw-&gt;GetRasterCount()));
+  GDALAsyncableJob&lt;int&gt; job;
+  job.persist(parent);
+  job.main = [ds_uid, raw]() {
+    GDAL_ASYNCABLE_LOCK(ds_uid);
+    int count = raw-&gt;GetRasterCount();
+    GDAL_UNLOCK_PARENT;
+    return count;
+  };
+  job.rval = [raw](int count, GDAL_ASYNCABLE_OBJS) { return Nan::New&lt;Integer&gt;(count); };
+  job.run(info, async, 0);
 }
 
 /**

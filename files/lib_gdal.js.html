@@ -212,6 +212,29 @@ gdal.Geometry.prototype.getEnvelope3D = function () {
   return new gdal.Envelope3D(obj)
 }
 
+const getEnvelopeAsync = gdal.Geometry.prototype.getEnvelopeAsync
+gdal.Geometry.prototype.getEnvelopeAsync = function () {
+  // arguments[arguments.length - 1] is the callback
+  const old_cb = arguments[arguments.length - 1]
+  const new_cb = (e, r) =&gt; {
+    const obj = e ? undefined : new gdal.Envelope(r)
+    old_cb(e, obj)
+  }
+  arguments[arguments.length - 1] = new_cb
+  getEnvelopeAsync.apply(this, arguments)
+}
+
+const getEnvelope3DAsync = gdal.Geometry.prototype.getEnvelope3DAsync
+gdal.Geometry.prototype.getEnvelope3DAsync = function () {
+  const old_cb = arguments[arguments.length - 1]
+  const new_cb = (e, r) =&gt; {
+    const obj = e ? undefined : new gdal.Envelope3D(r)
+    old_cb(e, obj)
+  }
+  arguments[arguments.length - 1] = new_cb
+  getEnvelope3DAsync.apply(this, arguments)
+}
+
 const getExtent = gdal.Layer.prototype.getExtent
 gdal.Layer.prototype.getExtent = function () {
   const obj = getExtent.apply(this, arguments)
@@ -636,11 +659,15 @@ gdal.PolygonRings.prototype.toArray = defaultToArray
  * &#x60;&#x60;&#x60;
  * var dataset = gdal.open(&#x27;./data.shp&#x27;);&#x60;&#x60;&#x60;
  *
+ * @example
+ * &#x60;&#x60;&#x60;
+ * var dataset = gdal.open(fs.readFileSync(&#x27;./data.shp&#x27;));&#x60;&#x60;&#x60;
+ *
  * @for gdal
  * @throws Error
  * @method open
  * @static
- * @param {String} path Path to dataset to open
+ * @param {String|Buffer} path Path to dataset or in-memory Buffer to open
  * @param {String} [mode=&quot;r&quot;] The mode to use to open the file: &#x60;&quot;r&quot;&#x60;, &#x60;&quot;r+&quot;&#x60;, or &#x60;&quot;w&quot;&#x60;
  * @param {String|Array} [drivers] Driver name, or list of driver names to attempt to use.
  *
@@ -661,6 +688,14 @@ gdal.open = (function () {
     mode,
     drivers /* , x_size, y_size, n_bands, datatype, options */
   ) {
+    if (filename instanceof Buffer) {
+      const buffer = filename
+      arguments[0] = gdal._getMemFileName(filename)
+      const ds = gdal.open.apply(gdal, arguments)
+      ds.buffer = buffer
+      return ds
+    }
+
     if (typeof drivers === &#x27;string&#x27;) {
       drivers = [ drivers ]
     } else if (drivers &amp;&amp; !Array.isArray(drivers)) {
@@ -713,77 +748,13 @@ gdal.open = (function () {
 
 /**
  * Standard async request callback
- * @callback requestCallback
+ * @method requestCallback
  * @param {error} error error or undefined when the operation is successful
  * @param {object} result result of the asynchronous operation or undefined on error
  */
 
 const promisify = require(&#x27;util&#x27;).promisify
 const callbackify = require(&#x27;util&#x27;).callbackify
-
-gdal.Driver.prototype.createAsync = (function () {
-  const driverCreateCb = gdal.Driver.prototype.createAsync
-  const driverCreatePromise = promisify(gdal.Driver.prototype.createAsync)
-  return function (
-    filename,
-    x_size,
-    y_size,
-    n_bands,
-    datatype,
-    options,
-    callback
-  ) {
-    if (typeof arguments[arguments.length - 1] === &#x27;function&#x27; &amp;&amp; callback === undefined) {
-      callback = arguments[arguments.length - 1]
-      arguments[arguments.length - 1] = undefined
-    }
-    if (callback) {
-      return driverCreateCb.call(this, filename, x_size, y_size,
-        n_bands, datatype, options, callback)
-    }
-    return driverCreatePromise.call(this, filename, x_size, y_size,
-      n_bands, datatype, options)
-  }
-})()
-
-gdal.Driver.prototype.createCopyAsync = (function () {
-  const driverCreateCopyCb = gdal.Driver.prototype.createCopyAsync
-  const driverCreateCopyPromise = promisify(gdal.Driver.prototype.createCopyAsync)
-  return function (
-    filename,
-    src,
-    options,
-    callback
-  ) {
-    if (typeof arguments[arguments.length - 1] === &#x27;function&#x27; &amp;&amp; callback === undefined) {
-      callback = arguments[arguments.length - 1]
-      arguments[arguments.length - 1] = undefined
-    }
-    if (callback) {
-      return driverCreateCopyCb.call(this, filename, src, options, callback)
-    }
-    return driverCreateCopyPromise.call(this, filename, src, options)
-  }
-})()
-
-gdal.Driver.prototype.openAsync = (function () {
-  const driverOpenCb = gdal.Driver.prototype.openAsync
-  const driverOpenPromise = promisify(gdal.Driver.prototype.openAsync)
-  return function (
-    filename,
-    mode,
-    callback
-  ) {
-    if (typeof arguments[arguments.length - 1] === &#x27;function&#x27; &amp;&amp; callback === undefined) {
-      callback = arguments[arguments.length - 1]
-      arguments[arguments.length - 1] = undefined
-    }
-    if (callback) {
-      return driverOpenCb.call(this, filename, mode, callback)
-    }
-    return driverOpenPromise.apply(this, filename, mode)
-  }
-})()
 
 /**
  * Asynchronously creates or opens a dataset. Dataset should be explicitly closed with &#x60;dataset.close()&#x60; method if opened in &#x60;&quot;w&quot;&#x60; mode to flush any changes. Otherwise, datasets are closed when (and if) node decides to garbage collect them.
@@ -795,12 +766,16 @@ gdal.Driver.prototype.openAsync = (function () {
  *
  * @example
  * &#x60;&#x60;&#x60;
+ * var dataset = await gdal.openAsync(await fd.readFile(&#x27;./data.shp&#x27;));&#x60;&#x60;&#x60;
+ *
+ * @example
+ * &#x60;&#x60;&#x60;
  * gdal.openAsync(&#x27;./data.shp&#x27;, (err, ds) =&gt; {...});&#x60;&#x60;&#x60;
  *
  * @for gdal
  * @method openAsync
  * @static
- * @param {String} path Path to dataset to open
+ * @param {String|Buffer} path Path to dataset or in-memory Buffer to open
  * @param {String} [mode=&quot;r&quot;] The mode to use to open the file: &#x60;&quot;r&quot;&#x60;, &#x60;&quot;r+&quot;&#x60;, or &#x60;&quot;w&quot;&#x60;
  * @param {String|Array} [drivers] Driver name, or list of driver names to attempt to use.
  *
@@ -829,6 +804,19 @@ gdal.openAsync = (function () {
       _datatype,
       _options
     ) {
+      if (filename instanceof Buffer) {
+        const buffer = filename
+        try {
+          // getMemFileName is always synchronous
+          arguments[0] = gdal._getMemFileName(filename)
+        } catch (e) {
+          return Promise.reject(e)
+        }
+        return gdal.openAsync.apply(gdal, arguments).then((ds) =&gt; {
+          ds.buffer = buffer
+          return ds
+        })
+      }
       if (typeof drivers === &#x27;string&#x27;) {
         drivers = [ drivers ]
       } else if (drivers &amp;&amp; !Array.isArray(drivers)) {
@@ -992,121 +980,57 @@ function getTypedArrayType(array) {
   return 0 // gdal.GDT_Unknown
 }
 
+const mangleWrite = (args) =&gt; {
+  let [ x, y, width, height, data, options ] = args
+  if (!options) options = {}
+  if (data) data._gdal_type = getTypedArrayType(data)
+  return [
+    x,
+    y,
+    width,
+    height,
+    data,
+    options.buffer_width,
+    options.buffer_height,
+    options.pixel_space,
+    options.line_space
+  ]
+}
+
+const mangleRead = (args) =&gt; {
+  let [ x, y, width, height, data, options ] = args
+  if (!options) options = {}
+  if (data) data._gdal_type = getTypedArrayType(data)
+  return [
+    x,
+    y,
+    width,
+    height,
+    data,
+    options.buffer_width,
+    options.buffer_height,
+    options.type,
+    options.pixel_space,
+    options.line_space
+  ]
+}
+
+const mangleBlock = (args) =&gt; {
+  if (args[2]) args[2]._gdal_type = getTypedArrayType(args[2])
+  return args
+}
+
 gdal.RasterBandPixels.prototype.read = (function () {
   const read = gdal.RasterBandPixels.prototype.read
-  return function (x, y, width, height, data, options) {
-    if (!options) options = {}
-    if (data) data._gdal_type = getTypedArrayType(data)
-    return read.apply(this, [
-      x,
-      y,
-      width,
-      height,
-      data,
-      options.buffer_width,
-      options.buffer_height,
-      options.type,
-      options.pixel_space,
-      options.line_space
-    ])
-  }
-})()
-
-gdal.RasterBandPixels.prototype.readAsync = (function () {
-  const readCb = gdal.RasterBandPixels.prototype.readAsync
-  const readPromise = promisify(gdal.RasterBandPixels.prototype.readAsync)
-  return function (x, y, width, height, data, options, cb) {
-    if (typeof arguments[arguments.length - 1] === &#x27;function&#x27; &amp;&amp; cb === undefined) {
-      cb = arguments[arguments.length - 1]
-      /* This has the desired effect of unsetting that argument */
-      arguments[arguments.length - 1] = undefined
-    }
-    if (!options) options = {}
-    if (data) data._gdal_type = getTypedArrayType(data)
-    if (cb) {
-      return readCb.apply(this, [
-        x,
-        y,
-        width,
-        height,
-        data,
-        options.buffer_width,
-        options.buffer_height,
-        options.type,
-        options.pixel_space,
-        options.line_space,
-        cb
-      ])
-    }
-    return readPromise.apply(this, [
-      x,
-      y,
-      width,
-      height,
-      data,
-      options.buffer_width,
-      options.buffer_height,
-      options.type,
-      options.pixel_space,
-      options.line_space
-    ])
+  return function () {
+    return read.apply(this, mangleRead(arguments))
   }
 })()
 
 gdal.RasterBandPixels.prototype.write = (function () {
   const write = gdal.RasterBandPixels.prototype.write
-  return function (x, y, width, height, data, options) {
-    if (!options) options = {}
-    if (data) data._gdal_type = getTypedArrayType(data)
-    return write.apply(this, [
-      x,
-      y,
-      width,
-      height,
-      data,
-      options.buffer_width,
-      options.buffer_height,
-      options.pixel_space,
-      options.line_space
-    ])
-  }
-})()
-
-gdal.RasterBandPixels.prototype.writeAsync = (function () {
-  const writeCb = gdal.RasterBandPixels.prototype.writeAsync
-  const writePromise = promisify(gdal.RasterBandPixels.prototype.writeAsync)
-  return function (x, y, width, height, data, options, cb) {
-    if (typeof arguments[arguments.length - 1] === &#x27;function&#x27; &amp;&amp; cb === undefined) {
-      cb = arguments[arguments.length - 1]
-      arguments[arguments.length - 1] = undefined
-    }
-    if (!options) options = {}
-    if (data) data._gdal_type = getTypedArrayType(data)
-    if (cb) {
-      return writeCb.apply(this, [
-        x,
-        y,
-        width,
-        height,
-        data,
-        options.buffer_width,
-        options.buffer_height,
-        options.pixel_space,
-        options.line_space,
-        cb
-      ])
-    }
-    return writePromise.apply(this, [
-      x,
-      y,
-      width,
-      height,
-      data,
-      options.buffer_width,
-      options.buffer_height,
-      options.pixel_space,
-      options.line_space
-    ])
+  return function () {
+    return write.apply(this, mangleWrite(arguments))
   }
 })()
 
@@ -1128,6 +1052,24 @@ gdal.RasterBandPixels.prototype.writeBlock = (function () {
 
 // Generic promisifiable methods and the argument number of their callbacks
 const promisifiables = {
+  Driver: {
+    createAsync: 6,
+    createCopyAsync: 3,
+    openAsync: 2
+  },
+  RasterBandPixels: {
+    readAsync: 10,
+    writeAsync: 9,
+    readBlockAsync: 3,
+    writeBlockAsync: 3
+  },
+  DatasetLayers: {
+    getAsync: 1,
+    createAsync: 4,
+    countAsync: 0,
+    copyAsync: 3,
+    removeAsync: 1
+  },
   LayerFeatures: {
     getAsync: 1,
     firstAsync: 0,
@@ -1135,22 +1077,90 @@ const promisifiables = {
     addAsync: 1,
     countAsync: 1,
     removeAsync: 1
+  },
+  DatasetBands: {
+    getAsync: 1,
+    createAsync: 2,
+    countAsync: 0
+  },
+  Geometry: {
+    $fromWKTAsync: 2,
+    $fromWKBAsync: 2,
+    $fromGeoJsonAsync: 1,
+    toKMLAsync: 0,
+    toGMLAsync: 0,
+    toWKTAsync: 0,
+    toWKBAsync: 2,
+    toJSONAsync: 0,
+    centroidAsync: 0,
+    convexHullAsync: 0,
+    boundaryAsync: 0,
+    intersectionAsync: 1,
+    unionAsync: 1,
+    differenceAsync: 1,
+    symDifferenceAsync: 1,
+    simplifyAsync: 1,
+    simplifyPreserveTopologyAsync: 1,
+    bufferAsync: 2,
+    getEnvelopeAsync: 0,
+    getEnvelope3DAsync: 0,
+    closeRingsAsync: 0,
+    emptyAsync: 0,
+    swapXYAsync: 0,
+    isEmptyAsync: 0,
+    isValidAsync: 0,
+    isSimpleAsync: 0,
+    isRingAsync: 0,
+    intersectsAsync: 1,
+    equalsAsync: 1,
+    disjointAsync: 1,
+    touchesAsync: 1,
+    crossesAsync: 1,
+    withinAsync: 1,
+    containsAsync: 1,
+    overlapsAsync: 1,
+    distanceAsync: 1,
+    transformAsync: 1,
+    transformToAsync: 1
+  },
+  $: {
+    $fillNodataAsync: 1,
+    $contourGenerateAsync: 1,
+    $sieveFilterAsync: 1,
+    $checksumImageAsync: 5,
+    $polygonizeAsync: 1,
+    $reprojectImageAsync: 1,
+    $suggestedWarpOutputAsync: 1
+  }
+}
+
+const argMangle = {
+  RasterBandPixels: {
+    readAsync: mangleRead,
+    writeAsync: mangleWrite,
+    readBlockAsync: mangleBlock,
+    writeBlockAsync: mangleBlock
   }
 }
 
 for (const c of Object.keys(promisifiables)) {
-  for (const m of Object.keys(promisifiables[c])) {
-    gdal[c].prototype[m] = (function () {
-      const promisified = promisify(gdal[c].prototype[m])
-      const original = gdal[c].prototype[m]
-      const cbArg = promisifiables[c][m]
+  for (const _m of Object.keys(promisifiables[c])) {
+    const klass = c === &#x27;$&#x27; ? gdal : gdal[c]
+    const { base, m } = _m.startsWith(&#x27;$&#x27;) ?
+      { base: klass, m: _m.slice(1) } :
+      { base: klass.prototype, m: _m }
+    base[m] = (function () {
+      const promisified = promisify(base[m])
+      const original = base[m]
+      const cbArg = promisifiables[c][_m]
+      const mangle = argMangle[c] &amp;&amp; argMangle[c][_m] ? argMangle[c][_m] : (a) =&gt; a
       return function () {
         let callback
         if (typeof arguments[arguments.length - 1] === &#x27;function&#x27;) {
           callback = arguments[arguments.length - 1]
           arguments[arguments.length - 1] = undefined
         }
-        let args = Array.prototype.slice.call(arguments, 0, cbArg)
+        let args = Array.prototype.slice.call(mangle(arguments), 0, cbArg)
         if (callback) {
           args[cbArg] = callback
           return original.apply(this, args)

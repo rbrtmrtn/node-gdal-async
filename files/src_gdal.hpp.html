@@ -151,7 +151,7 @@ namespace node_gdal {
 /*
  * Common code for sync and async opening
  */
-GDAL_ASYNCABLE_DECLARE(open);
+GDAL_ASYNCABLE_GLOBAL(open);
 GDAL_ASYNCABLE_DEFINE(open) {
   Nan::HandleScope scope;
 
@@ -162,11 +162,7 @@ GDAL_ASYNCABLE_DEFINE(open) {
   NODE_ARG_OPT_STR(1, &quot;mode&quot;, mode);
 
 #if GDAL_VERSION_MAJOR &lt; 2
-  if (GDAL_ISASYNC) {
-    Nan::ThrowError(&quot;Asynchronous opening is not supported on GDAL 1.x&quot;);
-    return;
-  }
-
+  GDAL_ASYNCABLE_1x_UNSUPPORTED;
   GDALAccess access = GA_ReadOnly;
   if (mode == &quot;r+&quot;) {
     access = GA_Update;
@@ -200,15 +196,14 @@ GDAL_ASYNCABLE_DEFINE(open) {
     return;
   }
 
-  GDAL_ASYNCABLE_RVAL(GDALDataset *) = [](GDALDataset *ds, GDAL_ASYNCABLE_OBJS) { return Dataset::New(ds); };
-  GDAL_ASYNCABLE_PERSIST();
-
-  GDAL_ASYNCABLE_MAIN(GDALDataset *) = [path, flags]() {
+  GDALAsyncableJob&lt;GDALDataset *&gt; job;
+  job.rval = [](GDALDataset *ds, GDAL_ASYNCABLE_OBJS) { return Dataset::New(ds); };
+  job.main = [path, flags]() {
     GDALDataset *ds = (GDALDataset *)GDALOpenEx(path.c_str(), flags, NULL, NULL, NULL);
     if (!ds) throw &quot;Error opening dataset&quot;;
     return ds;
   };
-  GDAL_ASYNCABLE_EXECUTE(2, GDALDataset *);
+  job.run(info, async, 2);
 #endif
 }
 

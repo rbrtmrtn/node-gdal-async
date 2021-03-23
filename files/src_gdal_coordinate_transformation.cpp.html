@@ -207,7 +207,7 @@ NAN_METHOD(CoordinateTransformation::New) {
 
       OGRCoordinateTransformation *transform = OGRCreateCoordinateTransformation(source-&gt;get(), target-&gt;get());
       if (!transform) {
-        NODE_THROW_LAST_CPLERR();
+        NODE_THROW_LAST_CPLERR;
         return;
       }
       f = new CoordinateTransformation(transform);
@@ -244,7 +244,7 @@ NAN_METHOD(CoordinateTransformation::New) {
       GeoTransformTransformer *transform = new GeoTransformTransformer();
       transform-&gt;hSrcImageTransformer = GDALCreateGenImgProjTransformer2(ds-&gt;getDataset(), NULL, papszTO);
       if (!transform-&gt;hSrcImageTransformer) {
-        NODE_THROW_LAST_CPLERR();
+        NODE_THROW_LAST_CPLERR;
         return;
       }
 

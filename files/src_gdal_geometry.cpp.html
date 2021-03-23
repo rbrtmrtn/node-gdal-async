@@ -139,6 +139,7 @@
 
 #include &lt;node_buffer.h&gt;
 #include &lt;ogr_core.h&gt;
+#include &lt;memory&gt;
 #include &lt;sstream&gt;
 #include &lt;stdlib.h&gt;
 
@@ -155,49 +156,87 @@ void Geometry::Initialize(Local&lt;Object&gt; target) {
 
   // Nan::SetMethod(constructor, &quot;fromWKBType&quot;, Geometry::create);
   Nan::SetMethod(lcons, &quot;fromWKT&quot;, Geometry::createFromWkt);
+  Nan::SetMethod(lcons, &quot;fromWKTAsync&quot;, Geometry::createFromWktAsync);
   Nan::SetMethod(lcons, &quot;fromWKB&quot;, Geometry::createFromWkb);
+  Nan::SetMethod(lcons, &quot;fromWKBAsync&quot;, Geometry::createFromWkbAsync);
   Nan::SetMethod(lcons, &quot;fromGeoJson&quot;, Geometry::createFromGeoJson);
+  Nan::SetMethod(lcons, &quot;fromGeoJsonAsync&quot;, Geometry::createFromGeoJsonAsync);
   Nan::SetMethod(lcons, &quot;getName&quot;, Geometry::getName);
   Nan::SetMethod(lcons, &quot;getConstructor&quot;, Geometry::getConstructor);
 
   Nan::SetPrototypeMethod(lcons, &quot;toString&quot;, toString);
   Nan::SetPrototypeMethod(lcons, &quot;toKML&quot;, exportToKML);
+  Nan::SetPrototypeMethod(lcons, &quot;toKMLAsync&quot;, exportToKMLAsync);
   Nan::SetPrototypeMethod(lcons, &quot;toGML&quot;, exportToGML);
+  Nan::SetPrototypeMethod(lcons, &quot;toGMLAsync&quot;, exportToGMLAsync);
   Nan::SetPrototypeMethod(lcons, &quot;toJSON&quot;, exportToJSON);
+  Nan::SetPrototypeMethod(lcons, &quot;toJSONAsync&quot;, exportToJSONAsync);
   Nan::SetPrototypeMethod(lcons, &quot;toWKT&quot;, exportToWKT);
+  Nan::SetPrototypeMethod(lcons, &quot;toWKTAsync&quot;, exportToWKTAsync);
   Nan::SetPrototypeMethod(lcons, &quot;toWKB&quot;, exportToWKB);
+  Nan::SetPrototypeMethod(lcons, &quot;toWKBAsync&quot;, exportToWKBAsync);
   Nan::SetPrototypeMethod(lcons, &quot;isEmpty&quot;, isEmpty);
+  Nan::SetPrototypeMethod(lcons, &quot;isEmptyAsync&quot;, isEmptyAsync);
   Nan::SetPrototypeMethod(lcons, &quot;isValid&quot;, isValid);
+  Nan::SetPrototypeMethod(lcons, &quot;isValidAsync&quot;, isValidAsync);
   Nan::SetPrototypeMethod(lcons, &quot;isSimple&quot;, isSimple);
+  Nan::SetPrototypeMethod(lcons, &quot;isSimpleAsync&quot;, isSimpleAsync);
   Nan::SetPrototypeMethod(lcons, &quot;isRing&quot;, isRing);
+  Nan::SetPrototypeMethod(lcons, &quot;isRingAsync&quot;, isRingAsync);
   Nan::SetPrototypeMethod(lcons, &quot;clone&quot;, clone);
   Nan::SetPrototypeMethod(lcons, &quot;empty&quot;, empty);
+  Nan::SetPrototypeMethod(lcons, &quot;emptyAsync&quot;, emptyAsync);
   Nan::SetPrototypeMethod(lcons, &quot;closeRings&quot;, closeRings);
+  Nan::SetPrototypeMethod(lcons, &quot;closeRingsAsync&quot;, closeRingsAsync);
   Nan::SetPrototypeMethod(lcons, &quot;intersects&quot;, intersects);
+  Nan::SetPrototypeMethod(lcons, &quot;intersectsAsync&quot;, intersectsAsync);
   Nan::SetPrototypeMethod(lcons, &quot;equals&quot;, equals);
+  Nan::SetPrototypeMethod(lcons, &quot;equalsAsync&quot;, equalsAsync);
   Nan::SetPrototypeMethod(lcons, &quot;disjoint&quot;, disjoint);
+  Nan::SetPrototypeMethod(lcons, &quot;disjointAsync&quot;, disjointAsync);
   Nan::SetPrototypeMethod(lcons, &quot;touches&quot;, touches);
+  Nan::SetPrototypeMethod(lcons, &quot;touchesAsync&quot;, touchesAsync);
   Nan::SetPrototypeMethod(lcons, &quot;crosses&quot;, crosses);
+  Nan::SetPrototypeMethod(lcons, &quot;crossesAsync&quot;, crossesAsync);
   Nan::SetPrototypeMethod(lcons, &quot;within&quot;, within);
+  Nan::SetPrototypeMethod(lcons, &quot;withinAsync&quot;, withinAsync);
   Nan::SetPrototypeMethod(lcons, &quot;contains&quot;, contains);
+  Nan::SetPrototypeMethod(lcons, &quot;containsAsync&quot;, containsAsync);
   Nan::SetPrototypeMethod(lcons, &quot;overlaps&quot;, overlaps);
+  Nan::SetPrototypeMethod(lcons, &quot;overlapsAsync&quot;, overlapsAsync);
   Nan::SetPrototypeMethod(lcons, &quot;boundary&quot;, boundary);
+  Nan::SetPrototypeMethod(lcons, &quot;boundaryAsync&quot;, boundaryAsync);
   Nan::SetPrototypeMethod(lcons, &quot;distance&quot;, distance);
+  Nan::SetPrototypeMethod(lcons, &quot;distanceAsync&quot;, distanceAsync);
   Nan::SetPrototypeMethod(lcons, &quot;convexHull&quot;, convexHull);
+  Nan::SetPrototypeMethod(lcons, &quot;convexHullAsync&quot;, convexHullAsync);
   Nan::SetPrototypeMethod(lcons, &quot;buffer&quot;, buffer);
+  Nan::SetPrototypeMethod(lcons, &quot;bufferAsync&quot;, bufferAsync);
   Nan::SetPrototypeMethod(lcons, &quot;intersection&quot;, intersection);
+  Nan::SetPrototypeMethod(lcons, &quot;intersectionAsync&quot;, intersectionAsync);
   Nan::SetPrototypeMethod(lcons, &quot;union&quot;, unionGeometry);
+  Nan::SetPrototypeMethod(lcons, &quot;unionAsync&quot;, unionGeometryAsync);
   Nan::SetPrototypeMethod(lcons, &quot;difference&quot;, difference);
+  Nan::SetPrototypeMethod(lcons, &quot;differenceAsync&quot;, differenceAsync);
   Nan::SetPrototypeMethod(lcons, &quot;symDifference&quot;, symDifference);
+  Nan::SetPrototypeMethod(lcons, &quot;symDifferenceAsync&quot;, symDifferenceAsync);
   Nan::SetPrototypeMethod(lcons, &quot;centroid&quot;, centroid);
+  Nan::SetPrototypeMethod(lcons, &quot;centroidAsync&quot;, centroidAsync);
   Nan::SetPrototypeMethod(lcons, &quot;simplify&quot;, simplify);
+  Nan::SetPrototypeMethod(lcons, &quot;simplifyAsync&quot;, simplifyAsync);
   Nan::SetPrototypeMethod(lcons, &quot;simplifyPreserveTopology&quot;, simplifyPreserveTopology);
+  Nan::SetPrototypeMethod(lcons, &quot;simplifyPreserveTopologyAsync&quot;, simplifyPreserveTopologyAsync);
   Nan::SetPrototypeMethod(lcons, &quot;segmentize&quot;, segmentize);
   Nan::SetPrototypeMethod(lcons, &quot;swapXY&quot;, swapXY);
+  Nan::SetPrototypeMethod(lcons, &quot;swapXYAsync&quot;, swapXYAsync);
   Nan::SetPrototypeMethod(lcons, &quot;getEnvelope&quot;, getEnvelope);
+  Nan::SetPrototypeMethod(lcons, &quot;getEnvelopeAsync&quot;, getEnvelopeAsync);
   Nan::SetPrototypeMethod(lcons, &quot;getEnvelope3D&quot;, getEnvelope3D);
+  Nan::SetPrototypeMethod(lcons, &quot;getEnvelope3DAsync&quot;, getEnvelope3DAsync);
   Nan::SetPrototypeMethod(lcons, &quot;transform&quot;, transform);
+  Nan::SetPrototypeMethod(lcons, &quot;transformAsync&quot;, transformAsync);
   Nan::SetPrototypeMethod(lcons, &quot;transformTo&quot;, transformTo);
+  Nan::SetPrototypeMethod(lcons, &quot;transformToAsync&quot;, transformToAsync);
 
   ATTR(lcons, &quot;srs&quot;, srsGetter, srsSetter);
   ATTR(lcons, &quot;wkbSize&quot;, wkbSizeGetter, READ_ONLY_SETTER);
@@ -213,9 +252,15 @@ void Geometry::Initialize(Local&lt;Object&gt; target) {
 
 Geometry::Geometry(OGRGeometry *geom) : Nan::ObjectWrap(), this_(geom), owned_(true), size_(0) {
   LOG(&quot;Created Geometry [%p]&quot;, geom);
+  // The async locks must live outside the V8 memory management,
+  // otherwise they won&#x27;t be accessible from the async threads
+  async_lock = new uv_sem_t;
+  uv_sem_init(async_lock, 1);
 }
 
 Geometry::Geometry() : Nan::ObjectWrap(), this_(NULL), owned_(true), size_(0) {
+  async_lock = new uv_sem_t;
+  uv_sem_init(async_lock, 1);
 }
 
 Geometry::~Geometry() {
@@ -228,6 +273,8 @@ Geometry::~Geometry() {
     LOG(&quot;Disposed Geometry [%p]&quot;, this_)
     this_ = NULL;
   }
+  uv_sem_destroy(async_lock);
+  delete async_lock;
 }
 
 /**
@@ -318,21 +365,48 @@ NAN_METHOD(Geometry::toString) {
  *
  * @method closeRings
  */
-NODE_WRAPPED_METHOD(Geometry, closeRings, closeRings);
+
+/**
+ * Closes any un-closed rings.
+ * {{{async}}}
+ *
+ * @param {requestCallback} [callback] {{cb}}
+ * @method closeRingsAsync
+ */
+
+NODE_WRAPPED_ASYNC_METHOD(Geometry, closeRings, closeRings);
 
 /**
  * Clears the geometry.
  *
  * @method empty
  */
-NODE_WRAPPED_METHOD(Geometry, empty, empty);
+
+/**
+ * Clears the geometry.
+ * {{{async}}}
+ *
+ * @param {requestCallback} [callback] {{cb}}
+ * @method emptyAsync
+ */
+
+NODE_WRAPPED_ASYNC_METHOD(Geometry, empty, empty);
 
 /**
  * Swaps x, y coordinates.
  *
  * @method swapXY
  */
-NODE_WRAPPED_METHOD(Geometry, swapXY, swapXY);
+
+/**
+ * Swaps x, y coordinates.
+ * {{{async}}}
+ *
+ * @param {requestCallback} [callback] {{cb}}
+ * @method swapXYAsync
+ */
+
+NODE_WRAPPED_ASYNC_METHOD(Geometry, swapXY, swapXY);
 
 /**
  * Determines if the geometry is empty.
@@ -340,7 +414,17 @@ NODE_WRAPPED_METHOD(Geometry, swapXY, swapXY);
  * @method isEmpty
  * @return Boolean
  */
-NODE_WRAPPED_METHOD_WITH_RESULT(Geometry, isEmpty, Boolean, IsEmpty);
+
+/**
+ * Determines if the geometry is empty.
+ * {{{async}}}
+ *
+ * @method isEmptyAsync
+ * @param {requestCallback} [callback] {{cb}}
+ * @return Boolean
+ */
+
+NODE_WRAPPED_ASYNC_METHOD_WITH_RESULT(Geometry, OGRBoolean, isEmpty, Boolean, IsEmpty);
 
 /**
  * Determines if the geometry is valid.
@@ -348,7 +432,17 @@ NODE_WRAPPED_METHOD_WITH_RESULT(Geometry, isEmpty, Boolean, IsEmpty);
  * @method isValid
  * @return Boolean
  */
-NODE_WRAPPED_METHOD_WITH_RESULT(Geometry, isValid, Boolean, IsValid);
+
+/**
+ * Determines if the geometry is valid.
+ * {{{async}}}
+ *
+ * @method isValidAsync
+ * @param {requestCallback} [callback] {{cb}}
+ * @return Boolean
+ */
+
+NODE_WRAPPED_ASYNC_METHOD_WITH_RESULT(Geometry, OGRBoolean, isValid, Boolean, IsValid);
 
 /**
  * Determines if the geometry is simple.
@@ -356,7 +450,17 @@ NODE_WRAPPED_METHOD_WITH_RESULT(Geometry, isValid, Boolean, IsValid);
  * @method isSimple
  * @return Boolean
  */
-NODE_WRAPPED_METHOD_WITH_RESULT(Geometry, isSimple, Boolean, IsSimple);
+
+/**
+ * Determines if the geometry is simple.
+ * {{{async}}}
+ *
+ * @method isSimpleAsync
+ * @param {requestCallback} [callback] {{cb}}
+ * @return Boolean
+ */
+
+NODE_WRAPPED_ASYNC_METHOD_WITH_RESULT(Geometry, OGRBoolean, isSimple, Boolean, IsSimple);
 
 /**
  * Determines if the geometry is a ring.
@@ -364,7 +468,17 @@ NODE_WRAPPED_METHOD_WITH_RESULT(Geometry, isSimple, Boolean, IsSimple);
  * @method isRing
  * @return Boolean
  */
-NODE_WRAPPED_METHOD_WITH_RESULT(Geometry, isRing, Boolean, IsRing);
+
+/**
+ * Determines if the geometry is a ring.
+ * {{{async}}}
+ *
+ * @method isRingAsync
+ * @param {requestCallback} [callback] {{cb}}
+ * @return Boolean
+ */
+
+NODE_WRAPPED_ASYNC_METHOD_WITH_RESULT(Geometry, OGRBoolean, isRing, Boolean, IsRing);
 
 /**
  * Determines if the two geometries intersect.
@@ -373,8 +487,19 @@ NODE_WRAPPED_METHOD_WITH_RESULT(Geometry, isRing, Boolean, IsRing);
  * @param {gdal.Geometry} geometry
  * @return Boolean
  */
-NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(
-  Geometry, intersects, Boolean, Intersects, Geometry, &quot;geometry to compare&quot;);
+
+/**
+ * Determines if the two geometries intersect.
+ * {{{async}}}
+ *
+ * @method intersectsAsync
+ * @param {gdal.Geometry} geometry
+ * @param {requestCallback} [callback] {{cb}}
+ * @return Boolean
+ */
+
+NODE_WRAPPED_ASYNC_METHOD_WITH_RESULT_1_WRAPPED_PARAM(
+  Geometry, OGRBoolean, intersects, Boolean, Intersects, Geometry, &quot;geometry to compare&quot;);
 
 /**
  * Determines if the two geometries equal each other.
@@ -383,7 +508,19 @@ NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(
  * @param {gdal.Geometry} geometry
  * @return Boolean
  */
-NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(Geometry, equals, Boolean, Equals, Geometry, &quot;geometry to compare&quot;);
+
+/**
+ * Determines if the two geometries equal each other.
+ * {{{async}}}
+ *
+ * @method equalsAsync
+ * @param {gdal.Geometry} geometry
+ * @param {requestCallback} [callback] {{cb}}
+ * @return Boolean
+ */
+
+NODE_WRAPPED_ASYNC_METHOD_WITH_RESULT_1_WRAPPED_PARAM(
+  Geometry, OGRBoolean, equals, Boolean, Equals, Geometry, &quot;geometry to compare&quot;);
 
 /**
  * Determines if the two geometries are disjoint.
@@ -392,7 +529,19 @@ NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(Geometry, equals, Boolean, Equal
  * @param {gdal.Geometry} geometry
  * @return Boolean
  */
-NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(Geometry, disjoint, Boolean, Disjoint, Geometry, &quot;geometry to compare&quot;);
+
+/**
+ * Determines if the two geometries are disjoint.
+ * {{{async}}}
+ *
+ * @method disjointAsync
+ * @param {gdal.Geometry} geometry
+ * @param {requestCallback} [callback] {{cb}}
+ * @return Boolean
+ */
+
+NODE_WRAPPED_ASYNC_METHOD_WITH_RESULT_1_WRAPPED_PARAM(
+  Geometry, OGRBoolean, disjoint, Boolean, Disjoint, Geometry, &quot;geometry to compare&quot;);
 
 /**
  * Determines if the two geometries touch.
@@ -401,7 +550,19 @@ NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(Geometry, disjoint, Boolean, Dis
  * @param {gdal.Geometry} geometry
  * @return Boolean
  */
-NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(Geometry, touches, Boolean, Touches, Geometry, &quot;geometry to compare&quot;);
+
+/**
+ * Determines if the two geometries touch.
+ * {{{async}}}
+ *
+ * @method touchesAsync
+ * @param {gdal.Geometry} geometry
+ * @param {requestCallback} [callback] {{cb}}
+ * @return Boolean
+ */
+
+NODE_WRAPPED_ASYNC_METHOD_WITH_RESULT_1_WRAPPED_PARAM(
+  Geometry, OGRBoolean, touches, Boolean, Touches, Geometry, &quot;geometry to compare&quot;);
 
 /**
  * Determines if the two geometries cross.
@@ -410,7 +571,19 @@ NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(Geometry, touches, Boolean, Touc
  * @param {gdal.Geometry} geometry
  * @return Boolean
  */
-NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(Geometry, crosses, Boolean, Crosses, Geometry, &quot;geometry to compare&quot;);
+
+/**
+ * Determines if the two geometries cross.
+ * {{{async}}}
+ *
+ * @method crossesAsync
+ * @param {gdal.Geometry} geometry
+ * @param {requestCallback} [callback] {{cb}}
+ * @return Boolean
+ */
+
+NODE_WRAPPED_ASYNC_METHOD_WITH_RESULT_1_WRAPPED_PARAM(
+  Geometry, OGRBoolean, crosses, Boolean, Crosses, Geometry, &quot;geometry to compare&quot;);
 
 /**
  * Determines if the current geometry is within the provided geometry.
@@ -419,7 +592,19 @@ NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(Geometry, crosses, Boolean, Cros
  * @param {gdal.Geometry} geometry
  * @return Boolean
  */
-NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(Geometry, within, Boolean, Within, Geometry, &quot;geometry to compare&quot;);
+
+/**
+ * Determines if the current geometry is within the provided geometry.
+ * {{{async}}}
+ *
+ * @method withinAsync
+ * @param {gdal.Geometry} geometry
+ * @param {requestCallback} [callback] {{cb}}
+ * @return Boolean
+ */
+
+NODE_WRAPPED_ASYNC_METHOD_WITH_RESULT_1_WRAPPED_PARAM(
+  Geometry, OGRBoolean, within, Boolean, Within, Geometry, &quot;geometry to compare&quot;);
 
 /**
  * Determines if the current geometry contains the provided geometry.
@@ -428,7 +613,19 @@ NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(Geometry, within, Boolean, Withi
  * @param {gdal.Geometry} geometry
  * @return Boolean
  */
-NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(Geometry, contains, Boolean, Contains, Geometry, &quot;geometry to compare&quot;);
+
+/**
+ * Determines if the current geometry contains the provided geometry.
+ * {{{async}}}
+ *
+ * @method containsAsync
+ * @param {gdal.Geometry} geometry
+ * @param {requestCallback} [callback] {{cb}}
+ * @return Boolean
+ */
+
+NODE_WRAPPED_ASYNC_METHOD_WITH_RESULT_1_WRAPPED_PARAM(
+  Geometry, OGRBoolean, contains, Boolean, Contains, Geometry, &quot;geometry to compare&quot;);
 
 /**
  * Determines if the current geometry overlaps the provided geometry.
@@ -437,7 +634,19 @@ NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(Geometry, contains, Boolean, Con
  * @param {gdal.Geometry} geometry
  * @return Boolean
  */
-NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(Geometry, overlaps, Boolean, Overlaps, Geometry, &quot;geometry to compare&quot;);
+
+/**
+ * Determines if the current geometry overlaps the provided geometry.
+ * {{{async}}}
+ *
+ * @method overlapsAsync
+ * @param {gdal.Geometry} geometry
+ * @param {requestCallback} [callback] {{cb}}
+ * @return Boolean
+ */
+
+NODE_WRAPPED_ASYNC_METHOD_WITH_RESULT_1_WRAPPED_PARAM(
+  Geometry, OGRBoolean, overlaps, Boolean, Overlaps, Geometry, &quot;geometry to compare&quot;);
 
 /**
  * Computes the distance between the two geometries.
@@ -446,8 +655,19 @@ NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(Geometry, overlaps, Boolean, Ove
  * @param {gdal.Geometry} geometry
  * @return Number
  */
-NODE_WRAPPED_METHOD_WITH_RESULT_1_WRAPPED_PARAM(
-  Geometry, distance, Number, Distance, Geometry, &quot;geometry to use for distance calculation&quot;);
+
+/**
+ * Computes the distance between the two geometries.
+ * {{{async}}}
+ *
+ * @method distanceAsync
+ * @param {gdal.Geometry} geometry
+ * @param {requestCallback} [callback] {{cb}}
+ * @return Number
+ */
+
+NODE_WRAPPED_ASYNC_METHOD_WITH_RESULT_1_WRAPPED_PARAM(
+  Geometry, double, distance, Number, Distance, Geometry, &quot;geometry to use for distance calculation&quot;);
 
 /**
  * Modify the geometry such it has no segment longer then the given distance.
@@ -476,8 +696,19 @@ NODE_WRAPPED_METHOD_WITH_1_DOUBLE_PARAM(Geometry, segmentize, segmentize, &quot;
  * @method transform
  * @param {gdal.CoordinateTransformation} transformation
  */
-NODE_WRAPPED_METHOD_WITH_OGRERR_RESULT_1_WRAPPED_PARAM(
-  Geometry, transform, transform, CoordinateTransformation, &quot;transform&quot;);
+
+/**
+ * Apply arbitrary coordinate transformation to the geometry.
+ * {{{async}}}
+ *
+ * @throws Error
+ * @method transformAsync
+ * @param {requestCallback} [callback] {{cb}}
+ * @param {gdal.CoordinateTransformation} transformation
+ */
+
+NODE_WRAPPED_ASYNC_METHOD_WITH_OGRERR_RESULT_1_WRAPPED_PARAM(
+  Geometry, int, transform, transform, CoordinateTransformation, &quot;transform&quot;);
 
 /**
  * Transforms the geometry to match the provided {{#crossLink
@@ -487,8 +718,20 @@ NODE_WRAPPED_METHOD_WITH_OGRERR_RESULT_1_WRAPPED_PARAM(
  * @method transformTo
  * @param {gdal.SpatialReference} srs
  */
-NODE_WRAPPED_METHOD_WITH_OGRERR_RESULT_1_WRAPPED_PARAM(
-  Geometry, transformTo, transformTo, SpatialReference, &quot;spatial reference&quot;);
+
+/**
+ * Transforms the geometry to match the provided {{#crossLink
+ * &quot;gdal.SpatialReference&quot;}}SpatialReference{{/crossLink}}.
+ * {{{async}}}
+ *
+ * @throws Error
+ * @method transformToAsync
+ * @param {requestCallback} [callback] {{cb}}
+ * @param {gdal.SpatialReference} srs
+ */
+
+NODE_WRAPPED_ASYNC_METHOD_WITH_OGRERR_RESULT_1_WRAPPED_PARAM(
+  Geometry, int, transformTo, transformTo, SpatialReference, &quot;spatial reference&quot;);
 
 /**
  * Clones the instance.
@@ -508,10 +751,25 @@ NAN_METHOD(Geometry::clone) {
  * @method convexHull
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::convexHull) {
+
+/**
+ * Compute convex hull.
+ * {{{async}}}
+ *
+ * @method convexHullAsync
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::convexHull) {
   Nan::HandleScope scope;
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
-  info.GetReturnValue().Set(Geometry::New(geom-&gt;this_-&gt;ConvexHull()));
+  OGRGeometry *gdal_geom = geom-&gt;this_;
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  job.persist(info.This());
+  job.main = [gdal_geom]() { return gdal_geom-&gt;ConvexHull(); };
+  job.rval = [](OGRGeometry *r, GDAL_ASYNCABLE_OBJS) { return Geometry::New(r); };
+  job.run(info, async, 0);
 }
 
 /**
@@ -520,10 +778,25 @@ NAN_METHOD(Geometry::convexHull) {
  * @method boundary
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::boundary) {
+
+/**
+ * Compute boundary.
+ * {{{async}}}
+ *
+ * @method boundaryAsync
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::boundary) {
   Nan::HandleScope scope;
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
-  info.GetReturnValue().Set(Geometry::New(geom-&gt;this_-&gt;Boundary()));
+  OGRGeometry *gdal_geom = geom-&gt;this_;
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  job.persist(info.This());
+  job.main = [gdal_geom]() { return gdal_geom-&gt;Boundary(); };
+  job.rval = [](OGRGeometry *r, GDAL_ASYNCABLE_OBJS) { return Geometry::New(r); };
+  job.run(info, async, 0);
 }
 
 /**
@@ -533,7 +806,18 @@ NAN_METHOD(Geometry::boundary) {
  * @param {gdal.Geometry} geometry
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::intersection) {
+
+/**
+ * Compute intersection with another geometry.
+ * {{{async}}}
+ *
+ * @method intersectionAsync
+ * @param {gdal.Geometry} geometry
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::intersection) {
   Nan::HandleScope scope;
 
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
@@ -541,7 +825,13 @@ NAN_METHOD(Geometry::intersection) {
 
   NODE_ARG_WRAPPED(0, &quot;geometry to use for intersection&quot;, Geometry, x);
 
-  info.GetReturnValue().Set(Geometry::New(geom-&gt;this_-&gt;Intersection(x-&gt;this_)));
+  OGRGeometry *gdal_geom = geom-&gt;this_;
+  OGRGeometry *gdal_x = x-&gt;this_;
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  job.persist(info.This());
+  job.main = [gdal_geom, gdal_x]() { return gdal_geom-&gt;Intersection(gdal_x); };
+  job.rval = [](OGRGeometry *r, GDAL_ASYNCABLE_OBJS) { return Geometry::New(r); };
+  job.run(info, async, 1);
 }
 
 /**
@@ -551,7 +841,18 @@ NAN_METHOD(Geometry::intersection) {
  * @param {gdal.Geometry} geometry
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::unionGeometry) {
+
+/**
+ * Compute the union of this geometry with another.
+ * {{{async}}}
+ *
+ * @method unionAsync
+ * @param {gdal.Geometry} geometry
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::unionGeometry) {
   Nan::HandleScope scope;
 
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
@@ -559,7 +860,13 @@ NAN_METHOD(Geometry::unionGeometry) {
 
   NODE_ARG_WRAPPED(0, &quot;geometry to use for union&quot;, Geometry, x);
 
-  info.GetReturnValue().Set(Geometry::New(geom-&gt;this_-&gt;Union(x-&gt;this_)));
+  OGRGeometry *gdal_geom = geom-&gt;this_;
+  OGRGeometry *gdal_x = x-&gt;this_;
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  job.persist(info.This());
+  job.main = [gdal_geom, gdal_x]() { return gdal_geom-&gt;Union(gdal_x); };
+  job.rval = [](OGRGeometry *r, GDAL_ASYNCABLE_OBJS) { return Geometry::New(r); };
+  job.run(info, async, 1);
 }
 
 /**
@@ -569,7 +876,18 @@ NAN_METHOD(Geometry::unionGeometry) {
  * @param {gdal.Geometry} geometry
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::difference) {
+
+/**
+ * Compute the difference of this geometry with another.
+ * {{{async}}}
+ *
+ * @method differenceAsync
+ * @param {gdal.Geometry} geometry
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::difference) {
   Nan::HandleScope scope;
 
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
@@ -577,7 +895,13 @@ NAN_METHOD(Geometry::difference) {
 
   NODE_ARG_WRAPPED(0, &quot;geometry to use for difference&quot;, Geometry, x);
 
-  info.GetReturnValue().Set(Geometry::New(geom-&gt;this_-&gt;Difference(x-&gt;this_)));
+  OGRGeometry *gdal_geom = geom-&gt;this_;
+  OGRGeometry *gdal_x = x-&gt;this_;
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  job.persist(info.This());
+  job.main = [gdal_geom, gdal_x]() { return gdal_geom-&gt;Difference(gdal_x); };
+  job.rval = [](OGRGeometry *r, GDAL_ASYNCABLE_OBJS) { return Geometry::New(r); };
+  job.run(info, async, 1);
 }
 
 /**
@@ -587,7 +911,18 @@ NAN_METHOD(Geometry::difference) {
  * @param {gdal.Geometry} geometry
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::symDifference) {
+
+/**
+ * Computes the symmetric difference of this geometry and the second geometry.
+ * {{{async}}}
+ *
+ * @method symDifferenceAsync
+ * @param {gdal.Geometry} geometry
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::symDifference) {
   Nan::HandleScope scope;
 
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
@@ -595,7 +930,13 @@ NAN_METHOD(Geometry::symDifference) {
 
   NODE_ARG_WRAPPED(0, &quot;geometry to use for symDifference&quot;, Geometry, x);
 
-  info.GetReturnValue().Set(Geometry::New(geom-&gt;this_-&gt;SymDifference(x-&gt;this_)));
+  OGRGeometry *gdal_geom = geom-&gt;this_;
+  OGRGeometry *gdal_x = x-&gt;this_;
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  job.persist(info.This());
+  job.main = [gdal_geom, gdal_x]() { return gdal_geom-&gt;SymDifference(gdal_x); };
+  job.rval = [](OGRGeometry *r, GDAL_ASYNCABLE_OBJS) { return Geometry::New(r); };
+  job.run(info, async, 1);
 }
 
 /**
@@ -605,16 +946,31 @@ NAN_METHOD(Geometry::symDifference) {
  * @param {Number} tolerance
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::simplify) {
+
+/**
+ * Reduces the geometry complexity.
+ * {{{async}}}
+ *
+ * @method simplifyAsync
+ * @param {gdal.Geometry} geometry
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::simplify) {
   Nan::HandleScope scope;
 
+  Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
   double tolerance;
 
   NODE_ARG_DOUBLE(0, &quot;tolerance&quot;, tolerance);
+  OGRGeometry *gdal_geom = geom-&gt;this_;
 
-  Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
-
-  info.GetReturnValue().Set(Geometry::New(geom-&gt;this_-&gt;Simplify(tolerance)));
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  job.persist(info.This());
+  job.main = [gdal_geom, tolerance]() { return gdal_geom-&gt;Simplify(tolerance); };
+  job.rval = [](OGRGeometry *r, GDAL_ASYNCABLE_OBJS) { return Geometry::New(r); };
+  job.run(info, async, 1);
 }
 
 /**
@@ -624,16 +980,31 @@ NAN_METHOD(Geometry::simplify) {
  * @param {Number} tolerance
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::simplifyPreserveTopology) {
+
+/**
+ * Reduces the geometry complexity while preserving the topology.
+ * {{{async}}}
+ *
+ * @method simplifyPreserveTopologyAsync
+ * @param {gdal.Geometry} geometry
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::simplifyPreserveTopology) {
   Nan::HandleScope scope;
 
+  Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
   double tolerance;
 
   NODE_ARG_DOUBLE(0, &quot;tolerance&quot;, tolerance);
+  OGRGeometry *gdal_geom = geom-&gt;this_;
 
-  Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
-
-  info.GetReturnValue().Set(Geometry::New(geom-&gt;this_-&gt;SimplifyPreserveTopology(tolerance)));
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  job.persist(info.This());
+  job.main = [gdal_geom, tolerance]() { return gdal_geom-&gt;SimplifyPreserveTopology(tolerance); };
+  job.rval = [](OGRGeometry *r, GDAL_ASYNCABLE_OBJS) { return Geometry::New(r); };
+  job.run(info, async, 1);
 }
 
 /**
@@ -644,7 +1015,19 @@ NAN_METHOD(Geometry::simplifyPreserveTopology) {
  * @param {integer} segments
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::buffer) {
+
+/**
+ * Buffers the geometry by the given distance.
+ * {{{async}}}
+ *
+ * @method bufferAsync
+ * @param {Number} distance
+ * @param {integer} segments
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::buffer) {
   Nan::HandleScope scope;
 
   double distance;
@@ -655,7 +1038,13 @@ NAN_METHOD(Geometry::buffer) {
 
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
 
-  info.GetReturnValue().Set(Geometry::New(geom-&gt;this_-&gt;Buffer(distance, number_of_segments)));
+  OGRGeometry *gdal_geom = geom-&gt;this_;
+
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  job.persist(info.This());
+  job.main = [gdal_geom, distance, number_of_segments]() { return gdal_geom-&gt;Buffer(distance, number_of_segments); };
+  job.rval = [](OGRGeometry *r, GDAL_ASYNCABLE_OBJS) { return Geometry::New(r); };
+  job.run(info, async, 2);
 }
 
 /**
@@ -664,24 +1053,40 @@ NAN_METHOD(Geometry::buffer) {
  * @method toWKT
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::exportToWKT) {
+
+/**
+ * Convert a geometry into well known text format.
+ * {{{async}}}
+ *
+ * @method toWKTAsync
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKT) {
   Nan::HandleScope scope;
 
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
 
-  char *text = NULL;
-  OGRErr err = geom-&gt;this_-&gt;exportToWkt(&amp;text);
+  OGRGeometry *gdal_geom = geom-&gt;this_;
+  uv_sem_t *async_lock = geom-&gt;async_lock;
+  GDALAsyncableJob&lt;char *&gt; job;
+  job.persist(info.This());
+  job.main = [async_lock, gdal_geom]() {
+    char *text = NULL;
+    uv_sem_wait(async_lock);
+    OGRErr err = gdal_geom-&gt;exportToWkt(&amp;text);
+    uv_sem_post(async_lock);
+    if (err) { throw getOGRErrMsg(err); }
+    return text;
+  };
 
-  if (err) {
-    NODE_THROW_OGRERR(err);
-    return;
-  }
-  if (text) {
-    info.GetReturnValue().Set(SafeString::New(text));
-    return;
-  }
+  job.rval = [](char *text, GDAL_ASYNCABLE_OBJS) {
+    if (text) { return SafeString::New(text); }
+    return Nan::Undefined().As&lt;Value&gt;();
+  };
 
-  return;
+  job.run(info, async, 0);
 }
 
 /**
@@ -694,7 +1099,21 @@ NAN_METHOD(Geometry::exportToWKT) {
  * options{{/crossLink}})
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::exportToWKB) {
+
+/**
+ * Convert a geometry into well known binary format.
+ * {{{async}}}
+ *
+ * @method toWKBAsync
+ * @param {string} [byte_order=&quot;MSB&quot;] ({{#crossLink &quot;Constants
+ * (wkbByteOrder)&quot;}}see options{{/crossLink}})
+ * @param {string} [variant=&quot;OGC&quot;] ({{#crossLink &quot;Constants (wkbVariant)&quot;}}see
+ * options{{/crossLink}})
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKB) {
   Nan::HandleScope scope;
 
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
@@ -732,20 +1151,38 @@ NAN_METHOD(Geometry::exportToWKB) {
     Nan::ThrowError(&quot;variant must be &#x27;OGC&#x27; or &#x27;ISO&#x27;&quot;);
     return;
   }
-  OGRErr err = geom-&gt;this_-&gt;exportToWkb(byte_order, data, wkb_variant);
-#else
-  OGRErr err = geom-&gt;this_-&gt;exportToWkb(byte_order, data);
-#endif
-
+  OGRGeometry *gdal_geom = geom-&gt;this_;
+  uv_sem_t *async_lock = geom-&gt;async_lock;
+  GDALAsyncableJob&lt;unsigned char *&gt; job;
+  job.persist(info.This());
+  job.main = [async_lock, gdal_geom, data, byte_order, wkb_variant]() {
+    uv_sem_wait(async_lock);
+    OGRErr err = gdal_geom-&gt;exportToWkb(byte_order, data, wkb_variant);
+    uv_sem_post(async_lock);
+    if (err) {
+      free(data);
+      throw getOGRErrMsg(err);
+    }
+    return data;
+  };
   //^^ export to wkb and fill buffer ^^
+  job.rval = [size](unsigned char *data, GDAL_ASYNCABLE_OBJS) {
+    Local&lt;Value&gt; result = Nan::NewBuffer((char *)data, size).ToLocalChecked();
+    return result;
+  };
+  job.run(info, async, 2);
+#else
+  GDAL_ASYNCABLE_1x_UNSUPPORTED;
+  OGRErr err = geom-&gt;this_-&gt;exportToWkb(byte_order, data);
   if (err) {
     free(data);
     NODE_THROW_OGRERR(err);
     return;
   }
-
+  //^^ export to wkb and fill buffer ^^
   Local&lt;Value&gt; result = Nan::NewBuffer((char *)data, size).ToLocalChecked();
   info.GetReturnValue().Set(result);
+#endif
 }
 
 /**
@@ -754,20 +1191,40 @@ NAN_METHOD(Geometry::exportToWKB) {
  * @method toKML
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::exportToKML) {
+
+/**
+ * Convert a geometry into KML format.
+ * {{{async}}}
+ *
+ * @method toKMLAsync
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::exportToKML) {
   Nan::HandleScope scope;
 
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
 
-  char *text = geom-&gt;this_-&gt;exportToKML();
-  if (text) {
-    Local&lt;Value&gt; result = Nan::New(text).ToLocalChecked();
-    CPLFree(text);
-    info.GetReturnValue().Set(result);
-    return;
-  }
-
-  return;
+  OGRGeometry *gdal_geom = geom-&gt;this_;
+  uv_sem_t *async_lock = geom-&gt;async_lock;
+  GDALAsyncableJob&lt;char *&gt; job;
+  job.persist(info.This());
+  job.main = [async_lock, gdal_geom]() {
+    uv_sem_wait(async_lock);
+    char *text = gdal_geom-&gt;exportToKML();
+    uv_sem_post(async_lock);
+    return text;
+  };
+  job.rval = [](char *text, GDAL_ASYNCABLE_OBJS) {
+    if (text) {
+      Local&lt;Value&gt; result = Nan::New(text).ToLocalChecked();
+      CPLFree(text);
+      return result;
+    }
+    return Nan::Undefined().As&lt;Value&gt;();
+  };
+  job.run(info, async, 0);
 }
 
 /**
@@ -776,20 +1233,40 @@ NAN_METHOD(Geometry::exportToKML) {
  * @method toGML
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::exportToGML) {
+
+/**
+ * Convert a geometry into GML format.
+ * {{{async}}}
+ *
+ * @method toGMLAsync
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::exportToGML) {
   Nan::HandleScope scope;
 
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
 
-  char *text = geom-&gt;this_-&gt;exportToGML();
-  if (text) {
-    Local&lt;Value&gt; result = Nan::New(text).ToLocalChecked();
-    CPLFree(text);
-    info.GetReturnValue().Set(result);
-    return;
-  }
-
-  return;
+  OGRGeometry *gdal_geom = geom-&gt;this_;
+  uv_sem_t *async_lock = geom-&gt;async_lock;
+  GDALAsyncableJob&lt;char *&gt; job;
+  job.persist(info.This());
+  job.main = [async_lock, gdal_geom]() {
+    uv_sem_wait(async_lock);
+    char *text = gdal_geom-&gt;exportToGML();
+    uv_sem_post(async_lock);
+    return text;
+  };
+  job.rval = [](char *text, GDAL_ASYNCABLE_OBJS) {
+    if (text) {
+      Local&lt;Value&gt; result = Nan::New(text).ToLocalChecked();
+      CPLFree(text);
+      return result;
+    }
+    return Nan::Undefined().As&lt;Value&gt;();
+  };
+  job.run(info, async, 0);
 }
 
 /**
@@ -798,20 +1275,40 @@ NAN_METHOD(Geometry::exportToGML) {
  * @method toJSON
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::exportToJSON) {
+
+/**
+ * Convert a geometry into JSON format.
+ * {{{async}}}
+ *
+ * @method toJSONAsync
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::exportToJSON) {
   Nan::HandleScope scope;
 
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
 
-  char *text = geom-&gt;this_-&gt;exportToJson();
-  if (text) {
-    Local&lt;Value&gt; result = Nan::New(text).ToLocalChecked();
-    CPLFree(text);
-    info.GetReturnValue().Set(result);
-    return;
-  }
-
-  return;
+  OGRGeometry *gdal_geom = geom-&gt;this_;
+  uv_sem_t *async_lock = geom-&gt;async_lock;
+  GDALAsyncableJob&lt;char *&gt; job;
+  job.persist(info.This());
+  job.main = [async_lock, gdal_geom]() {
+    uv_sem_wait(async_lock);
+    char *text = gdal_geom-&gt;exportToJson();
+    uv_sem_post(async_lock);
+    return text;
+  };
+  job.rval = [](char *text, GDAL_ASYNCABLE_OBJS) {
+    if (text) {
+      Local&lt;Value&gt; result = Nan::New(text).ToLocalChecked();
+      CPLFree(text);
+      return result;
+    }
+    return Nan::Undefined().As&lt;Value&gt;();
+  };
+  job.run(info, async, 0);
 }
 
 /**
@@ -820,16 +1317,41 @@ NAN_METHOD(Geometry::exportToJSON) {
  * @method centroid
  * @return gdal.Point
  */
-NAN_METHOD(Geometry::centroid) {
+
+/**
+ * Compute the centroid of the geometry.
+ * {{{async}}}
+ *
+ * @method centroidAsync
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Point
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::centroid) {
   // The Centroid method wants the caller to create the point to fill in.
   // Instead of requiring the caller to create the point geometry to fill in, we
   // new up an OGRPoint and put the result into it and return that.
   Nan::HandleScope scope;
-  OGRPoint *point = new OGRPoint();
 
-  Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This())-&gt;this_-&gt;Centroid(point);
+  Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
 
-  info.GetReturnValue().Set(Point::New(point));
+  OGRGeometry *gdal_geom = geom-&gt;this_;
+  uv_sem_t *async_lock = geom-&gt;async_lock;
+  GDALAsyncableJob&lt;OGRPoint *&gt; job;
+  job.persist(info.This());
+  job.main = [async_lock, gdal_geom]() {
+    OGRPoint *point = new OGRPoint();
+    uv_sem_wait(async_lock);
+    OGRErr err = gdal_geom-&gt;Centroid(point);
+    uv_sem_post(async_lock);
+    if (err) {
+      delete point;
+      throw getOGRErrMsg(err);
+    }
+    return point;
+  };
+  job.rval = [](OGRPoint *point, GDAL_ASYNCABLE_OBJS) { return Point::New(point); };
+  job.run(info, async, 0);
 }
 
 /**
@@ -838,7 +1360,16 @@ NAN_METHOD(Geometry::centroid) {
  * @method getEnvelope
  * @return {gdal.Envelope} Bounding envelope
  */
-NAN_METHOD(Geometry::getEnvelope) {
+
+/**
+ * Computes the bounding box (envelope).
+ * {{{async}}}
+ *
+ * @method getEnvelopeAsync
+ * @param {requestCallback} [callback] {{cb}}
+ * @return {gdal.Envelope} Bounding envelope
+ */
+GDAL_ASYNCABLE_DEFINE(Geometry::getEnvelope) {
   // returns object containing boundaries until complete OGREnvelope binding is
   // built
 
@@ -846,18 +1377,29 @@ NAN_METHOD(Geometry::getEnvelope) {
 
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
 
-  OGREnvelope *envelope = new OGREnvelope();
-  geom-&gt;this_-&gt;getEnvelope(envelope);
+  OGRGeometry *gdal_geom = geom-&gt;this_;
+  uv_sem_t *async_lock = geom-&gt;async_lock;
 
-  Local&lt;Object&gt; obj = Nan::New&lt;Object&gt;();
-  Nan::Set(obj, Nan::New(&quot;minX&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MinX));
-  Nan::Set(obj, Nan::New(&quot;maxX&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MaxX));
-  Nan::Set(obj, Nan::New(&quot;minY&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MinY));
-  Nan::Set(obj, Nan::New(&quot;maxY&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MaxY));
+  GDALAsyncableJob&lt;OGREnvelope *&gt; job;
+  job.persist(info.This());
+  job.main = [async_lock, gdal_geom]() {
+    OGREnvelope *envelope = new OGREnvelope();
+    uv_sem_wait(async_lock);
+    gdal_geom-&gt;getEnvelope(envelope);
+    uv_sem_post(async_lock);
+    return envelope;
+  };
 
-  delete envelope;
-
-  info.GetReturnValue().Set(obj);
+  job.rval = [](OGREnvelope *envelope, GDAL_ASYNCABLE_OBJS) {
+    Local&lt;Object&gt; obj = Nan::New&lt;Object&gt;();
+    Nan::Set(obj, Nan::New(&quot;minX&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MinX));
+    Nan::Set(obj, Nan::New(&quot;maxX&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MaxX));
+    Nan::Set(obj, Nan::New(&quot;minY&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MinY));
+    Nan::Set(obj, Nan::New(&quot;maxY&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MaxY));
+    delete envelope;
+    return obj;
+  };
+  job.run(info, async, 0);
 }
 
 /**
@@ -866,7 +1408,17 @@ NAN_METHOD(Geometry::getEnvelope) {
  * @method getEnvelope3D
  * @return {gdal.Envelope3D} Bounding envelope
  */
-NAN_METHOD(Geometry::getEnvelope3D) {
+
+/**
+ * Computes the 3D bounding box (envelope).
+ * {{{async}}}
+ *
+ * @method getEnvelope3DAsync
+ * @param {requestCallback} [callback] {{cb}}
+ * @return {gdal.Envelope3D} Bounding envelope
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::getEnvelope3D) {
   // returns object containing boundaries until complete OGREnvelope binding is
   // built
 
@@ -874,20 +1426,31 @@ NAN_METHOD(Geometry::getEnvelope3D) {
 
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
 
-  OGREnvelope3D *envelope = new OGREnvelope3D();
-  geom-&gt;this_-&gt;getEnvelope(envelope);
+  OGRGeometry *gdal_geom = geom-&gt;this_;
+  uv_sem_t *async_lock = geom-&gt;async_lock;
 
-  Local&lt;Object&gt; obj = Nan::New&lt;Object&gt;();
-  Nan::Set(obj, Nan::New(&quot;minX&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MinX));
-  Nan::Set(obj, Nan::New(&quot;maxX&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MaxX));
-  Nan::Set(obj, Nan::New(&quot;minY&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MinY));
-  Nan::Set(obj, Nan::New(&quot;maxY&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MaxY));
-  Nan::Set(obj, Nan::New(&quot;minZ&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MinZ));
-  Nan::Set(obj, Nan::New(&quot;maxZ&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MaxZ));
+  GDALAsyncableJob&lt;OGREnvelope3D *&gt; job;
+  job.persist(info.This());
+  job.main = [async_lock, gdal_geom]() {
+    OGREnvelope3D *envelope = new OGREnvelope3D();
+    uv_sem_wait(async_lock);
+    gdal_geom-&gt;getEnvelope(envelope);
+    uv_sem_post(async_lock);
+    return envelope;
+  };
 
-  delete envelope;
-
-  info.GetReturnValue().Set(obj);
+  job.rval = [](OGREnvelope3D *envelope, GDAL_ASYNCABLE_OBJS) {
+    Local&lt;Object&gt; obj = Nan::New&lt;Object&gt;();
+    Nan::Set(obj, Nan::New(&quot;minX&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MinX));
+    Nan::Set(obj, Nan::New(&quot;maxX&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MaxX));
+    Nan::Set(obj, Nan::New(&quot;minY&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MinY));
+    Nan::Set(obj, Nan::New(&quot;maxY&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MaxY));
+    Nan::Set(obj, Nan::New(&quot;minZ&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MinZ));
+    Nan::Set(obj, Nan::New(&quot;maxZ&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(envelope-&gt;MaxZ));
+    delete envelope;
+    return obj;
+  };
+  job.run(info, async, 0);
 }
 
 // --- JS static methods (OGRGeometryFactory) ---
@@ -901,27 +1464,42 @@ NAN_METHOD(Geometry::getEnvelope3D) {
  * @param {gdal.SpatialReference} [srs]
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::createFromWkt) {
+
+/**
+ * Creates a Geometry from a WKT string.
+ * {{{async}}}
+ *
+ * @static
+ * @method fromWKTAsync
+ * @param {String} wkt
+ * @param {gdal.SpatialReference} [srs]
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::createFromWkt) {
   Nan::HandleScope scope;
 
-  std::string wkt_string;
+  std::string *wkt_string = new std::string;
   SpatialReference *srs = NULL;
 
-  NODE_ARG_STR(0, &quot;wkt&quot;, wkt_string);
+  NODE_ARG_STR(0, &quot;wkt&quot;, *wkt_string);
   NODE_ARG_WRAPPED_OPT(1, &quot;srs&quot;, SpatialReference, srs);
 
-  OGRChar *wkt = (OGRChar *)wkt_string.c_str();
-  OGRGeometry *geom = NULL;
   OGRSpatialReference *ogr_srs = NULL;
   if (srs) { ogr_srs = srs-&gt;get(); }
 
-  OGRErr err = OGRGeometryFactory::createFromWkt(&amp;wkt, ogr_srs, &amp;geom);
-  if (err) {
-    NODE_THROW_OGRERR(err);
-    return;
-  }
-
-  info.GetReturnValue().Set(Geometry::New(geom, true));
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  job.main = [wkt_string, ogr_srs]() {
+    std::unique_ptr&lt;std::string&gt; wkt_string_ptr(wkt_string);
+    OGRGeometry *geom = NULL;
+    OGRChar *wkt = (OGRChar *)wkt_string-&gt;c_str();
+    OGRErr err = OGRGeometryFactory::createFromWkt(wkt, ogr_srs, &amp;geom);
+    if (err) throw getOGRErrMsg(err);
+    return geom;
+  };
+  job.rval = [](OGRGeometry *geom, GDAL_ASYNCABLE_OBJS) { return Geometry::New(geom, true); };
+  job.run(info, async, 2);
 }
 
 /**
@@ -933,7 +1511,20 @@ NAN_METHOD(Geometry::createFromWkt) {
  * @param {gdal.SpatialReference} [srs]
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::createFromWkb) {
+
+/**
+ * Creates a Geometry from a WKB buffer.
+ * {{{async}}}
+ *
+ * @static
+ * @method fromWKBAsync
+ * @param {Buffer} wkb
+ * @param {gdal.SpatialReference} [srs]
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+
+GDAL_ASYNCABLE_DEFINE(Geometry::createFromWkb) {
   Nan::HandleScope scope;
 
   std::string wkb_string;
@@ -953,17 +1544,18 @@ NAN_METHOD(Geometry::createFromWkb) {
   unsigned char *data = (unsigned char *)Buffer::Data(wkb_obj);
   size_t length = Buffer::Length(wkb_obj);
 
-  OGRGeometry *geom = NULL;
   OGRSpatialReference *ogr_srs = NULL;
   if (srs) { ogr_srs = srs-&gt;get(); }
 
-  OGRErr err = OGRGeometryFactory::createFromWkb(data, ogr_srs, &amp;geom, length);
-  if (err) {
-    NODE_THROW_OGRERR(err);
-    return;
-  }
-
-  info.GetReturnValue().Set(Geometry::New(geom, true));
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  job.main = [data, length, ogr_srs]() {
+    OGRGeometry *geom = NULL;
+    OGRErr err = OGRGeometryFactory::createFromWkb(data, ogr_srs, &amp;geom, length);
+    if (err) throw getOGRErrMsg(err);
+    return geom;
+  };
+  job.rval = [](OGRGeometry *geom, GDAL_ASYNCABLE_OBJS) { return Geometry::New(geom, true); };
+  job.run(info, async, 2);
 }
 
 /**
@@ -974,7 +1566,25 @@ NAN_METHOD(Geometry::createFromWkb) {
  * @param {Object} geojson
  * @return gdal.Geometry
  */
-NAN_METHOD(Geometry::createFromGeoJson) {
+
+/**
+ * Creates a Geometry from a GeoJSON string.
+ * {{{async}}}
+ *
+ * Alas, the current implementation uses V8&#x27;s JSON.Stringify
+ * and then converts the string to UTF-8 (from JS internal UTF-16)
+ * This part is neither async-compatible, neither parallelizable
+ * The GDAL part is async
+ * Pay attention to the event loop if you use this and need
+ * to remain low-latency
+ *
+ * @static
+ * @method fromGeoJsonAsync
+ * @param {Object} geojson
+ * @param {requestCallback} [callback] {{cb}}
+ * @return gdal.Geometry
+ */
+GDAL_ASYNCABLE_DEFINE(Geometry::createFromGeoJson) {
   Nan::HandleScope scope;
 #if GDAL_VERSION_MAJOR &lt; 2 || (GDAL_VERSION_MAJOR &lt;= 2 &amp;&amp; GDAL_VERSION_MINOR &lt; 3)
   Nan::ThrowError(&quot;GDAL &lt; 2.3 does not support parsing GeoJSON directly&quot;);
@@ -993,10 +1603,18 @@ NAN_METHOD(Geometry::createFromGeoJson) {
     return;
   }
   Local&lt;String&gt; stringified = result.ToLocalChecked();
-  std::string val = *Nan::Utf8String(stringified);
+  std::string *val = new std::string(*Nan::Utf8String(stringified));
+  OGRGeometry *geom = NULL;
+  OGRSpatialReference *ogr_srs = NULL;
 
-  OGRGeometry *geom = OGRGeometryFactory::createFromGeoJson(val.c_str());
-  info.GetReturnValue().Set(Geometry::New(geom, true));
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  job.main = [val, geom, ogr_srs]() {
+    std::unique_ptr&lt;std::string&gt; val_ptr(val);
+    OGRGeometry *geom = OGRGeometryFactory::createFromGeoJson(val-&gt;c_str());
+    return geom;
+  };
+  job.rval = [](OGRGeometry *geom, GDAL_ASYNCABLE_OBJS) { return Geometry::New(geom, true); };
+  job.run(info, async, 1);
 #endif
 }
 

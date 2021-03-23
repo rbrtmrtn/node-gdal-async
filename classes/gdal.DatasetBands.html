@@ -142,10 +142,11 @@ raster bands.</p>
 			<strong>Methods</strong>
 			<ul>
 				<li><a href="#method-count"><span class="im">count</span>()</a></li>
-				<li><a href="#method-create"><span class="im">create</span>(<span class="ia">dataType</span>)</a></li>
+				<li><a href="#method-create"><span class="im">create</span>(<span class="ia">dataType</span><span class="ia">options</span>)</a></li>
+				<li><a href="#method-createAsync"><span class="im">createAsync</span>(<span class="ia">dataType</span><span class="ia">options</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-forEach"><span class="im">forEach</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-get"><span class="im">get</span>(<span class="ia">id</span>)</a></li>
-				<li><a href="#method-getAsync!~YUIDOC_LINE~!}"><span class="im">getAsync!~YUIDOC_LINE~!}</span>(<span class="ia">id</span>)</a></li>
+				<li><a href="#method-getAsync"><span class="im">getAsync</span>(<span class="ia">id</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-map"><span class="im">map</span>(<span class="ia">callback</span>)</a></li>
 			</ul>
 		</li>
@@ -185,7 +186,7 @@ raster bands.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_dataset_bands.cpp.html#l194"><code>src&#x2F;collections&#x2F;dataset_bands.cpp:194</code></a>
+		<a href="../files/src_collections_dataset_bands.cpp.html#l229"><code>src&#x2F;collections&#x2F;dataset_bands.cpp:229</code></a>
 		</p>
 
 
@@ -214,6 +215,9 @@ raster bands.</p>
 				<li class="arg">
 						<code>dataType</code>
 				</li>
+				<li class="arg">
+						<code class="optional">options</code>
+				</li>
 			</ul><span class="paren">)</span>
 		</div>
 		<span class="returns-inline">
@@ -229,7 +233,7 @@ raster bands.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_dataset_bands.cpp.html#l133"><code>src&#x2F;collections&#x2F;dataset_bands.cpp:133</code></a>
+		<a href="../files/src_collections_dataset_bands.cpp.html#l144"><code>src&#x2F;collections&#x2F;dataset_bands.cpp:144</code></a>
 		</p>
 
 
@@ -250,6 +254,111 @@ raster bands.</p>
 
 					<div class="param-description"><p>Type of band (<a href="../classes/Constants (GDT).html" class="crosslink">see
 GDT constants</a>).</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[options]</code>
+						<span class="type">Object</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>Creation options</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/gdal.RasterBand.html" class="crosslink">gdal.RasterBand</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-createAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>createAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>dataType</code>
+				</li>
+				<li class="arg">
+						<code class="optional">options</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/gdal.RasterBand.html" class="crosslink">gdal.RasterBand</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_collections_dataset_bands.cpp.html#l155"><code>src&#x2F;collections&#x2F;dataset_bands.cpp:155</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Adds a new band.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">dataType</code>
+						<span class="type">Integer</span>
+
+
+					<div class="param-description"><p>Type of band (<a href="../classes/Constants (GDT).html" class="crosslink">see
+GDT constants</a>).</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[options]</code>
+						<span class="type">Object</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>Creation options</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
 </div>
 
 				</li>
@@ -286,7 +395,7 @@ GDT constants</a>).</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/lib_gdal.js.html#l121"><code>lib&#x2F;gdal.js:121</code></a>
+		<a href="../files/lib_gdal.js.html#l144"><code>lib&#x2F;gdal.js:144</code></a>
 		</p>
 
 
@@ -347,7 +456,7 @@ Note: GDAL band indexes start at 1, not 0.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_dataset_bands.cpp.html#l86"><code>src&#x2F;collections&#x2F;dataset_bands.cpp:86</code></a>
+		<a href="../files/src_collections_dataset_bands.cpp.html#l87"><code>src&#x2F;collections&#x2F;dataset_bands.cpp:87</code></a>
 		</p>
 
 
@@ -380,14 +489,17 @@ Note: GDAL band indexes start at 1, not 0.</p>
 		</div>
 
 </div>
-<div id="method-getAsync!~YUIDOC_LINE~!}" class="method item">
+<div id="method-getAsync" class="method item">
 	<div class="method-signature">
-	<span class="name"><code>getAsync!~YUIDOC_LINE~!}</code></span>
+	<span class="name"><code>getAsync</code></span>
 
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
 						<code>id</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -404,14 +516,20 @@ Note: GDAL band indexes start at 1, not 0.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_dataset_bands.cpp.html#l94"><code>src&#x2F;collections&#x2F;dataset_bands.cpp:94</code></a>
+		<a href="../files/src_collections_dataset_bands.cpp.html#l95"><code>src&#x2F;collections&#x2F;dataset_bands.cpp:95</code></a>
 		</p>
 
 
 
 	</div>
 
-	<div class="description"><p>Returns the band with the given ID.</p>
+	<div class="description"><p>Returns the band with the given ID.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
 </div>
 
 		<div class="params">
@@ -423,6 +541,19 @@ Note: GDAL band indexes start at 1, not 0.</p>
 						<span class="type">Integer</span>
 
 
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
 
 				</li>
 			</ul>
@@ -458,7 +589,7 @@ Note: GDAL band indexes start at 1, not 0.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/lib_gdal.js.html#l140"><code>lib&#x2F;gdal.js:140</code></a>
+		<a href="../files/lib_gdal.js.html#l163"><code>lib&#x2F;gdal.js:163</code></a>
 		</p>
 
 
@@ -520,7 +651,7 @@ an array of the returned values.</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_collections_dataset_bands.cpp.html#l223"><code>src&#x2F;collections&#x2F;dataset_bands.cpp:223</code></a>
+        <a href="../files/src_collections_dataset_bands.cpp.html#l269"><code>src&#x2F;collections&#x2F;dataset_bands.cpp:269</code></a>
         </p>
 
 

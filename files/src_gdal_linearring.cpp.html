@@ -154,9 +154,13 @@ void LinearRing::Initialize(Local&lt;Object&gt; target) {
 
 LinearRing::LinearRing(OGRLinearRing *geom) : Nan::ObjectWrap(), this_(geom), owned_(true), size_(0) {
   LOG(&quot;Created LinearRing [%p]&quot;, geom);
+  async_lock = new uv_sem_t;
+  uv_sem_init(async_lock, 1);
 }
 
 LinearRing::LinearRing() : Nan::ObjectWrap(), this_(NULL), owned_(true), size_(0) {
+  async_lock = new uv_sem_t;
+  uv_sem_init(async_lock, 1);
 }
 
 LinearRing::~LinearRing() {
@@ -169,6 +173,8 @@ LinearRing::~LinearRing() {
     LOG(&quot;Disposed LinearRing [%p]&quot;, this_);
     this_ = NULL;
   }
+  uv_sem_destroy(async_lock);
+  delete async_lock;
 }
 
 /**

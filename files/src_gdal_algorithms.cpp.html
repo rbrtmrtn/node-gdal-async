@@ -134,10 +134,15 @@ namespace node_gdal {
 
 void Algorithms::Initialize(Local&lt;Object&gt; target) {
   Nan::SetMethod(target, &quot;fillNodata&quot;, fillNodata);
+  Nan::SetMethod(target, &quot;fillNodataAsync&quot;, fillNodataAsync);
   Nan::SetMethod(target, &quot;contourGenerate&quot;, contourGenerate);
+  Nan::SetMethod(target, &quot;contourGenerateAsync&quot;, contourGenerateAsync);
   Nan::SetMethod(target, &quot;sieveFilter&quot;, sieveFilter);
+  Nan::SetMethod(target, &quot;sieveFilterAsync&quot;, sieveFilterAsync);
   Nan::SetMethod(target, &quot;checksumImage&quot;, checksumImage);
+  Nan::SetMethod(target, &quot;checksumImageAsync&quot;, checksumImageAsync);
   Nan::SetMethod(target, &quot;polygonize&quot;, polygonize);
+  Nan::SetMethod(target, &quot;polygonizeAsync&quot;, polygonizeAsync);
 }
 
 /**
@@ -156,7 +161,27 @@ void Algorithms::Initialize(Local&lt;Object&gt; target) {
  * filter smoothing iterations to run after the interpolation to dampen
  * artifacts.
  */
-NAN_METHOD(Algorithms::fillNodata) {
+
+/**
+ * Fill raster regions by interpolation from edges.
+ * {{{async}}}
+ *
+ * @throws Error
+ * @method fillNodataAsync
+ * @static
+ * @for gdal
+ * @param {Object} options
+ * @param {gdal.RasterBand} options.src This band to be updated in-place.
+ * @param {gdal.RasterBand} [options.mask] Mask band
+ * @param {Number} options.searchDist The maximum distance (in pixels) that the
+ * algorithm will search out for values to interpolate.
+ * @param {integer} [options.smoothingIterations=0] The number of 3x3 average
+ * @param {requestCallback} [callback] {{cb}}
+ * filter smoothing iterations to run after the interpolation to dampen
+ * artifacts.
+ */
+
+GDAL_ASYNCABLE_DEFINE(Algorithms::fillNodata) {
   Nan::HandleScope scope;
 
   Local&lt;Object&gt; obj;
@@ -164,23 +189,30 @@ NAN_METHOD(Algorithms::fillNodata) {
   RasterBand *mask = NULL;
   double search_dist;
   int smooth_iterations = 0;
+  GDALAsyncableJob&lt;CPLErr&gt; job;
 
   NODE_ARG_OBJECT(0, &quot;options&quot;, obj);
 
   NODE_WRAPPED_FROM_OBJ(obj, &quot;src&quot;, RasterBand, src);
   NODE_WRAPPED_FROM_OBJ_OPT(obj, &quot;mask&quot;, RasterBand, mask);
   NODE_DOUBLE_FROM_OBJ(obj, &quot;searchDist&quot;, search_dist);
-  NODE_INT_FROM_OBJ_OPT(obj, &quot;smoothIterations&quot;, smooth_iterations)
+  NODE_INT_FROM_OBJ_OPT(obj, &quot;smoothIterations&quot;, smooth_iterations);
 
-  CPLErr err =
-    GDALFillNodata(src-&gt;get(), mask ? mask-&gt;get() : NULL, search_dist, 0, smooth_iterations, NULL, NULL, NULL);
+  GDALRasterBand *gdal_src = src-&gt;get();
+  GDALRasterBand *gdal_mask = mask ? mask-&gt;get() : nullptr;
 
-  if (err) {
-    NODE_THROW_CPLERR(err);
-    return;
-  }
+  long src_uid = src-&gt;parent_uid;
+  long mask_uid = mask ? mask-&gt;parent_uid : 0;
 
-  return;
+  job.main = [src_uid, mask_uid, gdal_src, gdal_mask, search_dist, smooth_iterations]() {
+    GDAL_ASYNCABLE_LOCK_MANY(src_uid, mask_uid);
+    CPLErr err = GDALFillNodata(gdal_src, gdal_mask, search_dist, 0, smooth_iterations, NULL, NULL, NULL);
+    GDAL_UNLOCK_MANY;
+    if (err) { throw CPLGetLastErrorMsg(); }
+    return err;
+  };
+  job.rval = [](CPLErr r, GDAL_ASYNCABLE_OBJS) { return Nan::Undefined().As&lt;Value&gt;(); };
+  job.run(info, async, 1);
 }
 
 /**
@@ -213,7 +245,40 @@ NAN_METHOD(Algorithms::fillNodata) {
  * @param {integer} [options.elevField] A field index to indicate where the
  * elevation value of the contour should be written.
  */
-NAN_METHOD(Algorithms::contourGenerate) {
+
+/**
+ * Create vector contours from raster DEM.
+ * {{{async}}}
+ *
+ * This algorithm will generate contour vectors for the input raster band on the
+ * requested set of contour levels. The vector contours are written to the
+ * passed in vector layer. Also, a NODATA value may be specified to identify
+ * pixels that should not be considered in contour line generation.
+ *
+ * @throws Error
+ * @method contourGenerateAsync
+ * @static
+ * @for gdal
+ * @param {Object} options
+ * @param {gdal.RasterBand} options.src
+ * @param {gdal.Layer} options.dst
+ * @param {Number} [options.offset=0] The &quot;offset&quot; relative to which contour
+ * intervals are applied. This is normally zero, but could be different. To
+ * generate 10m contours at 5, 15, 25, ... the offset would be 5.
+ * @param {Number} [options.interval=100] The elevation interval between
+ * contours generated.
+ * @param {Number[]} [options.fixedLevels] A list of fixed contour levels at
+ * which contours should be generated. Overrides interval/base options if set.
+ * @param {Number} [options.nodata] The value to use as a &quot;nodata&quot; value. That
+ * is, a pixel value which should be ignored in generating contours as if the
+ * value of the pixel were not known.
+ * @param {integer} [options.idField] A field index to indicate where a unique
+ * id should be written for each feature (contour) written.
+ * @param {integer} [options.elevField] A field index to indicate where the
+ * elevation value of the contour should be written.
+ * @param {requestCallback} [callback] {{cb}}
+ */
+GDAL_ASYNCABLE_DEFINE(Algorithms::contourGenerate) {
   Nan::HandleScope scope;
 
   Local&lt;Object&gt; obj;
@@ -254,26 +319,45 @@ NAN_METHOD(Algorithms::contourGenerate) {
     }
   }
 
-  CPLErr err = GDALContourGenerate(
-    src-&gt;get(),
-    interval,
-    base,
-    n_fixed_levels,
-    fixed_levels,
-    use_nodata,
-    nodata,
-    dst-&gt;get(),
-    id_field,
-    elev_field,
-    NULL,
-    NULL);
+  GDALRasterBand *gdal_src = src-&gt;get();
+  OGRLayer *gdal_dst = dst-&gt;get();
 
-  if (err) {
-    NODE_THROW_CPLERR(err);
-    return;
-  }
+  long src_uid = src-&gt;parent_uid;
+  long dst_uid = dst-&gt;parent_uid;
 
-  return;
+  GDALAsyncableJob&lt;CPLErr&gt; job;
+  job.main = [src_uid,
+              dst_uid,
+              gdal_src,
+              interval,
+              base,
+              n_fixed_levels,
+              fixed_levels,
+              use_nodata,
+              nodata,
+              gdal_dst,
+              id_field,
+              elev_field]() {
+    GDAL_ASYNCABLE_LOCK_MANY(src_uid, dst_uid);
+    CPLErr err = GDALContourGenerate(
+      gdal_src,
+      interval,
+      base,
+      n_fixed_levels,
+      fixed_levels,
+      use_nodata,
+      nodata,
+      gdal_dst,
+      id_field,
+      elev_field,
+      NULL,
+      NULL);
+    GDAL_UNLOCK_MANY;
+    if (err) { throw CPLGetLastErrorMsg(); }
+    return err;
+  };
+  job.rval = [](CPLErr r, GDAL_ASYNCABLE_OBJS) { return Nan::Undefined().As&lt;Value&gt;(); };
+  job.run(info, async, 1);
 }
 
 /**
@@ -295,7 +379,29 @@ NAN_METHOD(Algorithms::contourGenerate) {
  * pixels are not considered directly adjacent for polygon membership purposes
  * or 8 indicating they are.
  */
-NAN_METHOD(Algorithms::sieveFilter) {
+
+/**
+ * Removes small raster polygons.
+ * {{{async}}}
+ *
+ * @throws Error
+ * @method sieveFilterAsync
+ * @static
+ * @for gdal
+ * @param {Object} options
+ * @param {gdal.RasterBand} options.src
+ * @param {gdal.RasterBand} options.dst Output raster band. It may be the same
+ * as src band to update the source in place.
+ * @param {gdal.RasterBand} [options.mask] All pixels in the mask band with a
+ * value other than zero will be considered suitable for inclusion in polygons.
+ * @param {Number} options.threshold Raster polygons with sizes smaller than
+ * this will be merged into their largest neighbour.
+ * @param {integer} [options.connectedness=4] Either 4 indicating that diagonal
+ * pixels are not considered directly adjacent for polygon membership purposes
+ * or 8 indicating they are.
+ * @param {requestCallback} [callback] {{cb}}
+ */
+GDAL_ASYNCABLE_DEFINE(Algorithms::sieveFilter) {
   Nan::HandleScope scope;
 
   Local&lt;Object&gt; obj;
@@ -318,15 +424,24 @@ NAN_METHOD(Algorithms::sieveFilter) {
     return;
   }
 
-  CPLErr err =
-    GDALSieveFilter(src-&gt;get(), mask ? mask-&gt;get() : NULL, dst-&gt;get(), threshold, connectedness, NULL, NULL, NULL);
+  GDALRasterBand *gdal_src = src-&gt;get();
+  GDALRasterBand *gdal_dst = dst-&gt;get();
+  GDALRasterBand *gdal_mask = mask ? mask-&gt;get() : nullptr;
 
-  if (err) {
-    NODE_THROW_CPLERR(err);
-    return;
-  }
+  long src_uid = src-&gt;parent_uid;
+  long dst_uid = dst-&gt;parent_uid;
+  long mask_uid = mask ? mask-&gt;parent_uid : 0;
 
-  return;
+  GDALAsyncableJob&lt;CPLErr&gt; job;
+  job.main = [src_uid, dst_uid, mask_uid, gdal_src, gdal_dst, gdal_mask, threshold, connectedness]() {
+    GDAL_ASYNCABLE_LOCK_MANY(src_uid, dst_uid, mask_uid);
+    CPLErr err = GDALSieveFilter(gdal_src, gdal_mask, gdal_dst, threshold, connectedness, NULL, NULL, NULL);
+    GDAL_UNLOCK_MANY;
+    if (err) { throw CPLGetLastErrorMsg(); }
+    return err;
+  };
+  job.rval = [](CPLErr r, GDAL_ASYNCABLE_OBJS) { return Nan::Undefined().As&lt;Value&gt;(); };
+  job.run(info, async, 1);
 }
 
 /**
@@ -343,7 +458,24 @@ NAN_METHOD(Algorithms::sieveFilter) {
  * @param {integer} [h=src.height]
  * @return integer
  */
-NAN_METHOD(Algorithms::checksumImage) {
+
+/**
+ * Compute checksum for image region.
+ *
+ * @throws Error
+ * @method checksumImageAsync
+ * @static
+ * @for gdal
+ * @param {gdal.RasterBand} src
+ * @param {integer} [x=0]
+ * @param {integer} [y=0]
+ * @param {integer} [w=src.width]
+ * @param {integer} [h=src.height]
+ * @param {requestCallback} [callback] {{cb}}
+ * @return integer
+ */
+
+GDAL_ASYNCABLE_DEFINE(Algorithms::checksumImage) {
   Nan::HandleScope scope;
 
   RasterBand *src;
@@ -372,9 +504,19 @@ NAN_METHOD(Algorithms::checksumImage) {
     return;
   }
 
-  int checksum = GDALChecksumImage(src-&gt;get(), x, y, w, h);
+  GDALRasterBand *gdal_src = src-&gt;get();
+  long src_uid = src-&gt;parent_uid;
 
-  info.GetReturnValue().Set(Nan::New&lt;Integer&gt;(checksum));
+  GDALAsyncableJob&lt;int&gt; job;
+
+  job.main = [src_uid, gdal_src, x, y, w, h]() {
+    GDAL_ASYNCABLE_LOCK(src_uid);
+    int r = GDALChecksumImage(gdal_src, x, y, w, h);
+    GDAL_UNLOCK_PARENT;
+    return r;
+  };
+  job.rval = [](int r, GDAL_ASYNCABLE_OBJS) { return Nan::New&lt;Integer&gt;(r); };
+  job.run(info, async, 5);
 }
 
 /**
@@ -400,7 +542,7 @@ NAN_METHOD(Algorithms::checksumImage) {
  * @param {Boolean} [options.useFloats=false] Use floating point buffers instead
  * of int buffers.
  */
-NAN_METHOD(Algorithms::polygonize) {
+GDAL_ASYNCABLE_DEFINE(Algorithms::polygonize) {
   Nan::HandleScope scope;
 
   Local&lt;Object&gt; obj;
@@ -426,39 +568,42 @@ NAN_METHOD(Algorithms::polygonize) {
     return;
   }
 
-  CPLErr err;
+  GDALRasterBand *gdal_src = src-&gt;get();
+  OGRLayer *gdal_dst = dst-&gt;get();
+  GDALRasterBand *gdal_mask = mask ? mask-&gt;get() : nullptr;
+
+  long src_uid = src-&gt;parent_uid;
+  long dst_uid = dst-&gt;parent_uid;
+  long mask_uid = mask ? mask-&gt;parent_uid : 0;
+
+  GDALAsyncableJob&lt;CPLErr&gt; job;
+
   if (
     Nan::HasOwnProperty(obj, Nan::New(&quot;useFloats&quot;).ToLocalChecked()).FromMaybe(false) &amp;&amp;
     Nan::To&lt;bool&gt;(Nan::Get(obj, Nan::New(&quot;useFloats&quot;).ToLocalChecked()).ToLocalChecked()).ToChecked()) {
-    err = GDALFPolygonize(
-      src-&gt;get(),
-      mask ? mask-&gt;get() : NULL,
-      reinterpret_cast&lt;OGRLayerH&gt;(dst-&gt;get()),
-      pix_val_field,
-      papszOptions,
-      NULL,
-      NULL);
+    job.main = [src_uid, dst_uid, mask_uid, gdal_src, gdal_mask, gdal_dst, pix_val_field, papszOptions]() {
+      GDAL_ASYNCABLE_LOCK_MANY(src_uid, dst_uid, mask_uid);
+      CPLErr err = GDALFPolygonize(
+        gdal_src, gdal_mask, reinterpret_cast&lt;OGRLayerH&gt;(gdal_dst), pix_val_field, papszOptions, NULL, NULL);
+      GDAL_UNLOCK_MANY;
+      if (papszOptions) CSLDestroy(papszOptions);
+      if (err) throw CPLGetLastErrorMsg();
+      return err;
+    };
   } else {
-    err = GDALPolygonize(
-      src-&gt;get(),
-      mask ? mask-&gt;get() : NULL,
-      reinterpret_cast&lt;OGRLayerH&gt;(dst-&gt;get()),
-      pix_val_field,
-      papszOptions,
-      NULL,
-      NULL);
+    job.main = [src_uid, dst_uid, mask_uid, gdal_src, gdal_mask, gdal_dst, pix_val_field, papszOptions]() {
+      GDAL_ASYNCABLE_LOCK_MANY(src_uid, dst_uid, mask_uid);
+      CPLErr err = GDALPolygonize(
+        gdal_src, gdal_mask, reinterpret_cast&lt;OGRLayerH&gt;(gdal_dst), pix_val_field, papszOptions, NULL, NULL);
+      GDAL_UNLOCK_MANY;
+      if (papszOptions) CSLDestroy(papszOptions);
+      if (err) throw CPLGetLastErrorMsg();
+      return err;
+    };
   }
-
-  if (papszOptions) CSLDestroy(papszOptions);
-
-  if (err) {
-    NODE_THROW_CPLERR(err);
-    return;
-  }
-
-  return;
+  job.rval = [](CPLErr r, GDAL_ASYNCABLE_OBJS) { return Nan::Undefined().As&lt;Value&gt;(); };
+  job.run(info, async, 1);
 }
-
 } // namespace node_gdal
 
     </pre>

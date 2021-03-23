@@ -141,46 +141,81 @@
 			<strong>Methods</strong>
 			<ul>
 				<li><a href="#method-boundary"><span class="im">boundary</span>()</a></li>
+				<li><a href="#method-boundaryAsync"><span class="im">boundaryAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-buffer"><span class="im">buffer</span>(<span class="ia">distance</span><span class="ia">segments</span>)</a></li>
+				<li><a href="#method-bufferAsync"><span class="im">bufferAsync</span>(<span class="ia">distance</span><span class="ia">segments</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-centroid"><span class="im">centroid</span>()</a></li>
+				<li><a href="#method-centroidAsync"><span class="im">centroidAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-clone"><span class="im">clone</span>()</a></li>
 				<li><a href="#method-closeRings"><span class="im">closeRings</span>()</a></li>
+				<li><a href="#method-closeRingsAsync"><span class="im">closeRingsAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-contains"><span class="im">contains</span>(<span class="ia">geometry</span>)</a></li>
+				<li><a href="#method-containsAsync"><span class="im">containsAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-convexHull"><span class="im">convexHull</span>()</a></li>
+				<li><a href="#method-convexHullAsync"><span class="im">convexHullAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-crosses"><span class="im">crosses</span>(<span class="ia">geometry</span>)</a></li>
+				<li><a href="#method-crossesAsync"><span class="im">crossesAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-difference"><span class="im">difference</span>(<span class="ia">geometry</span>)</a></li>
+				<li><a href="#method-differenceAsync"><span class="im">differenceAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-disjoint"><span class="im">disjoint</span>(<span class="ia">geometry</span>)</a></li>
+				<li><a href="#method-disjointAsync"><span class="im">disjointAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-distance"><span class="im">distance</span>(<span class="ia">geometry</span>)</a></li>
+				<li><a href="#method-distanceAsync"><span class="im">distanceAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-empty"><span class="im">empty</span>()</a></li>
+				<li><a href="#method-emptyAsync"><span class="im">emptyAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-equals"><span class="im">equals</span>(<span class="ia">geometry</span>)</a></li>
+				<li><a href="#method-equalsAsync"><span class="im">equalsAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-getArea"><span class="im">getArea</span>()</a></li>
 				<li><a href="#method-getEnvelope"><span class="im">getEnvelope</span>()</a></li>
 				<li><a href="#method-getEnvelope3D"><span class="im">getEnvelope3D</span>()</a></li>
+				<li><a href="#method-getEnvelope3DAsync"><span class="im">getEnvelope3DAsync</span>(<span class="ia">callback</span>)</a></li>
+				<li><a href="#method-getEnvelopeAsync"><span class="im">getEnvelopeAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-getLength"><span class="im">getLength</span>()</a></li>
 				<li><a href="#method-intersection"><span class="im">intersection</span>(<span class="ia">geometry</span>)</a></li>
+				<li><a href="#method-intersectionAsync"><span class="im">intersectionAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-intersects"><span class="im">intersects</span>(<span class="ia">geometry</span>)</a></li>
+				<li><a href="#method-intersectsAsync"><span class="im">intersectsAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-isEmpty"><span class="im">isEmpty</span>()</a></li>
+				<li><a href="#method-isEmptyAsync"><span class="im">isEmptyAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-isRing"><span class="im">isRing</span>()</a></li>
+				<li><a href="#method-isRingAsync"><span class="im">isRingAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-isSimple"><span class="im">isSimple</span>()</a></li>
+				<li><a href="#method-isSimpleAsync"><span class="im">isSimpleAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-isValid"><span class="im">isValid</span>()</a></li>
+				<li><a href="#method-isValidAsync"><span class="im">isValidAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-overlaps"><span class="im">overlaps</span>(<span class="ia">geometry</span>)</a></li>
+				<li><a href="#method-overlapsAsync"><span class="im">overlapsAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-segmentize"><span class="im">segmentize</span>(<span class="ia">segment_length</span>)</a></li>
 				<li><a href="#method-simplify"><span class="im">simplify</span>(<span class="ia">tolerance</span>)</a></li>
+				<li><a href="#method-simplifyAsync"><span class="im">simplifyAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-simplifyPreserveTopology"><span class="im">simplifyPreserveTopology</span>(<span class="ia">tolerance</span>)</a></li>
+				<li><a href="#method-simplifyPreserveTopologyAsync"><span class="im">simplifyPreserveTopologyAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-swapXY"><span class="im">swapXY</span>()</a></li>
+				<li><a href="#method-swapXYAsync"><span class="im">swapXYAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-symDifference"><span class="im">symDifference</span>(<span class="ia">geometry</span>)</a></li>
+				<li><a href="#method-symDifferenceAsync"><span class="im">symDifferenceAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-toGML"><span class="im">toGML</span>()</a></li>
+				<li><a href="#method-toGMLAsync"><span class="im">toGMLAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-toJSON"><span class="im">toJSON</span>()</a></li>
+				<li><a href="#method-toJSONAsync"><span class="im">toJSONAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-toKML"><span class="im">toKML</span>()</a></li>
+				<li><a href="#method-toKMLAsync"><span class="im">toKMLAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-toObject"><span class="im">toObject</span>()</a></li>
 				<li><a href="#method-touches"><span class="im">touches</span>(<span class="ia">geometry</span>)</a></li>
+				<li><a href="#method-touchesAsync"><span class="im">touchesAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-toWKB"><span class="im">toWKB</span>(<span class="ia">byte_order</span><span class="ia">variant</span>)</a></li>
+				<li><a href="#method-toWKBAsync"><span class="im">toWKBAsync</span>(<span class="ia">byte_order</span><span class="ia">variant</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-toWKT"><span class="im">toWKT</span>()</a></li>
+				<li><a href="#method-toWKTAsync"><span class="im">toWKTAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-transform"><span class="im">transform</span>(<span class="ia">transformation</span>)</a></li>
+				<li><a href="#method-transformAsync"><span class="im">transformAsync</span>(<span class="ia">callback</span><span class="ia">transformation</span>)</a></li>
 				<li><a href="#method-transformTo"><span class="im">transformTo</span>(<span class="ia">srs</span>)</a></li>
+				<li><a href="#method-transformToAsync"><span class="im">transformToAsync</span>(<span class="ia">callback</span><span class="ia">srs</span>)</a></li>
 				<li><a href="#method-union"><span class="im">union</span>(<span class="ia">geometry</span>)</a></li>
+				<li><a href="#method-unionAsync"><span class="im">unionAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-unionCascaded"><span class="im">unionCascaded</span>()</a></li>
 				<li><a href="#method-within"><span class="im">within</span>(<span class="ia">geometry</span>)</a></li>
+				<li><a href="#method-withinAsync"><span class="im">withinAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 			</ul>
 		</li>
 
@@ -221,7 +256,7 @@
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_multipolygon.cpp.html#l50"><code>src&#x2F;gdal_multipolygon.cpp:50</code></a>
+		<a href="../files/src_gdal_multipolygon.cpp.html#l56"><code>src&#x2F;gdal_multipolygon.cpp:56</code></a>
 		</p>
 
 
@@ -256,7 +291,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_boundary">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l392"><code>src&#x2F;gdal_geometry.cpp:392</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l650"><code>src&#x2F;gdal_geometry.cpp:650</code></a>
 		</p>
 
 
@@ -266,6 +301,76 @@
 	<div class="description"><p>Compute boundary.</p>
 </div>
 
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>gdal.Geometry</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-boundaryAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>boundaryAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_boundaryAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l657"><code>src&#x2F;gdal_geometry.cpp:657</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Compute boundary.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
 
 		<div class="returns">
 			<h4>Returns:</h4>
@@ -304,7 +409,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_buffer">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l514"><code>src&#x2F;gdal_geometry.cpp:514</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l885"><code>src&#x2F;gdal_geometry.cpp:885</code></a>
 		</p>
 
 
@@ -345,6 +450,96 @@
 		</div>
 
 </div>
+<div id="method-bufferAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>bufferAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>distance</code>
+				</li>
+				<li class="arg">
+						<code>segments</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_bufferAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l894"><code>src&#x2F;gdal_geometry.cpp:894</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Buffers the geometry by the given distance.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">distance</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">segments</code>
+						<span class="type">Integer</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>gdal.Geometry</p>
+
+			</div>
+		</div>
+
+</div>
 <div id="method-centroid" class="method item inherited">
 	<div class="method-signature">
 	<span class="name"><code>centroid</code></span>
@@ -363,7 +558,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_centroid">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l692"><code>src&#x2F;gdal_geometry.cpp:692</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1189"><code>src&#x2F;gdal_geometry.cpp:1189</code></a>
 		</p>
 
 
@@ -373,6 +568,76 @@
 	<div class="description"><p>Compute the centroid of the geometry.</p>
 </div>
 
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>gdal.Point</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-centroidAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>centroidAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_centroidAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l1196"><code>src&#x2F;gdal_geometry.cpp:1196</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Compute the centroid of the geometry.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
 
 		<div class="returns">
 			<h4>Returns:</h4>
@@ -402,7 +667,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_clone">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l368"><code>src&#x2F;gdal_geometry.cpp:368</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l611"><code>src&#x2F;gdal_geometry.cpp:611</code></a>
 		</p>
 
 
@@ -438,7 +703,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_closeRings">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l191"><code>src&#x2F;gdal_geometry.cpp:191</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l238"><code>src&#x2F;gdal_geometry.cpp:238</code></a>
 		</p>
 
 
@@ -448,6 +713,65 @@
 	<div class="description"><p>Closes any un-closed rings.</p>
 </div>
 
+
+
+</div>
+<div id="method-closeRingsAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>closeRingsAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_closeRingsAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l244"><code>src&#x2F;gdal_geometry.cpp:244</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Closes any un-closed rings.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
 
 
 </div>
@@ -475,7 +799,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_contains">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l299"><code>src&#x2F;gdal_geometry.cpp:299</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l484"><code>src&#x2F;gdal_geometry.cpp:484</code></a>
 		</p>
 
 
@@ -509,6 +833,86 @@
 		</div>
 
 </div>
+<div id="method-containsAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>containsAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>geometry</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_containsAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l492"><code>src&#x2F;gdal_geometry.cpp:492</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Determines if the current geometry contains the provided geometry.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">geometry</code>
+						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>Boolean</p>
+
+			</div>
+		</div>
+
+</div>
 <div id="method-convexHull" class="method item inherited">
 	<div class="method-signature">
 	<span class="name"><code>convexHull</code></span>
@@ -527,7 +931,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_convexHull">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l380"><code>src&#x2F;gdal_geometry.cpp:380</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l623"><code>src&#x2F;gdal_geometry.cpp:623</code></a>
 		</p>
 
 
@@ -537,6 +941,76 @@
 	<div class="description"><p>Compute convex hull.</p>
 </div>
 
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>gdal.Geometry</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-convexHullAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>convexHullAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_convexHullAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l630"><code>src&#x2F;gdal_geometry.cpp:630</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Compute convex hull.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
 
 		<div class="returns">
 			<h4>Returns:</h4>
@@ -572,7 +1046,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_crosses">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l281"><code>src&#x2F;gdal_geometry.cpp:281</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l442"><code>src&#x2F;gdal_geometry.cpp:442</code></a>
 		</p>
 
 
@@ -591,6 +1065,86 @@
 						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
 
 
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>Boolean</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-crossesAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>crossesAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>geometry</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_crossesAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l450"><code>src&#x2F;gdal_geometry.cpp:450</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Determines if the two geometries cross.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">geometry</code>
+						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
 
 				</li>
 			</ul>
@@ -630,7 +1184,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_difference">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l440"><code>src&#x2F;gdal_geometry.cpp:440</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l747"><code>src&#x2F;gdal_geometry.cpp:747</code></a>
 		</p>
 
 
@@ -649,6 +1203,86 @@
 						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
 
 
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>gdal.Geometry</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-differenceAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>differenceAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>geometry</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_differenceAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l755"><code>src&#x2F;gdal_geometry.cpp:755</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Compute the difference of this geometry with another.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">geometry</code>
+						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
 
 				</li>
 			</ul>
@@ -688,7 +1322,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_disjoint">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l263"><code>src&#x2F;gdal_geometry.cpp:263</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l400"><code>src&#x2F;gdal_geometry.cpp:400</code></a>
 		</p>
 
 
@@ -707,6 +1341,86 @@
 						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
 
 
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>Boolean</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-disjointAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>disjointAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>geometry</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_disjointAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l408"><code>src&#x2F;gdal_geometry.cpp:408</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Determines if the two geometries are disjoint.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">geometry</code>
+						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
 
 				</li>
 			</ul>
@@ -746,7 +1460,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_distance">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l317"><code>src&#x2F;gdal_geometry.cpp:317</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l526"><code>src&#x2F;gdal_geometry.cpp:526</code></a>
 		</p>
 
 
@@ -780,6 +1494,86 @@
 		</div>
 
 </div>
+<div id="method-distanceAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>distanceAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>geometry</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_distanceAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l534"><code>src&#x2F;gdal_geometry.cpp:534</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Computes the distance between the two geometries.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">geometry</code>
+						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>Number</p>
+
+			</div>
+		</div>
+
+</div>
 <div id="method-empty" class="method item inherited">
 	<div class="method-signature">
 	<span class="name"><code>empty</code></span>
@@ -795,7 +1589,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_empty">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l198"><code>src&#x2F;gdal_geometry.cpp:198</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l254"><code>src&#x2F;gdal_geometry.cpp:254</code></a>
 		</p>
 
 
@@ -805,6 +1599,65 @@
 	<div class="description"><p>Clears the geometry.</p>
 </div>
 
+
+
+</div>
+<div id="method-emptyAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>emptyAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_emptyAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l260"><code>src&#x2F;gdal_geometry.cpp:260</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Clears the geometry.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
 
 
 </div>
@@ -832,7 +1685,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_equals">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l254"><code>src&#x2F;gdal_geometry.cpp:254</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l379"><code>src&#x2F;gdal_geometry.cpp:379</code></a>
 		</p>
 
 
@@ -851,6 +1704,86 @@
 						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
 
 
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>Boolean</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-equalsAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>equalsAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>geometry</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_equalsAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l387"><code>src&#x2F;gdal_geometry.cpp:387</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Determines if the two geometries equal each other.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">geometry</code>
+						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
 
 				</li>
 			</ul>
@@ -887,7 +1820,7 @@
 				gdal.GeometryCollection
 			</a>
 			but overwritten in
-		<a href="../files/src_gdal_multipolygon.cpp.html#l133"><code>src&#x2F;gdal_multipolygon.cpp:133</code></a>
+		<a href="../files/src_gdal_multipolygon.cpp.html#l139"><code>src&#x2F;gdal_multipolygon.cpp:139</code></a>
 		</p>
 
 
@@ -925,7 +1858,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_getEnvelope">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l710"><code>src&#x2F;gdal_geometry.cpp:710</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1232"><code>src&#x2F;gdal_geometry.cpp:1232</code></a>
 		</p>
 
 
@@ -965,7 +1898,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_getEnvelope3D">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l738"><code>src&#x2F;gdal_geometry.cpp:738</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1280"><code>src&#x2F;gdal_geometry.cpp:1280</code></a>
 		</p>
 
 
@@ -981,6 +1914,148 @@
 
 			<div class="returns-description">
 						<span class="type"><a href="../classes/gdal.Envelope3D.html" class="crosslink">gdal.Envelope3D</a></span>:
+					<p>Bounding envelope</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-getEnvelope3DAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>getEnvelope3DAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/gdal.Envelope3D.html" class="crosslink">gdal.Envelope3D</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_getEnvelope3DAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l1287"><code>src&#x2F;gdal_geometry.cpp:1287</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Computes the 3D bounding box (envelope).
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/gdal.Envelope3D.html" class="crosslink">gdal.Envelope3D</a></span>:
+					<p>Bounding envelope</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-getEnvelopeAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>getEnvelopeAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/gdal.Envelope.html" class="crosslink">gdal.Envelope</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_getEnvelopeAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l1239"><code>src&#x2F;gdal_geometry.cpp:1239</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Computes the bounding box (envelope).
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/gdal.Envelope.html" class="crosslink">gdal.Envelope</a></span>:
 					<p>Bounding envelope</p>
 
 			</div>
@@ -1005,7 +2080,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.GeometryCollection.html#method_getLength">gdal.GeometryCollection</a>:
-		<a href="../files/src_gdal_geometrycollection.cpp.html#l132"><code>src&#x2F;gdal_geometrycollection.cpp:132</code></a>
+		<a href="../files/src_gdal_geometrycollection.cpp.html#l138"><code>src&#x2F;gdal_geometrycollection.cpp:138</code></a>
 		</p>
 
 
@@ -1050,7 +2125,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_intersection">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l404"><code>src&#x2F;gdal_geometry.cpp:404</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l677"><code>src&#x2F;gdal_geometry.cpp:677</code></a>
 		</p>
 
 
@@ -1069,6 +2144,86 @@
 						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
 
 
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>gdal.Geometry</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-intersectionAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>intersectionAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>geometry</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_intersectionAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l685"><code>src&#x2F;gdal_geometry.cpp:685</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Compute intersection with another geometry.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">geometry</code>
+						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
 
 				</li>
 			</ul>
@@ -1108,7 +2263,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_intersects">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l244"><code>src&#x2F;gdal_geometry.cpp:244</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l358"><code>src&#x2F;gdal_geometry.cpp:358</code></a>
 		</p>
 
 
@@ -1142,6 +2297,86 @@
 		</div>
 
 </div>
+<div id="method-intersectsAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>intersectsAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>geometry</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_intersectsAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l366"><code>src&#x2F;gdal_geometry.cpp:366</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Determines if the two geometries intersect.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">geometry</code>
+						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>Boolean</p>
+
+			</div>
+		</div>
+
+</div>
 <div id="method-isEmpty" class="method item inherited">
 	<div class="method-signature">
 	<span class="name"><code>isEmpty</code></span>
@@ -1160,7 +2395,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_isEmpty">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l212"><code>src&#x2F;gdal_geometry.cpp:212</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l286"><code>src&#x2F;gdal_geometry.cpp:286</code></a>
 		</p>
 
 
@@ -1170,6 +2405,76 @@
 	<div class="description"><p>Determines if the geometry is empty.</p>
 </div>
 
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>Boolean</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-isEmptyAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>isEmptyAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_isEmptyAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l293"><code>src&#x2F;gdal_geometry.cpp:293</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Determines if the geometry is empty.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
 
 		<div class="returns">
 			<h4>Returns:</h4>
@@ -1199,7 +2504,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_isRing">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l236"><code>src&#x2F;gdal_geometry.cpp:236</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l340"><code>src&#x2F;gdal_geometry.cpp:340</code></a>
 		</p>
 
 
@@ -1209,6 +2514,76 @@
 	<div class="description"><p>Determines if the geometry is a ring.</p>
 </div>
 
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>Boolean</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-isRingAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>isRingAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_isRingAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l347"><code>src&#x2F;gdal_geometry.cpp:347</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Determines if the geometry is a ring.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
 
 		<div class="returns">
 			<h4>Returns:</h4>
@@ -1238,7 +2613,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_isSimple">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l228"><code>src&#x2F;gdal_geometry.cpp:228</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l322"><code>src&#x2F;gdal_geometry.cpp:322</code></a>
 		</p>
 
 
@@ -1248,6 +2623,76 @@
 	<div class="description"><p>Determines if the geometry is simple.</p>
 </div>
 
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>Boolean</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-isSimpleAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>isSimpleAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_isSimpleAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l329"><code>src&#x2F;gdal_geometry.cpp:329</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Determines if the geometry is simple.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
 
 		<div class="returns">
 			<h4>Returns:</h4>
@@ -1277,7 +2722,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_isValid">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l220"><code>src&#x2F;gdal_geometry.cpp:220</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l304"><code>src&#x2F;gdal_geometry.cpp:304</code></a>
 		</p>
 
 
@@ -1287,6 +2732,76 @@
 	<div class="description"><p>Determines if the geometry is valid.</p>
 </div>
 
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>Boolean</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-isValidAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>isValidAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_isValidAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l311"><code>src&#x2F;gdal_geometry.cpp:311</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Determines if the geometry is valid.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
 
 		<div class="returns">
 			<h4>Returns:</h4>
@@ -1322,7 +2837,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_overlaps">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l308"><code>src&#x2F;gdal_geometry.cpp:308</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l505"><code>src&#x2F;gdal_geometry.cpp:505</code></a>
 		</p>
 
 
@@ -1341,6 +2856,86 @@
 						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
 
 
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>Boolean</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-overlapsAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>overlapsAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>geometry</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_overlapsAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l513"><code>src&#x2F;gdal_geometry.cpp:513</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Determines if the current geometry overlaps the provided geometry.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">geometry</code>
+						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
 
 				</li>
 			</ul>
@@ -1380,7 +2975,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_segmentize">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l327"><code>src&#x2F;gdal_geometry.cpp:327</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l547"><code>src&#x2F;gdal_geometry.cpp:547</code></a>
 		</p>
 
 
@@ -1438,7 +3033,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_simplify">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l476"><code>src&#x2F;gdal_geometry.cpp:476</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l817"><code>src&#x2F;gdal_geometry.cpp:817</code></a>
 		</p>
 
 
@@ -1457,6 +3052,86 @@
 						<span class="type">Number</span>
 
 
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>gdal.Geometry</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-simplifyAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>simplifyAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>geometry</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_simplifyAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l825"><code>src&#x2F;gdal_geometry.cpp:825</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Reduces the geometry complexity.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">geometry</code>
+						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
 
 				</li>
 			</ul>
@@ -1496,7 +3171,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_simplifyPreserveTopology">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l495"><code>src&#x2F;gdal_geometry.cpp:495</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l851"><code>src&#x2F;gdal_geometry.cpp:851</code></a>
 		</p>
 
 
@@ -1530,6 +3205,86 @@
 		</div>
 
 </div>
+<div id="method-simplifyPreserveTopologyAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>simplifyPreserveTopologyAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>geometry</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_simplifyPreserveTopologyAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l859"><code>src&#x2F;gdal_geometry.cpp:859</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Reduces the geometry complexity while preserving the topology.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">geometry</code>
+						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>gdal.Geometry</p>
+
+			</div>
+		</div>
+
+</div>
 <div id="method-swapXY" class="method item inherited">
 	<div class="method-signature">
 	<span class="name"><code>swapXY</code></span>
@@ -1545,7 +3300,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_swapXY">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l205"><code>src&#x2F;gdal_geometry.cpp:205</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l270"><code>src&#x2F;gdal_geometry.cpp:270</code></a>
 		</p>
 
 
@@ -1555,6 +3310,65 @@
 	<div class="description"><p>Swaps x, y coordinates.</p>
 </div>
 
+
+
+</div>
+<div id="method-swapXYAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>swapXYAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_swapXYAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l276"><code>src&#x2F;gdal_geometry.cpp:276</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Swaps x, y coordinates.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
 
 
 </div>
@@ -1582,7 +3396,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_symDifference">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l458"><code>src&#x2F;gdal_geometry.cpp:458</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l782"><code>src&#x2F;gdal_geometry.cpp:782</code></a>
 		</p>
 
 
@@ -1616,6 +3430,86 @@
 		</div>
 
 </div>
+<div id="method-symDifferenceAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>symDifferenceAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>geometry</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_symDifferenceAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l790"><code>src&#x2F;gdal_geometry.cpp:790</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Computes the symmetric difference of this geometry and the second geometry.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">geometry</code>
+						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>gdal.Geometry</p>
+
+			</div>
+		</div>
+
+</div>
 <div id="method-toGML" class="method item inherited">
 	<div class="method-signature">
 	<span class="name"><code>toGML</code></span>
@@ -1634,7 +3528,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_toGML">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l648"><code>src&#x2F;gdal_geometry.cpp:648</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1105"><code>src&#x2F;gdal_geometry.cpp:1105</code></a>
 		</p>
 
 
@@ -1644,6 +3538,76 @@
 	<div class="description"><p>Convert a geometry into GML format.</p>
 </div>
 
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>gdal.Geometry</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-toGMLAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>toGMLAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_toGMLAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l1112"><code>src&#x2F;gdal_geometry.cpp:1112</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Convert a geometry into GML format.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
 
 		<div class="returns">
 			<h4>Returns:</h4>
@@ -1673,7 +3637,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_toJSON">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l670"><code>src&#x2F;gdal_geometry.cpp:670</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1147"><code>src&#x2F;gdal_geometry.cpp:1147</code></a>
 		</p>
 
 
@@ -1683,6 +3647,76 @@
 	<div class="description"><p>Convert a geometry into JSON format.</p>
 </div>
 
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>gdal.Geometry</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-toJSONAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>toJSONAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_toJSONAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l1154"><code>src&#x2F;gdal_geometry.cpp:1154</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Convert a geometry into JSON format.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
 
 		<div class="returns">
 			<h4>Returns:</h4>
@@ -1712,7 +3746,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_toKML">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l626"><code>src&#x2F;gdal_geometry.cpp:626</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1063"><code>src&#x2F;gdal_geometry.cpp:1063</code></a>
 		</p>
 
 
@@ -1722,6 +3756,76 @@
 	<div class="description"><p>Convert a geometry into KML format.</p>
 </div>
 
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>gdal.Geometry</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-toKMLAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>toKMLAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_toKMLAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l1070"><code>src&#x2F;gdal_geometry.cpp:1070</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Convert a geometry into KML format.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
 
 		<div class="returns">
 			<h4>Returns:</h4>
@@ -1751,7 +3855,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_toObject">gdal.Geometry</a>:
-		<a href="../files/lib_gdal.js.html#l237"><code>lib&#x2F;gdal.js:237</code></a>
+		<a href="../files/lib_gdal.js.html#l260"><code>lib&#x2F;gdal.js:260</code></a>
 		</p>
 
 
@@ -1797,7 +3901,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_touches">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l272"><code>src&#x2F;gdal_geometry.cpp:272</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l421"><code>src&#x2F;gdal_geometry.cpp:421</code></a>
 		</p>
 
 
@@ -1816,6 +3920,86 @@
 						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
 
 
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>Boolean</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-touchesAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>touchesAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>geometry</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_touchesAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l429"><code>src&#x2F;gdal_geometry.cpp:429</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Determines if the two geometries touch.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">geometry</code>
+						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
 
 				</li>
 			</ul>
@@ -1858,7 +4042,7 @@
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_toWKB">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l562"><code>src&#x2F;gdal_geometry.cpp:562</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l967"><code>src&#x2F;gdal_geometry.cpp:967</code></a>
 		</p>
 
 
@@ -1907,6 +4091,104 @@ options</a>)</p>
 		</div>
 
 </div>
+<div id="method-toWKBAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>toWKBAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">byte_order=&quot;MSB&quot;</code>
+				</li>
+				<li class="arg">
+						<code class="optional">variant=&quot;OGC&quot;</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_toWKBAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l978"><code>src&#x2F;gdal_geometry.cpp:978</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Convert a geometry into well known binary format.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[byte_order=&quot;MSB&quot;]</code>
+						<span class="type">String</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>(Constants
+(wkbByteOrder))</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[variant=&quot;OGC&quot;]</code>
+						<span class="type">String</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>(<a href="../classes/Constants (wkbVariant).html" class="crosslink">see
+options</a>)</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>gdal.Geometry</p>
+
+			</div>
+		</div>
+
+</div>
 <div id="method-toWKT" class="method item inherited">
 	<div class="method-signature">
 	<span class="name"><code>toWKT</code></span>
@@ -1925,7 +4207,7 @@ options</a>)</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_toWKT">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l536"><code>src&#x2F;gdal_geometry.cpp:536</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l925"><code>src&#x2F;gdal_geometry.cpp:925</code></a>
 		</p>
 
 
@@ -1935,6 +4217,76 @@ options</a>)</p>
 	<div class="description"><p>Convert a geometry into well known text format.</p>
 </div>
 
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>gdal.Geometry</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-toWKTAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>toWKTAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_toWKTAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l932"><code>src&#x2F;gdal_geometry.cpp:932</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Convert a geometry into well known text format.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
 
 		<div class="returns">
 			<h4>Returns:</h4>
@@ -1967,7 +4319,7 @@ options</a>)</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_transform">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l336"><code>src&#x2F;gdal_geometry.cpp:336</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l556"><code>src&#x2F;gdal_geometry.cpp:556</code></a>
 		</p>
 
 
@@ -2001,6 +4353,75 @@ object, and the actual SRS of the geometry will be ignored.</p>
 
 
 </div>
+<div id="method-transformAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>transformAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+				<li class="arg">
+						<code>transformation</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_transformAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l575"><code>src&#x2F;gdal_geometry.cpp:575</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Apply arbitrary coordinate transformation to the geometry.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">transformation</code>
+						<span class="type"><a href="../classes/gdal.CoordinateTransformation.html" class="crosslink">gdal.CoordinateTransformation</a></span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
 <div id="method-transformTo" class="method item inherited">
 	<div class="method-signature">
 	<span class="name"><code>transformTo</code></span>
@@ -2022,7 +4443,7 @@ object, and the actual SRS of the geometry will be ignored.</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_transformTo">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l357"><code>src&#x2F;gdal_geometry.cpp:357</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l588"><code>src&#x2F;gdal_geometry.cpp:588</code></a>
 		</p>
 
 
@@ -2036,6 +4457,75 @@ object, and the actual SRS of the geometry will be ignored.</p>
 			<h4>Parameters:</h4>
 
 			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">srs</code>
+						<span class="type"><a href="../classes/gdal.SpatialReference.html" class="crosslink">gdal.SpatialReference</a></span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+<div id="method-transformToAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>transformToAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+				<li class="arg">
+						<code>srs</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_transformToAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l597"><code>src&#x2F;gdal_geometry.cpp:597</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Transforms the geometry to match the provided <a href="../classes/gdal.SpatialReference.html" class="crosslink">SpatialReference</a>.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
 				<li class="param">
 						<code class="param-name">srs</code>
 						<span class="type"><a href="../classes/gdal.SpatialReference.html" class="crosslink">gdal.SpatialReference</a></span>
@@ -2072,7 +4562,7 @@ object, and the actual SRS of the geometry will be ignored.</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_union">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l422"><code>src&#x2F;gdal_geometry.cpp:422</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l712"><code>src&#x2F;gdal_geometry.cpp:712</code></a>
 		</p>
 
 
@@ -2106,6 +4596,86 @@ object, and the actual SRS of the geometry will be ignored.</p>
 		</div>
 
 </div>
+<div id="method-unionAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>unionAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>geometry</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_unionAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l720"><code>src&#x2F;gdal_geometry.cpp:720</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Compute the union of this geometry with another.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">geometry</code>
+						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>gdal.Geometry</p>
+
+			</div>
+		</div>
+
+</div>
 <div id="method-unionCascaded" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>unionCascaded</code></span>
@@ -2124,7 +4694,7 @@ object, and the actual SRS of the geometry will be ignored.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_multipolygon.cpp.html#l119"><code>src&#x2F;gdal_multipolygon.cpp:119</code></a>
+		<a href="../files/src_gdal_multipolygon.cpp.html#l125"><code>src&#x2F;gdal_multipolygon.cpp:125</code></a>
 		</p>
 
 
@@ -2168,7 +4738,7 @@ object, and the actual SRS of the geometry will be ignored.</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/gdal.Geometry.html#method_within">gdal.Geometry</a>:
-		<a href="../files/src_gdal_geometry.cpp.html#l290"><code>src&#x2F;gdal_geometry.cpp:290</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l463"><code>src&#x2F;gdal_geometry.cpp:463</code></a>
 		</p>
 
 
@@ -2187,6 +4757,86 @@ object, and the actual SRS of the geometry will be ignored.</p>
 						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
 
 
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>Boolean</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-withinAsync" class="method item inherited">
+	<div class="method-signature">
+	<span class="name"><code>withinAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>geometry</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>Inherited from
+				<a href="../classes/gdal.Geometry.html#method_withinAsync">gdal.Geometry</a>:
+		<a href="../files/src_gdal_geometry.cpp.html#l471"><code>src&#x2F;gdal_geometry.cpp:471</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Determines if the current geometry is within the provided geometry.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">geometry</code>
+						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
 
 				</li>
 			</ul>
@@ -2224,7 +4874,7 @@ object, and the actual SRS of the geometry will be ignored.</p>
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/gdal.GeometryCollection.html#attr_children">gdal.GeometryCollection</a>:
-        <a href="../files/src_gdal_geometrycollection.cpp.html#l140"><code>src&#x2F;gdal_geometrycollection.cpp:140</code></a>
+        <a href="../files/src_gdal_geometrycollection.cpp.html#l146"><code>src&#x2F;gdal_geometrycollection.cpp:146</code></a>
         </p>
 
 
@@ -2253,7 +4903,7 @@ object, and the actual SRS of the geometry will be ignored.</p>
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/gdal.Geometry.html#attr_coordinateDimension">gdal.Geometry</a>:
-        <a href="../files/src_gdal_geometry.cpp.html#l968"><code>src&#x2F;gdal_geometry.cpp:968</code></a>
+        <a href="../files/src_gdal_geometry.cpp.html#l1586"><code>src&#x2F;gdal_geometry.cpp:1586</code></a>
         </p>
 
 
@@ -2282,7 +4932,7 @@ object, and the actual SRS of the geometry will be ignored.</p>
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/gdal.Geometry.html#attr_dimension">gdal.Geometry</a>:
-        <a href="../files/src_gdal_geometry.cpp.html#l957"><code>src&#x2F;gdal_geometry.cpp:957</code></a>
+        <a href="../files/src_gdal_geometry.cpp.html#l1575"><code>src&#x2F;gdal_geometry.cpp:1575</code></a>
         </p>
 
 
@@ -2311,7 +4961,7 @@ object, and the actual SRS of the geometry will be ignored.</p>
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/gdal.Geometry.html#attr_name">gdal.Geometry</a>:
-        <a href="../files/src_gdal_geometry.cpp.html#l922"><code>src&#x2F;gdal_geometry.cpp:922</code></a>
+        <a href="../files/src_gdal_geometry.cpp.html#l1540"><code>src&#x2F;gdal_geometry.cpp:1540</code></a>
         </p>
 
 
@@ -2339,7 +4989,7 @@ object, and the actual SRS of the geometry will be ignored.</p>
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/gdal.Geometry.html#attr_srs">gdal.Geometry</a>:
-        <a href="../files/src_gdal_geometry.cpp.html#l896"><code>src&#x2F;gdal_geometry.cpp:896</code></a>
+        <a href="../files/src_gdal_geometry.cpp.html#l1514"><code>src&#x2F;gdal_geometry.cpp:1514</code></a>
         </p>
 
 
@@ -2368,7 +5018,7 @@ object, and the actual SRS of the geometry will be ignored.</p>
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/gdal.Geometry.html#attr_wkbSize">gdal.Geometry</a>:
-        <a href="../files/src_gdal_geometry.cpp.html#l946"><code>src&#x2F;gdal_geometry.cpp:946</code></a>
+        <a href="../files/src_gdal_geometry.cpp.html#l1564"><code>src&#x2F;gdal_geometry.cpp:1564</code></a>
         </p>
 
 
@@ -2397,7 +5047,7 @@ object, and the actual SRS of the geometry will be ignored.</p>
     <div class="meta">
                 <p>Inherited from
                 <a href="../classes/gdal.Geometry.html#attr_wkbType">gdal.Geometry</a>:
-        <a href="../files/src_gdal_geometry.cpp.html#l933"><code>src&#x2F;gdal_geometry.cpp:933</code></a>
+        <a href="../files/src_gdal_geometry.cpp.html#l1551"><code>src&#x2F;gdal_geometry.cpp:1551</code></a>
         </p>
 
 

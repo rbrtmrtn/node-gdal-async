@@ -152,6 +152,12 @@ height="20"></iframe></p>
 <div id="class-toc" class="page-section">
 	<h2>Table of Contents</h2>
     <ul>
+		<li>
+			<strong>Methods</strong>
+			<ul>
+				<li><a href="#method-requestCallback"><span class="im">requestCallback</span>(<span class="ia">error</span><span class="ia">result</span>)</a></li>
+			</ul>
+		</li>
 
 		<li>
 			<strong>Properties</strong>
@@ -173,20 +179,27 @@ height="20"></iframe></p>
 			<strong>Static Methods</strong>
 			<ul>
 				<li><a href="#method-checksumImage"><span class="im">gdal.checksumImage</span>(<span class="ia">src</span><span class="ia">x</span><span class="ia">y</span><span class="ia">w</span><span class="ia">h</span>)</a></li>
+				<li><a href="#method-checksumImageAsync"><span class="im">gdal.checksumImageAsync</span>(<span class="ia">src</span><span class="ia">x</span><span class="ia">y</span><span class="ia">w</span><span class="ia">h</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-config.get"><span class="im">gdal.config.get</span>(<span class="ia">key</span>)</a></li>
 				<li><a href="#method-config.set"><span class="im">gdal.config.set</span>(<span class="ia">key</span><span class="ia">value</span>)</a></li>
 				<li><a href="#method-contourGenerate"><span class="im">gdal.contourGenerate</span>(<span class="ia">options</span>)</a></li>
+				<li><a href="#method-contourGenerateAsync"><span class="im">gdal.contourGenerateAsync</span>(<span class="ia">options</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-decToDMS"><span class="im">gdal.decToDMS</span>(<span class="ia">angle</span><span class="ia">axis</span><span class="ia">precision</span>)</a></li>
 				<li><a href="#method-fillNodata"><span class="im">gdal.fillNodata</span>(<span class="ia">options</span>)</a></li>
+				<li><a href="#method-fillNodataAsync"><span class="im">gdal.fillNodataAsync</span>(<span class="ia">options</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-open"><span class="im">gdal.open</span>(<span class="ia">path</span><span class="ia">mode</span><span class="ia">drivers</span><span class="ia">x_size</span><span class="ia">y_size</span><span class="ia">band_count</span><span class="ia">data_type</span><span class="ia">creation_options</span>)</a></li>
 				<li><a href="#method-openAsync"><span class="im">gdal.openAsync</span>(<span class="ia">path</span><span class="ia">mode</span><span class="ia">drivers</span><span class="ia">x_size</span><span class="ia">y_size</span><span class="ia">band_count</span><span class="ia">data_type</span><span class="ia">creation_options</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-polygonize"><span class="im">gdal.polygonize</span>(<span class="ia">options</span>)</a></li>
 				<li><a href="#method-quiet"><span class="im">gdal.quiet</span>()</a></li>
 				<li><a href="#method-reprojectImage"><span class="im">gdal.reprojectImage</span>(<span class="ia">options</span><span class="ia">[options.options] Warp options (see:
 [reference]</span>)</a></li>
+				<li><a href="#method-reprojectImageAsync"><span class="im">gdal.reprojectImageAsync</span>(<span class="ia">options</span><span class="ia">[options.options] Warp options (see:
+[reference]</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-setPROJSearchPaths"><span class="im">gdal.setPROJSearchPaths</span>(<span class="ia">Path</span>)</a></li>
 				<li><a href="#method-sieveFilter"><span class="im">gdal.sieveFilter</span>(<span class="ia">options</span>)</a></li>
+				<li><a href="#method-sieveFilterAsync"><span class="im">gdal.sieveFilterAsync</span>(<span class="ia">options</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-suggestedWarpOutput"><span class="im">gdal.suggestedWarpOutput</span>(<span class="ia">options</span>)</a></li>
+				<li><a href="#method-suggestedWarpOutputAsync"><span class="im">gdal.suggestedWarpOutputAsync</span>(<span class="ia">options</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-verbose"><span class="im">gdal.verbose</span>()</a></li>
 			</ul>
 		</li>
@@ -196,6 +209,72 @@ height="20"></iframe></p>
 <!-- details -->
 
 
+    <div id="methods" class="page-section">
+        <h2 class="off-left">Methods</h2>
+        <div class="item-list">
+<div id="method-requestCallback" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>requestCallback</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>error</code>
+				</li>
+				<li class="arg">
+						<code>result</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/lib_gdal.js.html#l624"><code>lib&#x2F;gdal.js:624</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Standard async request callback</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">error</code>
+						<span class="type">Error</span>
+
+
+					<div class="param-description"><p>error or undefined when the operation is successful</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">result</code>
+						<span class="type">Object</span>
+
+
+					<div class="param-description"><p>result of the asynchronous operation or undefined on error</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+        </div>
+    </div>
 
     <div id="properties" class="page-section">
         <h2 class="off-left">Properties</h2>
@@ -213,7 +292,7 @@ height="20"></iframe></p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l277"><code>src&#x2F;node_gdal.cpp:277</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l292"><code>src&#x2F;node_gdal.cpp:292</code></a>
         </p>
 
 
@@ -239,7 +318,7 @@ height="20"></iframe></p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1239"><code>src&#x2F;node_gdal.cpp:1239</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l1254"><code>src&#x2F;node_gdal.cpp:1254</code></a>
         </p>
 
 
@@ -267,7 +346,7 @@ will be null or an object containing three properties: "number",
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1229"><code>src&#x2F;node_gdal.cpp:1229</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l1244"><code>src&#x2F;node_gdal.cpp:1244</code></a>
         </p>
 
 
@@ -302,7 +381,7 @@ will be null or an object containing three properties: "number",
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l90"><code>src&#x2F;node_gdal.cpp:90</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l91"><code>src&#x2F;node_gdal.cpp:91</code></a>
         </p>
 
 
@@ -357,7 +436,7 @@ will be null or an object containing three properties: "number",
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l207"><code>src&#x2F;gdal_algorithms.cpp:207</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l322"><code>src&#x2F;gdal_algorithms.cpp:322</code></a>
 		</p>
 
 
@@ -408,6 +487,124 @@ will be null or an object containing three properties: "number",
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>integer</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-checksumImageAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>gdal.checksumImageAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>src</code>
+				</li>
+				<li class="arg">
+						<code class="optional">x=0</code>
+				</li>
+				<li class="arg">
+						<code class="optional">y=0</code>
+				</li>
+				<li class="arg">
+						<code class="optional">w=src.width</code>
+				</li>
+				<li class="arg">
+						<code class="optional">h=src.height</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_algorithms.cpp.html#l337"><code>src&#x2F;gdal_algorithms.cpp:337</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Compute checksum for image region.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">src</code>
+						<span class="type"><a href="../classes/gdal.RasterBand.html" class="crosslink">gdal.RasterBand</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[x=0]</code>
+						<span class="type">Integer</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[y=0]</code>
+						<span class="type">Integer</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[w=src.width]</code>
+						<span class="type">Integer</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[h=src.height]</code>
+						<span class="type">Integer</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
 
 				</li>
 			</ul>
@@ -584,7 +781,7 @@ will be null or an object containing three properties: "number",
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l61"><code>src&#x2F;gdal_algorithms.cpp:61</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l93"><code>src&#x2F;gdal_algorithms.cpp:93</code></a>
 		</p>
 
 
@@ -692,6 +889,157 @@ elevation value of the contour should be written.</p>
 
 
 </div>
+<div id="method-contourGenerateAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>gdal.contourGenerateAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>options</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_algorithms.cpp.html#l124"><code>src&#x2F;gdal_algorithms.cpp:124</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Create vector contours from raster DEM.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+<p>This algorithm will generate contour vectors for the input raster band on the
+requested set of contour levels. The vector contours are written to the
+passed in vector layer. Also, a NODATA value may be specified to identify
+pixels that should not be considered in contour line generation.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">options</code>
+						<span class="type">Object</span>
+
+
+
+						<ul class="params-list">
+							<li class="param">
+									<code class="param-name">src</code>
+									<span class="type"><a href="../classes/gdal.RasterBand.html" class="crosslink">gdal.RasterBand</a></span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name">dst</code>
+									<span class="type"><a href="../classes/gdal.Layer.html" class="crosslink">gdal.Layer</a></span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[offset=0]</code>
+									<span class="type">Number</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>The "offset" relative to which contour
+intervals are applied. This is normally zero, but could be different. To
+generate 10m contours at 5, 15, 25, ... the offset would be 5.</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[interval=100]</code>
+									<span class="type">Number</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>The elevation interval between
+contours generated.</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[fixedLevels]</code>
+									<span class="type">Number[]</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>A list of fixed contour levels at
+which contours should be generated. Overrides interval/base options if set.</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[nodata]</code>
+									<span class="type">Number</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>The value to use as a "nodata" value. That
+is, a pixel value which should be ignored in generating contours as if the
+value of the pixel were not known.</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[idField]</code>
+									<span class="type">Integer</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>A field index to indicate where a unique
+id should be written for each feature (contour) written.</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[elevField]</code>
+									<span class="type">Integer</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>A field index to indicate where the
+elevation value of the contour should be written.</p>
+</div>
+
+							</li>
+						</ul>
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
 <div id="method-decToDMS" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>gdal.decToDMS</code></span>
@@ -722,7 +1070,7 @@ elevation value of the contour should be written.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal.hpp.html#l123"><code>src&#x2F;gdal.hpp:123</code></a>
+		<a href="../files/src_gdal.hpp.html#l118"><code>src&#x2F;gdal.hpp:118</code></a>
 		</p>
 
 
@@ -796,7 +1144,7 @@ N or E</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l18"><code>src&#x2F;gdal_algorithms.cpp:18</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l23"><code>src&#x2F;gdal_algorithms.cpp:23</code></a>
 		</p>
 
 
@@ -861,6 +1209,114 @@ artifacts.</p>
 
 
 </div>
+<div id="method-fillNodataAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>gdal.fillNodataAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>options</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_algorithms.cpp.html#l40"><code>src&#x2F;gdal_algorithms.cpp:40</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Fill raster regions by interpolation from edges.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">options</code>
+						<span class="type">Object</span>
+
+
+
+						<ul class="params-list">
+							<li class="param">
+									<code class="param-name">src</code>
+									<span class="type"><a href="../classes/gdal.RasterBand.html" class="crosslink">gdal.RasterBand</a></span>
+
+								<div class="param-description"><p>This band to be updated in-place.</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[mask]</code>
+									<span class="type"><a href="../classes/gdal.RasterBand.html" class="crosslink">gdal.RasterBand</a></span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>Mask band</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name">searchDist</code>
+									<span class="type">Number</span>
+
+								<div class="param-description"><p>The maximum distance (in pixels) that the
+algorithm will search out for values to interpolate.</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[smoothingIterations=0]</code>
+									<span class="type">Integer</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>The number of 3x3 average</p>
+</div>
+
+							</li>
+						</ul>
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+
+filter smoothing iterations to run after the interpolation to dampen
+artifacts.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
 <div id="method-open" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>gdal.open</code></span>
@@ -906,7 +1362,7 @@ artifacts.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/lib_gdal.js.html#l507"><code>lib&#x2F;gdal.js:507</code></a>
+		<a href="../files/lib_gdal.js.html#l530"><code>lib&#x2F;gdal.js:530</code></a>
 		</p>
 
 
@@ -922,10 +1378,10 @@ artifacts.</p>
 			<ul class="params-list">
 				<li class="param">
 						<code class="param-name">path</code>
-						<span class="type">String</span>
+						<span class="type">String  |  Buffer</span>
 
 
-					<div class="param-description"><p>Path to dataset to open</p>
+					<div class="param-description"><p>Path to dataset or in-memory Buffer to open</p>
 </div>
 
 				</li>
@@ -1015,6 +1471,7 @@ artifacts.</p>
 
 			<div class="example-content">
 				<pre class="code prettyprint"><code>var dataset = gdal.open('./data.shp');<code>&#x60;</code></code></pre>
+<pre class="code prettyprint"><code>var dataset = gdal.open(fs.readFileSync('./data.shp'));<code>&#x60;</code></code></pre>
 
 			</div>
 		</div>
@@ -1067,7 +1524,7 @@ artifacts.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/lib_gdal.js.html#l663"><code>lib&#x2F;gdal.js:663</code></a>
+		<a href="../files/lib_gdal.js.html#l634"><code>lib&#x2F;gdal.js:634</code></a>
 		</p>
 
 
@@ -1084,10 +1541,10 @@ If the last parameter is a callback, then this callback is called on completion 
 			<ul class="params-list">
 				<li class="param">
 						<code class="param-name">path</code>
-						<span class="type">String</span>
+						<span class="type">String  |  Buffer</span>
 
 
-					<div class="param-description"><p>Path to dataset to open</p>
+					<div class="param-description"><p>Path to dataset or in-memory Buffer to open</p>
 </div>
 
 				</li>
@@ -1188,6 +1645,7 @@ certain optional parameters are omitted</p>
 
 			<div class="example-content">
 				<pre class="code prettyprint"><code>var dataset = await gdal.openAsync('./data.shp');<code>&#x60;</code></code></pre>
+<pre class="code prettyprint"><code>var dataset = await gdal.openAsync(await fd.readFile('./data.shp'));<code>&#x60;</code></code></pre>
 <pre class="code prettyprint"><code>gdal.openAsync('./data.shp', (err, ds) =&gt; {...});<code>&#x60;</code></code></pre>
 
 			</div>
@@ -1214,7 +1672,7 @@ certain optional parameters are omitted</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l255"><code>src&#x2F;gdal_algorithms.cpp:255</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l397"><code>src&#x2F;gdal_algorithms.cpp:397</code></a>
 		</p>
 
 
@@ -1313,7 +1771,7 @@ of int buffers.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_node_gdal.cpp.html#l1257"><code>src&#x2F;node_gdal.cpp:1257</code></a>
+		<a href="../files/src_node_gdal.cpp.html#l1272"><code>src&#x2F;node_gdal.cpp:1272</code></a>
 		</p>
 
 
@@ -1351,7 +1809,7 @@ of int buffers.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_warper.cpp.html#l165"><code>src&#x2F;gdal_warper.cpp:165</code></a>
+		<a href="../files/src_gdal_warper.cpp.html#l167"><code>src&#x2F;gdal_warper.cpp:167</code></a>
 		</p>
 
 
@@ -1509,6 +1967,211 @@ coordinates and pixel coordinates</p>
 
 
 </div>
+<div id="method-reprojectImageAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>gdal.reprojectImageAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>options</code>
+				</li>
+				<li class="arg">
+						<code>[options.options] Warp options (see:
+[reference]</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_warper.cpp.html#l197"><code>src&#x2F;gdal_warper.cpp:197</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Reprojects a dataset.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">options</code>
+						<span class="type">Object</span>
+
+
+
+						<ul class="params-list">
+							<li class="param">
+									<code class="param-name">src</code>
+									<span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name">dst</code>
+									<span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name">s_srs</code>
+									<span class="type"><a href="../classes/gdal.SpatialReference.html" class="crosslink">gdal.SpatialReference</a></span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name">t_srs</code>
+									<span class="type"><a href="../classes/gdal.SpatialReference.html" class="crosslink">gdal.SpatialReference</a></span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[resampling]</code>
+									<span class="type">String</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>Resampling algorithm (<a href="../classes/Constants (GRA).html" class="crosslink">available options</a>)</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[cutline]</code>
+									<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>Must be in src dataset pixel
+coordinates. Use CoordinateTransformation to convert between georeferenced
+coordinates and pixel coordinates</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[srcBands]</code>
+									<span class="type">Integer[]</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[dstBands]</code>
+									<span class="type">Integer[]</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[srcAlphaBand]</code>
+									<span class="type">Integer</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[dstAlphaBand]</code>
+									<span class="type">Integer</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[srcNodata]</code>
+									<span class="type">Number</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[dstNodata]</code>
+									<span class="type">Number</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[memoryLimit]</code>
+									<span class="type">Integer</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[maxError]</code>
+									<span class="type">Number</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[multi]</code>
+									<span class="type">Boolean</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"></div>
+
+							</li>
+						</ul>
+				</li>
+				<li class="param">
+						<code class="param-name">[options.options] Warp options (see:
+[reference]</code>
+						<span class="type">String[] |  Object</span>
+
+
+					<div class="param-description"><p>(<a href="http://www.gdal.org/structGDALWarpOptions.html#a0ed77f9917bb96c7a9aabd73d4d06e08">http://www.gdal.org/structGDALWarpOptions.html#a0ed77f9917bb96c7a9aabd73d4d06e08</a>))</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
 <div id="method-setPROJSearchPaths" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>gdal.setPROJSearchPaths</code></span>
@@ -1530,7 +2193,7 @@ coordinates and pixel coordinates</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_node_gdal.cpp.html#l197"><code>src&#x2F;node_gdal.cpp:197</code></a>
+		<a href="../files/src_node_gdal.cpp.html#l198"><code>src&#x2F;node_gdal.cpp:198</code></a>
 		</p>
 
 
@@ -1579,7 +2242,7 @@ coordinates and pixel coordinates</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l154"><code>src&#x2F;gdal_algorithms.cpp:154</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l238"><code>src&#x2F;gdal_algorithms.cpp:238</code></a>
 		</p>
 
 
@@ -1653,6 +2316,123 @@ or 8 indicating they are.</p>
 
 
 </div>
+<div id="method-sieveFilterAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>gdal.sieveFilterAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>options</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_algorithms.cpp.html#l258"><code>src&#x2F;gdal_algorithms.cpp:258</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Removes small raster polygons.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">options</code>
+						<span class="type">Object</span>
+
+
+
+						<ul class="params-list">
+							<li class="param">
+									<code class="param-name">src</code>
+									<span class="type"><a href="../classes/gdal.RasterBand.html" class="crosslink">gdal.RasterBand</a></span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name">dst</code>
+									<span class="type"><a href="../classes/gdal.RasterBand.html" class="crosslink">gdal.RasterBand</a></span>
+
+								<div class="param-description"><p>Output raster band. It may be the same
+as src band to update the source in place.</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[mask]</code>
+									<span class="type"><a href="../classes/gdal.RasterBand.html" class="crosslink">gdal.RasterBand</a></span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>All pixels in the mask band with a
+value other than zero will be considered suitable for inclusion in polygons.</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name">threshold</code>
+									<span class="type">Number</span>
+
+								<div class="param-description"><p>Raster polygons with sizes smaller than
+this will be merged into their largest neighbour.</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[connectedness=4]</code>
+									<span class="type">Integer</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>Either 4 indicating that diagonal
+pixels are not considered directly adjacent for polygon membership purposes
+or 8 indicating they are.</p>
+</div>
+
+							</li>
+						</ul>
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
 <div id="method-suggestedWarpOutput" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>gdal.suggestedWarpOutput</code></span>
@@ -1677,7 +2457,7 @@ or 8 indicating they are.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_warper.cpp.html#l274"><code>src&#x2F;gdal_warper.cpp:274</code></a>
+		<a href="../files/src_gdal_warper.cpp.html#l320"><code>src&#x2F;gdal_warper.cpp:320</code></a>
 		</p>
 
 
@@ -1747,6 +2527,122 @@ properties.</p>
 		</div>
 
 </div>
+<div id="method-suggestedWarpOutputAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>gdal.suggestedWarpOutputAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>options</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Object</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_warper.cpp.html#l337"><code>src&#x2F;gdal_warper.cpp:337</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Used to determine the bounds and resolution of the output virtual file which
+should be large enough to include all the input image.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">options</code>
+						<span class="type">Object</span>
+
+
+					<div class="param-description"><p>Warp options</p>
+</div>
+
+						<ul class="params-list">
+							<li class="param">
+									<code class="param-name">src</code>
+									<span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name">s_srs</code>
+									<span class="type"><a href="../classes/gdal.SpatialReference.html" class="crosslink">gdal.SpatialReference</a></span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name">t_srs</code>
+									<span class="type"><a href="../classes/gdal.SpatialReference.html" class="crosslink">gdal.SpatialReference</a></span>
+
+								<div class="param-description"></div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[maxError=0]</code>
+									<span class="type">Number</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"></div>
+
+							</li>
+						</ul>
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback]</code>
+						<span class="type">RequestCallback</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+Promisifiable callback, always the last parameter, can be specified even if
+certain optional parameters are omitted
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Object</span>:
+					<p>An object containing <code>"rasterSize"</code> and <code>"geoTransform"</code>
+properties.</p>
+
+			</div>
+		</div>
+
+</div>
 <div id="method-verbose" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>gdal.verbose</code></span>
@@ -1762,7 +2658,7 @@ properties.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_node_gdal.cpp.html#l1266"><code>src&#x2F;node_gdal.cpp:1266</code></a>
+		<a href="../files/src_node_gdal.cpp.html#l1281"><code>src&#x2F;node_gdal.cpp:1281</code></a>
 		</p>
 
 
