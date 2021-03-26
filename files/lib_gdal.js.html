@@ -146,7 +146,7 @@ if (proj_lib_env_undefined &amp;&amp; !fs.existsSync(proj_path)) {
 
 const gdal = module.exports = require(binding_path)
 
-if (proj_lib_env_undefined) {
+if (proj_lib_env_undefined &amp;&amp; gdal.bundled) {
   gdal.setPROJSearchPath(proj_path)
 }
 

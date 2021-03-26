@@ -124,7 +124,7 @@
 <div class="file">
     <pre class="prettyprint linenums">
 /**
- * This [node-gdal](https://github.com/contra/node-gdal-next) binding for
+ * This [node-gdal-async](https://github.com/mmomtchev/node-gdal-async) binding for
  * Node.js provides a feature-complete way of reading, writing, and manipulating
  * geospatial data (raster and vector) using [GDAL](http://www.gdal.org/).
  * &#x60;&#x60;&#x60;
@@ -137,10 +137,10 @@
  * &#x60;&#x60;&#x60;
  *
  * &lt;iframe
- * src=&quot;http://ghbtns.com/github-btn.html?user=contra&amp;repo=node-gdal-next&amp;type=watch&amp;count=true&quot;
+ * src=&quot;http://ghbtns.com/github-btn.html?user=mmomtchev&amp;repo=node-gdal-async&amp;type=watch&amp;count=true&quot;
  * allowtransparency=&quot;true&quot; frameborder=&quot;0&quot; scrolling=&quot;0&quot; width=&quot;90&quot; height=&quot;20&quot;
  * style=&quot;margin-top:20px&quot;&gt;&lt;/iframe&gt; &lt;iframe
- * src=&quot;http://ghbtns.com/github-btn.html?user=contra&amp;repo=node-gdal-next&amp;type=fork&amp;count=true&quot;
+ * src=&quot;http://ghbtns.com/github-btn.html?user=mmomtchev&amp;repo=node-gdal-async&amp;type=fork&amp;count=true&quot;
  * allowtransparency=&quot;true&quot; frameborder=&quot;0&quot; scrolling=&quot;0&quot; width=&quot;200&quot;
  * height=&quot;20&quot;&gt;&lt;/iframe&gt;
  *
@@ -1375,6 +1375,20 @@ static void Init(Local&lt;Object&gt; target, Local&lt;v8::Value&gt;, void *) {
    * @type {String}
    */
   Nan::Set(target, Nan::New(&quot;version&quot;).ToLocalChecked(), Nan::New(GDAL_RELEASE_NAME).ToLocalChecked());
+
+  /**
+   * GDAL library - system library (false) or bundled (true)
+   *
+   * @final
+   * @for gdal
+   * @property gdal.bundled
+   * @type {Boolean}
+   */
+#ifdef BUNDLED_GDAL
+  Nan::Set(target, Nan::New(&quot;bundled&quot;).ToLocalChecked(), Nan::New(true));
+#else
+  Nan::Set(target, Nan::New(&quot;bundled&quot;).ToLocalChecked(), Nan::New(false));
+#endif
 
   /**
    * Details about the last error that occurred. The property

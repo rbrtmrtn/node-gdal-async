@@ -443,7 +443,11 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::count) {
   }
 
   Local&lt;Object&gt; ds;
+#if GDAL_VERSION_MAJOR &lt; 2
+  if (Dataset::datasource_cache.has(layer-&gt;getParent())) { ds = Dataset::datasource_cache.get(layer-&gt;getParent()); }
+#else
   if (Dataset::dataset_cache.has(layer-&gt;getParent())) { ds = Dataset::dataset_cache.get(layer-&gt;getParent()); }
+#endif
   if (!layer-&gt;isAlive()) {
     Nan::ThrowError(&quot;Dataset object already destroyed&quot;);
     return;
@@ -453,11 +457,10 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::count) {
   NODE_ARG_BOOL_OPT(0, &quot;force&quot;, force);
 
   OGRLayer *gdal_layer = layer-&gt;get();
-  GDALDataset *gdal_dataset = layer-&gt;getParent();
   long ds_uid = layer-&gt;parent_uid;
   GDALAsyncableJob&lt;GIntBig&gt; job;
   job.persist(parent, ds);
-  job.main = [ds_uid, gdal_layer, force, gdal_dataset]() {
+  job.main = [ds_uid, gdal_layer, force]() {
     GDAL_ASYNCABLE_LOCK(ds_uid);
     GIntBig count = gdal_layer-&gt;GetFeatureCount(force);
     GDAL_UNLOCK_PARENT;

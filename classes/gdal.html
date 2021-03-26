@@ -127,7 +127,7 @@
 
 
 <div class="yuidoc-class-description">
-<p>This <a href="https://github.com/contra/node-gdal-next">node-gdal</a> binding for
+<p>This <a href="https://github.com/mmomtchev/node-gdal-async">node-gdal-async</a> binding for
 Node.js provides a feature-complete way of reading, writing, and manipulating
 geospatial data (raster and vector) using <a href="http://www.gdal.org/">GDAL</a>.</p>
 <pre class="code prettyprint"><code>// sample: open a shapefile and display all features as geojson
@@ -138,10 +138,10 @@ dataset.layers.get(0).features.forEach(function(feature) {
 });
 </code></pre>
 <p><iframe
-src="http://ghbtns.com/github-btn.html?user=contra&repo=node-gdal-next&type=watch&count=true"
+src="http://ghbtns.com/github-btn.html?user=mmomtchev&repo=node-gdal-async&type=watch&count=true"
 allowtransparency="true" frameborder="0" scrolling="0" width="90" height="20"
 style="margin-top:20px"></iframe> <iframe
-src="http://ghbtns.com/github-btn.html?user=contra&repo=node-gdal-next&type=fork&count=true"
+src="http://ghbtns.com/github-btn.html?user=mmomtchev&repo=node-gdal-async&type=fork&count=true"
 allowtransparency="true" frameborder="0" scrolling="0" width="200"
 height="20"></iframe></p>
 
@@ -162,6 +162,7 @@ height="20"></iframe></p>
 		<li>
 			<strong>Properties</strong>
 			<ul>
+				<li><a href="#prop-gdal.bundled"><span class="ip">gdal.bundled</span></a></li>
 				<li><a href="#prop-gdal.drivers"><span class="ip">gdal.drivers</span></a></li>
 				<li><a href="#prop-gdal.lastError"><span class="ip">gdal.lastError</span></a></li>
 				<li><a href="#prop-gdal.version"><span class="ip">gdal.version</span></a></li>
@@ -280,6 +281,32 @@ height="20"></iframe></p>
         <h2 class="off-left">Properties</h2>
 
         <div class="item-list">
+<div id="prop-gdal.bundled" class="property item">
+    <h3 class="name"><code>gdal.bundled</code></h3>
+    <span class="type">Boolean</span>
+
+
+
+        <span class="flag final">const</span>
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_node_gdal.cpp.html#l1254"><code>src&#x2F;node_gdal.cpp:1254</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>GDAL library - system library (false) or bundled (true)</p>
+
+    </div>
+
+
+
+</div>
 <div id="prop-gdal.drivers" class="property item">
     <h3 class="name"><code>gdal.drivers</code></h3>
     <span class="type"><a href="../classes/gdal.GDALDrivers.html" class="crosslink">gdal.GDALDrivers</a></span>
@@ -318,7 +345,7 @@ height="20"></iframe></p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1254"><code>src&#x2F;node_gdal.cpp:1254</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l1268"><code>src&#x2F;node_gdal.cpp:1268</code></a>
         </p>
 
 
@@ -1771,7 +1798,7 @@ of int buffers.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_node_gdal.cpp.html#l1272"><code>src&#x2F;node_gdal.cpp:1272</code></a>
+		<a href="../files/src_node_gdal.cpp.html#l1286"><code>src&#x2F;node_gdal.cpp:1286</code></a>
 		</p>
 
 
@@ -2658,7 +2685,7 @@ properties.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_node_gdal.cpp.html#l1281"><code>src&#x2F;node_gdal.cpp:1281</code></a>
+		<a href="../files/src_node_gdal.cpp.html#l1295"><code>src&#x2F;node_gdal.cpp:1295</code></a>
 		</p>
 
 

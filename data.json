@@ -422,7 +422,7 @@
             "extension_for": [],
             "file": "src/node_gdal.cpp",
             "line": 1,
-            "description": "This [node-gdal](https://github.com/contra/node-gdal-next) binding for\nNode.js provides a feature-complete way of reading, writing, and manipulating\ngeospatial data (raster and vector) using [GDAL](http://www.gdal.org/).\n```\n// sample: open a shapefile and display all features as geojson\nvar dataset = gdal.open(\"states.shp\");\n\ndataset.layers.get(0).features.forEach(function(feature) {\n    console.log(feature.getGeometry().toJSON());\n});\n```\n\n<iframe\nsrc=\"http://ghbtns.com/github-btn.html?user=contra&repo=node-gdal-next&type=watch&count=true\"\nallowtransparency=\"true\" frameborder=\"0\" scrolling=\"0\" width=\"90\" height=\"20\"\nstyle=\"margin-top:20px\"></iframe> <iframe\nsrc=\"http://ghbtns.com/github-btn.html?user=contra&repo=node-gdal-next&type=fork&count=true\"\nallowtransparency=\"true\" frameborder=\"0\" scrolling=\"0\" width=\"200\"\nheight=\"20\"></iframe>"
+            "description": "This [node-gdal-async](https://github.com/mmomtchev/node-gdal-async) binding for\nNode.js provides a feature-complete way of reading, writing, and manipulating\ngeospatial data (raster and vector) using [GDAL](http://www.gdal.org/).\n```\n// sample: open a shapefile and display all features as geojson\nvar dataset = gdal.open(\"states.shp\");\n\ndataset.layers.get(0).features.forEach(function(feature) {\n    console.log(feature.getGeometry().toJSON());\n});\n```\n\n<iframe\nsrc=\"http://ghbtns.com/github-btn.html?user=mmomtchev&repo=node-gdal-async&type=watch&count=true\"\nallowtransparency=\"true\" frameborder=\"0\" scrolling=\"0\" width=\"90\" height=\"20\"\nstyle=\"margin-top:20px\"></iframe> <iframe\nsrc=\"http://ghbtns.com/github-btn.html?user=mmomtchev&repo=node-gdal-async&type=fork&count=true\"\nallowtransparency=\"true\" frameborder=\"0\" scrolling=\"0\" width=\"200\"\nheight=\"20\"></iframe>"
         },
         "gdal.DatasetBands": {
             "name": "gdal.DatasetBands",
@@ -2922,7 +2922,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 345,
+            "line": 348,
             "description": "Sets a feature in the layer.",
             "itemtype": "method",
             "name": "set",
@@ -2946,7 +2946,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 396,
+            "line": 399,
             "description": "Removes a feature from the layer.",
             "itemtype": "method",
             "name": "remove",
@@ -2964,7 +2964,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 404,
+            "line": 407,
             "description": "Removes a feature from the layer.",
             "itemtype": "method",
             "name": "removeAsync",
@@ -2987,7 +2987,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 444,
+            "line": 447,
             "description": "Parent layer",
             "itemtype": "attribute",
             "name": "layer",
@@ -6886,7 +6886,7 @@
         },
         {
             "file": "src/gdal_geometry.cpp",
-            "line": 1496,
+            "line": 1494,
             "description": "Creates an empty Geometry from a WKB type.",
             "static": 1,
             "itemtype": "method",
@@ -6905,7 +6905,7 @@
         },
         {
             "file": "src/gdal_geometry.cpp",
-            "line": 1514,
+            "line": 1512,
             "itemtype": "attribute",
             "name": "srs",
             "type": "gdal.SpatialReference",
@@ -6913,7 +6913,7 @@
         },
         {
             "file": "src/gdal_geometry.cpp",
-            "line": 1540,
+            "line": 1538,
             "readonly": "",
             "itemtype": "attribute",
             "name": "name",
@@ -6922,7 +6922,7 @@
         },
         {
             "file": "src/gdal_geometry.cpp",
-            "line": 1551,
+            "line": 1549,
             "description": "See {{#crossLink \"Constants\n(wkbGeometryType)\"}}wkbGeometryTypes{{/crossLink}}.",
             "readonly": "",
             "itemtype": "attribute",
@@ -6932,7 +6932,7 @@
         },
         {
             "file": "src/gdal_geometry.cpp",
-            "line": 1564,
+            "line": 1562,
             "readonly": "",
             "itemtype": "attribute",
             "name": "wkbSize",
@@ -6941,7 +6941,7 @@
         },
         {
             "file": "src/gdal_geometry.cpp",
-            "line": 1575,
+            "line": 1573,
             "readonly": "",
             "itemtype": "attribute",
             "name": "dimension",
@@ -6950,7 +6950,7 @@
         },
         {
             "file": "src/gdal_geometry.cpp",
-            "line": 1586,
+            "line": 1584,
             "itemtype": "attribute",
             "name": "coordinateDimension",
             "type": "Integer",
@@ -6958,7 +6958,7 @@
         },
         {
             "file": "src/gdal_geometry.cpp",
-            "line": 1632,
+            "line": 1630,
             "description": "Returns the Geometry subclass that matches the\ngiven WKB geometry type.",
             "static": 1,
             "itemtype": "method",
@@ -6977,7 +6977,7 @@
         },
         {
             "file": "src/gdal_geometry.cpp",
-            "line": 1649,
+            "line": 1647,
             "description": "Returns the Geometry subclass name that matches the\ngiven WKB geometry type.",
             "static": 1,
             "itemtype": "method",
@@ -9904,6 +9904,16 @@
         {
             "file": "src/node_gdal.cpp",
             "line": 1254,
+            "description": "GDAL library - system library (false) or bundled (true)",
+            "final": 1,
+            "itemtype": "property",
+            "name": "gdal.bundled",
+            "type": "{Boolean}",
+            "class": "gdal"
+        },
+        {
+            "file": "src/node_gdal.cpp",
+            "line": 1268,
             "description": "Details about the last error that occurred. The property\nwill be null or an object containing three properties: \"number\",\n\"message\", and \"type\".",
             "final": 1,
             "itemtype": "property",
@@ -9913,7 +9923,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1272,
+            "line": 1286,
             "description": "Disables all output.",
             "static": 1,
             "itemtype": "method",
@@ -9922,7 +9932,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1281,
+            "line": 1295,
             "description": "Displays extra debugging information from GDAL.",
             "static": 1,
             "itemtype": "method",

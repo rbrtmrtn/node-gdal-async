@@ -536,7 +536,11 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
     int w, h;
   };
 
+#if GDAL_VERSION_MAJOR &lt; 2 || (GDAL_VERSION_MAJOR == 2 &amp;&amp; GDAL_VERSION_MINOR &lt; 3)
+  GDALDatasetH gdal_ds = static_cast&lt;GDALDatasetH&gt;(ds-&gt;getDataset());
+#else
   GDALDatasetH gdal_ds = GDALDataset::ToHandle(ds-&gt;getDataset());
+#endif
   long uid = ds-&gt;uid;
   GDALAsyncableJob&lt;warpOutputResult&gt; job;
   job.persist(ds-&gt;handle());

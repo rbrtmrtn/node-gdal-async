@@ -803,7 +803,7 @@ NAN_GETTER(RasterBand::noDataValueGetter) {
   double result = band-&gt;this_-&gt;GetNoDataValue(&amp;success);
   GDAL_UNLOCK_PARENT;
 
-  if (success &amp;&amp; !CPLIsNan(result)) {
+  if (success &amp;&amp; !std::isnan(result)) {
     info.GetReturnValue().Set(Nan::New&lt;Number&gt;(result));
     return;
   } else {
