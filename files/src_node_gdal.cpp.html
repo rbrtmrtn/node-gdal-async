@@ -126,15 +126,32 @@
 /**
  * This [node-gdal-async](https://github.com/mmomtchev/node-gdal-async) binding for
  * Node.js provides a feature-complete way of reading, writing, and manipulating
- * geospatial data (raster and vector) using [GDAL](http://www.gdal.org/).
+ * geospatial data, raster and vector, synchronously and asynchronously using [GDAL](http://www.gdal.org/).
  * &#x60;&#x60;&#x60;
  * // sample: open a shapefile and display all features as geojson
- * var dataset = gdal.open(&quot;states.shp&quot;);
+ * const dataset = gdal.open(&quot;states.shp&quot;);
  *
  * dataset.layers.get(0).features.forEach(function(feature) {
  *     console.log(feature.getGeometry().toJSON());
  * });
  * &#x60;&#x60;&#x60;
+ *
+ * &#x60;&#x60;&#x60;
+ * // same thing, but asynchronously, allowing integration in server-side multi-user code
+ * const dataset = await gdal.openAsync(&quot;states.shp&quot;);
+ * const features = (await dataset.layers.getAsync(0)).features;
+ * const len = await features.countAsync();
+ *
+ * for (let i = t; i &lt; len; i++) {
+ *   features.getAsync(i, (error, feature) =&gt; {
+ *     console.log(feature.getGeometry().toJSON());
+ *   });
+ * }
+ * &#x60;&#x60;&#x60;
+ *
+ * see &lt;https://gist.github.com/mmomtchev/14c3428255fd9c88ed20517572d8efdc&gt;
+ * for some performance considerations when designing code that will run
+ * multiple parallel operations on the same dataset
  *
  * &lt;iframe
  * src=&quot;http://ghbtns.com/github-btn.html?user=mmomtchev&amp;repo=node-gdal-async&amp;type=watch&amp;count=true&quot;

@@ -203,7 +203,7 @@ vector layers.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_dataset_layers.cpp.html#l318"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:318</code></a>
+		<a href="../files/src_collections_dataset_layers.cpp.html#l319"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:319</code></a>
 		</p>
 
 
@@ -269,7 +269,7 @@ vector layers.</p>
 						<code class="optional">options=null</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -286,7 +286,7 @@ vector layers.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_dataset_layers.cpp.html#l328"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:328</code></a>
+		<a href="../files/src_collections_dataset_layers.cpp.html#l329"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:329</code></a>
 		</p>
 
 
@@ -331,14 +331,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -373,7 +375,7 @@ certain optional parameters are omitted
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_dataset_layers.cpp.html#l265"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:265</code></a>
+		<a href="../files/src_collections_dataset_layers.cpp.html#l266"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:266</code></a>
 		</p>
 
 
@@ -400,7 +402,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -417,7 +419,7 @@ certain optional parameters are omitted
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_dataset_layers.cpp.html#l272"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:272</code></a>
+		<a href="../files/src_collections_dataset_layers.cpp.html#l273"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:273</code></a>
 		</p>
 
 
@@ -438,14 +440,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -586,7 +590,7 @@ options</p>
 						<code>creation_options</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -661,14 +665,16 @@ options</p>
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -688,7 +694,8 @@ certain optional parameters are omitted
 			<h4>Example:</h4>
 
 			<div class="example-content">
-				<pre class="code prettyprint"><code>dataset.layers.createAsync('layername', null, gdal.Point);
+				<pre class="code prettyprint"><code>await dataset.layers.createAsync('layername', null, gdal.Point);
+dataset.layers.createAsync('layername', null, gdal.Point, (e, r) =&gt; console.log(e, r));
 </code></pre>
 
 			</div>
@@ -820,7 +827,7 @@ certain optional parameters are omitted
 						<code>key</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -867,14 +874,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -972,7 +981,7 @@ an array of the returned values.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_dataset_layers.cpp.html#l390"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:390</code></a>
+		<a href="../files/src_collections_dataset_layers.cpp.html#l391"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:391</code></a>
 		</p>
 
 
@@ -1008,7 +1017,7 @@ an array of the returned values.</p>
 						<code>index</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -1022,7 +1031,7 @@ an array of the returned values.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_dataset_layers.cpp.html#l398"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:398</code></a>
+		<a href="../files/src_collections_dataset_layers.cpp.html#l399"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:399</code></a>
 		</p>
 
 
@@ -1050,14 +1059,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -1090,7 +1101,7 @@ certain optional parameters are omitted
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_collections_dataset_layers.cpp.html#l448"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:448</code></a>
+        <a href="../files/src_collections_dataset_layers.cpp.html#l449"><code>src&#x2F;collections&#x2F;dataset_layers.cpp:449</code></a>
         </p>
 
 

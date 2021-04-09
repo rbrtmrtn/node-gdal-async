@@ -318,7 +318,7 @@
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -356,14 +356,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -462,7 +464,7 @@ certain optional parameters are omitted
 						<code>segments</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -514,14 +516,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -585,7 +589,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -623,14 +627,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -722,7 +728,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -757,14 +763,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -842,7 +850,7 @@ certain optional parameters are omitted
 						<code>geometry</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -887,14 +895,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -958,7 +968,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -996,14 +1006,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -1089,7 +1101,7 @@ certain optional parameters are omitted
 						<code>geometry</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -1134,14 +1146,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -1227,7 +1241,7 @@ certain optional parameters are omitted
 						<code>geometry</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -1272,14 +1286,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -1365,7 +1381,7 @@ certain optional parameters are omitted
 						<code>geometry</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -1410,14 +1426,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -1503,7 +1521,7 @@ certain optional parameters are omitted
 						<code>geometry</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -1548,14 +1566,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -1608,7 +1628,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -1643,14 +1663,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -1728,7 +1750,7 @@ certain optional parameters are omitted
 						<code>geometry</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -1773,14 +1795,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -1924,7 +1948,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -1962,14 +1986,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -1995,7 +2021,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -2033,14 +2059,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -2166,7 +2194,7 @@ certain optional parameters are omitted
 						<code>geometry</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -2211,14 +2239,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -2304,7 +2334,7 @@ certain optional parameters are omitted
 						<code>geometry</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -2349,14 +2379,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -2420,7 +2452,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -2458,14 +2490,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -2529,7 +2563,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -2567,14 +2601,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -2638,7 +2674,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -2676,14 +2712,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -2747,7 +2785,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -2785,14 +2823,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -2878,7 +2918,7 @@ certain optional parameters are omitted
 						<code>geometry</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -2923,14 +2963,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -3074,7 +3116,7 @@ certain optional parameters are omitted
 						<code>geometry</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -3119,14 +3161,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -3212,7 +3256,7 @@ certain optional parameters are omitted
 						<code>geometry</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -3257,14 +3301,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -3317,7 +3363,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -3352,14 +3398,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -3437,7 +3485,7 @@ certain optional parameters are omitted
 						<code>geometry</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -3482,14 +3530,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -3553,7 +3603,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -3591,14 +3641,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -3662,7 +3714,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -3700,14 +3752,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -3771,7 +3825,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -3809,14 +3863,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -3942,7 +3998,7 @@ certain optional parameters are omitted
 						<code>geometry</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -3987,14 +4043,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -4101,7 +4159,7 @@ options</a>)</p>
 						<code class="optional">variant=&quot;OGC&quot;</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -4161,14 +4219,16 @@ options</a>)</p>
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -4232,7 +4292,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -4270,14 +4330,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -4357,7 +4419,7 @@ object, and the actual SRS of the geometry will be ignored.</p>
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 				<li class="arg">
 						<code>transformation</code>
@@ -4395,14 +4457,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -4473,7 +4537,7 @@ certain optional parameters are omitted
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 				<li class="arg">
 						<code>srs</code>
@@ -4511,14 +4575,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -4603,7 +4669,7 @@ certain optional parameters are omitted
 						<code>geometry</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -4648,14 +4714,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
@@ -4741,7 +4809,7 @@ certain optional parameters are omitted
 						<code>geometry</code>
 				</li>
 				<li class="arg">
-						<code class="optional">callback</code>
+						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -4786,14 +4854,16 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[callback]</code>
-						<span class="type">RequestCallback</span>
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
 					<div class="param-description"><p>
-Promisifiable callback, always the last parameter, can be specified even if
-certain optional parameters are omitted
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
 </p>
 </div>
 
