@@ -125,7 +125,7 @@
     <pre class="prettyprint linenums">
 const path = require(&#x27;path&#x27;)
 const fs = require(&#x27;fs&#x27;)
-const binary = require(&#x27;node-pre-gyp&#x27;)
+const binary = require(&#x27;@mapbox/node-pre-gyp&#x27;)
 
 const binding_path = binary.find(path.join(__dirname, &#x27;../package.json&#x27;))
 const data_path = path.resolve(__dirname, &#x27;../deps/libgdal/gdal/data&#x27;)
@@ -1096,6 +1096,7 @@ const promisifiables = {
     convexHullAsync: 0,
     boundaryAsync: 0,
     intersectionAsync: 1,
+    flattenTo2DAsync: 0,
     unionAsync: 1,
     differenceAsync: 1,
     symDifferenceAsync: 1,

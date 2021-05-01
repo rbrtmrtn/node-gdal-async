@@ -164,6 +164,7 @@
 				<li><a href="#method-emptyAsync"><span class="im">emptyAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-equals"><span class="im">equals</span>(<span class="ia">geometry</span>)</a></li>
 				<li><a href="#method-equalsAsync"><span class="im">equalsAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
+				<li><a href="#method-flattenTo2D"><span class="im">flattenTo2D</span>()</a></li>
 				<li><a href="#method-getEnvelope"><span class="im">getEnvelope</span>()</a></li>
 				<li><a href="#method-getEnvelope3D"><span class="im">getEnvelope3D</span>()</a></li>
 				<li><a href="#method-getEnvelope3DAsync"><span class="im">getEnvelope3DAsync</span>(<span class="ia">callback</span>)</a></li>
@@ -186,7 +187,7 @@
 				<li><a href="#method-simplify"><span class="im">simplify</span>(<span class="ia">tolerance</span>)</a></li>
 				<li><a href="#method-simplifyAsync"><span class="im">simplifyAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-simplifyPreserveTopology"><span class="im">simplifyPreserveTopology</span>(<span class="ia">tolerance</span>)</a></li>
-				<li><a href="#method-simplifyPreserveTopologyAsync"><span class="im">simplifyPreserveTopologyAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
+				<li><a href="#method-simplifyPreserveTopologyAsync"><span class="im">simplifyPreserveTopologyAsync</span>(<span class="ia">tolerance</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-swapXY"><span class="im">swapXY</span>()</a></li>
 				<li><a href="#method-swapXYAsync"><span class="im">swapXYAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-symDifference"><span class="im">symDifference</span>(<span class="ia">geometry</span>)</a></li>
@@ -269,7 +270,7 @@
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l650"><code>src&#x2F;gdal_geometry.cpp:650</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l613"><code>src&#x2F;gdal_geometry.cpp:613</code></a>
 		</p>
 
 
@@ -314,7 +315,7 @@
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l657"><code>src&#x2F;gdal_geometry.cpp:657</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l620"><code>src&#x2F;gdal_geometry.cpp:620</code></a>
 		</p>
 
 
@@ -389,7 +390,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l885"><code>src&#x2F;gdal_geometry.cpp:885</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l848"><code>src&#x2F;gdal_geometry.cpp:848</code></a>
 		</p>
 
 
@@ -460,7 +461,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l894"><code>src&#x2F;gdal_geometry.cpp:894</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l857"><code>src&#x2F;gdal_geometry.cpp:857</code></a>
 		</p>
 
 
@@ -540,7 +541,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1189"><code>src&#x2F;gdal_geometry.cpp:1189</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1152"><code>src&#x2F;gdal_geometry.cpp:1152</code></a>
 		</p>
 
 
@@ -585,7 +586,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1196"><code>src&#x2F;gdal_geometry.cpp:1196</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1159"><code>src&#x2F;gdal_geometry.cpp:1159</code></a>
 		</p>
 
 
@@ -651,7 +652,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l611"><code>src&#x2F;gdal_geometry.cpp:611</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l574"><code>src&#x2F;gdal_geometry.cpp:574</code></a>
 		</p>
 
 
@@ -687,7 +688,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l238"><code>src&#x2F;gdal_geometry.cpp:238</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l201"><code>src&#x2F;gdal_geometry.cpp:201</code></a>
 		</p>
 
 
@@ -721,7 +722,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l244"><code>src&#x2F;gdal_geometry.cpp:244</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l207"><code>src&#x2F;gdal_geometry.cpp:207</code></a>
 		</p>
 
 
@@ -785,7 +786,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l484"><code>src&#x2F;gdal_geometry.cpp:484</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l447"><code>src&#x2F;gdal_geometry.cpp:447</code></a>
 		</p>
 
 
@@ -846,7 +847,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l492"><code>src&#x2F;gdal_geometry.cpp:492</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l455"><code>src&#x2F;gdal_geometry.cpp:455</code></a>
 		</p>
 
 
@@ -919,7 +920,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l623"><code>src&#x2F;gdal_geometry.cpp:623</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l586"><code>src&#x2F;gdal_geometry.cpp:586</code></a>
 		</p>
 
 
@@ -964,7 +965,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l630"><code>src&#x2F;gdal_geometry.cpp:630</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l593"><code>src&#x2F;gdal_geometry.cpp:593</code></a>
 		</p>
 
 
@@ -1036,7 +1037,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l442"><code>src&#x2F;gdal_geometry.cpp:442</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l405"><code>src&#x2F;gdal_geometry.cpp:405</code></a>
 		</p>
 
 
@@ -1097,7 +1098,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l450"><code>src&#x2F;gdal_geometry.cpp:450</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l413"><code>src&#x2F;gdal_geometry.cpp:413</code></a>
 		</p>
 
 
@@ -1176,7 +1177,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l747"><code>src&#x2F;gdal_geometry.cpp:747</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l710"><code>src&#x2F;gdal_geometry.cpp:710</code></a>
 		</p>
 
 
@@ -1237,7 +1238,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l755"><code>src&#x2F;gdal_geometry.cpp:755</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l718"><code>src&#x2F;gdal_geometry.cpp:718</code></a>
 		</p>
 
 
@@ -1316,7 +1317,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l400"><code>src&#x2F;gdal_geometry.cpp:400</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l363"><code>src&#x2F;gdal_geometry.cpp:363</code></a>
 		</p>
 
 
@@ -1377,7 +1378,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l408"><code>src&#x2F;gdal_geometry.cpp:408</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l371"><code>src&#x2F;gdal_geometry.cpp:371</code></a>
 		</p>
 
 
@@ -1456,7 +1457,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l526"><code>src&#x2F;gdal_geometry.cpp:526</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l489"><code>src&#x2F;gdal_geometry.cpp:489</code></a>
 		</p>
 
 
@@ -1517,7 +1518,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l534"><code>src&#x2F;gdal_geometry.cpp:534</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l497"><code>src&#x2F;gdal_geometry.cpp:497</code></a>
 		</p>
 
 
@@ -1587,7 +1588,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l254"><code>src&#x2F;gdal_geometry.cpp:254</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l217"><code>src&#x2F;gdal_geometry.cpp:217</code></a>
 		</p>
 
 
@@ -1621,7 +1622,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l260"><code>src&#x2F;gdal_geometry.cpp:260</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l223"><code>src&#x2F;gdal_geometry.cpp:223</code></a>
 		</p>
 
 
@@ -1685,7 +1686,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l379"><code>src&#x2F;gdal_geometry.cpp:379</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l342"><code>src&#x2F;gdal_geometry.cpp:342</code></a>
 		</p>
 
 
@@ -1746,7 +1747,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l387"><code>src&#x2F;gdal_geometry.cpp:387</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l350"><code>src&#x2F;gdal_geometry.cpp:350</code></a>
 		</p>
 
 
@@ -1801,6 +1802,45 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 		</div>
 
 </div>
+<div id="method-flattenTo2D" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>flattenTo2D</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type"></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_geometry.cpp.html#l1294"><code>src&#x2F;gdal_geometry.cpp:1294</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Convert geometry to strictly 2D</p>
+</div>
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+					<p>void</p>
+
+			</div>
+		</div>
+
+</div>
 <div id="method-getEnvelope" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>getEnvelope</code></span>
@@ -1819,7 +1859,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1232"><code>src&#x2F;gdal_geometry.cpp:1232</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1195"><code>src&#x2F;gdal_geometry.cpp:1195</code></a>
 		</p>
 
 
@@ -1859,7 +1899,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1280"><code>src&#x2F;gdal_geometry.cpp:1280</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1243"><code>src&#x2F;gdal_geometry.cpp:1243</code></a>
 		</p>
 
 
@@ -1905,7 +1945,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1287"><code>src&#x2F;gdal_geometry.cpp:1287</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1250"><code>src&#x2F;gdal_geometry.cpp:1250</code></a>
 		</p>
 
 
@@ -1978,7 +2018,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1239"><code>src&#x2F;gdal_geometry.cpp:1239</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1202"><code>src&#x2F;gdal_geometry.cpp:1202</code></a>
 		</p>
 
 
@@ -2051,7 +2091,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l677"><code>src&#x2F;gdal_geometry.cpp:677</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l640"><code>src&#x2F;gdal_geometry.cpp:640</code></a>
 		</p>
 
 
@@ -2112,7 +2152,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l685"><code>src&#x2F;gdal_geometry.cpp:685</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l648"><code>src&#x2F;gdal_geometry.cpp:648</code></a>
 		</p>
 
 
@@ -2191,7 +2231,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l358"><code>src&#x2F;gdal_geometry.cpp:358</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l321"><code>src&#x2F;gdal_geometry.cpp:321</code></a>
 		</p>
 
 
@@ -2252,7 +2292,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l366"><code>src&#x2F;gdal_geometry.cpp:366</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l329"><code>src&#x2F;gdal_geometry.cpp:329</code></a>
 		</p>
 
 
@@ -2325,7 +2365,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l286"><code>src&#x2F;gdal_geometry.cpp:286</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l249"><code>src&#x2F;gdal_geometry.cpp:249</code></a>
 		</p>
 
 
@@ -2370,7 +2410,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l293"><code>src&#x2F;gdal_geometry.cpp:293</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l256"><code>src&#x2F;gdal_geometry.cpp:256</code></a>
 		</p>
 
 
@@ -2436,7 +2476,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l340"><code>src&#x2F;gdal_geometry.cpp:340</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l303"><code>src&#x2F;gdal_geometry.cpp:303</code></a>
 		</p>
 
 
@@ -2481,7 +2521,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l347"><code>src&#x2F;gdal_geometry.cpp:347</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l310"><code>src&#x2F;gdal_geometry.cpp:310</code></a>
 		</p>
 
 
@@ -2547,7 +2587,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l322"><code>src&#x2F;gdal_geometry.cpp:322</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l285"><code>src&#x2F;gdal_geometry.cpp:285</code></a>
 		</p>
 
 
@@ -2592,7 +2632,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l329"><code>src&#x2F;gdal_geometry.cpp:329</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l292"><code>src&#x2F;gdal_geometry.cpp:292</code></a>
 		</p>
 
 
@@ -2658,7 +2698,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l304"><code>src&#x2F;gdal_geometry.cpp:304</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l267"><code>src&#x2F;gdal_geometry.cpp:267</code></a>
 		</p>
 
 
@@ -2703,7 +2743,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l311"><code>src&#x2F;gdal_geometry.cpp:311</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l274"><code>src&#x2F;gdal_geometry.cpp:274</code></a>
 		</p>
 
 
@@ -2775,7 +2815,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l505"><code>src&#x2F;gdal_geometry.cpp:505</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l468"><code>src&#x2F;gdal_geometry.cpp:468</code></a>
 		</p>
 
 
@@ -2836,7 +2876,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l513"><code>src&#x2F;gdal_geometry.cpp:513</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l476"><code>src&#x2F;gdal_geometry.cpp:476</code></a>
 		</p>
 
 
@@ -2915,7 +2955,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l547"><code>src&#x2F;gdal_geometry.cpp:547</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l510"><code>src&#x2F;gdal_geometry.cpp:510</code></a>
 		</p>
 
 
@@ -2973,7 +3013,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l817"><code>src&#x2F;gdal_geometry.cpp:817</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l780"><code>src&#x2F;gdal_geometry.cpp:780</code></a>
 		</p>
 
 
@@ -3034,7 +3074,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l825"><code>src&#x2F;gdal_geometry.cpp:825</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l788"><code>src&#x2F;gdal_geometry.cpp:788</code></a>
 		</p>
 
 
@@ -3113,7 +3153,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l851"><code>src&#x2F;gdal_geometry.cpp:851</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l814"><code>src&#x2F;gdal_geometry.cpp:814</code></a>
 		</p>
 
 
@@ -3154,7 +3194,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code>geometry</code>
+						<code>tolerance</code>
 				</li>
 				<li class="arg">
 						<code class="optional">callback=undefined</code>
@@ -3174,7 +3214,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l859"><code>src&#x2F;gdal_geometry.cpp:859</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l822"><code>src&#x2F;gdal_geometry.cpp:822</code></a>
 		</p>
 
 
@@ -3195,8 +3235,8 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name">geometry</code>
-						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+						<code class="param-name">tolerance</code>
+						<span class="type">Number</span>
 
 
 
@@ -3244,7 +3284,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l270"><code>src&#x2F;gdal_geometry.cpp:270</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l233"><code>src&#x2F;gdal_geometry.cpp:233</code></a>
 		</p>
 
 
@@ -3278,7 +3318,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l276"><code>src&#x2F;gdal_geometry.cpp:276</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l239"><code>src&#x2F;gdal_geometry.cpp:239</code></a>
 		</p>
 
 
@@ -3342,7 +3382,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l782"><code>src&#x2F;gdal_geometry.cpp:782</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l745"><code>src&#x2F;gdal_geometry.cpp:745</code></a>
 		</p>
 
 
@@ -3403,7 +3443,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l790"><code>src&#x2F;gdal_geometry.cpp:790</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l753"><code>src&#x2F;gdal_geometry.cpp:753</code></a>
 		</p>
 
 
@@ -3476,7 +3516,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1105"><code>src&#x2F;gdal_geometry.cpp:1105</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1068"><code>src&#x2F;gdal_geometry.cpp:1068</code></a>
 		</p>
 
 
@@ -3521,7 +3561,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1112"><code>src&#x2F;gdal_geometry.cpp:1112</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1075"><code>src&#x2F;gdal_geometry.cpp:1075</code></a>
 		</p>
 
 
@@ -3587,7 +3627,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1147"><code>src&#x2F;gdal_geometry.cpp:1147</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1110"><code>src&#x2F;gdal_geometry.cpp:1110</code></a>
 		</p>
 
 
@@ -3632,7 +3672,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1154"><code>src&#x2F;gdal_geometry.cpp:1154</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1117"><code>src&#x2F;gdal_geometry.cpp:1117</code></a>
 		</p>
 
 
@@ -3698,7 +3738,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1063"><code>src&#x2F;gdal_geometry.cpp:1063</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1026"><code>src&#x2F;gdal_geometry.cpp:1026</code></a>
 		</p>
 
 
@@ -3743,7 +3783,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1070"><code>src&#x2F;gdal_geometry.cpp:1070</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1033"><code>src&#x2F;gdal_geometry.cpp:1033</code></a>
 		</p>
 
 
@@ -3855,7 +3895,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l421"><code>src&#x2F;gdal_geometry.cpp:421</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l384"><code>src&#x2F;gdal_geometry.cpp:384</code></a>
 		</p>
 
 
@@ -3916,7 +3956,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l429"><code>src&#x2F;gdal_geometry.cpp:429</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l392"><code>src&#x2F;gdal_geometry.cpp:392</code></a>
 		</p>
 
 
@@ -3998,7 +4038,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l967"><code>src&#x2F;gdal_geometry.cpp:967</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l930"><code>src&#x2F;gdal_geometry.cpp:930</code></a>
 		</p>
 
 
@@ -4077,7 +4117,7 @@ options</a>)</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l978"><code>src&#x2F;gdal_geometry.cpp:978</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l941"><code>src&#x2F;gdal_geometry.cpp:941</code></a>
 		</p>
 
 
@@ -4165,7 +4205,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l925"><code>src&#x2F;gdal_geometry.cpp:925</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l888"><code>src&#x2F;gdal_geometry.cpp:888</code></a>
 		</p>
 
 
@@ -4210,7 +4250,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l932"><code>src&#x2F;gdal_geometry.cpp:932</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l895"><code>src&#x2F;gdal_geometry.cpp:895</code></a>
 		</p>
 
 
@@ -4279,7 +4319,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l556"><code>src&#x2F;gdal_geometry.cpp:556</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l519"><code>src&#x2F;gdal_geometry.cpp:519</code></a>
 		</p>
 
 
@@ -4337,7 +4377,7 @@ object, and the actual SRS of the geometry will be ignored.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l575"><code>src&#x2F;gdal_geometry.cpp:575</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l538"><code>src&#x2F;gdal_geometry.cpp:538</code></a>
 		</p>
 
 
@@ -4405,7 +4445,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l588"><code>src&#x2F;gdal_geometry.cpp:588</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l551"><code>src&#x2F;gdal_geometry.cpp:551</code></a>
 		</p>
 
 
@@ -4455,7 +4495,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l597"><code>src&#x2F;gdal_geometry.cpp:597</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l560"><code>src&#x2F;gdal_geometry.cpp:560</code></a>
 		</p>
 
 
@@ -4526,7 +4566,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l712"><code>src&#x2F;gdal_geometry.cpp:712</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l675"><code>src&#x2F;gdal_geometry.cpp:675</code></a>
 		</p>
 
 
@@ -4587,7 +4627,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l720"><code>src&#x2F;gdal_geometry.cpp:720</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l683"><code>src&#x2F;gdal_geometry.cpp:683</code></a>
 		</p>
 
 
@@ -4666,7 +4706,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l463"><code>src&#x2F;gdal_geometry.cpp:463</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l426"><code>src&#x2F;gdal_geometry.cpp:426</code></a>
 		</p>
 
 
@@ -4727,7 +4767,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l471"><code>src&#x2F;gdal_geometry.cpp:471</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l434"><code>src&#x2F;gdal_geometry.cpp:434</code></a>
 		</p>
 
 
@@ -4804,7 +4844,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_geometry.cpp.html#l1584"><code>src&#x2F;gdal_geometry.cpp:1584</code></a>
+        <a href="../files/src_gdal_geometry.cpp.html#l1555"><code>src&#x2F;gdal_geometry.cpp:1555</code></a>
         </p>
 
 
@@ -4833,7 +4873,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_geometry.cpp.html#l1573"><code>src&#x2F;gdal_geometry.cpp:1573</code></a>
+        <a href="../files/src_gdal_geometry.cpp.html#l1544"><code>src&#x2F;gdal_geometry.cpp:1544</code></a>
         </p>
 
 
@@ -4862,7 +4902,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_geometry.cpp.html#l1538"><code>src&#x2F;gdal_geometry.cpp:1538</code></a>
+        <a href="../files/src_gdal_geometry.cpp.html#l1509"><code>src&#x2F;gdal_geometry.cpp:1509</code></a>
         </p>
 
 
@@ -4890,7 +4930,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_geometry.cpp.html#l1512"><code>src&#x2F;gdal_geometry.cpp:1512</code></a>
+        <a href="../files/src_gdal_geometry.cpp.html#l1483"><code>src&#x2F;gdal_geometry.cpp:1483</code></a>
         </p>
 
 
@@ -4919,7 +4959,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_geometry.cpp.html#l1562"><code>src&#x2F;gdal_geometry.cpp:1562</code></a>
+        <a href="../files/src_gdal_geometry.cpp.html#l1533"><code>src&#x2F;gdal_geometry.cpp:1533</code></a>
         </p>
 
 
@@ -4948,7 +4988,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_geometry.cpp.html#l1549"><code>src&#x2F;gdal_geometry.cpp:1549</code></a>
+        <a href="../files/src_gdal_geometry.cpp.html#l1520"><code>src&#x2F;gdal_geometry.cpp:1520</code></a>
         </p>
 
 
@@ -4993,7 +5033,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1494"><code>src&#x2F;gdal_geometry.cpp:1494</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1465"><code>src&#x2F;gdal_geometry.cpp:1465</code></a>
 		</p>
 
 
@@ -5054,7 +5094,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1436"><code>src&#x2F;gdal_geometry.cpp:1436</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1407"><code>src&#x2F;gdal_geometry.cpp:1407</code></a>
 		</p>
 
 
@@ -5115,7 +5155,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1445"><code>src&#x2F;gdal_geometry.cpp:1445</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1416"><code>src&#x2F;gdal_geometry.cpp:1416</code></a>
 		</p>
 
 
@@ -5203,7 +5243,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1380"><code>src&#x2F;gdal_geometry.cpp:1380</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1351"><code>src&#x2F;gdal_geometry.cpp:1351</code></a>
 		</p>
 
 
@@ -5275,7 +5315,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1390"><code>src&#x2F;gdal_geometry.cpp:1390</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1361"><code>src&#x2F;gdal_geometry.cpp:1361</code></a>
 		</p>
 
 
@@ -5365,7 +5405,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1333"><code>src&#x2F;gdal_geometry.cpp:1333</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1304"><code>src&#x2F;gdal_geometry.cpp:1304</code></a>
 		</p>
 
 
@@ -5437,7 +5477,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1343"><code>src&#x2F;gdal_geometry.cpp:1343</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1314"><code>src&#x2F;gdal_geometry.cpp:1314</code></a>
 		</p>
 
 
@@ -5524,7 +5564,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1630"><code>src&#x2F;gdal_geometry.cpp:1630</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1601"><code>src&#x2F;gdal_geometry.cpp:1601</code></a>
 		</p>
 
 
@@ -5586,7 +5626,7 @@ given WKB geometry type.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_geometry.cpp.html#l1647"><code>src&#x2F;gdal_geometry.cpp:1647</code></a>
+		<a href="../files/src_gdal_geometry.cpp.html#l1618"><code>src&#x2F;gdal_geometry.cpp:1618</code></a>
 		</p>
 
 

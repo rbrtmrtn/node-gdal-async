@@ -143,16 +143,11 @@ void DatasetLayers::Initialize(Local&lt;Object&gt; target) {
   lcons-&gt;SetClassName(Nan::New(&quot;DatasetLayers&quot;).ToLocalChecked());
 
   Nan::SetPrototypeMethod(lcons, &quot;toString&quot;, toString);
-  Nan::SetPrototypeMethod(lcons, &quot;count&quot;, count);
-  Nan::SetPrototypeMethod(lcons, &quot;countAsync&quot;, countAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;create&quot;, create);
-  Nan::SetPrototypeMethod(lcons, &quot;createAsync&quot;, createAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;copy&quot;, copy);
-  Nan::SetPrototypeMethod(lcons, &quot;copyAsync&quot;, copyAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;get&quot;, get);
-  Nan::SetPrototypeMethod(lcons, &quot;getAsync&quot;, getAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;remove&quot;, remove);
-  Nan::SetPrototypeMethod(lcons, &quot;removeAsync&quot;, removeAsync);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;count&quot;, count);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;create&quot;, create);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;copy&quot;, copy);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;get&quot;, get);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;remove&quot;, remove);
 
   ATTR_DONT_ENUM(lcons, &quot;ds&quot;, dsGetter, READ_ONLY_SETTER);
 

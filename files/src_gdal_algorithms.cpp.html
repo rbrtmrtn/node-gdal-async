@@ -133,16 +133,11 @@
 namespace node_gdal {
 
 void Algorithms::Initialize(Local&lt;Object&gt; target) {
-  Nan::SetMethod(target, &quot;fillNodata&quot;, fillNodata);
-  Nan::SetMethod(target, &quot;fillNodataAsync&quot;, fillNodataAsync);
-  Nan::SetMethod(target, &quot;contourGenerate&quot;, contourGenerate);
-  Nan::SetMethod(target, &quot;contourGenerateAsync&quot;, contourGenerateAsync);
-  Nan::SetMethod(target, &quot;sieveFilter&quot;, sieveFilter);
-  Nan::SetMethod(target, &quot;sieveFilterAsync&quot;, sieveFilterAsync);
-  Nan::SetMethod(target, &quot;checksumImage&quot;, checksumImage);
-  Nan::SetMethod(target, &quot;checksumImageAsync&quot;, checksumImageAsync);
-  Nan::SetMethod(target, &quot;polygonize&quot;, polygonize);
-  Nan::SetMethod(target, &quot;polygonizeAsync&quot;, polygonizeAsync);
+  Nan__SetAsyncableMethod(target, &quot;fillNodata&quot;, fillNodata);
+  Nan__SetAsyncableMethod(target, &quot;contourGenerate&quot;, contourGenerate);
+  Nan__SetAsyncableMethod(target, &quot;sieveFilter&quot;, sieveFilter);
+  Nan__SetAsyncableMethod(target, &quot;checksumImage&quot;, checksumImage);
+  Nan__SetAsyncableMethod(target, &quot;polygonize&quot;, polygonize);
 }
 
 /**

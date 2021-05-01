@@ -140,19 +140,13 @@ void LayerFeatures::Initialize(Local&lt;Object&gt; target) {
   lcons-&gt;SetClassName(Nan::New(&quot;LayerFeatures&quot;).ToLocalChecked());
 
   Nan::SetPrototypeMethod(lcons, &quot;toString&quot;, toString);
-  Nan::SetPrototypeMethod(lcons, &quot;count&quot;, count);
-  Nan::SetPrototypeMethod(lcons, &quot;countAsync&quot;, countAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;add&quot;, add);
-  Nan::SetPrototypeMethod(lcons, &quot;addAsync&quot;, addAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;get&quot;, get);
-  Nan::SetPrototypeMethod(lcons, &quot;getAsync&quot;, getAsync);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;count&quot;, count);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;add&quot;, add);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;get&quot;, get);
   Nan::SetPrototypeMethod(lcons, &quot;set&quot;, set);
-  Nan::SetPrototypeMethod(lcons, &quot;first&quot;, first);
-  Nan::SetPrototypeMethod(lcons, &quot;firstAsync&quot;, firstAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;next&quot;, next);
-  Nan::SetPrototypeMethod(lcons, &quot;nextAsync&quot;, nextAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;remove&quot;, remove);
-  Nan::SetPrototypeMethod(lcons, &quot;removeAsync&quot;, removeAsync);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;first&quot;, first);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;next&quot;, next);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;remove&quot;, remove);
 
   ATTR_DONT_ENUM(lcons, &quot;layer&quot;, layerGetter, READ_ONLY_SETTER);
 

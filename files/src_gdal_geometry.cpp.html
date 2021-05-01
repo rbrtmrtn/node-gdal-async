@@ -155,88 +155,51 @@ void Geometry::Initialize(Local&lt;Object&gt; target) {
   lcons-&gt;SetClassName(Nan::New(&quot;Geometry&quot;).ToLocalChecked());
 
   // Nan::SetMethod(constructor, &quot;fromWKBType&quot;, Geometry::create);
-  Nan::SetMethod(lcons, &quot;fromWKT&quot;, Geometry::createFromWkt);
-  Nan::SetMethod(lcons, &quot;fromWKTAsync&quot;, Geometry::createFromWktAsync);
-  Nan::SetMethod(lcons, &quot;fromWKB&quot;, Geometry::createFromWkb);
-  Nan::SetMethod(lcons, &quot;fromWKBAsync&quot;, Geometry::createFromWkbAsync);
-  Nan::SetMethod(lcons, &quot;fromGeoJson&quot;, Geometry::createFromGeoJson);
-  Nan::SetMethod(lcons, &quot;fromGeoJsonAsync&quot;, Geometry::createFromGeoJsonAsync);
+  Nan__SetAsyncableMethod(lcons, &quot;fromWKT&quot;, Geometry::createFromWkt);
+  Nan__SetAsyncableMethod(lcons, &quot;fromWKB&quot;, Geometry::createFromWkb);
+  Nan__SetAsyncableMethod(lcons, &quot;fromGeoJson&quot;, Geometry::createFromGeoJson);
   Nan::SetMethod(lcons, &quot;getName&quot;, Geometry::getName);
   Nan::SetMethod(lcons, &quot;getConstructor&quot;, Geometry::getConstructor);
 
   Nan::SetPrototypeMethod(lcons, &quot;toString&quot;, toString);
-  Nan::SetPrototypeMethod(lcons, &quot;toKML&quot;, exportToKML);
-  Nan::SetPrototypeMethod(lcons, &quot;toKMLAsync&quot;, exportToKMLAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;toGML&quot;, exportToGML);
-  Nan::SetPrototypeMethod(lcons, &quot;toGMLAsync&quot;, exportToGMLAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;toJSON&quot;, exportToJSON);
-  Nan::SetPrototypeMethod(lcons, &quot;toJSONAsync&quot;, exportToJSONAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;toWKT&quot;, exportToWKT);
-  Nan::SetPrototypeMethod(lcons, &quot;toWKTAsync&quot;, exportToWKTAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;toWKB&quot;, exportToWKB);
-  Nan::SetPrototypeMethod(lcons, &quot;toWKBAsync&quot;, exportToWKBAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;isEmpty&quot;, isEmpty);
-  Nan::SetPrototypeMethod(lcons, &quot;isEmptyAsync&quot;, isEmptyAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;isValid&quot;, isValid);
-  Nan::SetPrototypeMethod(lcons, &quot;isValidAsync&quot;, isValidAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;isSimple&quot;, isSimple);
-  Nan::SetPrototypeMethod(lcons, &quot;isSimpleAsync&quot;, isSimpleAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;isRing&quot;, isRing);
-  Nan::SetPrototypeMethod(lcons, &quot;isRingAsync&quot;, isRingAsync);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;toKML&quot;, exportToKML);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;toGML&quot;, exportToGML);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;toJSON&quot;, exportToJSON);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;toWKT&quot;, exportToWKT);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;toWKB&quot;, exportToWKB);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;isEmpty&quot;, isEmpty);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;isValid&quot;, isValid);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;isSimple&quot;, isSimple);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;isRing&quot;, isRing);
   Nan::SetPrototypeMethod(lcons, &quot;clone&quot;, clone);
-  Nan::SetPrototypeMethod(lcons, &quot;empty&quot;, empty);
-  Nan::SetPrototypeMethod(lcons, &quot;emptyAsync&quot;, emptyAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;closeRings&quot;, closeRings);
-  Nan::SetPrototypeMethod(lcons, &quot;closeRingsAsync&quot;, closeRingsAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;intersects&quot;, intersects);
-  Nan::SetPrototypeMethod(lcons, &quot;intersectsAsync&quot;, intersectsAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;equals&quot;, equals);
-  Nan::SetPrototypeMethod(lcons, &quot;equalsAsync&quot;, equalsAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;disjoint&quot;, disjoint);
-  Nan::SetPrototypeMethod(lcons, &quot;disjointAsync&quot;, disjointAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;touches&quot;, touches);
-  Nan::SetPrototypeMethod(lcons, &quot;touchesAsync&quot;, touchesAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;crosses&quot;, crosses);
-  Nan::SetPrototypeMethod(lcons, &quot;crossesAsync&quot;, crossesAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;within&quot;, within);
-  Nan::SetPrototypeMethod(lcons, &quot;withinAsync&quot;, withinAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;contains&quot;, contains);
-  Nan::SetPrototypeMethod(lcons, &quot;containsAsync&quot;, containsAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;overlaps&quot;, overlaps);
-  Nan::SetPrototypeMethod(lcons, &quot;overlapsAsync&quot;, overlapsAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;boundary&quot;, boundary);
-  Nan::SetPrototypeMethod(lcons, &quot;boundaryAsync&quot;, boundaryAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;distance&quot;, distance);
-  Nan::SetPrototypeMethod(lcons, &quot;distanceAsync&quot;, distanceAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;convexHull&quot;, convexHull);
-  Nan::SetPrototypeMethod(lcons, &quot;convexHullAsync&quot;, convexHullAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;buffer&quot;, buffer);
-  Nan::SetPrototypeMethod(lcons, &quot;bufferAsync&quot;, bufferAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;intersection&quot;, intersection);
-  Nan::SetPrototypeMethod(lcons, &quot;intersectionAsync&quot;, intersectionAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;union&quot;, unionGeometry);
-  Nan::SetPrototypeMethod(lcons, &quot;unionAsync&quot;, unionGeometryAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;difference&quot;, difference);
-  Nan::SetPrototypeMethod(lcons, &quot;differenceAsync&quot;, differenceAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;symDifference&quot;, symDifference);
-  Nan::SetPrototypeMethod(lcons, &quot;symDifferenceAsync&quot;, symDifferenceAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;centroid&quot;, centroid);
-  Nan::SetPrototypeMethod(lcons, &quot;centroidAsync&quot;, centroidAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;simplify&quot;, simplify);
-  Nan::SetPrototypeMethod(lcons, &quot;simplifyAsync&quot;, simplifyAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;simplifyPreserveTopology&quot;, simplifyPreserveTopology);
-  Nan::SetPrototypeMethod(lcons, &quot;simplifyPreserveTopologyAsync&quot;, simplifyPreserveTopologyAsync);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;empty&quot;, empty);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;closeRings&quot;, closeRings);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;intersects&quot;, intersects);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;equals&quot;, equals);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;disjoint&quot;, disjoint);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;touches&quot;, touches);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;crosses&quot;, crosses);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;within&quot;, within);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;contains&quot;, contains);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;overlaps&quot;, overlaps);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;boundary&quot;, boundary);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;distance&quot;, distance);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;convexHull&quot;, convexHull);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;buffer&quot;, buffer);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;intersection&quot;, intersection);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;union&quot;, unionGeometry);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;difference&quot;, difference);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;symDifference&quot;, symDifference);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;centroid&quot;, centroid);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;simplify&quot;, simplify);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;simplifyPreserveTopology&quot;, simplifyPreserveTopology);
   Nan::SetPrototypeMethod(lcons, &quot;segmentize&quot;, segmentize);
-  Nan::SetPrototypeMethod(lcons, &quot;swapXY&quot;, swapXY);
-  Nan::SetPrototypeMethod(lcons, &quot;swapXYAsync&quot;, swapXYAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;getEnvelope&quot;, getEnvelope);
-  Nan::SetPrototypeMethod(lcons, &quot;getEnvelopeAsync&quot;, getEnvelopeAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;getEnvelope3D&quot;, getEnvelope3D);
-  Nan::SetPrototypeMethod(lcons, &quot;getEnvelope3DAsync&quot;, getEnvelope3DAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;transform&quot;, transform);
-  Nan::SetPrototypeMethod(lcons, &quot;transformAsync&quot;, transformAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;transformTo&quot;, transformTo);
-  Nan::SetPrototypeMethod(lcons, &quot;transformToAsync&quot;, transformToAsync);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;swapXY&quot;, swapXY);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;getEnvelope&quot;, getEnvelope);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;getEnvelope3D&quot;, getEnvelope3D);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;flattenTo2D&quot;, flattenTo2D);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;transform&quot;, transform);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;transformTo&quot;, transformTo);
 
   ATTR(lcons, &quot;srs&quot;, srsGetter, srsSetter);
   ATTR(lcons, &quot;wkbSize&quot;, wkbSizeGetter, READ_ONLY_SETTER);
@@ -986,7 +949,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::simplify) {
  * {{{async}}}
  *
  * @method simplifyPreserveTopologyAsync
- * @param {gdal.Geometry} geometry
+ * @param {Number} tolerance
  * @param {callback} [callback=undefined] {{{cb}}}
  * @return gdal.Geometry
  */
@@ -1452,6 +1415,14 @@ GDAL_ASYNCABLE_DEFINE(Geometry::getEnvelope3D) {
   };
   job.run(info, async, 0);
 }
+
+/**
+ * Convert geometry to strictly 2D
+ *
+ * @method flattenTo2D
+ * @return void
+ */
+NODE_WRAPPED_ASYNC_METHOD(Geometry, flattenTo2D, flattenTo2D);
 
 // --- JS static methods (OGRGeometryFactory) ---
 

@@ -147,12 +147,9 @@ void Driver::Initialize(Local&lt;Object&gt; target) {
   lcons-&gt;SetClassName(Nan::New(&quot;Driver&quot;).ToLocalChecked());
 
   Nan::SetPrototypeMethod(lcons, &quot;toString&quot;, toString);
-  Nan::SetPrototypeMethod(lcons, &quot;open&quot;, open);
-  Nan::SetPrototypeMethod(lcons, &quot;openAsync&quot;, openAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;create&quot;, create);
-  Nan::SetPrototypeMethod(lcons, &quot;createAsync&quot;, createAsync);
-  Nan::SetPrototypeMethod(lcons, &quot;createCopy&quot;, createCopy);
-  Nan::SetPrototypeMethod(lcons, &quot;createCopyAsync&quot;, createCopyAsync);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;open&quot;, open);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;create&quot;, create);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;createCopy&quot;, createCopy);
   Nan::SetPrototypeMethod(lcons, &quot;deleteDataset&quot;, deleteDataset);
   Nan::SetPrototypeMethod(lcons, &quot;rename&quot;, rename);
   Nan::SetPrototypeMethod(lcons, &quot;copyFiles&quot;, copyFiles);
