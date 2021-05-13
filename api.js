@@ -16,6 +16,9 @@ YUI.add("yuidoc-meta", function(Y) {
         "Constants (wkbGeometryType)",
         "Constants (wkbVariant)",
         "gdal",
+        "gdal.Circularstring",
+        "gdal.CompoundCurve",
+        "gdal.CompoundCurveCurves",
         "gdal.CoordinateTransformation",
         "gdal.Dataset",
         "gdal.DatasetBands",
@@ -26,6 +29,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "gdal.Feature",
         "gdal.FeatureDefn",
         "gdal.FeatureDefnFields",
+        "gdal.FeatureDefnFields *",
         "gdal.FeatureFields",
         "gdal.FieldDefn",
         "gdal.GDALDrivers",
@@ -38,7 +42,8 @@ YUI.add("yuidoc-meta", function(Y) {
         "gdal.LineString",
         "gdal.LineStringPoints",
         "gdal.LinearRing",
-        "gdal.MultiLineString",
+        "gdal.MultiCurve",
+        "gdal.MultiLinestring",
         "gdal.MultiPoint",
         "gdal.MultiPolygon",
         "gdal.Point",
@@ -47,10 +52,16 @@ YUI.add("yuidoc-meta", function(Y) {
         "gdal.RasterBand",
         "gdal.RasterBandOverviews",
         "gdal.RasterBandPixels",
-        "gdal.SpatialReference"
+        "gdal.SimpleCurve",
+        "gdal.SpatialReference",
+        "gdal.config"
     ],
     "modules": [],
     "allModules": [],
-    "elements": []
+    "elements": [
+        "callback",
+        "forEachCb",
+        "mapCb"
+    ]
 } };
 });
