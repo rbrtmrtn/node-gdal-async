@@ -22,12 +22,12 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.1.0</b>
+                    API Docs for Version: <b>3.1.1</b>
                 </p>
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.Circularstring", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureDefnFields *", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLinestring", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureDefnFields *", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
         </form>
     </div>
 </div>
@@ -53,7 +53,7 @@
                 <li><a href="../classes/Constants (wkbGeometryType).html">Constants (wkbGeometryType)</a></li>
                 <li><a href="../classes/Constants (wkbVariant).html">Constants (wkbVariant)</a></li>
                 <li><a href="../classes/gdal.html">gdal</a></li>
-                <li><a href="../classes/gdal.Circularstring.html">gdal.Circularstring</a></li>
+                <li><a href="../classes/gdal.CircularString.html">gdal.CircularString</a></li>
                 <li><a href="../classes/gdal.CompoundCurve.html">gdal.CompoundCurve</a></li>
                 <li><a href="../classes/gdal.CompoundCurveCurves.html">gdal.CompoundCurveCurves</a></li>
                 <li><a href="../classes/gdal.config.html">gdal.config</a></li>
@@ -81,7 +81,7 @@
                 <li><a href="../classes/gdal.LineString.html">gdal.LineString</a></li>
                 <li><a href="../classes/gdal.LineStringPoints.html">gdal.LineStringPoints</a></li>
                 <li><a href="../classes/gdal.MultiCurve.html">gdal.MultiCurve</a></li>
-                <li><a href="../classes/gdal.MultiLinestring.html">gdal.MultiLinestring</a></li>
+                <li><a href="../classes/gdal.MultiLineString.html">gdal.MultiLineString</a></li>
                 <li><a href="../classes/gdal.MultiPoint.html">gdal.MultiPoint</a></li>
                 <li><a href="../classes/gdal.MultiPolygon.html">gdal.MultiPolygon</a></li>
                 <li><a href="../classes/gdal.Point.html">gdal.Point</a></li>
@@ -172,6 +172,7 @@
 				<li><a href="#method-equals"><span class="im">equals</span>(<span class="ia">geometry</span>)</a></li>
 				<li><a href="#method-equalsAsync"><span class="im">equalsAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-flattenTo2D"><span class="im">flattenTo2D</span>()</a></li>
+				<li><a href="#method-flattenTo2DAsync"><span class="im">flattenTo2DAsync</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-getEnvelope"><span class="im">getEnvelope</span>()</a></li>
 				<li><a href="#method-getEnvelope3D"><span class="im">getEnvelope3D</span>()</a></li>
 				<li><a href="#method-getEnvelope3DAsync"><span class="im">getEnvelope3DAsync</span>(<span class="ia">callback</span>)</a></li>
@@ -192,7 +193,7 @@
 				<li><a href="#method-overlapsAsync"><span class="im">overlapsAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-segmentize"><span class="im">segmentize</span>(<span class="ia">segment_length</span>)</a></li>
 				<li><a href="#method-simplify"><span class="im">simplify</span>(<span class="ia">tolerance</span>)</a></li>
-				<li><a href="#method-simplifyAsync"><span class="im">simplifyAsync</span>(<span class="ia">geometry</span><span class="ia">callback</span>)</a></li>
+				<li><a href="#method-simplifyAsync"><span class="im">simplifyAsync</span>(<span class="ia">tolerance</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-simplifyPreserveTopology"><span class="im">simplifyPreserveTopology</span>(<span class="ia">tolerance</span>)</a></li>
 				<li><a href="#method-simplifyPreserveTopologyAsync"><span class="im">simplifyPreserveTopologyAsync</span>(<span class="ia">tolerance</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-swapXY"><span class="im">swapXY</span>()</a></li>
@@ -223,6 +224,12 @@
 			</ul>
 		</li>
 
+		<li>
+			<strong>Properties</strong>
+			<ul>
+				<li><a href="#prop-wkbType"><span class="ip">wkbType</span></a></li>
+			</ul>
+		</li>
 
 		<li>
 			<strong>Attributes</strong>
@@ -1505,7 +1512,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			</ul><span class="paren">)</span>
 		</div>
 		<span class="returns-inline">
-			<span class="type">Promise<boolean></span>
+			<span class="type">Promise<number></span>
 		</span>
 	</div>
 
@@ -1546,7 +1553,7 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 				</li>
 				<li class="param">
 						<code class="param-name optional">[callback=undefined]</code>
-						<span class="type">Callback<boolean></span>
+						<span class="type">Callback<number></span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
@@ -1566,7 +1573,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			<h4>Returns:</h4>
 
 			<div class="returns-description">
-						<span class="type">Promise<boolean></span>
+						<span class="type">Promise<number></span>
 			</div>
 		</div>
 
@@ -1846,6 +1853,77 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 		</div>
 
 </div>
+<div id="method-flattenTo2DAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>flattenTo2DAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">callback=undefined</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Promise<void></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1286"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1286</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Convert geometry to strictly 2D
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback<void></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Promise<void></span>
+			</div>
+		</div>
+
+</div>
 <div id="method-getEnvelope" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>getEnvelope</code></span>
@@ -2009,7 +2087,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			</ul><span class="paren">)</span>
 		</div>
 		<span class="returns-inline">
-			<span class="type">Promise<gdal.Geometry></span>
+			<span class="type">Promise<gdal.Envelope></span>
 		</span>
 	</div>
 
@@ -2043,7 +2121,7 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 			<ul class="params-list">
 				<li class="param">
 						<code class="param-name optional">[callback=undefined]</code>
-						<span class="type">callback<gdal.Geometry></span>
+						<span class="type">callback<gdal.Envelope></span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
@@ -2063,7 +2141,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			<h4>Returns:</h4>
 
 			<div class="returns-description">
-						<span class="type">Promise<gdal.Geometry></span>
+						<span class="type">Promise<gdal.Envelope></span>
 			</div>
 		</div>
 
@@ -3039,7 +3117,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code>geometry</code>
+						<code>tolerance</code>
 				</li>
 				<li class="arg">
 						<code class="optional">callback=undefined</code>
@@ -3080,8 +3158,8 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name">geometry</code>
-						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+						<code class="param-name">tolerance</code>
+						<span class="type">Number</span>
 
 
 
@@ -3494,7 +3572,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 
 		<span class="paren">()</span>
 		<span class="returns-inline">
-			<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+			<span class="type">String</span>
 		</span>
 	</div>
 
@@ -3521,7 +3599,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			<h4>Returns:</h4>
 
 			<div class="returns-description">
-						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+						<span class="type">String</span>
 			</div>
 		</div>
 
@@ -3538,7 +3616,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			</ul><span class="paren">)</span>
 		</div>
 		<span class="returns-inline">
-			<span class="type">Promise<gdal.Geometry></span>
+			<span class="type">Promise<string></span>
 		</span>
 	</div>
 
@@ -3572,7 +3650,7 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 			<ul class="params-list">
 				<li class="param">
 						<code class="param-name optional">[callback=undefined]</code>
-						<span class="type">callback<gdal.Geometry></span>
+						<span class="type">Callback<string></span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
@@ -3592,7 +3670,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			<h4>Returns:</h4>
 
 			<div class="returns-description">
-						<span class="type">Promise<gdal.Geometry></span>
+						<span class="type">Promise<string></span>
 			</div>
 		</div>
 
@@ -3603,7 +3681,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 
 		<span class="paren">()</span>
 		<span class="returns-inline">
-			<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+			<span class="type">String</span>
 		</span>
 	</div>
 
@@ -3630,7 +3708,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			<h4>Returns:</h4>
 
 			<div class="returns-description">
-						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+						<span class="type">String</span>
 			</div>
 		</div>
 
@@ -3647,7 +3725,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			</ul><span class="paren">)</span>
 		</div>
 		<span class="returns-inline">
-			<span class="type">Promise<gdal.Geometry></span>
+			<span class="type">Promise<string></span>
 		</span>
 	</div>
 
@@ -3681,7 +3759,7 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 			<ul class="params-list">
 				<li class="param">
 						<code class="param-name optional">[callback=undefined]</code>
-						<span class="type">callback<gdal.Geometry></span>
+						<span class="type">Callback<string></span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
@@ -3701,7 +3779,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			<h4>Returns:</h4>
 
 			<div class="returns-description">
-						<span class="type">Promise<gdal.Geometry></span>
+						<span class="type">Promise<string></span>
 			</div>
 		</div>
 
@@ -3712,7 +3790,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 
 		<span class="paren">()</span>
 		<span class="returns-inline">
-			<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+			<span class="type">String</span>
 		</span>
 	</div>
 
@@ -3739,7 +3817,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			<h4>Returns:</h4>
 
 			<div class="returns-description">
-						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+						<span class="type">String</span>
 			</div>
 		</div>
 
@@ -3756,7 +3834,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			</ul><span class="paren">)</span>
 		</div>
 		<span class="returns-inline">
-			<span class="type">Promise<gdal.Geometry></span>
+			<span class="type">Promise<string></span>
 		</span>
 	</div>
 
@@ -3790,7 +3868,7 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 			<ul class="params-list">
 				<li class="param">
 						<code class="param-name optional">[callback=undefined]</code>
-						<span class="type">callback<gdal.Geometry></span>
+						<span class="type">Callback<string></span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
@@ -3810,7 +3888,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			<h4>Returns:</h4>
 
 			<div class="returns-description">
-						<span class="type">Promise<gdal.Geometry></span>
+						<span class="type">Promise<string></span>
 			</div>
 		</div>
 
@@ -3833,7 +3911,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/lib_gdal.js.html#l352"><code>lib&#x2F;gdal.js:352</code></a>
+		<a href="../files/lib_gdal.js.html#l356"><code>lib&#x2F;gdal.js:356</code></a>
 		</p>
 
 
@@ -4008,7 +4086,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			</ul><span class="paren">)</span>
 		</div>
 		<span class="returns-inline">
-			<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+			<span class="type">Buffer</span>
 		</span>
 	</div>
 
@@ -4063,7 +4141,7 @@ options</a>)</p>
 			<h4>Returns:</h4>
 
 			<div class="returns-description">
-						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+						<span class="type">Buffer</span>
 			</div>
 		</div>
 
@@ -4086,7 +4164,7 @@ options</a>)</p>
 			</ul><span class="paren">)</span>
 		</div>
 		<span class="returns-inline">
-			<span class="type">Promise<gdal.Geometry></span>
+			<span class="type">Promise<Buffer></span>
 		</span>
 	</div>
 
@@ -4142,7 +4220,7 @@ options</a>)</p>
 				</li>
 				<li class="param">
 						<code class="param-name optional">[callback=undefined]</code>
-						<span class="type">callback<gdal.Geometry></span>
+						<span class="type">Callback<Buffer></span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
@@ -4162,7 +4240,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			<h4>Returns:</h4>
 
 			<div class="returns-description">
-						<span class="type">Promise<gdal.Geometry></span>
+						<span class="type">Promise<Buffer></span>
 			</div>
 		</div>
 
@@ -4173,7 +4251,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 
 		<span class="paren">()</span>
 		<span class="returns-inline">
-			<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+			<span class="type">String</span>
 		</span>
 	</div>
 
@@ -4200,7 +4278,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			<h4>Returns:</h4>
 
 			<div class="returns-description">
-						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
+						<span class="type">String</span>
 			</div>
 		</div>
 
@@ -4217,7 +4295,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			</ul><span class="paren">)</span>
 		</div>
 		<span class="returns-inline">
-			<span class="type">Promise<gdal.Geometry></span>
+			<span class="type">Promise<string></span>
 		</span>
 	</div>
 
@@ -4251,7 +4329,7 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 			<ul class="params-list">
 				<li class="param">
 						<code class="param-name optional">[callback=undefined]</code>
-						<span class="type">callback<gdal.Geometry></span>
+						<span class="type">Callback<string></span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
@@ -4271,7 +4349,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 			<h4>Returns:</h4>
 
 			<div class="returns-description">
-						<span class="type">Promise<gdal.Geometry></span>
+						<span class="type">Promise<string></span>
 			</div>
 		</div>
 
@@ -4819,6 +4897,38 @@ Argument type errors are thrown synchronously even when a callback is provided. 
         </div>
     </div>
 
+    <div id="properties" class="page-section">
+        <h2 class="off-left">Properties</h2>
+
+        <div class="item-list">
+<div id="prop-wkbType" class="property item">
+    <h3 class="name"><code>wkbType</code></h3>
+    <span class="type">Number</span>
+
+
+
+        <span class="flag final">const</span>
+
+        <span class="flag static">static</span>
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/lib_gdal.js.html#l1075"><code>lib&#x2F;gdal.js:1075</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+        </div>
+    </div>
 
     <div id="attrs" class="page-section">
         <h2 class="off-left">Attributes</h2>
@@ -4838,7 +4948,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_geometry_gdal_geometry.cpp.html#l1540"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1540</code></a>
+        <a href="../files/src_geometry_gdal_geometry.cpp.html#l1550"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1550</code></a>
         </p>
 
 
@@ -4867,7 +4977,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_geometry_gdal_geometry.cpp.html#l1529"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1529</code></a>
+        <a href="../files/src_geometry_gdal_geometry.cpp.html#l1539"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1539</code></a>
         </p>
 
 
@@ -4896,7 +5006,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_geometry_gdal_geometry.cpp.html#l1494"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1494</code></a>
+        <a href="../files/src_geometry_gdal_geometry.cpp.html#l1504"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1504</code></a>
         </p>
 
 
@@ -4924,7 +5034,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_geometry_gdal_geometry.cpp.html#l1468"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1468</code></a>
+        <a href="../files/src_geometry_gdal_geometry.cpp.html#l1478"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1478</code></a>
         </p>
 
 
@@ -4953,7 +5063,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_geometry_gdal_geometry.cpp.html#l1518"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1518</code></a>
+        <a href="../files/src_geometry_gdal_geometry.cpp.html#l1528"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1528</code></a>
         </p>
 
 
@@ -4982,7 +5092,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_geometry_gdal_geometry.cpp.html#l1505"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1505</code></a>
+        <a href="../files/src_geometry_gdal_geometry.cpp.html#l1515"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1515</code></a>
         </p>
 
 
@@ -5027,7 +5137,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1450"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1450</code></a>
+		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1460"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1460</code></a>
 		</p>
 
 
@@ -5087,7 +5197,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1392"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1392</code></a>
+		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1402"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1402</code></a>
 		</p>
 
 
@@ -5147,7 +5257,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1401"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1401</code></a>
+		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1411"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1411</code></a>
 		</p>
 
 
@@ -5234,7 +5344,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1336"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1336</code></a>
+		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1346"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1346</code></a>
 		</p>
 
 
@@ -5305,7 +5415,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1346"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1346</code></a>
+		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1356"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1356</code></a>
 		</p>
 
 
@@ -5394,7 +5504,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1289"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1289</code></a>
+		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1299"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1299</code></a>
 		</p>
 
 
@@ -5465,7 +5575,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1299"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1299</code></a>
+		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1309"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1309</code></a>
 		</p>
 
 
@@ -5551,7 +5661,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1592"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1592</code></a>
+		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1602"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1602</code></a>
 		</p>
 
 
@@ -5612,7 +5722,7 @@ given WKB geometry type.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1609"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1609</code></a>
+		<a href="../files/src_geometry_gdal_geometry.cpp.html#l1619"><code>src&#x2F;geometry&#x2F;gdal_geometry.cpp:1619</code></a>
 		</p>
 
 

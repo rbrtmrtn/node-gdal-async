@@ -22,12 +22,12 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.1.0</b>
+                    API Docs for Version: <b>3.1.1</b>
                 </p>
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.Circularstring", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureDefnFields *", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLinestring", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureDefnFields *", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
         </form>
     </div>
 </div>
@@ -53,7 +53,7 @@
                 <li><a href="../classes/Constants (wkbGeometryType).html">Constants (wkbGeometryType)</a></li>
                 <li><a href="../classes/Constants (wkbVariant).html">Constants (wkbVariant)</a></li>
                 <li><a href="../classes/gdal.html">gdal</a></li>
-                <li><a href="../classes/gdal.Circularstring.html">gdal.Circularstring</a></li>
+                <li><a href="../classes/gdal.CircularString.html">gdal.CircularString</a></li>
                 <li><a href="../classes/gdal.CompoundCurve.html">gdal.CompoundCurve</a></li>
                 <li><a href="../classes/gdal.CompoundCurveCurves.html">gdal.CompoundCurveCurves</a></li>
                 <li><a href="../classes/gdal.config.html">gdal.config</a></li>
@@ -81,7 +81,7 @@
                 <li><a href="../classes/gdal.LineString.html">gdal.LineString</a></li>
                 <li><a href="../classes/gdal.LineStringPoints.html">gdal.LineStringPoints</a></li>
                 <li><a href="../classes/gdal.MultiCurve.html">gdal.MultiCurve</a></li>
-                <li><a href="../classes/gdal.MultiLinestring.html">gdal.MultiLinestring</a></li>
+                <li><a href="../classes/gdal.MultiLineString.html">gdal.MultiLineString</a></li>
                 <li><a href="../classes/gdal.MultiPoint.html">gdal.MultiPoint</a></li>
                 <li><a href="../classes/gdal.MultiPolygon.html">gdal.MultiPolygon</a></li>
                 <li><a href="../classes/gdal.Point.html">gdal.Point</a></li>
@@ -611,8 +611,8 @@ NODE_WRAPPED_ASYNC_METHOD_WITH_RESULT_1_WRAPPED_PARAM(
  *
  * @method distanceAsync
  * @param {gdal.Geometry} geometry
- * @param {callback&lt;boolean&gt;} [callback=undefined] {{{cb}}}
- * @return {Promise&lt;boolean&gt;}
+ * @param {callback&lt;number&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;number&gt;}
  */
 
 NODE_WRAPPED_ASYNC_METHOD_WITH_RESULT_1_WRAPPED_PARAM(
@@ -903,7 +903,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::symDifference) {
  * {{{async}}}
  *
  * @method simplifyAsync
- * @param {gdal.Geometry} geometry
+ * @param {number} tolerance
  * @param {callback&lt;gdal.Geometry&gt;} [callback=undefined] {{{cb}}}
  * @return {Promise&lt;gdal.Geometry&gt;}
  */
@@ -1002,7 +1002,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::buffer) {
  * Convert a geometry into well known text format.
  *
  * @method toWKT
- * @return {gdal.Geometry}
+ * @return {string}
  */
 
 /**
@@ -1010,8 +1010,8 @@ GDAL_ASYNCABLE_DEFINE(Geometry::buffer) {
  * {{{async}}}
  *
  * @method toWKTAsync
- * @param {callback&lt;gdal.Geometry&gt;} [callback=undefined] {{{cb}}}
- * @return {Promise&lt;gdal.Geometry&gt;}
+ * @param {callback&lt;string&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;string&gt;}
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKT) {
@@ -1052,7 +1052,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKT) {
  * (wkbByteOrder)&quot;}}see options{{/crossLink}})
  * @param {string} [variant=&quot;OGC&quot;] ({{#crossLink &quot;Constants (wkbVariant)&quot;}}see
  * options{{/crossLink}})
- * @return {gdal.Geometry}
+ * @return {Buffer}
  */
 
 /**
@@ -1064,8 +1064,8 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKT) {
  * (wkbByteOrder)&quot;}}see options{{/crossLink}})
  * @param {string} [variant=&quot;OGC&quot;] ({{#crossLink &quot;Constants (wkbVariant)&quot;}}see
  * options{{/crossLink}})
- * @param {callback&lt;gdal.Geometry&gt;} [callback=undefined] {{{cb}}}
- * @return {Promise&lt;gdal.Geometry&gt;}
+ * @param {callback&lt;Buffer&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;Buffer&gt;}
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKB) {
@@ -1144,7 +1144,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKB) {
  * Convert a geometry into KML format.
  *
  * @method toKML
- * @return {gdal.Geometry}
+ * @return {string}
  */
 
 /**
@@ -1152,8 +1152,8 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKB) {
  * {{{async}}}
  *
  * @method toKMLAsync
- * @param {callback&lt;gdal.Geometry&gt;} [callback=undefined] {{{cb}}}
- * @return {Promise&lt;gdal.Geometry&gt;}
+ * @param {callback&lt;string&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;string&gt;}
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::exportToKML) {
@@ -1186,7 +1186,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToKML) {
  * Convert a geometry into GML format.
  *
  * @method toGML
- * @return {gdal.Geometry}
+ * @return {string}
  */
 
 /**
@@ -1194,8 +1194,8 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToKML) {
  * {{{async}}}
  *
  * @method toGMLAsync
- * @param {callback&lt;gdal.Geometry&gt;} [callback=undefined] {{{cb}}}
- * @return {Promise&lt;gdal.Geometry&gt;}
+ * @param {callback&lt;string&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;string&gt;}
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::exportToGML) {
@@ -1228,7 +1228,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToGML) {
  * Convert a geometry into JSON format.
  *
  * @method toJSON
- * @return {gdal.Geometry}
+ * @return {string}
  */
 
 /**
@@ -1236,8 +1236,8 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToGML) {
  * {{{async}}}
  *
  * @method toJSONAsync
- * @param {callback&lt;gdal.Geometry&gt;} [callback=undefined] {{{cb}}}
- * @return {Promise&lt;gdal.Geometry&gt;}
+ * @param {callback&lt;string&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;string&gt;}
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::exportToJSON) {
@@ -1321,8 +1321,8 @@ GDAL_ASYNCABLE_DEFINE(Geometry::centroid) {
  * {{{async}}}
  *
  * @method getEnvelopeAsync
- * @param {callback&lt;gdal.Geometry&gt;} [callback=undefined] {{{cb}}}
- * @return {Promise&lt;gdal.Geometry&gt;}
+ * @param {callback&lt;gdal.Envelope&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;gdal.Envelope&gt;}
  */
 GDAL_ASYNCABLE_DEFINE(Geometry::getEnvelope) {
   // returns object containing boundaries until complete OGREnvelope binding is
@@ -1414,6 +1414,16 @@ GDAL_ASYNCABLE_DEFINE(Geometry::getEnvelope3D) {
  * @method flattenTo2D
  * @return {void}
  */
+
+/**
+ * Convert geometry to strictly 2D
+ * {{{async}}}
+ *
+ * @method flattenTo2DAsync
+ * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;void&gt;}
+ */
+
 NODE_WRAPPED_ASYNC_METHOD(Geometry, flattenTo2D, flattenTo2D);
 
 // --- JS static methods (OGRGeometryFactory) ---
