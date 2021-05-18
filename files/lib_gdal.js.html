@@ -202,6 +202,10 @@ gdal.config.set = gdal.setConfigOption
 delete gdal.getConfigOption
 delete gdal.setConfigOption
 
+if (process.env.CURL_CA_BUNDLE === undefined) {
+  gdal.config.set(&#x27;CURL_CA_BUNDLE&#x27;, path.resolve(__dirname, &#x27;../deps/libcurl/cacert.pem&#x27;))
+}
+
 /**
  * Callback using the standard Node.js error convention
  * @element callback
@@ -1282,7 +1286,8 @@ const mangleRead = (args) =&gt; {
     options.buffer_height,
     options.type,
     options.pixel_space,
-    options.line_space
+    options.line_space,
+    options.resampling
   ]
 }
 
@@ -1334,7 +1339,7 @@ const promisifiables = {
     executeSQLAsync: 3
   },
   RasterBandPixels: {
-    readAsync: 10,
+    readAsync: 11,
     writeAsync: 9,
     readBlockAsync: 3,
     writeBlockAsync: 3
@@ -1348,6 +1353,7 @@ const promisifiables = {
   },
   LayerFeatures: {
     getAsync: 1,
+    setAsync: 2,
     firstAsync: 0,
     nextAsync: 0,
     addAsync: 1,
@@ -1420,6 +1426,9 @@ const argMangle = {
   }
 }
 
+// For each *Async function create a function that checks if the last parameter is a callback
+// Then call either the original, either the promisified version with the callback
+// placed at the right argument number since the C++ code does not support floating callbacks
 for (const c of Object.keys(promisifiables)) {
   for (const _m of Object.keys(promisifiables[c])) {
     const klass = c === &#x27;$&#x27; ? gdal : gdal[c]
