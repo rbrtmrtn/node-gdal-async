@@ -29,7 +29,6 @@ YUI.add("yuidoc-meta", function(Y) {
         "gdal.Feature",
         "gdal.FeatureDefn",
         "gdal.FeatureDefnFields",
-        "gdal.FeatureDefnFields *",
         "gdal.FeatureFields",
         "gdal.FieldDefn",
         "gdal.GDALDrivers",

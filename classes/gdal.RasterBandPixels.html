@@ -22,12 +22,12 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.1.1</b>
+                    API Docs for Version: <b>3.2.0</b>
                 </p>
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureDefnFields *", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
         </form>
     </div>
 </div>
@@ -67,7 +67,6 @@
                 <li><a href="../classes/gdal.Feature.html">gdal.Feature</a></li>
                 <li><a href="../classes/gdal.FeatureDefn.html">gdal.FeatureDefn</a></li>
                 <li><a href="../classes/gdal.FeatureDefnFields.html">gdal.FeatureDefnFields</a></li>
-                <li><a href="../classes/gdal.FeatureDefnFields *.html">gdal.FeatureDefnFields *</a></li>
                 <li><a href="../classes/gdal.FeatureFields.html">gdal.FeatureFields</a></li>
                 <li><a href="../classes/gdal.FieldDefn.html">gdal.FieldDefn</a></li>
                 <li><a href="../classes/gdal.GDALDrivers.html">gdal.GDALDrivers</a></li>
@@ -393,6 +392,23 @@ constants</a>.</p>
 </div>
 
 							</li>
+							<li class="param">
+									<code class="param-name optional">[progress_cb]</code>
+									<span class="type">ProgressCb</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>
+optional progress callback. In sync mode at every invocation it will stop the GDAL operation until it returns.
+In async mode it will schedule the invocation to be executed at the next event loop iteration while the GDAL operation willl continues in the background.
+If the event loop is blocked and a second invocation is scheduled before the first one has been executed, the first one will be discarded.
+No progress callbacks will be delivered after the result callback has been triggered or the Promise has been resolved.
+If the event loop is blocked for the whole duration of the operation, no progress callbacks will be made at all.
+The callback takes two arguments, the first one, <code>complete</code>, is a number between 0 and 1 indicating the progress towards the operation finish and the second one,
+<code>message</code>, can be used by certain GDAL drivers to return text messages.
+</p>
+</div>
+
+							</li>
 						</ul>
 				</li>
 			</ul>
@@ -451,7 +467,7 @@ constants</a>.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l216"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:216</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l217"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:217</code></a>
 		</p>
 
 
@@ -459,9 +475,12 @@ constants</a>.</p>
 	</div>
 
 	<div class="description"><p>Asynchronously reads a region of pixels.
+
+Asynchronous version.
 If the last parameter is a callback, then this callback is called on completion and undefined is returned.
 All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
-as it is the last parameter. Otherwise the function returns a Promise resolved with the result.</p>
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
 </div>
 
 		<div class="params">
@@ -565,6 +584,23 @@ constants</a>.</p>
 </div>
 
 							</li>
+							<li class="param">
+									<code class="param-name optional">[progress_cb]</code>
+									<span class="type">ProgressCb</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>
+optional progress callback. In sync mode at every invocation it will stop the GDAL operation until it returns.
+In async mode it will schedule the invocation to be executed at the next event loop iteration while the GDAL operation willl continues in the background.
+If the event loop is blocked and a second invocation is scheduled before the first one has been executed, the first one will be discarded.
+No progress callbacks will be delivered after the result callback has been triggered or the Promise has been resolved.
+If the event loop is blocked for the whole duration of the operation, no progress callbacks will be made at all.
+The callback takes two arguments, the first one, <code>complete</code>, is a number between 0 and 1 indicating the progress towards the operation finish and the second one,
+<code>message</code>, can be used by certain GDAL drivers to return text messages.
+</p>
+</div>
+
+							</li>
 						</ul>
 				</li>
 				<li class="param">
@@ -626,7 +662,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l475"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:475</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l518"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:518</code></a>
 		</p>
 
 
@@ -711,7 +747,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l486"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:486</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l529"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:529</code></a>
 		</p>
 
 
@@ -887,7 +923,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l364"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:364</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l380"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:380</code></a>
 		</p>
 
 
@@ -978,6 +1014,23 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 								<div class="param-description"></div>
 
 							</li>
+							<li class="param">
+									<code class="param-name optional">[progress_cb]</code>
+									<span class="type">ProgressCb</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>
+optional progress callback. In sync mode at every invocation it will stop the GDAL operation until it returns.
+In async mode it will schedule the invocation to be executed at the next event loop iteration while the GDAL operation willl continues in the background.
+If the event loop is blocked and a second invocation is scheduled before the first one has been executed, the first one will be discarded.
+No progress callbacks will be delivered after the result callback has been triggered or the Promise has been resolved.
+If the event loop is blocked for the whole duration of the operation, no progress callbacks will be made at all.
+The callback takes two arguments, the first one, <code>complete</code>, is a number between 0 and 1 indicating the progress towards the operation finish and the second one,
+<code>message</code>, can be used by certain GDAL drivers to return text messages.
+</p>
+</div>
+
+							</li>
 						</ul>
 				</li>
 			</ul>
@@ -1027,7 +1080,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l381"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:381</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l398"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:398</code></a>
 		</p>
 
 
@@ -1035,11 +1088,12 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	</div>
 
 	<div class="description"><p>Asynchronously writes a region of pixels.
+
+Asynchronous version.
 If the last parameter is a callback, then this callback is called on completion and undefined is returned.
 All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
-as it is the last parameter.
-Otherwise the function returns a Promise resolved with the result.
-certain optional parameters are omitted</p>
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
 </div>
 
 		<div class="params">
@@ -1123,6 +1177,23 @@ certain optional parameters are omitted</p>
 								<div class="param-description"></div>
 
 							</li>
+							<li class="param">
+									<code class="param-name optional">[progress_cb]</code>
+									<span class="type">ProgressCb</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>
+optional progress callback. In sync mode at every invocation it will stop the GDAL operation until it returns.
+In async mode it will schedule the invocation to be executed at the next event loop iteration while the GDAL operation willl continues in the background.
+If the event loop is blocked and a second invocation is scheduled before the first one has been executed, the first one will be discarded.
+No progress callbacks will be delivered after the result callback has been triggered or the Promise has been resolved.
+If the event loop is blocked for the whole duration of the operation, no progress callbacks will be made at all.
+The callback takes two arguments, the first one, <code>complete</code>, is a number between 0 and 1 indicating the progress towards the operation finish and the second one,
+<code>message</code>, can be used by certain GDAL drivers to return text messages.
+</p>
+</div>
+
+							</li>
 						</ul>
 				</li>
 				<li class="param">
@@ -1179,7 +1250,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l548"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:548</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l592"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:592</code></a>
 		</p>
 
 
@@ -1254,7 +1325,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l558"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:558</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l602"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:602</code></a>
 		</p>
 
 

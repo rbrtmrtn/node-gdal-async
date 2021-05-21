@@ -22,12 +22,12 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.1.1</b>
+                    API Docs for Version: <b>3.2.0</b>
                 </p>
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureDefnFields *", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
         </form>
     </div>
 </div>
@@ -67,7 +67,6 @@
                 <li><a href="../classes/gdal.Feature.html">gdal.Feature</a></li>
                 <li><a href="../classes/gdal.FeatureDefn.html">gdal.FeatureDefn</a></li>
                 <li><a href="../classes/gdal.FeatureDefnFields.html">gdal.FeatureDefnFields</a></li>
-                <li><a href="../classes/gdal.FeatureDefnFields *.html">gdal.FeatureDefnFields *</a></li>
                 <li><a href="../classes/gdal.FeatureFields.html">gdal.FeatureFields</a></li>
                 <li><a href="../classes/gdal.FieldDefn.html">gdal.FieldDefn</a></li>
                 <li><a href="../classes/gdal.GDALDrivers.html">gdal.GDALDrivers</a></li>
@@ -321,7 +320,7 @@ inline GDALRIOResampleAlg parseResamplingAlg(Local&lt;Value&gt; value) {
 #endif
 
 /**
- * @typedef ReadOptions { buffer_width?: number, buffer_height?: number, type?: string, pixel_space?: number, line_space?: number, resampling?: string }
+ * @typedef ReadOptions { buffer_width?: number, buffer_height?: number, type?: string, pixel_space?: number, line_space?: number, resampling?: string, progress_cb?: ProgressCb }
  */
 
 /**
@@ -342,14 +341,13 @@ inline GDALRIOResampleAlg parseResamplingAlg(Local&lt;Value&gt; value) {
  * @param {number} [options.pixel_space]
  * @param {number} [options.line_space]
  * @param {string} [options.resampling] Resampling algorithm ({{#crossLink &quot;Constants (GRA)&quot;}}available options{{/crossLink}})
+ * @param {ProgressCb} [options.progress_cb] {{{progress_cb}}}
  * @return {TypedArray} A [TypedArray](https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses) of values.
  */
 
 /**
  * Asynchronously reads a region of pixels.
- * If the last parameter is a callback, then this callback is called on completion and undefined is returned.
- * All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
- * as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+ * {{{async}}}
  *
  * @method readAsync
  * @param {number} x
@@ -365,6 +363,7 @@ inline GDALRIOResampleAlg parseResamplingAlg(Local&lt;Value&gt; value) {
  * @param {number} [options.pixel_space]
  * @param {number} [options.line_space]
  * @param {string} [options.resampling] Resampling algorithm ({{#crossLink &quot;Constants (GRA)&quot;}}available options{{/crossLink}})
+ * @param {ProgressCb} [options.progress_cb] {{{progress_cb}}}
  * @param {callback&lt;TypedArray&gt;} [callback=undefined] {{{cb}}}
  * @return {Promise&lt;TypedArray&gt;} A [TypedArray](https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses) of values.
  */
@@ -382,6 +381,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::read) {
   void *data;
   Local&lt;Value&gt; array;
   Local&lt;Object&gt; obj;
+  Nan::Callback *cb = nullptr;
   GDALDataType type;
 
   NODE_ARG_INT(0, &quot;x_offset&quot;, x);
@@ -413,6 +413,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::read) {
   NODE_ARG_INT_OPT(8, &quot;pixel_space&quot;, pixel_space);
   line_space = pixel_space * buffer_w;
   NODE_ARG_INT_OPT(9, &quot;line_space&quot;, line_space);
+  NODE_ARG_CB_OPT(11, &quot;progress_cb&quot;, cb);
 #if GDAL_VERSION_MAJOR &gt;= 2
   GDALRIOResampleAlg resampling;
   try {
@@ -426,6 +427,10 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::read) {
   NODE_ARG_OPT_STR(10, &quot;resampling&quot;, resampling);
   if (resampling.length() &gt; 0) {
     Nan::ThrowError(&quot;Specifying resampling algorithm not supported on GDAL 1.x&quot;);
+    return;
+  }
+  if (cb) {
+    Nan::ThrowError(&quot;Progress callback not supported on GDAL 1.x&quot;);
     return;
   }
 #endif
@@ -462,13 +467,23 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::read) {
   long ds_uid = band-&gt;parent_uid;
   GDALRasterBand *gdal_band = band-&gt;get();
   GDALAsyncableJob&lt;CPLErr&gt; job;
-  job.persist(obj, band-&gt;handle());
-  job.main = [gdal_band, ds_uid, x, y, w, h, data, buffer_w, buffer_h, type, pixel_space, line_space, resampling]() {
+  job.persist(&quot;array&quot;, obj);
+  job.persist(band-&gt;handle());
+  if (cb) {
+    job.persist(cb-&gt;GetFunction());
+    job.progress = cb;
+  }
+
+  job.main = [gdal_band, ds_uid, x, y, w, h, data, buffer_w, buffer_h, type, pixel_space, line_space, resampling, cb](
+               const GDALExecutionProgress &amp;progress) {
 #if GDAL_VERSION_MAJOR &gt;= 2
     std::shared_ptr&lt;GDALRasterIOExtraArg&gt; extra(new GDALRasterIOExtraArg);
     INIT_RASTERIO_EXTRA_ARG(*extra);
     extra-&gt;eResampleAlg = resampling;
-    extra-&gt;nVersion = RASTERIO_EXTRA_ARG_CURRENT_VERSION;
+    if (cb) {
+      extra-&gt;pfnProgress = ProgressTrampoline;
+      extra-&gt;pProgressData = (void *)&amp;progress;
+    }
 #endif
 
     GDAL_ASYNCABLE_LOCK(ds_uid);
@@ -485,12 +500,12 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::read) {
     return err;
   };
 
-  job.rval = [](CPLErr err, GDAL_ASYNCABLE_OBJS o) { return o[0]; };
-  job.run(info, async, 11);
+  job.rval = [](CPLErr err, GetFromPersistentFunc getter) { return getter(&quot;array&quot;); };
+  job.run(info, async, 12);
 }
 
 /**
- * @typedef WriteOptions { buffer_width?: number, buffer_height?: number, pixel_space?: number, line_space?: number }
+ * @typedef WriteOptions { buffer_width?: number, buffer_height?: number, pixel_space?: number, line_space?: number, progress_cb?: ProgressCb }
  */
 
 /**
@@ -508,15 +523,12 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::read) {
  * @param {number} [options.buffer_height=y_size]
  * @param {number} [options.pixel_space]
  * @param {number} [options.line_space]
+ * @param {ProgressCb} [options.progress_cb] {{{progress_cb}}}
  */
 
 /**
  * Asynchronously writes a region of pixels.
- * If the last parameter is a callback, then this callback is called on completion and undefined is returned.
- * All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
- as it is the last parameter.
- * Otherwise the function returns a Promise resolved with the result.
- * certain optional parameters are omitted
+ * {{{async}}}
  *
  * @method writeAsync
  * @param {number} x
@@ -529,6 +541,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::read) {
  * @param {number} [options.buffer_height=y_size]
  * @param {number} [options.pixel_space]
  * @param {number} [options.line_space]
+ * @param {ProgressCb} [options.progress_cb] {{{progress_cb}}}
  * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
  * @return {Promise&lt;void&gt;}
  */
@@ -546,6 +559,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::write) {
   void *data;
   Local&lt;Object&gt; passed_array;
   GDALDataType type;
+  Nan::Callback *cb = nullptr;
 
   NODE_ARG_INT(0, &quot;x_offset&quot;, x);
   NODE_ARG_INT(1, &quot;y_offset&quot;, y);
@@ -569,6 +583,13 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::write) {
   NODE_ARG_INT_OPT(7, &quot;pixel_space&quot;, pixel_space);
   line_space = pixel_space * buffer_w;
   NODE_ARG_INT_OPT(8, &quot;line_space&quot;, line_space);
+  NODE_ARG_CB_OPT(9, &quot;progress_cb&quot;, cb);
+#if GDAL_VERSION_MAJOR &lt; 2
+  if (cb) {
+    Nan::ThrowError(&quot;Progress callback not supported on GDAL 1.x&quot;);
+    return;
+  }
+#endif
 
   size = line_space * buffer_h;                      // bytes
   min_size = size - (pixel_space - bytes_per_pixel); // subtract away padding on last pixel that wont be read
@@ -591,17 +612,38 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::write) {
   long ds_uid = band-&gt;parent_uid;
   GDALRasterBand *gdal_band = band-&gt;get();
   GDALAsyncableJob&lt;CPLErr&gt; job;
-  job.persist(passed_array, band-&gt;handle());
-  job.main = [gdal_band, ds_uid, x, y, w, h, data, buffer_w, buffer_h, type, pixel_space, line_space]() {
+  job.persist(&quot;array&quot;, passed_array);
+  job.persist(band-&gt;handle());
+  if (cb) {
+    job.persist(cb-&gt;GetFunction());
+    job.progress = cb;
+  }
+
+  job.main = [gdal_band, ds_uid, x, y, w, h, data, buffer_w, buffer_h, type, pixel_space, line_space, cb](
+               const GDALExecutionProgress &amp;progress) {
+#if GDAL_VERSION_MAJOR &gt;= 2
+    std::shared_ptr&lt;GDALRasterIOExtraArg&gt; extra(new GDALRasterIOExtraArg);
+    INIT_RASTERIO_EXTRA_ARG(*extra);
+    if (cb) {
+      extra-&gt;pfnProgress = ProgressTrampoline;
+      extra-&gt;pProgressData = (void *)&amp;progress;
+    }
+#endif
+
     GDAL_ASYNCABLE_LOCK(ds_uid);
+#if GDAL_VERSION_MAJOR &gt;= 2
+    CPLErr err =
+      gdal_band-&gt;RasterIO(GF_Write, x, y, w, h, data, buffer_w, buffer_h, type, pixel_space, line_space, extra.get());
+#else
     CPLErr err = gdal_band-&gt;RasterIO(GF_Write, x, y, w, h, data, buffer_w, buffer_h, type, pixel_space, line_space);
+#endif
     GDAL_UNLOCK_PARENT;
     if (err != CE_None) throw CPLGetLastErrorMsg();
     return err;
   };
-  job.rval = [](CPLErr, GDAL_ASYNCABLE_OBJS o) { return o[0]; };
+  job.rval = [](CPLErr, GetFromPersistentFunc getter) { return getter(&quot;array&quot;); };
 
-  job.run(info, async, 9);
+  job.run(info, async, 10);
 }
 
 /**
@@ -665,15 +707,16 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::readBlock) {
   long parent_uid = band-&gt;parent_uid;
 
   GDALAsyncableJob&lt;CPLErr&gt; job;
-  job.persist(obj, band-&gt;handle());
-  job.main = [gdal_band, parent_uid, x, y, data]() {
+  job.persist(&quot;array&quot;, obj);
+  job.persist(band-&gt;handle());
+  job.main = [gdal_band, parent_uid, x, y, data](const GDALExecutionProgress &amp;) {
     GDAL_ASYNCABLE_LOCK(parent_uid);
     CPLErr err = gdal_band-&gt;ReadBlock(x, y, data);
     GDAL_UNLOCK_PARENT;
     if (err) { throw CPLGetLastErrorMsg(); }
     return err;
   };
-  job.rval = [](CPLErr r, GDAL_ASYNCABLE_OBJS o) { return o[0]; };
+  job.rval = [](CPLErr r, GetFromPersistentFunc getter) { return getter(&quot;array&quot;); };
   job.run(info, async, 3);
 }
 
@@ -726,14 +769,14 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::writeBlock) {
 
   GDALAsyncableJob&lt;CPLErr&gt; job;
   job.persist(obj, band-&gt;handle());
-  job.main = [gdal_band, parent_uid, x, y, data]() {
+  job.main = [gdal_band, parent_uid, x, y, data](const GDALExecutionProgress &amp;) {
     GDAL_ASYNCABLE_LOCK(parent_uid);
     CPLErr err = gdal_band-&gt;WriteBlock(x, y, data);
     GDAL_UNLOCK_PARENT;
     if (err) { throw CPLGetLastErrorMsg(); }
     return err;
   };
-  job.rval = [](CPLErr r, GDAL_ASYNCABLE_OBJS) { return Nan::Undefined(); };
+  job.rval = [](CPLErr r, GetFromPersistentFunc) { return Nan::Undefined(); };
   job.run(info, async, 3);
 }
 

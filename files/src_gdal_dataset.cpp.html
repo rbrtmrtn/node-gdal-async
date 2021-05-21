@@ -22,12 +22,12 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.1.1</b>
+                    API Docs for Version: <b>3.2.0</b>
                 </p>
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureDefnFields *", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
         </form>
     </div>
 </div>
@@ -67,7 +67,6 @@
                 <li><a href="../classes/gdal.Feature.html">gdal.Feature</a></li>
                 <li><a href="../classes/gdal.FeatureDefn.html">gdal.FeatureDefn</a></li>
                 <li><a href="../classes/gdal.FeatureDefnFields.html">gdal.FeatureDefnFields</a></li>
-                <li><a href="../classes/gdal.FeatureDefnFields *.html">gdal.FeatureDefnFields *</a></li>
                 <li><a href="../classes/gdal.FeatureFields.html">gdal.FeatureFields</a></li>
                 <li><a href="../classes/gdal.FieldDefn.html">gdal.FieldDefn</a></li>
                 <li><a href="../classes/gdal.GDALDrivers.html">gdal.GDALDrivers</a></li>
@@ -485,13 +484,13 @@ GDAL_ASYNCABLE_DEFINE(Dataset::flush) {
   GDALAsyncableJob&lt;int&gt; job;
   long ds_uid = ds-&gt;uid;
   job.persist(info.This());
-  job.main = [raw, ds_uid]() {
+  job.main = [raw, ds_uid](const GDALExecutionProgress &amp;) {
     GDAL_ASYNCABLE_LOCK(ds_uid);
     raw-&gt;FlushCache();
     GDAL_UNLOCK_PARENT;
     return 0;
   };
-  job.rval = [raw](int, GDAL_ASYNCABLE_OBJS) { return Nan::Undefined().As&lt;Value&gt;(); };
+  job.rval = [raw](int, GetFromPersistentFunc) { return Nan::Undefined().As&lt;Value&gt;(); };
   job.run(info, async, 0);
 
   return;
@@ -562,14 +561,14 @@ GDAL_ASYNCABLE_DEFINE(Dataset::executeSQL) {
   OGRGeometry *geom_filter = spatial_filter ? spatial_filter-&gt;get() : NULL;
   long ds_uid = ds-&gt;uid;
   job.persist(info.This());
-  job.main = [raw, ds_uid, sql, sql_dialect, geom_filter]() {
+  job.main = [raw, ds_uid, sql, sql_dialect, geom_filter](const GDALExecutionProgress &amp;) {
     GDAL_ASYNCABLE_LOCK(ds_uid);
     OGRLayer *layer = raw-&gt;ExecuteSQL(sql.c_str(), geom_filter, sql_dialect.empty() ? NULL : sql_dialect.c_str());
     GDAL_UNLOCK_PARENT;
     if (layer == nullptr) throw CPLGetLastErrorMsg();
     return layer;
   };
-  job.rval = [raw](OGRLayer *layer, GDAL_ASYNCABLE_OBJS) { return Layer::New(layer, raw, true); };
+  job.rval = [raw](OGRLayer *layer, GetFromPersistentFunc) { return Layer::New(layer, raw, true); };
 
   job.run(info, async, 3);
 }
@@ -768,8 +767,9 @@ NAN_METHOD(Dataset::setGCPs) {
  * @param {string} resampling &#x60;&quot;NEAREST&quot;&#x60;, &#x60;&quot;GAUSS&quot;&#x60;, &#x60;&quot;CUBIC&quot;&#x60;, &#x60;&quot;AVERAGE&quot;&#x60;,
  * &#x60;&quot;MODE&quot;&#x60;, &#x60;&quot;AVERAGE_MAGPHASE&quot;&#x60; or &#x60;&quot;NONE&quot;&#x60;
  * @param {number[]} overviews
- * @param {number[]} [bands] Note: Generation of overviews in external TIFF
- * currently only supported when operating on all bands.
+ * @param {number[]} [bands] Note: Generation of overviews in external TIFF currently only supported when operating on all bands.
+ * @param {ProgressOptions} [options] options
+ * @param {ProgressCb} [options.progress_cb] {{{progress_cb}}}
  */
 
 /**
@@ -781,8 +781,9 @@ NAN_METHOD(Dataset::setGCPs) {
  * @param {string} resampling &#x60;&quot;NEAREST&quot;&#x60;, &#x60;&quot;GAUSS&quot;&#x60;, &#x60;&quot;CUBIC&quot;&#x60;, &#x60;&quot;AVERAGE&quot;&#x60;,
  * &#x60;&quot;MODE&quot;&#x60;, &#x60;&quot;AVERAGE_MAGPHASE&quot;&#x60; or &#x60;&quot;NONE&quot;&#x60;
  * @param {number[]} overviews
- * @param {number[]} [bands] Note: Generation of overviews in external TIFF
- * currently only supported when operating on all bands.
+ * @param {number[]} [bands] Note: Generation of overviews in external TIFF currently only supported when operating on all bands.
+ * @param {ProgressOptions} [options] options
+ * @param {ProgressCb} [options.progress_cb] {{{progress_cb}}}
  * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
  * @return {Promise&lt;void&gt;}
  */
@@ -851,20 +852,30 @@ GDAL_ASYNCABLE_DEFINE(Dataset::buildOverviews) {
   GDALAsyncableJob&lt;CPLErr&gt; job;
   long ds_uid = ds-&gt;uid;
   job.persist(info.This());
+
+  Nan::Callback *progress_cb;
+  NODE_PROGRESS_CB_OPT(3, progress_cb, job);
   // Alas one cannot capture-move a unique_ptr and assign the lambda to a variable
   // because the lambda becomes non-copyable
   // But we can use a shared_ptr because the lifetime of the lambda is limited by the lifetime
   // of the async worker
-  job.main = [raw, ds_uid, resampling, n_overviews, o, n_bands, b]() {
+  job.main = [raw, ds_uid, resampling, n_overviews, o, n_bands, b, progress_cb](const GDALExecutionProgress &amp;progress) {
     GDAL_ASYNCABLE_LOCK(ds_uid);
-    CPLErr err = raw-&gt;BuildOverviews(resampling.c_str(), n_overviews, o.get(), n_bands, b.get(), NULL, NULL);
+    CPLErr err = raw-&gt;BuildOverviews(
+      resampling.c_str(),
+      n_overviews,
+      o.get(),
+      n_bands,
+      b.get(),
+      progress_cb ? ProgressTrampoline : nullptr,
+      progress_cb ? (void *)&amp;progress : nullptr);
     GDAL_UNLOCK_PARENT;
     if (err != CE_None) { throw CPLGetLastErrorMsg(); }
     return err;
   };
-  job.rval = [raw](CPLErr, GDAL_ASYNCABLE_OBJS) { return Nan::Undefined().As&lt;Value&gt;(); };
+  job.rval = [raw](CPLErr, GetFromPersistentFunc) { return Nan::Undefined().As&lt;Value&gt;(); };
 
-  job.run(info, async, 3);
+  job.run(info, async, 4);
 }
 
 /**

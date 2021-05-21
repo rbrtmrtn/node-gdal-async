@@ -22,12 +22,12 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.1.1</b>
+                    API Docs for Version: <b>3.2.0</b>
                 </p>
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureDefnFields *", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
         </form>
     </div>
 </div>
@@ -67,7 +67,6 @@
                 <li><a href="../classes/gdal.Feature.html">gdal.Feature</a></li>
                 <li><a href="../classes/gdal.FeatureDefn.html">gdal.FeatureDefn</a></li>
                 <li><a href="../classes/gdal.FeatureDefnFields.html">gdal.FeatureDefnFields</a></li>
-                <li><a href="../classes/gdal.FeatureDefnFields *.html">gdal.FeatureDefnFields *</a></li>
                 <li><a href="../classes/gdal.FeatureFields.html">gdal.FeatureFields</a></li>
                 <li><a href="../classes/gdal.FieldDefn.html">gdal.FieldDefn</a></li>
                 <li><a href="../classes/gdal.GDALDrivers.html">gdal.GDALDrivers</a></li>
@@ -254,13 +253,13 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::get) {
   long ds_uid = layer-&gt;parent_uid;
   GDALAsyncableJob&lt;OGRFeature *&gt; job;
   job.persist(parent);
-  job.main = [ds_uid, gdal_layer, feature_id]() {
+  job.main = [ds_uid, gdal_layer, feature_id](const GDALExecutionProgress &amp;) {
     GDAL_ASYNCABLE_LOCK(ds_uid);
     OGRFeature *feature = gdal_layer-&gt;GetFeature(feature_id);
     GDAL_UNLOCK_PARENT;
     return feature;
   };
-  job.rval = [](OGRFeature *feature, GDAL_ASYNCABLE_OBJS) { return Feature::New(feature); };
+  job.rval = [](OGRFeature *feature, GetFromPersistentFunc) { return Feature::New(feature); };
   job.run(info, async, 1);
 }
 
@@ -296,14 +295,14 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::first) {
   long ds_uid = layer-&gt;parent_uid;
   GDALAsyncableJob&lt;OGRFeature *&gt; job;
   job.persist(parent);
-  job.main = [ds_uid, gdal_layer]() {
+  job.main = [ds_uid, gdal_layer](const GDALExecutionProgress &amp;) {
     GDAL_ASYNCABLE_LOCK(ds_uid);
     gdal_layer-&gt;ResetReading();
     OGRFeature *feature = gdal_layer-&gt;GetNextFeature();
     GDAL_UNLOCK_PARENT;
     return feature;
   };
-  job.rval = [](OGRFeature *feature, GDAL_ASYNCABLE_OBJS) { return Feature::New(feature); };
+  job.rval = [](OGRFeature *feature, GetFromPersistentFunc) { return Feature::New(feature); };
   job.run(info, async, 0);
 }
 
@@ -345,13 +344,13 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::next) {
   long ds_uid = layer-&gt;parent_uid;
   GDALAsyncableJob&lt;OGRFeature *&gt; job;
   job.persist(parent);
-  job.main = [ds_uid, gdal_layer]() {
+  job.main = [ds_uid, gdal_layer](const GDALExecutionProgress &amp;) {
     GDAL_ASYNCABLE_LOCK(ds_uid);
     OGRFeature *feature = gdal_layer-&gt;GetNextFeature();
     GDAL_UNLOCK_PARENT;
     return feature;
   };
-  job.rval = [](OGRFeature *feature, GDAL_ASYNCABLE_OBJS) { return Feature::New(feature); };
+  job.rval = [](OGRFeature *feature, GetFromPersistentFunc) { return Feature::New(feature); };
   job.run(info, async, 0);
 }
 
@@ -409,14 +408,14 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::add) {
   OGRFeature *gdal_f = f-&gt;get();
   GDALAsyncableJob&lt;int&gt; job;
   job.persist(parent);
-  job.main = [ds_uid, gdal_layer, gdal_f]() {
+  job.main = [ds_uid, gdal_layer, gdal_f](const GDALExecutionProgress &amp;) {
     GDAL_ASYNCABLE_LOCK(ds_uid);
     int err = gdal_layer-&gt;CreateFeature(gdal_f);
     GDAL_UNLOCK_PARENT;
     if (err != CE_None) throw getOGRErrMsg(err);
     return err;
   };
-  job.rval = [](int, GDAL_ASYNCABLE_OBJS) { return Nan::Undefined(); };
+  job.rval = [](int, GetFromPersistentFunc) { return Nan::Undefined(); };
   job.run(info, async, 1);
 }
 
@@ -467,13 +466,13 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::count) {
   long ds_uid = layer-&gt;parent_uid;
   GDALAsyncableJob&lt;GIntBig&gt; job;
   job.persist(parent, ds);
-  job.main = [ds_uid, gdal_layer, force]() {
+  job.main = [ds_uid, gdal_layer, force](const GDALExecutionProgress &amp;) {
     GDAL_ASYNCABLE_LOCK(ds_uid);
     GIntBig count = gdal_layer-&gt;GetFeatureCount(force);
     GDAL_UNLOCK_PARENT;
     return count;
   };
-  job.rval = [](GIntBig count, GDAL_ASYNCABLE_OBJS) { return Nan::New&lt;Number&gt;(count); };
+  job.rval = [](GIntBig count, GetFromPersistentFunc) { return Nan::New&lt;Number&gt;(count); };
   job.run(info, async, 1);
 }
 
@@ -559,7 +558,7 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::set) {
   long ds_uid = layer-&gt;parent_uid;
   GDALAsyncableJob&lt;OGRErr&gt; job;
   job.persist({parent, feature, ds});
-  job.main = [ds_uid, gdal_layer, gdal_feature]() {
+  job.main = [ds_uid, gdal_layer, gdal_feature](const GDALExecutionProgress &amp;) {
     GDAL_ASYNCABLE_LOCK(ds_uid);
     OGRErr err = gdal_layer-&gt;SetFeature(gdal_feature);
     GDAL_UNLOCK_PARENT;
@@ -567,7 +566,7 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::set) {
     return err;
   };
 
-  job.rval = [](int, GDAL_ASYNCABLE_OBJS) { return Nan::Undefined(); };
+  job.rval = [](int, GetFromPersistentFunc) { return Nan::Undefined(); };
   job.run(info, async, 2);
 }
 
@@ -607,14 +606,14 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::remove) {
   long ds_uid = layer-&gt;parent_uid;
   GDALAsyncableJob&lt;int&gt; job;
   job.persist(parent);
-  job.main = [ds_uid, gdal_layer, i]() {
+  job.main = [ds_uid, gdal_layer, i](const GDALExecutionProgress &amp;) {
     GDAL_ASYNCABLE_LOCK(ds_uid);
     int err = gdal_layer-&gt;DeleteFeature(i);
     GDAL_UNLOCK_PARENT;
     if (err) { throw getOGRErrMsg(err); }
     return err;
   };
-  job.rval = [](int, GDAL_ASYNCABLE_OBJS) { return Nan::Undefined(); };
+  job.rval = [](int, GetFromPersistentFunc) { return Nan::Undefined(); };
   job.run(info, async, 1);
 
   return;

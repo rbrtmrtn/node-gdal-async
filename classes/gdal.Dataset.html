@@ -22,12 +22,12 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.1.1</b>
+                    API Docs for Version: <b>3.2.0</b>
                 </p>
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureDefnFields *", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
         </form>
     </div>
 </div>
@@ -67,7 +67,6 @@
                 <li><a href="../classes/gdal.Feature.html">gdal.Feature</a></li>
                 <li><a href="../classes/gdal.FeatureDefn.html">gdal.FeatureDefn</a></li>
                 <li><a href="../classes/gdal.FeatureDefnFields.html">gdal.FeatureDefnFields</a></li>
-                <li><a href="../classes/gdal.FeatureDefnFields *.html">gdal.FeatureDefnFields *</a></li>
                 <li><a href="../classes/gdal.FeatureFields.html">gdal.FeatureFields</a></li>
                 <li><a href="../classes/gdal.FieldDefn.html">gdal.FieldDefn</a></li>
                 <li><a href="../classes/gdal.GDALDrivers.html">gdal.GDALDrivers</a></li>
@@ -153,8 +152,8 @@ layers = dataset.layers;<code>&#x60;</code></code></pre>
 		<li>
 			<strong>Methods</strong>
 			<ul>
-				<li><a href="#method-buildOverviews"><span class="im">buildOverviews</span>(<span class="ia">resampling</span><span class="ia">overviews</span><span class="ia">bands</span>)</a></li>
-				<li><a href="#method-buildOverviewsAsync"><span class="im">buildOverviewsAsync</span>(<span class="ia">resampling</span><span class="ia">overviews</span><span class="ia">bands</span><span class="ia">callback</span>)</a></li>
+				<li><a href="#method-buildOverviews"><span class="im">buildOverviews</span>(<span class="ia">resampling</span><span class="ia">overviews</span><span class="ia">bands</span><span class="ia">options</span>)</a></li>
+				<li><a href="#method-buildOverviewsAsync"><span class="im">buildOverviewsAsync</span>(<span class="ia">resampling</span><span class="ia">overviews</span><span class="ia">bands</span><span class="ia">options</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-close"><span class="im">close</span>()</a></li>
 				<li><a href="#method-executeSQL"><span class="im">executeSQL</span>(<span class="ia">statement</span><span class="ia">spatial_filter</span><span class="ia">dialect</span>)</a></li>
 				<li><a href="#method-executeSQLAsync"><span class="im">executeSQLAsync</span>(<span class="ia">statement</span><span class="ia">spatial_filter</span><span class="ia">dialect</span><span class="ia">callback</span>)</a></li>
@@ -207,6 +206,9 @@ layers = dataset.layers;<code>&#x60;</code></code></pre>
 				<li class="arg">
 						<code class="optional">bands</code>
 				</li>
+				<li class="arg">
+						<code class="optional">options</code>
+				</li>
 			</ul><span class="paren">)</span>
 		</div>
 	</div>
@@ -256,10 +258,38 @@ layers = dataset.layers;<code>&#x60;</code></code></pre>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
-					<div class="param-description"><p>Note: Generation of overviews in external TIFF
-currently only supported when operating on all bands.</p>
+					<div class="param-description"><p>Note: Generation of overviews in external TIFF currently only supported when operating on all bands.</p>
 </div>
 
+				</li>
+				<li class="param">
+						<code class="param-name optional">[options]</code>
+						<span class="type">ProgressOptions</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>options</p>
+</div>
+
+						<ul class="params-list">
+							<li class="param">
+									<code class="param-name optional">[progress_cb]</code>
+									<span class="type">ProgressCb</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>
+optional progress callback. In sync mode at every invocation it will stop the GDAL operation until it returns.
+In async mode it will schedule the invocation to be executed at the next event loop iteration while the GDAL operation willl continues in the background.
+If the event loop is blocked and a second invocation is scheduled before the first one has been executed, the first one will be discarded.
+No progress callbacks will be delivered after the result callback has been triggered or the Promise has been resolved.
+If the event loop is blocked for the whole duration of the operation, no progress callbacks will be made at all.
+The callback takes two arguments, the first one, <code>complete</code>, is a number between 0 and 1 indicating the progress towards the operation finish and the second one,
+<code>message</code>, can be used by certain GDAL drivers to return text messages.
+</p>
+</div>
+
+							</li>
+						</ul>
 				</li>
 			</ul>
 		</div>
@@ -282,6 +312,9 @@ currently only supported when operating on all bands.</p>
 						<code class="optional">bands</code>
 				</li>
 				<li class="arg">
+						<code class="optional">options</code>
+				</li>
+				<li class="arg">
 						<code class="optional">callback=undefined</code>
 				</li>
 			</ul><span class="paren">)</span>
@@ -299,7 +332,7 @@ currently only supported when operating on all bands.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_dataset.cpp.html#l643"><code>src&#x2F;gdal_dataset.cpp:643</code></a>
+		<a href="../files/src_gdal_dataset.cpp.html#l644"><code>src&#x2F;gdal_dataset.cpp:644</code></a>
 		</p>
 
 
@@ -342,10 +375,38 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
-					<div class="param-description"><p>Note: Generation of overviews in external TIFF
-currently only supported when operating on all bands.</p>
+					<div class="param-description"><p>Note: Generation of overviews in external TIFF currently only supported when operating on all bands.</p>
 </div>
 
+				</li>
+				<li class="param">
+						<code class="param-name optional">[options]</code>
+						<span class="type">ProgressOptions</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>options</p>
+</div>
+
+						<ul class="params-list">
+							<li class="param">
+									<code class="param-name optional">[progress_cb]</code>
+									<span class="type">ProgressCb</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>
+optional progress callback. In sync mode at every invocation it will stop the GDAL operation until it returns.
+In async mode it will schedule the invocation to be executed at the next event loop iteration while the GDAL operation willl continues in the background.
+If the event loop is blocked and a second invocation is scheduled before the first one has been executed, the first one will be discarded.
+No progress callbacks will be delivered after the result callback has been triggered or the Promise has been resolved.
+If the event loop is blocked for the whole duration of the operation, no progress callbacks will be made at all.
+The callback takes two arguments, the first one, <code>complete</code>, is a number between 0 and 1 indicating the progress towards the operation finish and the second one,
+<code>message</code>, can be used by certain GDAL drivers to return text messages.
+</p>
+</div>
+
+							</li>
+						</ul>
 				</li>
 				<li class="param">
 						<code class="param-name optional">[callback=undefined]</code>
@@ -1027,7 +1088,7 @@ list</a>)</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l1027"><code>src&#x2F;gdal_dataset.cpp:1027</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l1039"><code>src&#x2F;gdal_dataset.cpp:1039</code></a>
         </p>
 
 
@@ -1056,7 +1117,7 @@ list</a>)</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l738"><code>src&#x2F;gdal_dataset.cpp:738</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l750"><code>src&#x2F;gdal_dataset.cpp:750</code></a>
         </p>
 
 
@@ -1085,7 +1146,7 @@ list</a>)</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l912"><code>src&#x2F;gdal_dataset.cpp:912</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l924"><code>src&#x2F;gdal_dataset.cpp:924</code></a>
         </p>
 
 
@@ -1113,7 +1174,7 @@ list</a>)</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l860"><code>src&#x2F;gdal_dataset.cpp:860</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l872"><code>src&#x2F;gdal_dataset.cpp:872</code></a>
         </p>
 
 
@@ -1154,7 +1215,7 @@ var Ygeo = GT[3] + Xpixel*GT[4] + Yline*GT[5];<code>&#x60;</code></code></pre>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l1037"><code>src&#x2F;gdal_dataset.cpp:1037</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l1049"><code>src&#x2F;gdal_dataset.cpp:1049</code></a>
         </p>
 
 
@@ -1183,7 +1244,7 @@ var Ygeo = GT[3] + Xpixel*GT[4] + Yline*GT[5];<code>&#x60;</code></code></pre>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l770"><code>src&#x2F;gdal_dataset.cpp:770</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l782"><code>src&#x2F;gdal_dataset.cpp:782</code></a>
         </p>
 
 
@@ -1212,7 +1273,7 @@ var Ygeo = GT[3] + Xpixel*GT[4] + Yline*GT[5];<code>&#x60;</code></code></pre>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l814"><code>src&#x2F;gdal_dataset.cpp:814</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l826"><code>src&#x2F;gdal_dataset.cpp:826</code></a>
         </p>
 
 

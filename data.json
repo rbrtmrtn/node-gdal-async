@@ -4,7 +4,7 @@
         "description": "Node.js bindings for GDAL (Geospatial Data Abstraction Library) [Fork]",
         "url": "https://github.com/mmomtchev/node-gdal-async",
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/GDALLogoColor.svg/200px-GDALLogoColor.svg.png",
-        "version": "3.1.1"
+        "version": "3.2.0"
     },
     "files": {
         "lib/envelope.js": {
@@ -39,7 +39,6 @@
                 "gdal.LayerFields": 1,
                 "gdal.DatasetLayers": 1,
                 "gdal.FeatureDefnFields": 1,
-                "gdal.FeatureDefnFields *": 1,
                 "gdal.PolygonRings": 1,
                 "gdal.LineStringPoints": 1,
                 "gdal.CompoundCurveCurves": 1,
@@ -284,6 +283,13 @@
             "fors": {},
             "namespaces": {}
         },
+        "src/async.hpp": {
+            "name": "src/async.hpp",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "src/gdal.hpp": {
             "name": "src/gdal.hpp",
             "modules": {},
@@ -518,7 +524,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 94,
+            "line": 95,
             "description": "Abstract base class for all geometry classes."
         },
         "gdal.LayerFields": {
@@ -555,15 +561,6 @@
             "file": "src/collections/feature_defn_fields.cpp",
             "line": 40,
             "description": "An encapsulation of a {{#crossLink\n\"gdal.FeatureDefn\"}}FeatureDefn{{/crossLink}}'s fields."
-        },
-        "gdal.FeatureDefnFields *": {
-            "name": "gdal.FeatureDefnFields *",
-            "shortname": "gdal.FeatureDefnFields *",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": []
         },
         "gdal.PolygonRings": {
             "name": "gdal.PolygonRings",
@@ -1897,7 +1894,7 @@
             "type": "{gdal.FieldDefn}",
             "itemtype": "method",
             "name": "Symbol.iterator",
-            "class": "gdal.FeatureDefnFields *"
+            "class": "gdal.FeatureDefnFields"
         },
         {
             "file": "lib/gdal.js",
@@ -4169,7 +4166,7 @@
         {
             "file": "src/collections/rasterband_pixels.cpp",
             "line": 191,
-            "typedef": "ReadOptions { buffer_width?: number, buffer_height?: number, type?: string, pixel_space?: number, line_space?: number, resampling?: string }",
+            "typedef": "ReadOptions { buffer_width?: number, buffer_height?: number, type?: string, pixel_space?: number, line_space?: number, resampling?: string, progress_cb?: ProgressCb }",
             "class": "gdal.RasterBandPixels"
         },
         {
@@ -4251,6 +4248,12 @@
                             "description": "Resampling algorithm ({{#crossLink \"Constants (GRA)\"}}available options{{/crossLink}})",
                             "type": "String",
                             "optional": true
+                        },
+                        {
+                            "name": "progress_cb",
+                            "description": "{{{progress_cb}}}",
+                            "type": "ProgressCb",
+                            "optional": true
                         }
                     ]
                 }
@@ -4263,8 +4266,8 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 216,
-            "description": "Asynchronously reads a region of pixels.\nIf the last parameter is a callback, then this callback is called on completion and undefined is returned.\nAll optional parameters before the callback can be omitted so the callback parameter can be at any position as long\nas it is the last parameter. Otherwise the function returns a Promise resolved with the result.",
+            "line": 217,
+            "description": "Asynchronously reads a region of pixels.\n{{{async}}}",
             "itemtype": "method",
             "name": "readAsync",
             "params": [
@@ -4337,6 +4340,12 @@
                             "description": "Resampling algorithm ({{#crossLink \"Constants (GRA)\"}}available options{{/crossLink}})",
                             "type": "String",
                             "optional": true
+                        },
+                        {
+                            "name": "progress_cb",
+                            "description": "{{{progress_cb}}}",
+                            "type": "ProgressCb",
+                            "optional": true
                         }
                     ]
                 },
@@ -4356,13 +4365,13 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 360,
-            "typedef": "WriteOptions { buffer_width?: number, buffer_height?: number, pixel_space?: number, line_space?: number }",
+            "line": 376,
+            "typedef": "WriteOptions { buffer_width?: number, buffer_height?: number, pixel_space?: number, line_space?: number, progress_cb?: ProgressCb }",
             "class": "gdal.RasterBandPixels"
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 364,
+            "line": 380,
             "description": "Writes a region of pixels.",
             "itemtype": "method",
             "name": "write",
@@ -4426,6 +4435,12 @@
                             "description": "",
                             "type": "Number",
                             "optional": true
+                        },
+                        {
+                            "name": "progress_cb",
+                            "description": "{{{progress_cb}}}",
+                            "type": "ProgressCb",
+                            "optional": true
                         }
                     ]
                 }
@@ -4434,8 +4449,8 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 381,
-            "description": "Asynchronously writes a region of pixels.\nIf the last parameter is a callback, then this callback is called on completion and undefined is returned.\nAll optional parameters before the callback can be omitted so the callback parameter can be at any position as long\nas it is the last parameter.\nOtherwise the function returns a Promise resolved with the result.\ncertain optional parameters are omitted",
+            "line": 398,
+            "description": "Asynchronously writes a region of pixels.\n{{{async}}}",
             "itemtype": "method",
             "name": "writeAsync",
             "params": [
@@ -4495,6 +4510,12 @@
                             "description": "",
                             "type": "Number",
                             "optional": true
+                        },
+                        {
+                            "name": "progress_cb",
+                            "description": "{{{progress_cb}}}",
+                            "type": "ProgressCb",
+                            "optional": true
                         }
                     ]
                 },
@@ -4514,7 +4535,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 475,
+            "line": 518,
             "description": "Reads a block of pixels.",
             "itemtype": "method",
             "name": "readBlock",
@@ -4547,7 +4568,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 486,
+            "line": 529,
             "description": "Reads a block of pixels.\n{{{async}}}",
             "itemtype": "method",
             "name": "readBlockAsync",
@@ -4587,7 +4608,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 548,
+            "line": 592,
             "description": "Writes a block of pixels.",
             "itemtype": "method",
             "name": "writeBlock",
@@ -4615,7 +4636,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 558,
+            "line": 602,
             "description": "Writes a block of pixels.\n{{{async}}}",
             "itemtype": "method",
             "name": "writeBlockAsync",
@@ -4663,7 +4684,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 177,
+            "line": 178,
             "description": "Closes any un-closed rings.",
             "itemtype": "method",
             "name": "closeRings",
@@ -4671,7 +4692,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 183,
+            "line": 184,
             "description": "Closes any un-closed rings.\n{{{async}}}",
             "itemtype": "method",
             "name": "closeRingsAsync",
@@ -4692,7 +4713,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 194,
+            "line": 195,
             "description": "Clears the geometry.",
             "itemtype": "method",
             "name": "empty",
@@ -4700,7 +4721,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 200,
+            "line": 201,
             "description": "Clears the geometry.\n{{{async}}}",
             "itemtype": "method",
             "name": "emptyAsync",
@@ -4721,7 +4742,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 211,
+            "line": 212,
             "description": "Swaps x, y coordinates.",
             "itemtype": "method",
             "name": "swapXY",
@@ -4729,7 +4750,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 217,
+            "line": 218,
             "description": "Swaps x, y coordinates.\n{{{async}}}",
             "itemtype": "method",
             "name": "swapXYAsync",
@@ -4750,7 +4771,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 228,
+            "line": 229,
             "description": "Determines if the geometry is empty.",
             "itemtype": "method",
             "name": "isEmpty",
@@ -4762,7 +4783,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 235,
+            "line": 236,
             "description": "Determines if the geometry is empty.\n{{{async}}}",
             "itemtype": "method",
             "name": "isEmptyAsync",
@@ -4783,7 +4804,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 246,
+            "line": 247,
             "description": "Determines if the geometry is valid.",
             "itemtype": "method",
             "name": "isValid",
@@ -4795,7 +4816,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 253,
+            "line": 254,
             "description": "Determines if the geometry is valid.\n{{{async}}}",
             "itemtype": "method",
             "name": "isValidAsync",
@@ -4816,7 +4837,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 264,
+            "line": 265,
             "description": "Determines if the geometry is simple.",
             "itemtype": "method",
             "name": "isSimple",
@@ -4828,7 +4849,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 271,
+            "line": 272,
             "description": "Determines if the geometry is simple.\n{{{async}}}",
             "itemtype": "method",
             "name": "isSimpleAsync",
@@ -4849,7 +4870,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 282,
+            "line": 283,
             "description": "Determines if the geometry is a ring.",
             "itemtype": "method",
             "name": "isRing",
@@ -4861,7 +4882,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 289,
+            "line": 290,
             "description": "Determines if the geometry is a ring.\n{{{async}}}",
             "itemtype": "method",
             "name": "isRingAsync",
@@ -4882,7 +4903,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 300,
+            "line": 301,
             "description": "Determines if the two geometries intersect.",
             "itemtype": "method",
             "name": "intersects",
@@ -4901,7 +4922,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 308,
+            "line": 309,
             "description": "Determines if the two geometries intersect.\n{{{async}}}",
             "itemtype": "method",
             "name": "intersectsAsync",
@@ -4927,7 +4948,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 321,
+            "line": 322,
             "description": "Determines if the two geometries equal each other.",
             "itemtype": "method",
             "name": "equals",
@@ -4946,7 +4967,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 329,
+            "line": 330,
             "description": "Determines if the two geometries equal each other.\n{{{async}}}",
             "itemtype": "method",
             "name": "equalsAsync",
@@ -4972,7 +4993,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 342,
+            "line": 343,
             "description": "Determines if the two geometries are disjoint.",
             "itemtype": "method",
             "name": "disjoint",
@@ -4991,7 +5012,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 350,
+            "line": 351,
             "description": "Determines if the two geometries are disjoint.\n{{{async}}}",
             "itemtype": "method",
             "name": "disjointAsync",
@@ -5017,7 +5038,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 363,
+            "line": 364,
             "description": "Determines if the two geometries touch.",
             "itemtype": "method",
             "name": "touches",
@@ -5036,7 +5057,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 371,
+            "line": 372,
             "description": "Determines if the two geometries touch.\n{{{async}}}",
             "itemtype": "method",
             "name": "touchesAsync",
@@ -5062,7 +5083,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 384,
+            "line": 385,
             "description": "Determines if the two geometries cross.",
             "itemtype": "method",
             "name": "crosses",
@@ -5081,7 +5102,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 392,
+            "line": 393,
             "description": "Determines if the two geometries cross.\n{{{async}}}",
             "itemtype": "method",
             "name": "crossesAsync",
@@ -5107,7 +5128,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 405,
+            "line": 406,
             "description": "Determines if the current geometry is within the provided geometry.",
             "itemtype": "method",
             "name": "within",
@@ -5126,7 +5147,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 413,
+            "line": 414,
             "description": "Determines if the current geometry is within the provided geometry.\n{{{async}}}",
             "itemtype": "method",
             "name": "withinAsync",
@@ -5152,7 +5173,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 426,
+            "line": 427,
             "description": "Determines if the current geometry contains the provided geometry.",
             "itemtype": "method",
             "name": "contains",
@@ -5171,7 +5192,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 434,
+            "line": 435,
             "description": "Determines if the current geometry contains the provided geometry.\n{{{async}}}",
             "itemtype": "method",
             "name": "containsAsync",
@@ -5197,7 +5218,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 447,
+            "line": 448,
             "description": "Determines if the current geometry overlaps the provided geometry.",
             "itemtype": "method",
             "name": "overlaps",
@@ -5216,7 +5237,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 455,
+            "line": 456,
             "description": "Determines if the current geometry overlaps the provided geometry.\n{{{async}}}",
             "itemtype": "method",
             "name": "overlapsAsync",
@@ -5242,7 +5263,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 468,
+            "line": 469,
             "description": "Computes the distance between the two geometries.",
             "itemtype": "method",
             "name": "distance",
@@ -5261,7 +5282,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 476,
+            "line": 477,
             "description": "Computes the distance between the two geometries.\n{{{async}}}",
             "itemtype": "method",
             "name": "distanceAsync",
@@ -5287,7 +5308,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 489,
+            "line": 490,
             "description": "Modify the geometry such it has no segment longer then the given distance.",
             "itemtype": "method",
             "name": "segmentize",
@@ -5306,7 +5327,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 498,
+            "line": 499,
             "description": "Apply arbitrary coordinate transformation to the geometry.\n\nThis method will transform the coordinates of a geometry from their current\nspatial reference system to a new target spatial reference system. Normally\nthis means reprojecting the vectors, but it could include datum shifts,\nand changes of units.\n\nNote that this method does not require that the geometry already have a\nspatial reference system. It will be assumed that they can be treated as\nhaving the source spatial reference system of the {{#crossLink\n\"gdal.CoordinateTransformation\"}}CoordinateTransformation{{/crossLink}}\nobject, and the actual SRS of the geometry will be ignored.",
             "throws": {
                 "description": "Error"
@@ -5324,7 +5345,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 517,
+            "line": 518,
             "description": "Apply arbitrary coordinate transformation to the geometry.\n{{{async}}}",
             "throws": {
                 "description": "Error"
@@ -5353,7 +5374,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 531,
+            "line": 532,
             "description": "Transforms the geometry to match the provided {{#crossLink\n\"gdal.SpatialReference\"}}SpatialReference{{/crossLink}}.",
             "throws": {
                 "description": "Error"
@@ -5371,7 +5392,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 540,
+            "line": 541,
             "description": "Transforms the geometry to match the provided {{#crossLink\n\"gdal.SpatialReference\"}}SpatialReference{{/crossLink}}.\n{{{async}}}",
             "throws": {
                 "description": "Error"
@@ -5400,7 +5421,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 555,
+            "line": 556,
             "description": "Clones the instance.",
             "itemtype": "method",
             "name": "clone",
@@ -5412,7 +5433,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 567,
+            "line": 568,
             "description": "Compute convex hull.",
             "itemtype": "method",
             "name": "convexHull",
@@ -5424,7 +5445,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 574,
+            "line": 575,
             "description": "Compute convex hull.\n{{{async}}}",
             "itemtype": "method",
             "name": "convexHullAsync",
@@ -5445,7 +5466,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 594,
+            "line": 595,
             "description": "Compute boundary.",
             "itemtype": "method",
             "name": "boundary",
@@ -5457,7 +5478,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 601,
+            "line": 602,
             "description": "Compute boundary.\n{{{async}}}",
             "itemtype": "method",
             "name": "boundaryAsync",
@@ -5478,7 +5499,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 621,
+            "line": 622,
             "description": "Compute intersection with another geometry.",
             "itemtype": "method",
             "name": "intersection",
@@ -5497,7 +5518,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 629,
+            "line": 630,
             "description": "Compute intersection with another geometry.\n{{{async}}}",
             "itemtype": "method",
             "name": "intersectionAsync",
@@ -5523,7 +5544,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 656,
+            "line": 657,
             "description": "Compute the union of this geometry with another.",
             "itemtype": "method",
             "name": "union",
@@ -5542,7 +5563,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 664,
+            "line": 665,
             "description": "Compute the union of this geometry with another.\n{{{async}}}",
             "itemtype": "method",
             "name": "unionAsync",
@@ -5568,7 +5589,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 691,
+            "line": 692,
             "description": "Compute the difference of this geometry with another.",
             "itemtype": "method",
             "name": "difference",
@@ -5587,7 +5608,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 699,
+            "line": 700,
             "description": "Compute the difference of this geometry with another.\n{{{async}}}",
             "itemtype": "method",
             "name": "differenceAsync",
@@ -5613,7 +5634,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 726,
+            "line": 727,
             "description": "Computes the symmetric difference of this geometry and the second geometry.",
             "itemtype": "method",
             "name": "symDifference",
@@ -5632,7 +5653,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 734,
+            "line": 735,
             "description": "Computes the symmetric difference of this geometry and the second geometry.\n{{{async}}}",
             "itemtype": "method",
             "name": "symDifferenceAsync",
@@ -5658,7 +5679,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 761,
+            "line": 762,
             "description": "Reduces the geometry complexity.",
             "itemtype": "method",
             "name": "simplify",
@@ -5677,7 +5698,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 769,
+            "line": 770,
             "description": "Reduces the geometry complexity.\n{{{async}}}",
             "itemtype": "method",
             "name": "simplifyAsync",
@@ -5703,7 +5724,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 795,
+            "line": 796,
             "description": "Reduces the geometry complexity while preserving the topology.",
             "itemtype": "method",
             "name": "simplifyPreserveTopology",
@@ -5722,7 +5743,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 803,
+            "line": 804,
             "description": "Reduces the geometry complexity while preserving the topology.\n{{{async}}}",
             "itemtype": "method",
             "name": "simplifyPreserveTopologyAsync",
@@ -5748,7 +5769,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 829,
+            "line": 832,
             "description": "Buffers the geometry by the given distance.",
             "itemtype": "method",
             "name": "buffer",
@@ -5772,7 +5793,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 838,
+            "line": 841,
             "description": "Buffers the geometry by the given distance.\n{{{async}}}",
             "itemtype": "method",
             "name": "bufferAsync",
@@ -5803,7 +5824,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 869,
+            "line": 874,
             "description": "Convert a geometry into well known text format.",
             "itemtype": "method",
             "name": "toWKT",
@@ -5815,7 +5836,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 876,
+            "line": 881,
             "description": "Convert a geometry into well known text format.\n{{{async}}}",
             "itemtype": "method",
             "name": "toWKTAsync",
@@ -5836,7 +5857,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 915,
+            "line": 920,
             "description": "Convert a geometry into well known binary format.",
             "itemtype": "method",
             "name": "toWKB",
@@ -5864,7 +5885,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 926,
+            "line": 931,
             "description": "Convert a geometry into well known binary format.\n{{{async}}}",
             "itemtype": "method",
             "name": "toWKBAsync",
@@ -5899,7 +5920,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1011,
+            "line": 1016,
             "description": "Convert a geometry into KML format.",
             "itemtype": "method",
             "name": "toKML",
@@ -5911,7 +5932,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1018,
+            "line": 1023,
             "description": "Convert a geometry into KML format.\n{{{async}}}",
             "itemtype": "method",
             "name": "toKMLAsync",
@@ -5932,7 +5953,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1053,
+            "line": 1058,
             "description": "Convert a geometry into GML format.",
             "itemtype": "method",
             "name": "toGML",
@@ -5944,7 +5965,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1060,
+            "line": 1065,
             "description": "Convert a geometry into GML format.\n{{{async}}}",
             "itemtype": "method",
             "name": "toGMLAsync",
@@ -5965,7 +5986,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1095,
+            "line": 1100,
             "description": "Convert a geometry into JSON format.",
             "itemtype": "method",
             "name": "toJSON",
@@ -5977,7 +5998,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1102,
+            "line": 1107,
             "description": "Convert a geometry into JSON format.\n{{{async}}}",
             "itemtype": "method",
             "name": "toJSONAsync",
@@ -5998,7 +6019,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1137,
+            "line": 1142,
             "description": "Compute the centroid of the geometry.",
             "itemtype": "method",
             "name": "centroid",
@@ -6010,7 +6031,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1144,
+            "line": 1149,
             "description": "Compute the centroid of the geometry.\n{{{async}}}",
             "itemtype": "method",
             "name": "centroidAsync",
@@ -6031,7 +6052,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1180,
+            "line": 1185,
             "description": "Computes the bounding box (envelope).",
             "itemtype": "method",
             "name": "getEnvelope",
@@ -6043,7 +6064,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1187,
+            "line": 1192,
             "description": "Computes the bounding box (envelope).\n{{{async}}}",
             "itemtype": "method",
             "name": "getEnvelopeAsync",
@@ -6064,7 +6085,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1228,
+            "line": 1233,
             "description": "Computes the 3D bounding box (envelope).",
             "itemtype": "method",
             "name": "getEnvelope3D",
@@ -6076,7 +6097,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1235,
+            "line": 1240,
             "description": "Computes the 3D bounding box (envelope).\n{{{async}}}",
             "itemtype": "method",
             "name": "getEnvelope3DAsync",
@@ -6097,7 +6118,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1279,
+            "line": 1284,
             "description": "Convert geometry to strictly 2D",
             "itemtype": "method",
             "name": "flattenTo2D",
@@ -6109,7 +6130,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1286,
+            "line": 1291,
             "description": "Convert geometry to strictly 2D\n{{{async}}}",
             "itemtype": "method",
             "name": "flattenTo2DAsync",
@@ -6130,11 +6151,14 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1299,
+            "line": 1304,
             "description": "Creates a Geometry from a WKT string.",
             "static": 1,
             "itemtype": "method",
             "name": "fromWKT",
+            "throws": {
+                "description": "Error"
+            },
             "params": [
                 {
                     "name": "wkt",
@@ -6156,11 +6180,14 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1309,
+            "line": 1315,
             "description": "Creates a Geometry from a WKT string.\n{{{async}}}",
             "static": 1,
             "itemtype": "method",
             "name": "fromWKTAsync",
+            "throws": {
+                "description": "Error"
+            },
             "params": [
                 {
                     "name": "wkt",
@@ -6189,11 +6216,14 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1346,
+            "line": 1353,
             "description": "Creates a Geometry from a WKB buffer.",
             "static": 1,
             "itemtype": "method",
             "name": "fromWKB",
+            "throws": {
+                "description": "Error"
+            },
             "params": [
                 {
                     "name": "wkb",
@@ -6215,11 +6245,14 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1356,
+            "line": 1364,
             "description": "Creates a Geometry from a WKB buffer.\n{{{async}}}",
             "static": 1,
             "itemtype": "method",
             "name": "fromWKBAsync",
+            "throws": {
+                "description": "Error"
+            },
             "params": [
                 {
                     "name": "wkb",
@@ -6243,36 +6276,42 @@
             "return": {
                 "description": "",
                 "type": "Promise<gdal.Geometry>"
-            },
-            "class": "gdal.Geometry"
-        },
-        {
-            "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1402,
-            "description": "Creates a Geometry from a GeoJSON string.",
-            "static": 1,
-            "itemtype": "method",
-            "name": "fromGeoJson",
-            "params": [
-                {
-                    "name": "geojson",
-                    "description": "",
-                    "type": "Object"
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "gdal.Geometry"
             },
             "class": "gdal.Geometry"
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
             "line": 1411,
-            "description": "Creates a Geometry from a GeoJSON string.\n{{{async}}}\n\nAlas, the current implementation uses V8's JSON.Stringify\nand then converts the string to UTF-8 (from JS internal UTF-16)\nThis part is neither async-compatible, neither parallelizable\nThe GDAL part is async\nPay attention to the event loop if you use this and need\nto remain low-latency",
+            "description": "Creates a Geometry from a GeoJSON object fragment.\nThe async version depends on V8 for object serialization and this part is not parallelizable.\nV8 objects cannot be accessed outside of the main thread. This function should not be used\nfor importing objects of more than few tens of Kbytes when low latency is needed. If you need\nto import very large GeoJSON geometries in server code, use the much faster and completely\nparallel fromGeoJonBuffer(Async)",
+            "static": 1,
+            "itemtype": "method",
+            "name": "fromGeoJson",
+            "throws": {
+                "description": "Error"
+            },
+            "params": [
+                {
+                    "name": "geojson",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "gdal.Geometry"
+            },
+            "class": "gdal.Geometry"
+        },
+        {
+            "file": "src/geometry/gdal_geometry.cpp",
+            "line": 1426,
+            "description": "Creates a Geometry from a GeoJSON object fragment.\nThe async version depends on V8 for object serialization and this part is not parallelizable.\nV8 objects cannot be accessed outside of the main thread. This function should not be used\nfor importing objects of more than few tens of Kbytes when low latency is needed. If you need\nto import very large GeoJSON geometries in server code, use the much faster and completely\nparallel fromGeoJonBuffer(Async)\n{{{async}}}",
             "static": 1,
             "itemtype": "method",
             "name": "fromGeoJsonAsync",
+            "throws": {
+                "description": "Error"
+            },
             "params": [
                 {
                     "name": "geojson",
@@ -6295,7 +6334,60 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1460,
+            "line": 1475,
+            "description": "Creates a Geometry from a buffer containing a GeoJSON fragment in UT8 format.",
+            "static": 1,
+            "itemtype": "method",
+            "name": "fromGeoJsonBuffer",
+            "throws": {
+                "description": "Error"
+            },
+            "params": [
+                {
+                    "name": "geojson",
+                    "description": "",
+                    "type": "Buffer"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "gdal.Geometry"
+            },
+            "class": "gdal.Geometry"
+        },
+        {
+            "file": "src/geometry/gdal_geometry.cpp",
+            "line": 1485,
+            "description": "Creates a Geometry from a buffer containing a GeoJSON fragment in UT8 format.\n{{{async}}}",
+            "static": 1,
+            "itemtype": "method",
+            "name": "fromGeoJsonBufferAsync",
+            "throws": {
+                "description": "Error"
+            },
+            "params": [
+                {
+                    "name": "geojson",
+                    "description": "",
+                    "type": "Buffer"
+                },
+                {
+                    "name": "callback",
+                    "description": "{{{cb}}}",
+                    "type": "callback<gdal.Geometry>",
+                    "optional": true,
+                    "optdefault": "undefined"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Promise<gdal.Geometry>"
+            },
+            "class": "gdal.Geometry"
+        },
+        {
+            "file": "src/geometry/gdal_geometry.cpp",
+            "line": 1534,
             "description": "Creates an empty Geometry from a WKB type.",
             "static": 1,
             "itemtype": "method",
@@ -6315,7 +6407,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1478,
+            "line": 1552,
             "itemtype": "attribute",
             "name": "srs",
             "type": "{gdal.SpatialReference}",
@@ -6323,7 +6415,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1504,
+            "line": 1578,
             "readonly": "",
             "itemtype": "attribute",
             "name": "name",
@@ -6332,7 +6424,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1515,
+            "line": 1589,
             "description": "See {{#crossLink \"Constants\n(wkbGeometryType)\"}}wkbGeometryTypes{{/crossLink}}.",
             "readonly": "",
             "itemtype": "attribute",
@@ -6342,7 +6434,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1528,
+            "line": 1602,
             "readonly": "",
             "itemtype": "attribute",
             "name": "wkbSize",
@@ -6351,7 +6443,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1539,
+            "line": 1613,
             "readonly": "",
             "itemtype": "attribute",
             "name": "dimension",
@@ -6360,7 +6452,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1550,
+            "line": 1624,
             "itemtype": "attribute",
             "name": "coordinateDimension",
             "type": "{number}",
@@ -6368,7 +6460,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1602,
+            "line": 1676,
             "description": "Returns the Geometry subclass that matches the\ngiven WKB geometry type.",
             "static": 1,
             "itemtype": "method",
@@ -6388,7 +6480,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1619,
+            "line": 1693,
             "description": "Returns the Geometry subclass name that matches the\ngiven WKB geometry type.",
             "static": 1,
             "itemtype": "method",
@@ -6618,6 +6710,18 @@
             "class": "gdal.SimpleCurve"
         },
         {
+            "file": "src/async.hpp",
+            "line": 95,
+            "typedef": "ProgressOptions { progress_cb: ProgressCb }",
+            "class": "gdal"
+        },
+        {
+            "file": "src/async.hpp",
+            "line": 99,
+            "typedef": "ProgressCb ( complete: number, msg: string ) => void",
+            "class": "gdal"
+        },
+        {
             "file": "src/gdal.hpp",
             "line": 119,
             "description": "Convert decimal degrees to degrees, minutes, and seconds string",
@@ -6757,7 +6861,7 @@
         {
             "file": "src/gdal_algorithms.cpp",
             "line": 87,
-            "typedef": "ContourOptions { src: gdal.RasterBand, dst: gdal.Layer, offset?: number, interval?: number, fixedLevels?: number[], nodata?: number, idField?: number, elevField?: number }",
+            "typedef": "ContourOptions { src: gdal.RasterBand, dst: gdal.Layer, offset?: number, interval?: number, fixedLevels?: number[], nodata?: number, idField?: number, elevField?: number, progress_cb?: ProgressCb }",
             "class": "gdal"
         },
         {
@@ -6823,6 +6927,12 @@
                             "description": "A field index to indicate where the elevation value of the contour should be written.",
                             "type": "Number",
                             "optional": true
+                        },
+                        {
+                            "name": "progress_cb",
+                            "description": "{{{progress_cb}}}",
+                            "type": "ProgressCb",
+                            "optional": true
                         }
                     ]
                 }
@@ -6831,7 +6941,7 @@
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 114,
+            "line": 115,
             "description": "Create vector contours from raster DEM.\n{{{async}}}\n\nThis algorithm will generate contour vectors for the input raster band on the\nrequested set of contour levels. The vector contours are written to the\npassed in vector layer. Also, a NODATA value may be specified to identify\npixels that should not be considered in contour line generation.",
             "throws": {
                 "description": "Error"
@@ -6892,6 +7002,12 @@
                             "description": "A field index to indicate where the elevation value of the contour should be written.",
                             "type": "Number",
                             "optional": true
+                        },
+                        {
+                            "name": "progress_cb",
+                            "description": "{{{progress_cb}}}",
+                            "type": "ProgressCb",
+                            "optional": true
                         }
                     ]
                 },
@@ -6911,13 +7027,13 @@
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 221,
-            "typedef": "SieveOptions { src: gdal.RasterBand, dst: gdal.RasterBand, mask?: gdal.RasterBand, threshold: number, connectedness?: number }",
+            "line": 235,
+            "typedef": "SieveOptions { src: gdal.RasterBand, dst: gdal.RasterBand, mask?: gdal.RasterBand, threshold: number, connectedness?: number, progress_cb?: ProgressCb }",
             "class": "gdal"
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 225,
+            "line": 239,
             "description": "Removes small raster polygons.",
             "throws": {
                 "description": "Error"
@@ -6958,6 +7074,12 @@
                             "type": "Number",
                             "optional": true,
                             "optdefault": "4"
+                        },
+                        {
+                            "name": "progress_cb",
+                            "description": "{{{progress_cb}}}",
+                            "type": "ProgressCb",
+                            "optional": true
                         }
                     ]
                 }
@@ -6966,7 +7088,7 @@
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 240,
+            "line": 255,
             "description": "Removes small raster polygons.\n{{{async}}}",
             "throws": {
                 "description": "Error"
@@ -7007,6 +7129,12 @@
                             "type": "Number",
                             "optional": true,
                             "optdefault": "4"
+                        },
+                        {
+                            "name": "progress_cb",
+                            "description": "{{{progress_cb}}}",
+                            "type": "ProgressCb",
+                            "optional": true
                         }
                     ]
                 },
@@ -7026,7 +7154,7 @@
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 300,
+            "line": 336,
             "description": "Compute checksum for image region.",
             "throws": {
                 "description": "Error"
@@ -7077,7 +7205,7 @@
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 315,
+            "line": 351,
             "description": "Compute checksum for image region.",
             "throws": {
                 "description": "Error"
@@ -7135,13 +7263,13 @@
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 376,
-            "typedef": "PolygonizeOptions { src: gdal.RasterBand, dst: gdal.Layer, mask?: gdal.RasterBand, pixValField: number, connectedness?: number, useFloats?:boolean }",
+            "line": 412,
+            "typedef": "PolygonizeOptions { src: gdal.RasterBand, dst: gdal.Layer, mask?: gdal.RasterBand, pixValField: number, connectedness?: number, useFloats?: boolean, progress_cb?: ProgressCb }",
             "class": "gdal"
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 380,
+            "line": 416,
             "description": "Creates vector polygons for all connected regions of pixels in the raster\nsharing a common pixel value. Each polygon is created with an attribute\nindicating the pixel value of that polygon. A raster mask may also be\nprovided to determine which pixels are eligible for processing.",
             "throws": {
                 "description": "Error"
@@ -7189,6 +7317,12 @@
                             "type": "Boolean",
                             "optional": true,
                             "optdefault": "false"
+                        },
+                        {
+                            "name": "progress_cb",
+                            "description": "{{{progress_cb}}}",
+                            "type": "ProgressCb",
+                            "optional": true
                         }
                     ]
                 }
@@ -7197,7 +7331,7 @@
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 399,
+            "line": 436,
             "description": "Creates vector polygons for all connected regions of pixels in the raster\nsharing a common pixel value. Each polygon is created with an attribute\nindicating the pixel value of that polygon. A raster mask may also be\nprovided to determine which pixels are eligible for processing.",
             "throws": {
                 "description": "Error"
@@ -7245,6 +7379,12 @@
                             "type": "Boolean",
                             "optional": true,
                             "optdefault": "false"
+                        },
+                        {
+                            "name": "progress_cb",
+                            "description": "{{{progress_cb}}}",
+                            "type": "ProgressCb",
+                            "optional": true
                         }
                     ]
                 },
@@ -7538,16 +7678,30 @@
                 },
                 {
                     "name": "bands",
-                    "description": "Note: Generation of overviews in external TIFF\ncurrently only supported when operating on all bands.",
+                    "description": "Note: Generation of overviews in external TIFF currently only supported when operating on all bands.",
                     "type": "Number[]",
                     "optional": true
+                },
+                {
+                    "name": "options",
+                    "description": "options",
+                    "type": "ProgressOptions",
+                    "optional": true,
+                    "props": [
+                        {
+                            "name": "progress_cb",
+                            "description": "{{{progress_cb}}}",
+                            "type": "ProgressCb",
+                            "optional": true
+                        }
+                    ]
                 }
             ],
             "class": "gdal.Dataset"
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 643,
+            "line": 644,
             "description": "Builds dataset overviews.\n{{{async}}}",
             "throws": {
                 "description": "Error"
@@ -7567,9 +7721,23 @@
                 },
                 {
                     "name": "bands",
-                    "description": "Note: Generation of overviews in external TIFF\ncurrently only supported when operating on all bands.",
+                    "description": "Note: Generation of overviews in external TIFF currently only supported when operating on all bands.",
                     "type": "Number[]",
                     "optional": true
+                },
+                {
+                    "name": "options",
+                    "description": "options",
+                    "type": "ProgressOptions",
+                    "optional": true,
+                    "props": [
+                        {
+                            "name": "progress_cb",
+                            "description": "{{{progress_cb}}}",
+                            "type": "ProgressCb",
+                            "optional": true
+                        }
+                    ]
                 },
                 {
                     "name": "callback",
@@ -7587,7 +7755,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 738,
+            "line": 750,
             "readonly": "",
             "itemtype": "attribute",
             "name": "description",
@@ -7596,7 +7764,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 770,
+            "line": 782,
             "description": "Raster dimensions. An object containing `x` and `y` properties.",
             "readonly": "",
             "itemtype": "attribute",
@@ -7606,7 +7774,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 814,
+            "line": 826,
             "description": "Spatial reference associated with raster dataset",
             "throws": {
                 "description": "Error"
@@ -7618,7 +7786,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 860,
+            "line": 872,
             "description": "An affine transform which maps pixel/line coordinates into georeferenced\nspace using the following relationship:",
             "example": [
                 "\n```\nvar GT = dataset.geoTransform;\nvar Xgeo = GT[0] + Xpixel*GT[1] + Yline*GT[2];\nvar Ygeo = GT[3] + Xpixel*GT[4] + Yline*GT[5];```"
@@ -7630,7 +7798,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 912,
+            "line": 924,
             "readonly": "",
             "itemtype": "attribute",
             "name": "driver",
@@ -7639,7 +7807,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 1027,
+            "line": 1039,
             "readonly": "",
             "itemtype": "attribute",
             "name": "bands",
@@ -7648,7 +7816,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 1037,
+            "line": 1049,
             "readonly": "",
             "itemtype": "attribute",
             "name": "layers",
@@ -9501,7 +9669,7 @@
         {
             "file": "src/gdal_warper.cpp",
             "line": 165,
-            "typedef": "ReprojectOptions { src: gdal.Dataset, dst: gdal.Dataset, s_srs: gdal.SpatialReference, t_srs: gdal.SpatialReference, resampling?: string, cutline?: gdal.Geometry, srcBands?: number[], dstBands?: number[], srcAlphaBand?: number, dstAlphaBand?: number, srcNodata?: number, dstNodata?: number, blend?: number, memoryLimit?: number, maxError?: number, multi?: boolean, options?: object }",
+            "typedef": "ReprojectOptions { src: gdal.Dataset, dst: gdal.Dataset, s_srs: gdal.SpatialReference, t_srs: gdal.SpatialReference, resampling?: string, cutline?: gdal.Geometry, srcBands?: number[], dstBands?: number[], srcAlphaBand?: number, dstAlphaBand?: number, srcNodata?: number, dstNodata?: number, blend?: number, memoryLimit?: number, maxError?: number, multi?: boolean, options?: object, progress_cb?: ProgressCb }",
             "class": "gdal"
         },
         {
@@ -9611,6 +9779,12 @@
                             "description": "(http://www.gdal.org/structGDALWarpOptions.html#a0ed77f9917bb96c7a9aabd73d4d06e08))",
                             "type": "String[]|object",
                             "optional": true
+                        },
+                        {
+                            "name": "progress_cb",
+                            "description": "{{{progress_cb}}}",
+                            "type": "ProgressCb",
+                            "optional": true
                         }
                     ]
                 }
@@ -9619,7 +9793,7 @@
         },
         {
             "file": "src/gdal_warper.cpp",
-            "line": 195,
+            "line": 196,
             "description": "Reprojects a dataset.\n{{{async}}}",
             "throws": {
                 "description": "Error"
@@ -9724,6 +9898,12 @@
                             "description": "(http://www.gdal.org/structGDALWarpOptions.html#a0ed77f9917bb96c7a9aabd73d4d06e08))",
                             "type": "String[]|object",
                             "optional": true
+                        },
+                        {
+                            "name": "progress_cb",
+                            "description": "{{{progress_cb}}}",
+                            "type": "ProgressCb",
+                            "optional": true
                         }
                     ]
                 },
@@ -9743,19 +9923,19 @@
         },
         {
             "file": "src/gdal_warper.cpp",
-            "line": 315,
+            "line": 331,
             "typedef": "WarpOptions { src: gdal.Dataset, s_srs: gdal.SpatialReference, t_srs: gdal.SpatialReference, maxError?: number }",
             "class": "gdal"
         },
         {
             "file": "src/gdal_warper.cpp",
-            "line": 319,
+            "line": 335,
             "typedef": "WarpOutput { rasterSize: xyz, geoTransform: number[] }",
             "class": "gdal"
         },
         {
             "file": "src/gdal_warper.cpp",
-            "line": 323,
+            "line": 339,
             "description": "Used to determine the bounds and resolution of the output virtual file which\nshould be large enough to include all the input image.",
             "throws": {
                 "description": "Error"
@@ -9802,7 +9982,7 @@
         },
         {
             "file": "src/gdal_warper.cpp",
-            "line": 340,
+            "line": 356,
             "description": "Used to determine the bounds and resolution of the output virtual file which\nshould be large enough to include all the input image.\n{{{async}}}",
             "throws": {
                 "description": "Error"
@@ -11117,7 +11297,15 @@
         },
         {
             "message": "unknown tag: typedef",
-            "line": " src/collections/rasterband_pixels.cpp:360"
+            "line": " src/collections/rasterband_pixels.cpp:376"
+        },
+        {
+            "message": "unknown tag: typedef",
+            "line": " src/async.hpp:95"
+        },
+        {
+            "message": "unknown tag: typedef",
+            "line": " src/async.hpp:99"
         },
         {
             "message": "unknown tag: typedef",
@@ -11129,11 +11317,11 @@
         },
         {
             "message": "unknown tag: typedef",
-            "line": " src/gdal_algorithms.cpp:221"
+            "line": " src/gdal_algorithms.cpp:235"
         },
         {
             "message": "unknown tag: typedef",
-            "line": " src/gdal_algorithms.cpp:376"
+            "line": " src/gdal_algorithms.cpp:412"
         },
         {
             "message": "unknown tag: typedef",
@@ -11145,11 +11333,11 @@
         },
         {
             "message": "unknown tag: typedef",
-            "line": " src/gdal_warper.cpp:315"
+            "line": " src/gdal_warper.cpp:331"
         },
         {
             "message": "unknown tag: typedef",
-            "line": " src/gdal_warper.cpp:319"
+            "line": " src/gdal_warper.cpp:335"
         },
         {
             "message": "Missing item type",
@@ -11169,7 +11357,15 @@
         },
         {
             "message": "Missing item type",
-            "line": " src/collections/rasterband_pixels.cpp:360"
+            "line": " src/collections/rasterband_pixels.cpp:376"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/async.hpp:95"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/async.hpp:99"
         },
         {
             "message": "Missing item type",
@@ -11181,11 +11377,11 @@
         },
         {
             "message": "Missing item type",
-            "line": " src/gdal_algorithms.cpp:221"
+            "line": " src/gdal_algorithms.cpp:235"
         },
         {
             "message": "Missing item type",
-            "line": " src/gdal_algorithms.cpp:376"
+            "line": " src/gdal_algorithms.cpp:412"
         },
         {
             "message": "Missing item type",
@@ -11201,11 +11397,11 @@
         },
         {
             "message": "Missing item type",
-            "line": " src/gdal_warper.cpp:315"
+            "line": " src/gdal_warper.cpp:331"
         },
         {
             "message": "Missing item type",
-            "line": " src/gdal_warper.cpp:319"
+            "line": " src/gdal_warper.cpp:335"
         }
     ]
 }

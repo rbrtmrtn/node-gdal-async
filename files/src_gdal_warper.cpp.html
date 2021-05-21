@@ -22,12 +22,12 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.1.1</b>
+                    API Docs for Version: <b>3.2.0</b>
                 </p>
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureDefnFields *", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
         </form>
     </div>
 </div>
@@ -67,7 +67,6 @@
                 <li><a href="../classes/gdal.Feature.html">gdal.Feature</a></li>
                 <li><a href="../classes/gdal.FeatureDefn.html">gdal.FeatureDefn</a></li>
                 <li><a href="../classes/gdal.FeatureDefnFields.html">gdal.FeatureDefnFields</a></li>
-                <li><a href="../classes/gdal.FeatureDefnFields *.html">gdal.FeatureDefnFields *</a></li>
                 <li><a href="../classes/gdal.FeatureFields.html">gdal.FeatureFields</a></li>
                 <li><a href="../classes/gdal.FieldDefn.html">gdal.FieldDefn</a></li>
                 <li><a href="../classes/gdal.GDALDrivers.html">gdal.GDALDrivers</a></li>
@@ -267,7 +266,7 @@ CPLErr GDALReprojectImageMulti(
   /* -------------------------------------------------------------------- */
   /*      Set the progress function.                                      */
   /* -------------------------------------------------------------------- */
-  if (pfnProgress != NULL) {
+  if (pfnProgress != nullptr) {
     psWOptions-&gt;pfnProgress = pfnProgress;
     psWOptions-&gt;pProgressArg = pProgressArg;
   }
@@ -295,7 +294,7 @@ CPLErr GDALReprojectImageMulti(
 }
 
 /**
- * @typedef ReprojectOptions { src: gdal.Dataset, dst: gdal.Dataset, s_srs: gdal.SpatialReference, t_srs: gdal.SpatialReference, resampling?: string, cutline?: gdal.Geometry, srcBands?: number[], dstBands?: number[], srcAlphaBand?: number, dstAlphaBand?: number, srcNodata?: number, dstNodata?: number, blend?: number, memoryLimit?: number, maxError?: number, multi?: boolean, options?: object }
+ * @typedef ReprojectOptions { src: gdal.Dataset, dst: gdal.Dataset, s_srs: gdal.SpatialReference, t_srs: gdal.SpatialReference, resampling?: string, cutline?: gdal.Geometry, srcBands?: number[], dstBands?: number[], srcAlphaBand?: number, dstAlphaBand?: number, srcNodata?: number, dstNodata?: number, blend?: number, memoryLimit?: number, maxError?: number, multi?: boolean, options?: object, progress_cb?: ProgressCb }
  */
 
 /**
@@ -322,6 +321,7 @@ CPLErr GDALReprojectImageMulti(
  * @param {number} [options.maxError]
  * @param {boolean} [options.multi]
  * @param {string[]|object} [options.options] Warp options (see: [reference](http://www.gdal.org/structGDALWarpOptions.html#a0ed77f9917bb96c7a9aabd73d4d06e08))
+ * @param {ProgressCb} [options.progress_cb] {{{progress_cb}}}
  */
 
 /**
@@ -349,6 +349,7 @@ CPLErr GDALReprojectImageMulti(
  * @param {number} [options.maxError]
  * @param {boolean} [options.multi]
  * @param {string[]|object} [options.options] Warp options (see:[reference](http://www.gdal.org/structGDALWarpOptions.html#a0ed77f9917bb96c7a9aabd73d4d06e08))
+ * @param {ProgressCb} [options.progress_cb] {{{progress_cb}}}
  * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
  * @return {Promise&lt;void&gt;}
  */
@@ -365,6 +366,7 @@ GDAL_ASYNCABLE_DEFINE(Warper::reprojectImage) {
   SpatialReference *s_srs;
   SpatialReference *t_srs;
   double maxError = 0;
+  Nan::Callback *progress_cb = nullptr;
 
   NODE_ARG_OBJECT(0, &quot;Warp options&quot;, obj);
 
@@ -381,6 +383,7 @@ GDAL_ASYNCABLE_DEFINE(Warper::reprojectImage) {
   NODE_WRAPPED_FROM_OBJ(obj, &quot;s_srs&quot;, SpatialReference, s_srs);
   NODE_WRAPPED_FROM_OBJ(obj, &quot;t_srs&quot;, SpatialReference, t_srs);
   NODE_DOUBLE_FROM_OBJ_OPT(obj, &quot;maxError&quot;, maxError);
+  NODE_CB_FROM_OBJ_OPT(obj, &quot;progress_cb&quot;, progress_cb);
 
   char *s_srs_wkt, *t_srs_wkt;
   if (s_srs-&gt;get()-&gt;exportToWkt(&amp;s_srs_wkt)) {
@@ -400,47 +403,59 @@ GDAL_ASYNCABLE_DEFINE(Warper::reprojectImage) {
   job.persist(options-&gt;datasetObjects());
   std::vector&lt;long&gt; uids = options-&gt;datasetUids();
 
+  if (progress_cb) {
+#if GDAL_VERSION_MAJOR &lt; 2
+    Nan::ThrowError(&quot;Progress callback not supported on GDAL 1.x&quot;);
+    return;
+#else
+    job.persist(progress_cb-&gt;GetFunction());
+    job.progress = progress_cb;
+#endif
+  }
+
   // opts is a pointer inside options memory space
   // the lifetime of the options shared_ptr is limited by the lifetime of the lambda
   if (options-&gt;useMultithreading()) {
-    job.main = [uids, options, opts, s_srs_str, t_srs_str, maxError]() {
-      GDAL_ASYNCABLE_LOCK_MANY(uids[0], uids[1]);
-      CPLErr err = GDALReprojectImageMulti(
-        opts-&gt;hSrcDS,
-        s_srs_str.c_str(),
-        opts-&gt;hDstDS,
-        t_srs_str.c_str(),
-        opts-&gt;eResampleAlg,
-        opts-&gt;dfWarpMemoryLimit,
-        maxError,
-        NULL,
-        NULL,
-        opts);
-      GDAL_UNLOCK_MANY;
-      if (err) { throw CPLGetLastErrorMsg(); }
-      return err;
-    };
+    job.main =
+      [uids, options, opts, s_srs_str, t_srs_str, maxError, progress_cb](const GDALExecutionProgress &amp;progress) {
+        GDAL_ASYNCABLE_LOCK_MANY(uids[0], uids[1]);
+        CPLErr err = GDALReprojectImageMulti(
+          opts-&gt;hSrcDS,
+          s_srs_str.c_str(),
+          opts-&gt;hDstDS,
+          t_srs_str.c_str(),
+          opts-&gt;eResampleAlg,
+          opts-&gt;dfWarpMemoryLimit,
+          maxError,
+          progress_cb ? ProgressTrampoline : nullptr,
+          progress_cb ? (void *)&amp;progress : nullptr,
+          opts);
+        GDAL_UNLOCK_MANY;
+        if (err) { throw CPLGetLastErrorMsg(); }
+        return err;
+      };
   } else {
-    job.main = [uids, options, opts, s_srs_str, t_srs_str, maxError]() {
-      GDAL_ASYNCABLE_LOCK_MANY(uids[0], uids[1]);
-      CPLErr err = GDALReprojectImage(
-        opts-&gt;hSrcDS,
-        s_srs_str.c_str(),
-        opts-&gt;hDstDS,
-        t_srs_str.c_str(),
-        opts-&gt;eResampleAlg,
-        opts-&gt;dfWarpMemoryLimit,
-        maxError,
-        NULL,
-        NULL,
-        opts);
-      GDAL_UNLOCK_MANY;
-      if (err) { throw CPLGetLastErrorMsg(); }
-      return err;
-    };
+    job.main =
+      [uids, options, opts, s_srs_str, t_srs_str, maxError, progress_cb](const GDALExecutionProgress &amp;progress) {
+        GDAL_ASYNCABLE_LOCK_MANY(uids[0], uids[1]);
+        CPLErr err = GDALReprojectImage(
+          opts-&gt;hSrcDS,
+          s_srs_str.c_str(),
+          opts-&gt;hDstDS,
+          t_srs_str.c_str(),
+          opts-&gt;eResampleAlg,
+          opts-&gt;dfWarpMemoryLimit,
+          maxError,
+          progress_cb ? ProgressTrampoline : nullptr,
+          progress_cb ? (void *)&amp;progress : nullptr,
+          opts);
+        GDAL_UNLOCK_MANY;
+        if (err) { throw CPLGetLastErrorMsg(); }
+        return err;
+      };
   }
 
-  job.rval = [](CPLErr r, GDAL_ASYNCABLE_OBJS) { return Nan::Undefined(); };
+  job.rval = [](CPLErr r, GetFromPersistentFunc) { return Nan::Undefined(); };
   job.run(info, async, 1);
 }
 
@@ -554,7 +569,7 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
   GDALAsyncableJob&lt;warpOutputResult&gt; job;
   job.persist(ds-&gt;handle());
 
-  job.main = [gdal_ds, uid, s_srs_str, t_srs_str, maxError]() {
+  job.main = [gdal_ds, uid, s_srs_str, t_srs_str, maxError](const GDALExecutionProgress &amp;) {
     struct warpOutputResult r;
 
     GDAL_ASYNCABLE_LOCK(uid);
@@ -594,7 +609,7 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
     return r;
   };
 
-  job.rval = [](warpOutputResult r, GDAL_ASYNCABLE_OBJS o) {
+  job.rval = [](warpOutputResult r, GetFromPersistentFunc) {
     Nan::EscapableHandleScope scope;
     Local&lt;Array&gt; result_geotransform = Nan::New&lt;Array&gt;();
     Nan::Set(result_geotransform, 0, Nan::New&lt;Number&gt;(r.geotransform[0]));
