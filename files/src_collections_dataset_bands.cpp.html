@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.0</b>
+                    API Docs for Version: <b>3.2.1</b>
                 </p>
             </li>
         </div>
@@ -313,7 +313,7 @@ GDAL_ASYNCABLE_DEFINE(DatasetBands::create) {
 
   GDALDataset *raw = ds-&gt;getDataset();
   GDALDataType type;
-  StringList *options = new StringList;
+  std::shared_ptr&lt;StringList&gt; options(new StringList);
 
   // NODE_ARG_ENUM(0, &quot;data type&quot;, GDALDataType, type);
   if (info.Length() &lt; 1) {
@@ -339,7 +339,6 @@ GDAL_ASYNCABLE_DEFINE(DatasetBands::create) {
   GDALAsyncableJob&lt;GDALRasterBand *&gt; job;
   job.persist(parent);
   job.main = [ds_uid, raw, type, options](const GDALExecutionProgress &amp;) {
-    std::unique_ptr&lt;StringList&gt; options_ptr(options);
     GDAL_ASYNCABLE_LOCK(ds_uid);
     CPLErr err = raw-&gt;AddBand(type, options-&gt;get());
     GDAL_UNLOCK_PARENT;

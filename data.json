@@ -4,7 +4,7 @@
         "description": "Node.js bindings for GDAL (Geospatial Data Abstraction Library) [Fork]",
         "url": "https://github.com/mmomtchev/node-gdal-async",
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/GDALLogoColor.svg/200px-GDALLogoColor.svg.png",
-        "version": "3.2.0"
+        "version": "3.2.1"
     },
     "files": {
         "lib/envelope.js": {
@@ -2596,7 +2596,7 @@
         },
         {
             "file": "src/collections/dataset_bands.cpp",
-            "line": 224,
+            "line": 223,
             "description": "Returns the number of bands.",
             "itemtype": "method",
             "name": "count",
@@ -2608,7 +2608,7 @@
         },
         {
             "file": "src/collections/dataset_bands.cpp",
-            "line": 231,
+            "line": 230,
             "description": "Returns the number of bands.\n {{{async}}}",
             "itemtype": "method",
             "name": "countAsync",
@@ -2629,7 +2629,7 @@
         },
         {
             "file": "src/collections/dataset_bands.cpp",
-            "line": 275,
+            "line": 274,
             "description": "Parent dataset",
             "readonly": "",
             "itemtype": "attribute",
@@ -9358,7 +9358,7 @@
         },
         {
             "file": "src/gdal_spatial_reference.cpp",
-            "line": 526,
+            "line": 527,
             "description": "Creates a spatial reference from a Proj.4 string.",
             "static": 1,
             "throws": {
@@ -9381,7 +9381,7 @@
         },
         {
             "file": "src/gdal_spatial_reference.cpp",
-            "line": 551,
+            "line": 553,
             "description": "Creates a spatial reference from a WMSAUTO string.\n\nNote that the WMS 1.3 specification does not include the units code, while\napparently earlier specs do. GDAL tries to guess around this.",
             "example": [
                 "\n```\nvar wms = 'AUTO:42001,99,8888';\nvar ref = gdal.SpatialReference.fromWMSAUTO(wms);```"
@@ -9407,7 +9407,7 @@
         },
         {
             "file": "src/gdal_spatial_reference.cpp",
-            "line": 584,
+            "line": 587,
             "description": "Import coordinate system from XML format (GML only currently).",
             "static": 1,
             "throws": {
@@ -9430,7 +9430,7 @@
         },
         {
             "file": "src/gdal_spatial_reference.cpp",
-            "line": 609,
+            "line": 613,
             "description": "Initialize from OGC URN.\n\nThe OGC URN should be prefixed with \"urn:ogc:def:crs:\" per recommendation\npaper 06-023r1. Currently EPSG and OGC authority values are supported,\nincluding OGC auto codes, but not including CRS1 or CRS88 (NAVD88).",
             "static": 1,
             "throws": {
@@ -9453,7 +9453,7 @@
         },
         {
             "file": "src/gdal_spatial_reference.cpp",
-            "line": 638,
+            "line": 643,
             "description": "Initialize from OGC URL.\n\nThe OGC URL should be prefixed with \"http://opengis.net/def/crs\" per best\npractice paper 11-135. Currently EPSG and OGC authority values are supported,\nincluding OGC auto codes, but not including CRS1 or CRS88 (NAVD88).",
             "static": 1,
             "throws": {
@@ -9476,7 +9476,7 @@
         },
         {
             "file": "src/gdal_spatial_reference.cpp",
-            "line": 667,
+            "line": 673,
             "description": "Initialize spatial reference from a URL.\n\nThis method will download the spatial reference from the given URL.",
             "static": 1,
             "throws": {
@@ -9499,7 +9499,7 @@
         },
         {
             "file": "src/gdal_spatial_reference.cpp",
-            "line": 694,
+            "line": 701,
             "description": "Initialize from a Mapinfo style CoordSys definition.",
             "static": 1,
             "throws": {
@@ -9522,7 +9522,7 @@
         },
         {
             "file": "src/gdal_spatial_reference.cpp",
-            "line": 719,
+            "line": 727,
             "description": "Initialize from an arbitrary spatial reference string.\n\nThis method will examine the provided input, and try to deduce the format,\nand then use it to initialize the spatial reference system.",
             "static": 1,
             "throws": {
@@ -9545,7 +9545,7 @@
         },
         {
             "file": "src/gdal_spatial_reference.cpp",
-            "line": 747,
+            "line": 756,
             "description": "Initialize from EPSG GCS or PCS code.",
             "example": [
                 "\n```\nvar ref = gdal.SpatialReference.fromEPSGA(4326);```"
@@ -9571,7 +9571,7 @@
         },
         {
             "file": "src/gdal_spatial_reference.cpp",
-            "line": 776,
+            "line": 786,
             "description": "Initialize from EPSG GCS or PCS code.\n\nThis method is similar to `fromEPSG()` except that EPSG preferred axis\nordering *will* be applied for geographic and projected coordinate systems.\nEPSG normally defines geographic coordinate systems to use lat/long, and also\nthere are also a few projected coordinate systems that use northing/easting\norder contrary to typical GIS use).",
             "example": [
                 "\n```\nvar ref = gdal.SpatialReference.fromEPSGA(26910);```"
@@ -9597,7 +9597,7 @@
         },
         {
             "file": "src/gdal_spatial_reference.cpp",
-            "line": 811,
+            "line": 822,
             "description": "Import coordinate system from ESRI .prj format(s).\n\nThis function will read the text loaded from an ESRI .prj file, and translate\nit into an OGRSpatialReference definition. This should support many (but by\nno means all) old style (Arc/Info 7.x) .prj files, as well as the newer\npseudo-OGC WKT .prj files. Note that new style .prj files are in OGC WKT\nformat, but require some manipulation to correct datum names, and units on\nsome projection parameters. This is addressed within importFromESRI() by an\nautomatical call to morphFromESRI().\n\nCurrently only GEOGRAPHIC, UTM, STATEPLANE, GREATBRITIAN_GRID, ALBERS,\nEQUIDISTANT_CONIC, TRANSVERSE (mercator), POLAR, MERCATOR and POLYCONIC\nprojections are supported from old style files.",
             "static": 1,
             "throws": {
@@ -9620,13 +9620,13 @@
         },
         {
             "file": "src/gdal_spatial_reference.cpp",
-            "line": 856,
+            "line": 868,
             "typedef": "units { units: string, value: number }",
             "class": "gdal.SpatialReference"
         },
         {
             "file": "src/gdal_spatial_reference.cpp",
-            "line": 860,
+            "line": 872,
             "description": "Fetch linear geographic coordinate system units.",
             "itemtype": "method",
             "name": "getLinearUnits",
@@ -9638,7 +9638,7 @@
         },
         {
             "file": "src/gdal_spatial_reference.cpp",
-            "line": 881,
+            "line": 893,
             "description": "Fetch angular geographic coordinate system units.",
             "itemtype": "method",
             "name": "getAngularUnits",
@@ -9650,7 +9650,7 @@
         },
         {
             "file": "src/gdal_spatial_reference.cpp",
-            "line": 902,
+            "line": 914,
             "description": "Validate SRS tokens.\n\nThis method attempts to verify that the spatial reference system is well\nformed, and consists of known tokens. The validation is not comprehensive.",
             "itemtype": "method",
             "name": "validate",
@@ -11325,7 +11325,7 @@
         },
         {
             "message": "unknown tag: typedef",
-            "line": " src/gdal_spatial_reference.cpp:856"
+            "line": " src/gdal_spatial_reference.cpp:868"
         },
         {
             "message": "unknown tag: typedef",
@@ -11385,7 +11385,7 @@
         },
         {
             "message": "Missing item type",
-            "line": " src/gdal_spatial_reference.cpp:856"
+            "line": " src/gdal_spatial_reference.cpp:868"
         },
         {
             "message": "Missing item type\nGDALReprojectImage() method with a ChunkAndWarpImage replaced with\nChunkAndWarpMulti",

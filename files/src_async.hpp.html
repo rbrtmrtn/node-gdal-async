@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.0</b>
+                    API Docs for Version: <b>3.2.1</b>
                 </p>
             </li>
         </div>
@@ -373,20 +373,20 @@ template &lt;class GDALType&gt; class GDALAsyncableJob {
 
   GDALAsyncableJob() : main(), rval(), progress(nullptr), persistent(), autoIndex(0){};
 
-  void persist(const std::string &amp;key, const v8::Local&lt;v8::Object&gt; &amp;obj) {
+  inline void persist(const std::string &amp;key, const v8::Local&lt;v8::Object&gt; &amp;obj) {
     persistent[key] = obj;
   }
 
-  void persist(const v8::Local&lt;v8::Object&gt; &amp;obj) {
+  inline void persist(const v8::Local&lt;v8::Object&gt; &amp;obj) {
     persistent[std::to_string(autoIndex++)] = obj;
   }
 
-  void persist(const v8::Local&lt;v8::Object&gt; &amp;obj1, const v8::Local&lt;v8::Object&gt; &amp;obj2) {
+  inline void persist(const v8::Local&lt;v8::Object&gt; &amp;obj1, const v8::Local&lt;v8::Object&gt; &amp;obj2) {
     persist(obj1);
     persist(obj2);
   }
 
-  void persist(const std::vector&lt;v8::Local&lt;v8::Object&gt;&gt; &amp;objs) {
+  inline void persist(const std::vector&lt;v8::Local&lt;v8::Object&gt;&gt; &amp;objs) {
     for (auto const &amp;i : objs) persist(i);
   }
 
