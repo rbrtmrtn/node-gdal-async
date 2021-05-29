@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.2</b>
+                    API Docs for Version: <b>3.2.99</b>
                 </p>
             </li>
         </div>
@@ -140,8 +140,6 @@
 
 namespace node_gdal {
 
-#if GDAL_VERSION_MAJOR &gt;= 2
-
 Nan::Persistent&lt;FunctionTemplate&gt; MultiCurve::constructor;
 
 void MultiCurve::Initialize(Local&lt;Object&gt; target) {
@@ -184,8 +182,6 @@ NAN_METHOD(MultiCurve::polygonize) {
 
   info.GetReturnValue().Set(Geometry::New(geom-&gt;this_-&gt;Polygonize()));
 }
-
-#endif
 
 } // namespace node_gdal
 

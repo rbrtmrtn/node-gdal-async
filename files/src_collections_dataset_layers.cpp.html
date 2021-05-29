@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.2</b>
+                    API Docs for Version: <b>3.2.99</b>
                 </p>
             </li>
         </div>
@@ -246,16 +246,7 @@ GDAL_ASYNCABLE_DEFINE(DatasetLayers::get) {
     return;
   }
 
-#if GDAL_VERSION_MAJOR &gt;= 2
   GDALDataset *raw = ds-&gt;getDataset();
-#else
-  GDAL_ASYNCABLE_1x_UNSUPPORTED;
-  OGRDataSource *raw = ds-&gt;getDatasource();
-  if (!ds-&gt;uses_ogr) {
-    info.GetReturnValue().Set(Nan::Null());
-    return;
-  }
-#endif
 
   if (info.Length() &lt; 1) {
     Nan::ThrowError(&quot;method must be given integer or string&quot;);
@@ -345,16 +336,7 @@ GDAL_ASYNCABLE_DEFINE(DatasetLayers::create) {
     return;
   }
 
-#if GDAL_VERSION_MAJOR &gt;= 2
   GDALDataset *raw = ds-&gt;getDataset();
-#else
-  GDAL_ASYNCABLE_1x_UNSUPPORTED;
-  OGRDataSource *raw = ds-&gt;getDatasource();
-  if (!ds-&gt;uses_ogr) {
-    Nan::ThrowError(&quot;Dataset does not support creating layers&quot;);
-    return;
-  }
-#endif
 
   std::string *layer_name = new std::string;
   SpatialReference *spatial_ref = NULL;
@@ -417,16 +399,7 @@ GDAL_ASYNCABLE_DEFINE(DatasetLayers::count) {
     return;
   }
 
-#if GDAL_VERSION_MAJOR &gt;= 2
   GDALDataset *raw = ds-&gt;getDataset();
-#else
-  GDAL_ASYNCABLE_1x_UNSUPPORTED;
-  OGRDataSource *raw = ds-&gt;getDatasource();
-  if (!ds-&gt;uses_ogr) {
-    info.GetReturnValue().Set(Nan::New&lt;Integer&gt;(0));
-    return;
-  }
-#endif
 
   long ds_uid = ds-&gt;uid;
   GDALAsyncableJob&lt;int&gt; job;
@@ -476,16 +449,7 @@ GDAL_ASYNCABLE_DEFINE(DatasetLayers::copy) {
     return;
   }
 
-#if GDAL_VERSION_MAJOR &gt;= 2
   GDALDataset *raw = ds-&gt;getDataset();
-#else
-  GDAL_ASYNCABLE_1x_UNSUPPORTED;
-  OGRDataSource *raw = ds-&gt;getDatasource();
-  if (!ds-&gt;uses_ogr) {
-    Nan::ThrowError(&quot;Dataset does not support copying layers&quot;);
-    return;
-  }
-#endif
 
   Layer *layer_to_copy;
   std::string *new_name = new std::string(&quot;&quot;);
@@ -545,16 +509,7 @@ GDAL_ASYNCABLE_DEFINE(DatasetLayers::remove) {
     return;
   }
 
-#if GDAL_VERSION_MAJOR &gt;= 2
   GDALDataset *raw = ds-&gt;getDataset();
-#else
-  GDAL_ASYNCABLE_1x_UNSUPPORTED;
-  OGRDataSource *raw = ds-&gt;getDatasource();
-  if (!ds-&gt;uses_ogr) {
-    Nan::ThrowError(&quot;Dataset does not support removing layers&quot;);
-    return;
-  }
-#endif
 
   int i;
   NODE_ARG_INT(0, &quot;layer index&quot;, i);

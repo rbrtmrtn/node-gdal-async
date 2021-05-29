@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.2</b>
+                    API Docs for Version: <b>3.2.99</b>
                 </p>
             </li>
         </div>
@@ -152,10 +152,10 @@ band.pixels.read(0,0,16,16,data);<code>&#x60;</code></code></pre>
 			<strong>Methods</strong>
 			<ul>
 				<li><a href="#method-get"><span class="im">get</span>(<span class="ia">x</span><span class="ia">y</span>)</a></li>
-				<li><a href="#method-read"><span class="im">read</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">width</span><span class="ia">height</span><span class="ia">data] The [TypedArray</span><span class="ia">options</span>)</a></li>
-				<li><a href="#method-readAsync"><span class="im">readAsync</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">width</span><span class="ia">height</span><span class="ia">data] The [TypedArray</span><span class="ia">options</span><span class="ia">callback</span>)</a></li>
-				<li><a href="#method-readBlock"><span class="im">readBlock</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">data] The [TypedArray</span>)</a></li>
-				<li><a href="#method-readBlockAsync"><span class="im">readBlockAsync</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">data] The [TypedArray</span><span class="ia">callback</span>)</a></li>
+				<li><a href="#method-read"><span class="im">read</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">width</span><span class="ia">height</span><span class="ia">data</span><span class="ia">options</span>)</a></li>
+				<li><a href="#method-readAsync"><span class="im">readAsync</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">width</span><span class="ia">height</span><span class="ia">data</span><span class="ia">options</span><span class="ia">callback</span>)</a></li>
+				<li><a href="#method-readBlock"><span class="im">readBlock</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">data</span>)</a></li>
+				<li><a href="#method-readBlockAsync"><span class="im">readBlockAsync</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">data</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-set"><span class="im">set</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">value</span>)</a></li>
 				<li><a href="#method-write"><span class="im">write</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">width</span><span class="ia">height</span><span class="ia">data</span><span class="ia">options</span>)</a></li>
 				<li><a href="#method-writeAsync"><span class="im">writeAsync</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">width</span><span class="ia">height</span><span class="ia">data</span><span class="ia">options</span><span class="ia">callback</span>)</a></li>
@@ -165,6 +165,12 @@ band.pixels.read(0,0,16,16,data);<code>&#x60;</code></code></pre>
 		</li>
 
 
+		<li>
+			<strong>Attributes</strong>
+			<ul>
+				<li><a href="#attr-band"><span class="iattr">band</span></a></li>
+			</ul>
+		</li>
 
 	</ul>
 </div>
@@ -202,7 +208,7 @@ band.pixels.read(0,0,16,16,data);<code>&#x60;</code></code></pre>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l108"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:108</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l110"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:110</code></a>
 		</p>
 
 
@@ -261,7 +267,7 @@ band.pixels.read(0,0,16,16,data);<code>&#x60;</code></code></pre>
 						<code>height</code>
 				</li>
 				<li class="arg">
-						<code class="optional">data] The [TypedArray</code>
+						<code class="optional">data</code>
 				</li>
 				<li class="arg">
 						<code class="optional">options</code>
@@ -281,7 +287,7 @@ band.pixels.read(0,0,16,16,data);<code>&#x60;</code></code></pre>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l195"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:195</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l229"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:229</code></a>
 		</p>
 
 
@@ -324,12 +330,12 @@ band.pixels.read(0,0,16,16,data);<code>&#x60;</code></code></pre>
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[data] The [TypedArray]</code>
+						<code class="param-name optional">[data]</code>
 						<span class="type">TypedArray</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
-					<div class="param-description"><p>(<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) to put the data in. A new array is created if not given.</p>
+					<div class="param-description"><p>The TypedArray (<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) to put the data in. A new array is created if not given.</p>
 </div>
 
 				</li>
@@ -419,7 +425,7 @@ The callback takes two arguments, the first one, <code>complete</code>, is a num
 
 			<div class="returns-description">
 						<span class="type">TypedArray</span>:
-					<p>A <a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">TypedArray</a> of values.</p>
+					<p>A TypedArray (<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) of values.</p>
 
 			</div>
 		</div>
@@ -444,7 +450,7 @@ The callback takes two arguments, the first one, <code>complete</code>, is a num
 						<code>height</code>
 				</li>
 				<li class="arg">
-						<code class="optional">data] The [TypedArray</code>
+						<code class="optional">data</code>
 				</li>
 				<li class="arg">
 						<code class="optional">options</code>
@@ -467,7 +473,7 @@ The callback takes two arguments, the first one, <code>complete</code>, is a num
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l217"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:217</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l251"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:251</code></a>
 		</p>
 
 
@@ -506,6 +512,8 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 						<span class="type">Number</span>
 
 
+					<div class="param-description"><p>the width</p>
+</div>
 
 				</li>
 				<li class="param">
@@ -516,12 +524,12 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[data] The [TypedArray]</code>
+						<code class="param-name optional">[data]</code>
 						<span class="type">TypedArray</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
-					<div class="param-description"><p>(<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) to put the data in. A new array is created if not given.</p>
+					<div class="param-description"><p>The TypedArray (<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) to put the data in. A new array is created if not given.</p>
 </div>
 
 				</li>
@@ -626,7 +634,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 
 			<div class="returns-description">
 						<span class="type">Promise<TypedArray></span>:
-					<p>A <a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">TypedArray</a> of values.</p>
+					<p>A TypedArray (<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) of values.</p>
 
 			</div>
 		</div>
@@ -645,7 +653,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 						<code>y</code>
 				</li>
 				<li class="arg">
-						<code class="optional">data] The [TypedArray</code>
+						<code class="optional">data</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -662,7 +670,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l518"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:518</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l515"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:515</code></a>
 		</p>
 
 
@@ -691,12 +699,12 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[data] The [TypedArray]</code>
+						<code class="param-name optional">[data]</code>
 						<span class="type">TypedArray</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
-					<div class="param-description"><p>(<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) to put the data in. A new array is created if not given.</p>
+					<div class="param-description"><p>The TypedArray (<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) to put the data in. A new array is created if not given.</p>
 </div>
 
 				</li>
@@ -708,7 +716,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 
 			<div class="returns-description">
 						<span class="type">TypedArray</span>:
-					<p>A <a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">TypedArray</a> of values.</p>
+					<p>A TypedArray (<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) of values.</p>
 
 			</div>
 		</div>
@@ -727,7 +735,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 						<code>y</code>
 				</li>
 				<li class="arg">
-						<code class="optional">data] The [TypedArray</code>
+						<code class="optional">data</code>
 				</li>
 				<li class="arg">
 						<code class="optional">callback=undefined</code>
@@ -747,7 +755,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l529"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:529</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l526"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:526</code></a>
 		</p>
 
 
@@ -782,12 +790,12 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name optional">[data] The [TypedArray]</code>
+						<code class="param-name optional">[data]</code>
 						<span class="type">TypedArray</span>
 						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
-					<div class="param-description"><p>(<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) to put the data in. A new array is created if not given.</p>
+					<div class="param-description"><p>The TypedArray (<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) to put the data in. A new array is created if not given.</p>
 </div>
 
 				</li>
@@ -814,7 +822,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 
 			<div class="returns-description">
 						<span class="type">Promise<TypedArray></span>:
-					<p>A <a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">TypedArray</a> of values.</p>
+					<p>A TypedArray (<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) of values.</p>
 
 			</div>
 		</div>
@@ -847,7 +855,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l139"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:139</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l141"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:141</code></a>
 		</p>
 
 
@@ -906,7 +914,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 						<code>height</code>
 				</li>
 				<li class="arg">
-						<code>data</code>
+						<code class="optional">data</code>
 				</li>
 				<li class="arg">
 						<code class="optional">options</code>
@@ -923,7 +931,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l380"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:380</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l391"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:391</code></a>
 		</p>
 
 
@@ -966,11 +974,12 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 
 				</li>
 				<li class="param">
-						<code class="param-name">data</code>
+						<code class="param-name optional">[data]</code>
 						<span class="type">TypedArray</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
-					<div class="param-description"><p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">TypedArray</a> to write to the band.</p>
+					<div class="param-description"><p>The TypedArray (<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) to write to the band.</p>
 </div>
 
 				</li>
@@ -1057,7 +1066,7 @@ The callback takes two arguments, the first one, <code>complete</code>, is a num
 						<code>height</code>
 				</li>
 				<li class="arg">
-						<code>data</code>
+						<code class="optional">data</code>
 				</li>
 				<li class="arg">
 						<code class="optional">options</code>
@@ -1080,7 +1089,7 @@ The callback takes two arguments, the first one, <code>complete</code>, is a num
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l398"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:398</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l409"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:409</code></a>
 		</p>
 
 
@@ -1129,11 +1138,12 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 
 				</li>
 				<li class="param">
-						<code class="param-name">data</code>
+						<code class="param-name optional">[data]</code>
 						<span class="type">TypedArray</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
 
 
-					<div class="param-description"><p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">TypedArray</a> to write to the band.</p>
+					<div class="param-description"><p>The TypedArray (<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) to write to the band.</p>
 </div>
 
 				</li>
@@ -1250,7 +1260,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l592"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:592</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l589"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:589</code></a>
 		</p>
 
 
@@ -1283,7 +1293,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 						<span class="type">TypedArray</span>
 
 
-					<div class="param-description"><p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">TypedArray</a> of values to write to the band.</p>
+					<div class="param-description"><p>The TypedArray (<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) of values to write to the band.</p>
 </div>
 
 				</li>
@@ -1325,7 +1335,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_rasterband_pixels.cpp.html#l602"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:602</code></a>
+		<a href="../files/src_collections_rasterband_pixels.cpp.html#l599"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:599</code></a>
 		</p>
 
 
@@ -1364,7 +1374,7 @@ as it is the last parameter. Otherwise the function returns a Promise resolved w
 						<span class="type">TypedArray</span>
 
 
-					<div class="param-description"><p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">TypedArray</a> of values to write to the band.</p>
+					<div class="param-description"><p>The TypedArray (<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) of values to write to the band.</p>
 </div>
 
 				</li>
@@ -1399,6 +1409,40 @@ Argument type errors are thrown synchronously even when a callback is provided. 
     </div>
 
 
+    <div id="attrs" class="page-section">
+        <h2 class="off-left">Attributes</h2>
+
+<div id="attr-band" class="attr item">
+    <a name="config_band"></a> 
+    <h3 class="name"><code>band</code></h3>
+    <span class="type"><a href="../classes/gdal.RasterBand.html" class="crosslink">gdal.RasterBand</a></span>
+
+
+
+
+
+
+
+        <span class="flag readonly">readonly</span>
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_collections_rasterband_pixels.cpp.html#l649"><code>src&#x2F;collections&#x2F;rasterband_pixels.cpp:649</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Parent dataset</p>
+
+    </div>
+
+
+
+</div>
+    </div>
 
 
                     </div>

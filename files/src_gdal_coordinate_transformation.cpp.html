@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.2</b>
+                    API Docs for Version: <b>3.2.99</b>
                 </p>
             </li>
         </div>
@@ -228,12 +228,6 @@ NAN_METHOD(CoordinateTransformation::New) {
       ds = Nan::ObjectWrap::Unwrap&lt;Dataset&gt;(info[1].As&lt;Object&gt;());
 
       if (!ds-&gt;getDataset()) {
-#if GDAL_VERSION_MAJOR &lt; 2
-        if (ds-&gt;getDatasource()) {
-          Nan::ThrowError(&quot;Only raster datasets can be used to create geotransform coordinate transformations&quot;);
-          return;
-        }
-#endif
         Nan::ThrowError(&quot;Dataset already closed&quot;);
         return;
       }

@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.2</b>
+                    API Docs for Version: <b>3.2.99</b>
                 </p>
             </li>
         </div>
@@ -299,15 +299,11 @@ NAN_METHOD(PolygonRings::add) {
       Local&lt;Value&gt; element = Nan::Get(array, i).ToLocalChecked();
       if (IS_WRAPPED(element, LinearRing)) {
         ring = Nan::ObjectWrap::Unwrap&lt;LinearRing&gt;(element.As&lt;Object&gt;());
-#if GDAL_VERSION_MAJOR &lt; 2
-        geom-&gt;get()-&gt;addRing(ring-&gt;get());
-#else
         OGRErr err = geom-&gt;get()-&gt;addRing(ring-&gt;get());
         if (err) {
           NODE_THROW_OGRERR(err);
           return;
         }
-#endif
       } else {
         Nan::ThrowError(&quot;All array elements must be LinearRings&quot;);
         return;
@@ -315,15 +311,11 @@ NAN_METHOD(PolygonRings::add) {
     }
   } else if (IS_WRAPPED(info[0], LinearRing)) {
     ring = Nan::ObjectWrap::Unwrap&lt;LinearRing&gt;(info[0].As&lt;Object&gt;());
-#if GDAL_VERSION_MAJOR &lt; 2
-    geom-&gt;get()-&gt;addRing(ring-&gt;get());
-#else
     OGRErr err = geom-&gt;get()-&gt;addRing(ring-&gt;get());
     if (err) {
       NODE_THROW_OGRERR(err);
       return;
     }
-#endif
   } else {
     Nan::ThrowError(&quot;ring(s) must be a LinearRing or array of LinearRings&quot;);
     return;

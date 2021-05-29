@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.2</b>
+                    API Docs for Version: <b>3.2.99</b>
                 </p>
             </li>
         </div>
@@ -242,31 +242,21 @@ GDAL_ASYNCABLE_DEFINE(DatasetBands::get) {
     return;
   }
 
-#if GDAL_VERSION_MAJOR &lt; 2
-  GDAL_ASYNCABLE_1x_UNSUPPORTED;
-  if (ds-&gt;uses_ogr) {
-    info.GetReturnValue().Set(Nan::Null());
-    return;
-  } else {
-#else
-  {
-#endif
-    GDALDataset *raw = ds-&gt;getDataset();
-    long ds_uid = ds-&gt;uid;
-    int band_id;
-    NODE_ARG_INT(0, &quot;band id&quot;, band_id);
+  GDALDataset *raw = ds-&gt;getDataset();
+  long ds_uid = ds-&gt;uid;
+  int band_id;
+  NODE_ARG_INT(0, &quot;band id&quot;, band_id);
 
-    GDALAsyncableJob&lt;GDALRasterBand *&gt; job;
-    job.persist(parent);
-    job.main = [ds_uid, raw, band_id](const GDALExecutionProgress &amp;) {
-      GDAL_ASYNCABLE_LOCK(ds_uid);
-      GDALRasterBand *band = raw-&gt;GetRasterBand(band_id);
-      GDAL_UNLOCK_PARENT;
-      return band;
-    };
-    job.rval = [raw](GDALRasterBand *band, GetFromPersistentFunc) { return RasterBand::New(band, raw); };
-    job.run(info, async, 1);
-  }
+  GDALAsyncableJob&lt;GDALRasterBand *&gt; job;
+  job.persist(parent);
+  job.main = [ds_uid, raw, band_id](const GDALExecutionProgress &amp;) {
+    GDAL_ASYNCABLE_LOCK(ds_uid);
+    GDALRasterBand *band = raw-&gt;GetRasterBand(band_id);
+    GDAL_UNLOCK_PARENT;
+    return band;
+  };
+  job.rval = [raw](GDALRasterBand *band, GetFromPersistentFunc) { return RasterBand::New(band, raw); };
+  job.run(info, async, 1);
 }
 
 /**
@@ -302,14 +292,6 @@ GDAL_ASYNCABLE_DEFINE(DatasetBands::create) {
     Nan::ThrowError(&quot;Dataset object has already been destroyed&quot;);
     return;
   }
-
-#if GDAL_VERSION_MAJOR &lt; 2
-  GDAL_ASYNCABLE_1x_UNSUPPORTED;
-  if (ds-&gt;uses_ogr) {
-    Nan::ThrowError(&quot;Dataset does not support getting creating bands&quot;);
-    return;
-  }
-#endif
 
   GDALDataset *raw = ds-&gt;getDataset();
   GDALDataType type;
@@ -379,14 +361,6 @@ GDAL_ASYNCABLE_DEFINE(DatasetBands::count) {
     Nan::ThrowError(&quot;Dataset object has already been destroyed&quot;);
     return;
   }
-
-#if GDAL_VERSION_MAJOR &lt; 2
-  GDAL_ASYNCABLE_1x_UNSUPPORTED;
-  if (ds-&gt;uses_ogr) {
-    info.GetReturnValue().Set(Nan::New&lt;Integer&gt;(0));
-    return;
-  }
-#endif
 
   long ds_uid = ds-&gt;uid;
   GDALDataset *raw = ds-&gt;getDataset();

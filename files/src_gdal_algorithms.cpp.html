@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.2</b>
+                    API Docs for Version: <b>3.2.99</b>
                 </p>
             </li>
         </div>
@@ -320,13 +320,8 @@ GDAL_ASYNCABLE_DEFINE(Algorithms::contourGenerate) {
 
   GDALAsyncableJob&lt;CPLErr&gt; job;
   if (progress_cb) {
-#if GDAL_VERSION_MAJOR &lt; 2
-    Nan::ThrowError(&quot;Progress callback not supported on GDAL 1.x&quot;);
-    return;
-#else
     job.persist(progress_cb-&gt;GetFunction());
     job.progress = progress_cb;
-#endif
   }
   job.main = [src_uid,
               dst_uid,
@@ -436,13 +431,8 @@ GDAL_ASYNCABLE_DEFINE(Algorithms::sieveFilter) {
 
   GDALAsyncableJob&lt;CPLErr&gt; job;
   if (progress_cb) {
-#if GDAL_VERSION_MAJOR &lt; 2
-    Nan::ThrowError(&quot;Progress callback not supported on GDAL 1.x&quot;);
-    return;
-#else
     job.persist(progress_cb-&gt;GetFunction());
     job.progress = progress_cb;
-#endif
   }
   job.main = [src_uid, dst_uid, mask_uid, gdal_src, gdal_dst, gdal_mask, threshold, connectedness, progress_cb](
                const GDALExecutionProgress &amp;progress) {
@@ -623,13 +613,8 @@ GDAL_ASYNCABLE_DEFINE(Algorithms::polygonize) {
 
   GDALAsyncableJob&lt;CPLErr&gt; job;
   if (progress_cb) {
-#if GDAL_VERSION_MAJOR &lt; 2
-    Nan::ThrowError(&quot;Progress callback not supported on GDAL 1.x&quot;);
-    return;
-#else
     job.persist(progress_cb-&gt;GetFunction());
     job.progress = progress_cb;
-#endif
   }
 
   if (

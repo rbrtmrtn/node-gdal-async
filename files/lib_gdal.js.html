@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.2</b>
+                    API Docs for Version: <b>3.2.99</b>
                 </p>
             </li>
         </div>
@@ -211,7 +211,7 @@ if (process.env.CURL_CA_BUNDLE === undefined) {
  * @typedef callback&lt;T&gt; (Error, T) =&gt; void
  */
 
-if (process.env.GDAL_DATA === undefined) {
+if (process.env.GDAL_DATA === undefined &amp;&amp; gdal.bundled) {
   gdal.config.set(&#x27;GDAL_DATA&#x27;, data_path)
 }
 
@@ -1268,7 +1268,8 @@ const mangleWrite = (args) =&gt; {
     options.buffer_height,
     options.pixel_space,
     options.line_space,
-    options.progress_cb
+    options.progress_cb,
+    options.offset
   ]
 }
 
@@ -1288,7 +1289,8 @@ const mangleRead = (args) =&gt; {
     options.pixel_space,
     options.line_space,
     options.resampling,
-    options.progress_cb
+    options.progress_cb,
+    options.offset
   ]
 }
 
@@ -1340,8 +1342,8 @@ const promisifiables = {
     executeSQLAsync: 3
   },
   RasterBandPixels: {
-    readAsync: 12,
-    writeAsync: 10,
+    readAsync: 13,
+    writeAsync: 11,
     readBlockAsync: 3,
     writeBlockAsync: 3
   },
