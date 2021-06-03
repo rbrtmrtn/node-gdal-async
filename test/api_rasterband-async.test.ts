@@ -211,8 +211,8 @@ describe('gdal.RasterBandAsync', () => {
               return assert.isFulfilled(gdal.openAsync('temp', 'w', 'MEM', w, h, 2, gdal.GDT_Byte).then((ds) => {
                 const red = ds.bands.get(1)
                 const blue = ds.bands.get(2)
-                red.fill(1)
-                blue.fill(2)
+                const rq = red.fillAsync(1)
+                const bq = blue.fillAsync(2)
 
                 const interleaved = new Uint8Array(new ArrayBuffer(w * h * 2))
 
@@ -224,24 +224,26 @@ describe('gdal.RasterBandAsync', () => {
                   line_space: 2 * w
                 }
 
-                return red.pixels.readAsync(0, 0, w, h, interleaved, read_options)
-                  .then((interleaved) => blue.pixels.readAsync(
-                    0,
-                    0,
-                    w,
-                    h,
-                    interleaved.subarray(1),
-                    read_options
-                  ).then(() => {
-                    for (let y = 0; y < h; y++) {
-                      for (let x = 0; x < w; x++) {
-                        const r = interleaved[x * 2 + 0 + y * w * 2]
-                        const b = interleaved[x * 2 + 1 + y * w * 2]
-                        assert.equal(r, 1)
-                        assert.equal(b, 2)
+                return assert.isFulfilled(Promise.all([ rq, bq ])
+                  .then(() => red.pixels.readAsync(0, 0, w, h, interleaved, read_options)
+                    .then((interleaved) => blue.pixels.readAsync(
+                      0,
+                      0,
+                      w,
+                      h,
+                      interleaved.subarray(1),
+                      read_options
+                    ).then(() => {
+                      for (let y = 0; y < h; y++) {
+                        for (let x = 0; x < w; x++) {
+                          const r = interleaved[x * 2 + 0 + y * w * 2]
+                          const b = interleaved[x * 2 + 1 + y * w * 2]
+                          assert.equal(r, 1)
+                          assert.equal(b, 2)
+                        }
                       }
-                    }
-                  }))
+                    }))
+                  ))
               }))
             })
           })
@@ -289,7 +291,7 @@ describe('gdal.RasterBandAsync', () => {
               }))
             })
           })
-          describe('"progress_cb"', () => {
+          describe('"progress_cb" w/Net', () => {
             // When running the full test suite, all test files will be cached
             // In order to not create a flaky test and to make sure that the progress callback
             // has always a chance to run at least once, we must use a very slow datasource
