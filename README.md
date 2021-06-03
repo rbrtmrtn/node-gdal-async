@@ -24,7 +24,7 @@ It adds a number of features:
 - Numerous bugfixes including a number of memory leaks
 
 The default install is currently the 3.2 branch which is bundled with GDAL 3.2.3.
-The 3.3 branch, which introduces a number of significant changes, and is bundled with GDAL 3.3.0, is available only as a git checkout.
+The 3.3 branch, which introduces a number of significant changes, and is bundled with GDAL 3.3.0, is available as `gdal-async@alpha`.
 
 Support for `worker_threads` is planned but it is not a priority project
 
@@ -49,7 +49,7 @@ By default all dependencies are the latest versions and bundled out of the box, 
 
 ```sh
 # --shared_gdal allows linking to the OS-provided libgdal, requires libgdal-dev (debian: sudo apt-get install libgdal-dev)
-$ npm install gdal-next --build-from-source --shared_gdal  
+$ npm install gdal-async --build-from-source --shared_gdal  
 ```
 
 ## Sample Usage
