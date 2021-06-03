@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.99</b>
+                    API Docs for Version: <b>3.2.3</b>
                 </p>
             </li>
         </div>
@@ -175,6 +175,12 @@ namespace node_gdal {
 #define GDAL_ASYNCABLE_LOCK_MANY(...) std::vector&lt;uv_sem_t *&gt; async_locks = ptr_manager.tryLockDatasets({__VA_ARGS__});
 #define GDAL_UNLOCK_MANY                                                                                               \
   for (uv_sem_t * async_lock : async_locks) { uv_sem_post(async_lock); }
+
+#define GDAL_ASYNCABLE_1x_UNSUPPORTED                                                                                  \
+  if (GDAL_ISASYNC) {                                                                                                  \
+    Nan::ThrowError(&quot;This asynchronous operation is not supported on GDAL 1.x&quot;);                                       \
+    return;                                                                                                            \
+  }
 
 // Node.js NAN null initializes and trivially copies objects of this class without asking permission
 struct GDALProgressInfo {

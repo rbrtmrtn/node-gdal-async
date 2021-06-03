@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.99</b>
+                    API Docs for Version: <b>3.2.3</b>
                 </p>
             </li>
         </div>
@@ -449,7 +449,11 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::count) {
   }
 
   Local&lt;Object&gt; ds;
+#if GDAL_VERSION_MAJOR &lt; 2
+  if (Dataset::datasource_cache.has(layer-&gt;getParent())) { ds = Dataset::datasource_cache.get(layer-&gt;getParent()); }
+#else
   if (Dataset::dataset_cache.has(layer-&gt;getParent())) { ds = Dataset::dataset_cache.get(layer-&gt;getParent()); }
+#endif
   if (!layer-&gt;isAlive()) {
     Nan::ThrowError(&quot;Dataset object already destroyed&quot;);
     return;
@@ -512,7 +516,11 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::set) {
   }
 
   Local&lt;Object&gt; ds;
+#if GDAL_VERSION_MAJOR &lt; 2
+  if (Dataset::datasource_cache.has(layer-&gt;getParent())) { ds = Dataset::datasource_cache.get(layer-&gt;getParent()); }
+#else
   if (Dataset::dataset_cache.has(layer-&gt;getParent())) { ds = Dataset::dataset_cache.get(layer-&gt;getParent()); }
+#endif
   if (!layer-&gt;isAlive()) {
     Nan::ThrowError(&quot;Dataset object already destroyed&quot;);
     return;

@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.99</b>
+                    API Docs for Version: <b>3.2.3</b>
                 </p>
             </li>
         </div>
@@ -537,8 +537,10 @@ Local&lt;Value&gt; FeatureFields::get(OGRFeature *f, int field_index) {
   OGRFieldDefn *field_def = f-&gt;GetFieldDefnRef(field_index);
   switch (field_def-&gt;GetType()) {
     case OFTInteger: return scope.Escape(Nan::New&lt;Integer&gt;(f-&gt;GetFieldAsInteger(field_index)));
+#if defined(GDAL_VERSION_MAJOR) &amp;&amp; (GDAL_VERSION_MAJOR &gt;= 2)
     case OFTInteger64: return scope.Escape(Nan::New&lt;Number&gt;(f-&gt;GetFieldAsInteger64(field_index)));
     case OFTInteger64List: return scope.Escape(getFieldAsInteger64List(f, field_index));
+#endif
     case OFTReal: return scope.Escape(Nan::New&lt;Number&gt;(f-&gt;GetFieldAsDouble(field_index)));
     case OFTString: return scope.Escape(SafeString::New(f-&gt;GetFieldAsString(field_index)));
     case OFTIntegerList: return scope.Escape(getFieldAsIntegerList(f, field_index));
@@ -645,6 +647,7 @@ Local&lt;Value&gt; FeatureFields::getFieldAsIntegerList(OGRFeature *feature, int
   return scope.Escape(return_array);
 }
 
+#if defined(GDAL_VERSION_MAJOR) &amp;&amp; (GDAL_VERSION_MAJOR &gt;= 2)
 Local&lt;Value&gt; FeatureFields::getFieldAsInteger64List(OGRFeature *feature, int field_index) {
   Nan::EscapableHandleScope scope;
 
@@ -660,6 +663,7 @@ Local&lt;Value&gt; FeatureFields::getFieldAsInteger64List(OGRFeature *feature, i
 
   return scope.Escape(return_array);
 }
+#endif
 
 Local&lt;Value&gt; FeatureFields::getFieldAsDoubleList(OGRFeature *feature, int field_index) {
   Nan::EscapableHandleScope scope;

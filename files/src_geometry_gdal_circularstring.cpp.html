@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.99</b>
+                    API Docs for Version: <b>3.2.3</b>
                 </p>
             </li>
         </div>
@@ -142,6 +142,8 @@
 
 namespace node_gdal {
 
+#if GDAL_VERSION_MAJOR &gt;= 2
+
 Nan::Persistent&lt;FunctionTemplate&gt; CircularString::constructor;
 
 void CircularString::Initialize(Local&lt;Object&gt; target) {
@@ -177,6 +179,8 @@ NAN_METHOD(CircularString::toString) {
   Nan::HandleScope scope;
   info.GetReturnValue().Set(Nan::New(&quot;CircularString&quot;).ToLocalChecked());
 }
+
+#endif
 
 } // namespace node_gdal
 

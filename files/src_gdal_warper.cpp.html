@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.99</b>
+                    API Docs for Version: <b>3.2.3</b>
                 </p>
             </li>
         </div>
@@ -404,8 +404,13 @@ GDAL_ASYNCABLE_DEFINE(Warper::reprojectImage) {
   std::vector&lt;long&gt; uids = options-&gt;datasetUids();
 
   if (progress_cb) {
+#if GDAL_VERSION_MAJOR &lt; 2
+    Nan::ThrowError(&quot;Progress callback not supported on GDAL 1.x&quot;);
+    return;
+#else
     job.persist(progress_cb-&gt;GetFunction());
     job.progress = progress_cb;
+#endif
   }
 
   // opts is a pointer inside options memory space
@@ -514,6 +519,12 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
     if (prop-&gt;IsObject() &amp;&amp; !prop-&gt;IsNull() &amp;&amp; Nan::New(Dataset::constructor)-&gt;HasInstance(prop)) {
       ds = Nan::ObjectWrap::Unwrap&lt;Dataset&gt;(prop.As&lt;Object&gt;());
       if (!ds-&gt;getDataset()) {
+#if GDAL_VERSION_MAJOR &lt; 2
+        if (ds-&gt;getDatasource()) {
+          Nan::ThrowError(&quot;src dataset must be a raster dataset&quot;);
+          return;
+        }
+#endif
         Nan::ThrowError(&quot;src dataset already closed&quot;);
         return;
       }
@@ -549,7 +560,7 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
     int w, h;
   };
 
-#if GDAL_VERSION_MAJOR == 2 &amp;&amp; GDAL_VERSION_MINOR &lt; 3
+#if GDAL_VERSION_MAJOR &lt; 2 || (GDAL_VERSION_MAJOR == 2 &amp;&amp; GDAL_VERSION_MINOR &lt; 3)
   GDALDatasetH gdal_ds = static_cast&lt;GDALDatasetH&gt;(ds-&gt;getDataset());
 #else
   GDALDatasetH gdal_ds = GDALDataset::ToHandle(ds-&gt;getDataset());

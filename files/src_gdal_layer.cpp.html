@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.99</b>
+                    API Docs for Version: <b>3.2.3</b>
                 </p>
             </li>
         </div>
@@ -162,7 +162,7 @@ void Layer::Initialize(Local&lt;Object&gt; target) {
   Nan::SetPrototypeMethod(lcons, &quot;setSpatialFilter&quot;, setSpatialFilter);
   Nan::SetPrototypeMethod(lcons, &quot;getSpatialFilter&quot;, getSpatialFilter);
   Nan::SetPrototypeMethod(lcons, &quot;testCapability&quot;, testCapability);
-  Nan::SetPrototypeMethod(lcons, &quot;flush&quot;, syncToDisk);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;flush&quot;, syncToDisk);
 
   ATTR_DONT_ENUM(lcons, &quot;ds&quot;, dsGetter, READ_ONLY_SETTER);
   ATTR_DONT_ENUM(lcons, &quot;_uid&quot;, uidGetter, READ_ONLY_SETTER);
@@ -237,12 +237,22 @@ NAN_METHOD(Layer::New) {
   info.GetReturnValue().Set(info.This());
 }
 
-Local&lt;Value&gt; Layer::New(OGRLayer *raw, GDALDataset *raw_parent) {
+#if GDAL_VERSION_MAJOR &gt;= 2
+Local&lt;Value&gt; Layer::New(OGRLayer *raw, GDALDataset *raw_parent)
+#else
+Local&lt;Value&gt; Layer::New(OGRLayer *raw, OGRDataSource *raw_parent)
+#endif
+{
   Nan::EscapableHandleScope scope;
   return scope.Escape(Layer::New(raw, raw_parent, false));
 }
 
-Local&lt;Value&gt; Layer::New(OGRLayer *raw, GDALDataset *raw_parent, bool result_set) {
+#if GDAL_VERSION_MAJOR &gt;= 2
+Local&lt;Value&gt; Layer::New(OGRLayer *raw, GDALDataset *raw_parent, bool result_set)
+#else
+Local&lt;Value&gt; Layer::New(OGRLayer *raw, OGRDataSource *raw_parent, bool result_set)
+#endif
+{
   Nan::EscapableHandleScope scope;
 
   if (!raw) { return scope.Escape(Nan::Null()); }
@@ -259,9 +269,16 @@ Local&lt;Value&gt; Layer::New(OGRLayer *raw, GDALDataset *raw_parent, bool resul
   // add reference to datasource so datasource doesnt get GC&#x27;ed while layer is
   // alive
   Local&lt;Object&gt; ds;
+#if GDAL_VERSION_MAJOR &gt;= 2
   if (Dataset::dataset_cache.has(raw_parent)) {
     ds = Dataset::dataset_cache.get(raw_parent);
-  } else {
+  }
+#else
+  if (Dataset::datasource_cache.has(raw_parent)) {
+    ds = Dataset::datasource_cache.get(raw_parent);
+  }
+#endif
+  else {
     LOG(&quot;Layer&#x27;s parent dataset disappeared from cache (layer = %p, dataset = %p)&quot;, raw, raw_parent);
     Nan::ThrowError(&quot;Layer&#x27;s parent dataset disappeared from cache&quot;);
     return scope.Escape(Nan::Undefined());
@@ -289,7 +306,9 @@ NAN_METHOD(Layer::toString) {
   }
 
   std::ostringstream ss;
+  GDAL_TRYLOCK_PARENT(layer);
   ss &lt;&lt; &quot;Layer (&quot; &lt;&lt; layer-&gt;this_-&gt;GetName() &lt;&lt; &quot;)&quot;;
+  GDAL_UNLOCK_PARENT;
 
   info.GetReturnValue().Set(SafeString::New(ss.str().c_str()));
 }
@@ -300,7 +319,18 @@ NAN_METHOD(Layer::toString) {
  * @throws Error
  * @method flush
  */
-NODE_WRAPPED_METHOD_WITH_OGRERR_RESULT(Layer, syncToDisk, SyncToDisk);
+
+/**
+ * Flush pending changes to disk.
+ * {{{async}}}
+ *
+ * @throws Error
+ * @method flushAsync
+ * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;void&gt;}
+ * 
+ */
+NODE_WRAPPED_ASYNC_METHOD_WITH_OGRERR_RESULT_LOCKED(Layer, syncToDisk, SyncToDisk);
 
 /**
  * Determines if the dataset supports the indicated operation.
@@ -310,7 +340,7 @@ NODE_WRAPPED_METHOD_WITH_OGRERR_RESULT(Layer, syncToDisk, SyncToDisk);
  * list{{/crossLink}})
  * @return {boolean}
  */
-NODE_WRAPPED_METHOD_WITH_RESULT_1_STRING_PARAM(Layer, testCapability, Boolean, TestCapability, &quot;capability&quot;);
+NODE_WRAPPED_METHOD_WITH_RESULT_1_STRING_PARAM_LOCKED(Layer, testCapability, Boolean, TestCapability, &quot;capability&quot;);
 
 /**
  * Fetch the extent of this layer.
@@ -333,7 +363,9 @@ NAN_METHOD(Layer::getExtent) {
   NODE_ARG_BOOL_OPT(0, &quot;force&quot;, force);
 
   std::unique_ptr&lt;OGREnvelope&gt; envelope(new OGREnvelope());
+  GDAL_TRYLOCK_PARENT(layer);
   OGRErr err = layer-&gt;this_-&gt;GetExtent(envelope.get(), force);
+  GDAL_UNLOCK_PARENT;
   if (err) {
     Nan::ThrowError(&quot;Can&#x27;t get layer extent without computing it&quot;);
     return;
@@ -364,7 +396,10 @@ NAN_METHOD(Layer::getSpatialFilter) {
     return;
   }
 
-  info.GetReturnValue().Set(Geometry::New(layer-&gt;this_-&gt;GetSpatialFilter(), false));
+  GDAL_TRYLOCK_PARENT(layer);
+  auto r = layer-&gt;this_-&gt;GetSpatialFilter();
+  GDAL_UNLOCK_PARENT;
+  info.GetReturnValue().Set(Geometry::New(r, false));
 }
 
 /**
@@ -396,11 +431,13 @@ NAN_METHOD(Layer::setSpatialFilter) {
     Geometry *filter = NULL;
     NODE_ARG_WRAPPED_OPT(0, &quot;filter&quot;, Geometry, filter);
 
+    GDAL_TRYLOCK_PARENT(layer);
     if (filter) {
       layer-&gt;this_-&gt;SetSpatialFilter(filter-&gt;get());
     } else {
       layer-&gt;this_-&gt;SetSpatialFilter(NULL);
     }
+    GDAL_UNLOCK_PARENT;
   } else if (info.Length() == 4) {
     double minX, minY, maxX, maxY;
     NODE_ARG_DOUBLE(0, &quot;minX&quot;, minX);
@@ -408,7 +445,9 @@ NAN_METHOD(Layer::setSpatialFilter) {
     NODE_ARG_DOUBLE(2, &quot;maxX&quot;, maxX);
     NODE_ARG_DOUBLE(3, &quot;maxY&quot;, maxY);
 
+    GDAL_TRYLOCK_PARENT(layer);
     layer-&gt;this_-&gt;SetSpatialFilterRect(minX, minY, maxX, maxY);
+    GDAL_UNLOCK_PARENT;
   } else {
     Nan::ThrowError(&quot;Invalid number of arguments&quot;);
     return;
@@ -452,11 +491,13 @@ NAN_METHOD(Layer::setAttributeFilter) {
   NODE_ARG_OPT_STR(0, &quot;filter&quot;, filter);
 
   OGRErr err;
+  GDAL_TRYLOCK_PARENT(layer);
   if (filter.empty()) {
     err = layer-&gt;this_-&gt;SetAttributeFilter(NULL);
   } else {
     err = layer-&gt;this_-&gt;SetAttributeFilter(filter.c_str());
   }
+  GDAL_UNLOCK_PARENT;
 
   if (err) {
     NODE_THROW_OGRERR(err);
@@ -504,7 +545,10 @@ NAN_GETTER(Layer::srsGetter) {
     Nan::ThrowError(&quot;Layer object has already been destroyed&quot;);
     return;
   }
-  info.GetReturnValue().Set(SpatialReference::New(layer-&gt;this_-&gt;GetSpatialRef(), false));
+  GDAL_TRYLOCK_PARENT(layer);
+  auto r = layer-&gt;this_-&gt;GetSpatialRef();
+  GDAL_UNLOCK_PARENT;
+  info.GetReturnValue().Set(SpatialReference::New(r, false));
 }
 
 /**
@@ -519,7 +563,10 @@ NAN_GETTER(Layer::nameGetter) {
     Nan::ThrowError(&quot;Layer object has already been destroyed&quot;);
     return;
   }
-  info.GetReturnValue().Set(SafeString::New(layer-&gt;this_-&gt;GetName()));
+  GDAL_TRYLOCK_PARENT(layer);
+  auto r = layer-&gt;this_-&gt;GetName();
+  GDAL_UNLOCK_PARENT;
+  info.GetReturnValue().Set(SafeString::New(r));
 }
 
 /**
@@ -534,7 +581,10 @@ NAN_GETTER(Layer::geomColumnGetter) {
     Nan::ThrowError(&quot;Layer object has already been destroyed&quot;);
     return;
   }
-  info.GetReturnValue().Set(SafeString::New(layer-&gt;this_-&gt;GetGeometryColumn()));
+  GDAL_TRYLOCK_PARENT(layer);
+  auto r = layer-&gt;this_-&gt;GetGeometryColumn();
+  GDAL_UNLOCK_PARENT;
+  info.GetReturnValue().Set(SafeString::New(r));
 }
 
 /**
@@ -549,7 +599,10 @@ NAN_GETTER(Layer::fidColumnGetter) {
     Nan::ThrowError(&quot;Layer object has already been destroyed&quot;);
     return;
   }
-  info.GetReturnValue().Set(SafeString::New(layer-&gt;this_-&gt;GetFIDColumn()));
+  GDAL_TRYLOCK_PARENT(layer);
+  auto r = layer-&gt;this_-&gt;GetFIDColumn();
+  GDAL_UNLOCK_PARENT;
+  info.GetReturnValue().Set(SafeString::New(r));
 }
 
 /**
@@ -565,7 +618,10 @@ NAN_GETTER(Layer::geomTypeGetter) {
     Nan::ThrowError(&quot;Layer object has already been destroyed&quot;);
     return;
   }
-  info.GetReturnValue().Set(Nan::New&lt;Integer&gt;(layer-&gt;this_-&gt;GetGeomType()));
+  GDAL_TRYLOCK_PARENT(layer);
+  auto r = layer-&gt;this_-&gt;GetGeomType();
+  GDAL_UNLOCK_PARENT;
+  info.GetReturnValue().Set(Nan::New&lt;Integer&gt;(r));
 }
 
 /**

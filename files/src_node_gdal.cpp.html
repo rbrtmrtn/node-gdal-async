@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.99</b>
+                    API Docs for Version: <b>3.2.3</b>
                 </p>
             </li>
         </div>
@@ -155,8 +155,9 @@
  * }
  * &#x60;&#x60;&#x60;
  *
- * see ASYNCIO.md for some performance considerations when designing code
- * that will run multiple parallel operations on the same dataset
+ * see &lt;https://gist.github.com/mmomtchev/14c3428255fd9c88ed20517572d8efdc&gt;
+ * for some performance considerations when designing code that will run
+ * multiple parallel operations on the same dataset
  *
  * &lt;iframe
  * src=&quot;http://ghbtns.com/github-btn.html?user=mmomtchev&amp;repo=node-gdal-async&amp;type=watch&amp;count=true&quot;
@@ -209,6 +210,7 @@
 #include &quot;gdal_spatial_reference.hpp&quot;
 #include &quot;gdal_memfile.hpp&quot;
 
+#include &quot;gdal.hpp&quot;
 #include &quot;utils/field_types.hpp&quot;
 
 // collections
@@ -346,104 +348,6 @@ static NAN_METHOD(Log) {
   return;
 }
 
-/*
- * Common code for sync and async opening
- */
-GDAL_ASYNCABLE_GLOBAL(gdal_open);
-GDAL_ASYNCABLE_DEFINE(gdal_open) {
-  Nan::HandleScope scope;
-
-  std::string path;
-  std::string mode = &quot;r&quot;;
-
-  NODE_ARG_STR(0, &quot;path&quot;, path);
-  NODE_ARG_OPT_STR(1, &quot;mode&quot;, mode);
-
-  unsigned int flags = 0;
-  if (mode == &quot;r+&quot;) {
-    flags |= GDAL_OF_UPDATE;
-  } else if (mode == &quot;r&quot;) {
-    flags |= GDAL_OF_READONLY;
-  } else {
-    Nan::ThrowError(&quot;Invalid open mode. Must be \&quot;r\&quot; or \&quot;r+\&quot;&quot;);
-    return;
-  }
-  flags |= GDAL_OF_VERBOSE_ERROR;
-
-  GDALAsyncableJob&lt;GDALDataset *&gt; job;
-  job.rval = [](GDALDataset *ds, GetFromPersistentFunc) { return Dataset::New(ds); };
-  job.main = [path, flags](const GDALExecutionProgress &amp;) {
-    GDALDataset *ds = (GDALDataset *)GDALOpenEx(path.c_str(), flags, NULL, NULL, NULL);
-    if (!ds) throw CPLGetLastErrorMsg();
-    return ds;
-  };
-  job.run(info, async, 2);
-}
-
-static NAN_METHOD(setConfigOption) {
-  Nan::HandleScope scope;
-
-  std::string name;
-
-  NODE_ARG_STR(0, &quot;name&quot;, name);
-
-  if (info.Length() &lt; 2) {
-    Nan::ThrowError(&quot;string or null value must be provided&quot;);
-    return;
-  }
-  if (info[1]-&gt;IsString()) {
-    std::string val = *Nan::Utf8String(info[1]);
-    CPLSetConfigOption(name.c_str(), val.c_str());
-  } else if (info[1]-&gt;IsNull() || info[1]-&gt;IsUndefined()) {
-    CPLSetConfigOption(name.c_str(), NULL);
-  } else {
-    Nan::ThrowError(&quot;value must be a string or null&quot;);
-    return;
-  }
-
-  return;
-}
-
-static NAN_METHOD(getConfigOption) {
-  Nan::HandleScope scope;
-
-  std::string name;
-  NODE_ARG_STR(0, &quot;name&quot;, name);
-
-  info.GetReturnValue().Set(SafeString::New(CPLGetConfigOption(name.c_str(), NULL)));
-}
-
-/**
- * Convert decimal degrees to degrees, minutes, and seconds string
- *
- * @for gdal
- * @static
- * @method decToDMS
- * @param {number} angle
- * @param {string} axis &#x60;&quot;lat&quot;&#x60; or &#x60;&quot;long&quot;&#x60;
- * @param {number} [precision=2]
- * @return {string} A string nndnn&#x27;nn.nn&#x27;&quot;L where n is a number and L is either
- * N or E
- */
-static NAN_METHOD(decToDMS) {
-  Nan::HandleScope scope;
-
-  double angle;
-  std::string axis;
-  int precision = 2;
-  NODE_ARG_DOUBLE(0, &quot;angle&quot;, angle);
-  NODE_ARG_STR(1, &quot;axis&quot;, axis);
-  NODE_ARG_INT_OPT(2, &quot;precision&quot;, precision);
-
-  if (axis.length() &gt; 0) { axis[0] = toupper(axis[0]); }
-  if (axis != &quot;Lat&quot; &amp;&amp; axis != &quot;Long&quot;) {
-    Nan::ThrowError(&quot;Axis must be &#x27;lat&#x27; or &#x27;long&#x27;&quot;);
-    return;
-  }
-
-  info.GetReturnValue().Set(SafeString::New(GDALDecToDMS(angle, axis.c_str(), precision)));
-}
-
 /**
  * Set paths where proj will search it data.
  *
@@ -493,7 +397,7 @@ static NAN_METHOD(getMemfileName) {
 
 static void Init(Local&lt;Object&gt; target, Local&lt;v8::Value&gt;, void *) {
 
-  Nan__SetAsyncableMethod(target, &quot;open&quot;, gdal_open);
+  Nan__SetAsyncableMethod(target, &quot;open&quot;, open);
   Nan::SetMethod(target, &quot;setConfigOption&quot;, setConfigOption);
   Nan::SetMethod(target, &quot;getConfigOption&quot;, getConfigOption);
   Nan::SetMethod(target, &quot;decToDMS&quot;, decToDMS);
@@ -523,10 +427,13 @@ static void Init(Local&lt;Object&gt; target, Local&lt;v8::Value&gt;, void *) {
   MultiPoint::Initialize(target);
   MultiLineString::Initialize(target);
   MultiPolygon::Initialize(target);
+#if GDAL_VERSION_MAJOR &gt;= 2
   CircularString::Initialize(target);
   CompoundCurve::Initialize(target);
   MultiCurve::Initialize(target);
 
+  CompoundCurveCurves::Initialize(target);
+#endif
   SpatialReference::Initialize(target);
   CoordinateTransformation::Initialize(target);
 
@@ -539,7 +446,6 @@ static void Init(Local&lt;Object&gt; target, Local&lt;v8::Value&gt;, void *) {
   GeometryCollectionChildren::Initialize(target);
   PolygonRings::Initialize(target);
   LineStringPoints::Initialize(target);
-  CompoundCurveCurves::Initialize(target);
   RasterBandOverviews::Initialize(target);
   RasterBandPixels::Initialize(target);
 
@@ -1258,6 +1164,7 @@ static void Init(Local&lt;Object&gt; target, Local&lt;v8::Value&gt;, void *) {
    * @type {number}
    */
   Nan::Set(target, Nan::New(&quot;wkbLineString&quot;).ToLocalChecked(), Nan::New&lt;Integer&gt;(wkbLineString));
+#if GDAL_VERSION_MAJOR &gt;= 2
   /**
    * @final
    * @property gdal.wkbCircularString
@@ -1276,6 +1183,7 @@ static void Init(Local&lt;Object&gt; target, Local&lt;v8::Value&gt;, void *) {
    * @type {number}
    */
   Nan::Set(target, Nan::New(&quot;wkbMultiCurve&quot;).ToLocalChecked(), Nan::New&lt;Integer&gt;(wkbMultiCurve));
+#endif
   /**
    * @final
    * @property gdal.wkbPolygon
@@ -1385,6 +1293,7 @@ static void Init(Local&lt;Object&gt; target, Local&lt;v8::Value&gt;, void *) {
   Nan::Set(
     target, Nan::New(&quot;OFTIntegerList&quot;).ToLocalChecked(), Nan::New(getFieldTypeName(OFTIntegerList)).ToLocalChecked());
 
+#if defined(GDAL_VERSION_MAJOR) &amp;&amp; (GDAL_VERSION_MAJOR &gt;= 2)
   /**
    * @final
    * @property gdal.OFTInteger64
@@ -1401,6 +1310,7 @@ static void Init(Local&lt;Object&gt; target, Local&lt;v8::Value&gt;, void *) {
     target,
     Nan::New(&quot;OFTInteger64List&quot;).ToLocalChecked(),
     Nan::New(getFieldTypeName(OFTInteger64List)).ToLocalChecked());
+#endif
   /**
    * @final
    * @property gdal.OFTReal

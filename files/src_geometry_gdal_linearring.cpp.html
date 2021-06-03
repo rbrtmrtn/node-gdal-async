@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.99</b>
+                    API Docs for Version: <b>3.2.3</b>
                 </p>
             </li>
         </div>
@@ -152,34 +152,10 @@ void LinearRing::Initialize(Local&lt;Object&gt; target) {
 
   Nan::SetPrototypeMethod(lcons, &quot;toString&quot;, toString);
   Nan::SetPrototypeMethod(lcons, &quot;getArea&quot;, getArea);
-  Nan::SetPrototypeMethod(lcons, &quot;addSubLineString&quot;, addSubLineString);
 
   Nan::Set(target, Nan::New(&quot;LinearRing&quot;).ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
 
   constructor.Reset(lcons);
-}
-
-Local&lt;Value&gt; LinearRing::New(OGRLinearRing *geom, bool owned) {
-  Nan::EscapableHandleScope scope;
-
-  if (!geom) { return scope.Escape(Nan::Null()); }
-
-  // make a copy of geometry owned by a feature
-  // + no need to track when a feature is destroyed
-  // + no need to throw errors when a method trys to modify an owned read-only
-  // geometry
-  // - is slower
-
-  if (!owned) { geom = static_cast&lt;OGRLinearRing *&gt;(geom-&gt;clone()); }
-
-  LinearRing *wrapped = new LinearRing(geom);
-  wrapped-&gt;owned_ = true;
-
-  Local&lt;Value&gt; ext = Nan::New&lt;External&gt;(wrapped);
-  Local&lt;Object&gt; obj =
-    Nan::NewInstance(Nan::GetFunction(Nan::New(LinearRing::constructor)).ToLocalChecked(), 1, &amp;ext).ToLocalChecked();
-
-  return scope.Escape(obj);
 }
 
 /**
@@ -202,30 +178,6 @@ NAN_METHOD(LinearRing::toString) {
  * @return {number}
  */
 NODE_WRAPPED_METHOD_WITH_RESULT(LinearRing, getArea, Number, get_Area);
-
-NAN_METHOD(LinearRing::addSubLineString) {
-  Nan::HandleScope scope;
-
-  LinearRing *geom = Nan::ObjectWrap::Unwrap&lt;LinearRing&gt;(info.This());
-  LineString *other;
-  int start = 0;
-  int end = -1;
-
-  NODE_ARG_WRAPPED(0, &quot;line&quot;, LineString, other);
-  NODE_ARG_INT_OPT(1, &quot;start&quot;, start);
-  NODE_ARG_INT_OPT(2, &quot;end&quot;, end);
-
-  int n = other-&gt;get()-&gt;getNumPoints();
-
-  if (start &lt; 0 || end &lt; -1 || start &gt;= n || end &gt;= n) {
-    Nan::ThrowRangeError(&quot;Invalid start or end index for LineString&quot;);
-    return;
-  }
-
-  geom-&gt;this_-&gt;addSubLineString(other-&gt;get(), start, end);
-
-  return;
-}
 
 } // namespace node_gdal
 

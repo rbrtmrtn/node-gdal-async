@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Constants (DMD) - node-gdal-async</title>
+    <title>src/gdal.hpp - node-gdal-async</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -124,200 +124,165 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>Constants (DMD)</h1>
+    <h1>src/gdal.hpp <small>File</small></h1>
 </div>
 
+<div class="file">
+    <pre class="prettyprint linenums">
+#ifndef __NODE_GDAL_GLOBAL_H__
+#define __NODE_GDAL_GLOBAL_H__
 
+// node
+#include &lt;node.h&gt;
 
+// nan
+#include &quot;nan-wrapper.h&quot;
 
+// ogr
+#include &lt;ogr_api.h&gt;
+#include &lt;ogrsf_frmts.h&gt;
 
+// gdal
+#include &quot;gdal_common.hpp&quot;
+#include &quot;gdal_dataset.hpp&quot;
+#include &quot;gdal_driver.hpp&quot;
 
+#include &quot;async.hpp&quot;
 
-<!-- table of contents -->
+using namespace v8;
+using namespace node;
 
-<div id="class-toc" class="page-section">
-	<h2>Table of Contents</h2>
-    <ul>
+namespace node_gdal {
 
-		<li>
-			<strong>Properties</strong>
-			<ul>
-				<li><a href="#prop-gdal.DMD_CREATIONDATATYPES"><span class="ip">gdal.DMD_CREATIONDATATYPES</span></a></li>
-				<li><a href="#prop-gdal.DMD_CREATIONOPTIONLIST"><span class="ip">gdal.DMD_CREATIONOPTIONLIST</span></a></li>
-				<li><a href="#prop-gdal.DMD_EXTENSION"><span class="ip">gdal.DMD_EXTENSION</span></a></li>
-				<li><a href="#prop-gdal.DMD_HELPTOPIC"><span class="ip">gdal.DMD_HELPTOPIC</span></a></li>
-				<li><a href="#prop-gdal.DMD_LONGNAME"><span class="ip">gdal.DMD_LONGNAME</span></a></li>
-				<li><a href="#prop-gdal.DMD_MIMETYPE"><span class="ip">gdal.DMD_MIMETYPE</span></a></li>
-			</ul>
-		</li>
+/*
+ * Common code for sync and async opening
+ */
+GDAL_ASYNCABLE_GLOBAL(open);
+GDAL_ASYNCABLE_DEFINE(open) {
+  Nan::HandleScope scope;
 
+  std::string path;
+  std::string mode = &quot;r&quot;;
 
-	</ul>
+  NODE_ARG_STR(0, &quot;path&quot;, path);
+  NODE_ARG_OPT_STR(1, &quot;mode&quot;, mode);
+
+#if GDAL_VERSION_MAJOR &lt; 2
+  GDAL_ASYNCABLE_1x_UNSUPPORTED;
+  GDALAccess access = GA_ReadOnly;
+  if (mode == &quot;r+&quot;) {
+    access = GA_Update;
+  } else if (mode != &quot;r&quot;) {
+    Nan::ThrowError(&quot;Invalid open mode. Must be \&quot;r\&quot; or \&quot;r+\&quot;&quot;);
+    return;
+  }
+
+  OGRDataSource *ogr_ds = OGRSFDriverRegistrar::Open(path.c_str(), static_cast&lt;int&gt;(access));
+  if (ogr_ds) {
+    info.GetReturnValue().Set(Dataset::New(ogr_ds));
+    return;
+  }
+
+  GDALDataset *gdal_ds = (GDALDataset *)GDALOpen(path.c_str(), access);
+  if (gdal_ds) {
+    info.GetReturnValue().Set(Dataset::New(gdal_ds));
+    return;
+  }
+  Nan::ThrowError(&quot;Error opening dataset&quot;);
+  return;
+
+#else
+  unsigned int flags = 0;
+  if (mode == &quot;r+&quot;) {
+    flags |= GDAL_OF_UPDATE;
+  } else if (mode == &quot;r&quot;) {
+    flags |= GDAL_OF_READONLY;
+  } else {
+    Nan::ThrowError(&quot;Invalid open mode. Must be \&quot;r\&quot; or \&quot;r+\&quot;&quot;);
+    return;
+  }
+  flags |= GDAL_OF_VERBOSE_ERROR;
+
+  GDALAsyncableJob&lt;GDALDataset *&gt; job;
+  job.rval = [](GDALDataset *ds, GetFromPersistentFunc) { return Dataset::New(ds); };
+  job.main = [path, flags](const GDALExecutionProgress &amp;) {
+    GDALDataset *ds = (GDALDataset *)GDALOpenEx(path.c_str(), flags, NULL, NULL, NULL);
+    if (!ds) throw CPLGetLastErrorMsg();
+    return ds;
+  };
+  job.run(info, async, 2);
+#endif
+}
+
+static NAN_METHOD(setConfigOption) {
+  Nan::HandleScope scope;
+
+  std::string name;
+
+  NODE_ARG_STR(0, &quot;name&quot;, name);
+
+  if (info.Length() &lt; 2) {
+    Nan::ThrowError(&quot;string or null value must be provided&quot;);
+    return;
+  }
+  if (info[1]-&gt;IsString()) {
+    std::string val = *Nan::Utf8String(info[1]);
+    CPLSetConfigOption(name.c_str(), val.c_str());
+  } else if (info[1]-&gt;IsNull() || info[1]-&gt;IsUndefined()) {
+    CPLSetConfigOption(name.c_str(), NULL);
+  } else {
+    Nan::ThrowError(&quot;value must be a string or null&quot;);
+    return;
+  }
+
+  return;
+}
+
+static NAN_METHOD(getConfigOption) {
+  Nan::HandleScope scope;
+
+  std::string name;
+  NODE_ARG_STR(0, &quot;name&quot;, name);
+
+  info.GetReturnValue().Set(SafeString::New(CPLGetConfigOption(name.c_str(), NULL)));
+}
+
+/**
+ * Convert decimal degrees to degrees, minutes, and seconds string
+ *
+ * @for gdal
+ * @static
+ * @method decToDMS
+ * @param {number} angle
+ * @param {string} axis &#x60;&quot;lat&quot;&#x60; or &#x60;&quot;long&quot;&#x60;
+ * @param {number} [precision=2]
+ * @return {string} A string nndnn&#x27;nn.nn&#x27;&quot;L where n is a number and L is either
+ * N or E
+ */
+static NAN_METHOD(decToDMS) {
+  Nan::HandleScope scope;
+
+  double angle;
+  std::string axis;
+  int precision = 2;
+  NODE_ARG_DOUBLE(0, &quot;angle&quot;, angle);
+  NODE_ARG_STR(1, &quot;axis&quot;, axis);
+  NODE_ARG_INT_OPT(2, &quot;precision&quot;, precision);
+
+  if (axis.length() &gt; 0) { axis[0] = toupper(axis[0]); }
+  if (axis != &quot;Lat&quot; &amp;&amp; axis != &quot;Long&quot;) {
+    Nan::ThrowError(&quot;Axis must be &#x27;lat&#x27; or &#x27;long&#x27;&quot;);
+    return;
+  }
+
+  info.GetReturnValue().Set(SafeString::New(GDALDecToDMS(angle, axis.c_str(), precision)));
+}
+} // namespace node_gdal
+
+#endif
+
+    </pre>
 </div>
-
-<!-- details -->
-
-
-
-    <div id="properties" class="page-section">
-        <h2 class="off-left">Properties</h2>
-
-        <div class="item-list">
-<div id="prop-gdal.DMD_CREATIONDATATYPES" class="property item">
-    <h3 class="name"><code>gdal.DMD_CREATIONDATATYPES</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l373"><code>src&#x2F;node_gdal.cpp:373</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.DMD_CREATIONOPTIONLIST" class="property item">
-    <h3 class="name"><code>gdal.DMD_CREATIONOPTIONLIST</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l364"><code>src&#x2F;node_gdal.cpp:364</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.DMD_EXTENSION" class="property item">
-    <h3 class="name"><code>gdal.DMD_EXTENSION</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l358"><code>src&#x2F;node_gdal.cpp:358</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.DMD_HELPTOPIC" class="property item">
-    <h3 class="name"><code>gdal.DMD_HELPTOPIC</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l352"><code>src&#x2F;node_gdal.cpp:352</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.DMD_LONGNAME" class="property item">
-    <h3 class="name"><code>gdal.DMD_LONGNAME</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l340"><code>src&#x2F;node_gdal.cpp:340</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.DMD_MIMETYPE" class="property item">
-    <h3 class="name"><code>gdal.DMD_MIMETYPE</code></h3>
-    <span class="type">String</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l346"><code>src&#x2F;node_gdal.cpp:346</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-        </div>
-    </div>
-
-
-
                     </div>
                 </div>
             </div>

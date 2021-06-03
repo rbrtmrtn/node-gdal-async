@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.99</b>
+                    API Docs for Version: <b>3.2.3</b>
                 </p>
             </li>
         </div>
@@ -137,6 +137,8 @@
 #include &quot;../geometry/gdal_compoundcurve.hpp&quot;
 
 namespace node_gdal {
+
+#if GDAL_VERSION_MAJOR &gt;= 2
 
 Nan::Persistent&lt;FunctionTemplate&gt; CompoundCurveCurves::constructor;
 
@@ -316,6 +318,8 @@ NAN_METHOD(CompoundCurveCurves::add) {
 
   return;
 }
+
+#endif
 
 } // namespace node_gdal
 
