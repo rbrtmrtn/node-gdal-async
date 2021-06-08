@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/gdal_dimension.cpp - node-gdal-async</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+	    <img alt="node-gdal-async" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/GDALLogoColor.svg/200px-GDALLogoColor.svg.png" style="max-height: 65%;" title="node-gdal-async">
+            node-gdal-async
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>3.2.991</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DIM)", "classes/Constants (DIR)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.ArrayAttributes", "classes/gdal.ArrayDimensions", "classes/gdal.Attribute", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Dimension", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Group", "classes/gdal.GroupArrays", "classes/gdal.GroupAttributes", "classes/gdal.GroupDimensions", "classes/gdal.GroupGroups", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MDArray", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/Constants (CPL Error Codes).html">Constants (CPL Error Codes)</a></li>
+                <li><a href="../classes/Constants (CPL Error Levels).html">Constants (CPL Error Levels)</a></li>
+                <li><a href="../classes/Constants (DCAP).html">Constants (DCAP)</a></li>
+                <li><a href="../classes/Constants (DIM).html">Constants (DIM)</a></li>
+                <li><a href="../classes/Constants (DIR).html">Constants (DIR)</a></li>
+                <li><a href="../classes/Constants (DMD).html">Constants (DMD)</a></li>
+                <li><a href="../classes/Constants (GCI).html">Constants (GCI)</a></li>
+                <li><a href="../classes/Constants (GDT).html">Constants (GDT)</a></li>
+                <li><a href="../classes/Constants (GRA).html">Constants (GRA)</a></li>
+                <li><a href="../classes/Constants (ODsC).html">Constants (ODsC)</a></li>
+                <li><a href="../classes/Constants (OFT).html">Constants (OFT)</a></li>
+                <li><a href="../classes/Constants (OJ).html">Constants (OJ)</a></li>
+                <li><a href="../classes/Constants (OLC).html">Constants (OLC)</a></li>
+                <li><a href="../classes/Constants (wkbByteOrder).html">Constants (wkbByteOrder)</a></li>
+                <li><a href="../classes/Constants (wkbGeometryType).html">Constants (wkbGeometryType)</a></li>
+                <li><a href="../classes/Constants (wkbVariant).html">Constants (wkbVariant)</a></li>
+                <li><a href="../classes/gdal.html">gdal</a></li>
+                <li><a href="../classes/gdal.ArrayAttributes.html">gdal.ArrayAttributes</a></li>
+                <li><a href="../classes/gdal.ArrayDimensions.html">gdal.ArrayDimensions</a></li>
+                <li><a href="../classes/gdal.Attribute.html">gdal.Attribute</a></li>
+                <li><a href="../classes/gdal.CircularString.html">gdal.CircularString</a></li>
+                <li><a href="../classes/gdal.CompoundCurve.html">gdal.CompoundCurve</a></li>
+                <li><a href="../classes/gdal.CompoundCurveCurves.html">gdal.CompoundCurveCurves</a></li>
+                <li><a href="../classes/gdal.config.html">gdal.config</a></li>
+                <li><a href="../classes/gdal.CoordinateTransformation.html">gdal.CoordinateTransformation</a></li>
+                <li><a href="../classes/gdal.Dataset.html">gdal.Dataset</a></li>
+                <li><a href="../classes/gdal.DatasetBands.html">gdal.DatasetBands</a></li>
+                <li><a href="../classes/gdal.DatasetLayers.html">gdal.DatasetLayers</a></li>
+                <li><a href="../classes/gdal.Dimension.html">gdal.Dimension</a></li>
+                <li><a href="../classes/gdal.Driver.html">gdal.Driver</a></li>
+                <li><a href="../classes/gdal.Envelope.html">gdal.Envelope</a></li>
+                <li><a href="../classes/gdal.Envelope3D.html">gdal.Envelope3D</a></li>
+                <li><a href="../classes/gdal.Feature.html">gdal.Feature</a></li>
+                <li><a href="../classes/gdal.FeatureDefn.html">gdal.FeatureDefn</a></li>
+                <li><a href="../classes/gdal.FeatureDefnFields.html">gdal.FeatureDefnFields</a></li>
+                <li><a href="../classes/gdal.FeatureFields.html">gdal.FeatureFields</a></li>
+                <li><a href="../classes/gdal.FieldDefn.html">gdal.FieldDefn</a></li>
+                <li><a href="../classes/gdal.GDALDrivers.html">gdal.GDALDrivers</a></li>
+                <li><a href="../classes/gdal.Geometry.html">gdal.Geometry</a></li>
+                <li><a href="../classes/gdal.GeometryCollection.html">gdal.GeometryCollection</a></li>
+                <li><a href="../classes/gdal.GeometryCollectionChildren.html">gdal.GeometryCollectionChildren</a></li>
+                <li><a href="../classes/gdal.Group.html">gdal.Group</a></li>
+                <li><a href="../classes/gdal.GroupArrays.html">gdal.GroupArrays</a></li>
+                <li><a href="../classes/gdal.GroupAttributes.html">gdal.GroupAttributes</a></li>
+                <li><a href="../classes/gdal.GroupDimensions.html">gdal.GroupDimensions</a></li>
+                <li><a href="../classes/gdal.GroupGroups.html">gdal.GroupGroups</a></li>
+                <li><a href="../classes/gdal.Layer.html">gdal.Layer</a></li>
+                <li><a href="../classes/gdal.LayerFeatures.html">gdal.LayerFeatures</a></li>
+                <li><a href="../classes/gdal.LayerFields.html">gdal.LayerFields</a></li>
+                <li><a href="../classes/gdal.LinearRing.html">gdal.LinearRing</a></li>
+                <li><a href="../classes/gdal.LineString.html">gdal.LineString</a></li>
+                <li><a href="../classes/gdal.LineStringPoints.html">gdal.LineStringPoints</a></li>
+                <li><a href="../classes/gdal.MDArray.html">gdal.MDArray</a></li>
+                <li><a href="../classes/gdal.MultiCurve.html">gdal.MultiCurve</a></li>
+                <li><a href="../classes/gdal.MultiLineString.html">gdal.MultiLineString</a></li>
+                <li><a href="../classes/gdal.MultiPoint.html">gdal.MultiPoint</a></li>
+                <li><a href="../classes/gdal.MultiPolygon.html">gdal.MultiPolygon</a></li>
+                <li><a href="../classes/gdal.Point.html">gdal.Point</a></li>
+                <li><a href="../classes/gdal.Polygon.html">gdal.Polygon</a></li>
+                <li><a href="../classes/gdal.PolygonRings.html">gdal.PolygonRings</a></li>
+                <li><a href="../classes/gdal.RasterBand.html">gdal.RasterBand</a></li>
+                <li><a href="../classes/gdal.RasterBandOverviews.html">gdal.RasterBandOverviews</a></li>
+                <li><a href="../classes/gdal.RasterBandPixels.html">gdal.RasterBandPixels</a></li>
+                <li><a href="../classes/gdal.SimpleCurve.html">gdal.SimpleCurve</a></li>
+                <li><a href="../classes/gdal.SpatialReference.html">gdal.SpatialReference</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>src/gdal_dimension.cpp <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+#include &quot;gdal_dimension.hpp&quot;
+#include &quot;gdal_common.hpp&quot;
+#include &quot;gdal_driver.hpp&quot;
+#include &quot;gdal_group.hpp&quot;
+#include &quot;collections/group_groups.hpp&quot;
+#include &quot;collections/group_arrays.hpp&quot;
+#include &quot;geometry/gdal_geometry.hpp&quot;
+#include &quot;gdal_layer.hpp&quot;
+#include &quot;gdal_majorobject.hpp&quot;
+#include &quot;gdal_rasterband.hpp&quot;
+#include &quot;gdal_spatial_reference.hpp&quot;
+
+namespace node_gdal {
+
+#if GDAL_VERSION_MAJOR &gt; 3 || (GDAL_VERSION_MAJOR == 3 &amp;&amp; GDAL_VERSION_MINOR &gt;= 1)
+
+Nan::Persistent&lt;FunctionTemplate&gt; Dimension::constructor;
+ObjectCache&lt;std::shared_ptr&lt;GDALDimension&gt;, Dimension&gt; Dimension::dimension_cache;
+
+void Dimension::Initialize(Local&lt;Object&gt; target) {
+  Nan::HandleScope scope;
+
+  Local&lt;FunctionTemplate&gt; lcons = Nan::New&lt;FunctionTemplate&gt;(Dimension::New);
+  lcons-&gt;InstanceTemplate()-&gt;SetInternalFieldCount(1);
+  lcons-&gt;SetClassName(Nan::New(&quot;Dimension&quot;).ToLocalChecked());
+
+  Nan::SetPrototypeMethod(lcons, &quot;toString&quot;, toString);
+
+  ATTR_DONT_ENUM(lcons, &quot;_uid&quot;, uidGetter, READ_ONLY_SETTER);
+  ATTR(lcons, &quot;size&quot;, sizeGetter, READ_ONLY_SETTER);
+  ATTR(lcons, &quot;description&quot;, descriptionGetter, READ_ONLY_SETTER);
+  ATTR(lcons, &quot;type&quot;, typeGetter, READ_ONLY_SETTER);
+  ATTR(lcons, &quot;direction&quot;, directionGetter, READ_ONLY_SETTER);
+
+  Nan::Set(target, Nan::New(&quot;Dimension&quot;).ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+
+  constructor.Reset(lcons);
+}
+
+Dimension::Dimension(std::shared_ptr&lt;GDALDimension&gt; group) : Nan::ObjectWrap(), uid(0), this_(group), parent_ds(0) {
+  LOG(&quot;Created dimension [%p]&quot;, group);
+}
+
+Dimension::Dimension() : Nan::ObjectWrap(), uid(0), this_(0), parent_ds(0) {
+}
+
+Dimension::~Dimension() {
+  dispose();
+}
+
+void Dimension::dispose() {
+  if (this_) {
+
+    LOG(&quot;Disposing dimension [%p]&quot;, this_);
+
+    ptr_manager.dispose(uid);
+
+    LOG(&quot;Disposed dimension [%p]&quot;, this_);
+  }
+};
+
+/**
+ * A representation of a group with access methods.
+ *
+ * @class gdal.Dimension
+ */
+NAN_METHOD(Dimension::New) {
+  Nan::HandleScope scope;
+
+  if (!info.IsConstructCall()) {
+    Nan::ThrowError(&quot;Cannot call constructor as function, you need to use &#x27;new&#x27; keyword&quot;);
+    return;
+  }
+
+  if (info.Length() == 1 &amp;&amp; info[0]-&gt;IsExternal()) {
+    Local&lt;External&gt; ext = info[0].As&lt;External&gt;();
+    void *ptr = ext-&gt;Value();
+    Dimension *f = static_cast&lt;Dimension *&gt;(ptr);
+    f-&gt;Wrap(info.This());
+
+    info.GetReturnValue().Set(info.This());
+    return;
+  } else {
+    Nan::ThrowError(&quot;Cannot create dimension directly. Create with dataset instead.&quot;);
+    return;
+  }
+
+  info.GetReturnValue().Set(info.This());
+}
+
+Local&lt;Value&gt; Dimension::New(std::shared_ptr&lt;GDALDimension&gt; raw, GDALDataset *parent_ds) {
+  Nan::EscapableHandleScope scope;
+
+  if (!raw) { return scope.Escape(Nan::Null()); }
+  if (dimension_cache.has(raw)) { return scope.Escape(dimension_cache.get(raw)); }
+
+  Dimension *wrapped = new Dimension(raw);
+
+  Local&lt;Object&gt; ds;
+  if (Dataset::dataset_cache.has(parent_ds)) {
+    ds = Dataset::dataset_cache.get(parent_ds);
+  } else {
+    LOG(&quot;Dimension&#x27;s parent dataset disappeared from cache (array = %p, dataset = %p)&quot;, raw, parent_ds);
+    Nan::ThrowError(&quot;Dimension&#x27;s parent dataset disappeared from cache&quot;);
+    return scope.Escape(Nan::Undefined());
+  }
+
+  Local&lt;Value&gt; ext = Nan::New&lt;External&gt;(wrapped);
+  Local&lt;Object&gt; obj =
+    Nan::NewInstance(Nan::GetFunction(Nan::New(Dimension::constructor)).ToLocalChecked(), 1, &amp;ext).ToLocalChecked();
+
+  dimension_cache.add(raw, obj);
+
+  Dataset *unwrapped_ds = Nan::ObjectWrap::Unwrap&lt;Dataset&gt;(ds);
+  long parent_uid = unwrapped_ds-&gt;uid;
+
+  wrapped-&gt;uid = ptr_manager.add(raw, parent_uid);
+  wrapped-&gt;parent_ds = parent_ds;
+  wrapped-&gt;parent_uid = parent_uid;
+
+  Nan::SetPrivate(obj, Nan::New(&quot;ds_&quot;).ToLocalChecked(), ds);
+
+  return scope.Escape(obj);
+}
+
+NAN_METHOD(Dimension::toString) {
+  Nan::HandleScope scope;
+  info.GetReturnValue().Set(Nan::New(&quot;Dimension&quot;).ToLocalChecked());
+}
+
+/**
+ * @readOnly
+ * @attribute size
+ * @type {number}
+ */
+NODE_WRAPPED_GETTER_WITH_RESULT_LOCKED(Dimension, sizeGetter, Number, GetSize);
+
+/**
+ * @readOnly
+ * @attribute description
+ * @type {string}
+ */
+NODE_WRAPPED_GETTER_WITH_STRING_LOCKED(Dimension, descriptionGetter, GetFullName);
+
+/**
+ * @readOnly
+ * @attribute direction
+ * @type {string}
+ */
+NODE_WRAPPED_GETTER_WITH_STRING_LOCKED(Dimension, directionGetter, GetDirection);
+
+/**
+ * @readOnly
+ * @attribute type
+ * @type {string}
+ */
+NODE_WRAPPED_GETTER_WITH_STRING_LOCKED(Dimension, typeGetter, GetType);
+
+NAN_GETTER(Dimension::uidGetter) {
+  Nan::HandleScope scope;
+  Dimension *group = Nan::ObjectWrap::Unwrap&lt;Dimension&gt;(info.This());
+  info.GetReturnValue().Set(Nan::New((int)group-&gt;uid));
+}
+
+#endif
+
+} // namespace node_gdal
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

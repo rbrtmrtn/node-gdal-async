@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>gdal.MDArray - node-gdal-async</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+	    <img alt="node-gdal-async" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/GDALLogoColor.svg/200px-GDALLogoColor.svg.png" style="max-height: 65%;" title="node-gdal-async">
+            node-gdal-async
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>3.2.991</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DIM)", "classes/Constants (DIR)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.ArrayAttributes", "classes/gdal.ArrayDimensions", "classes/gdal.Attribute", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Dimension", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Group", "classes/gdal.GroupArrays", "classes/gdal.GroupAttributes", "classes/gdal.GroupDimensions", "classes/gdal.GroupGroups", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MDArray", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/Constants (CPL Error Codes).html">Constants (CPL Error Codes)</a></li>
+                <li><a href="../classes/Constants (CPL Error Levels).html">Constants (CPL Error Levels)</a></li>
+                <li><a href="../classes/Constants (DCAP).html">Constants (DCAP)</a></li>
+                <li><a href="../classes/Constants (DIM).html">Constants (DIM)</a></li>
+                <li><a href="../classes/Constants (DIR).html">Constants (DIR)</a></li>
+                <li><a href="../classes/Constants (DMD).html">Constants (DMD)</a></li>
+                <li><a href="../classes/Constants (GCI).html">Constants (GCI)</a></li>
+                <li><a href="../classes/Constants (GDT).html">Constants (GDT)</a></li>
+                <li><a href="../classes/Constants (GRA).html">Constants (GRA)</a></li>
+                <li><a href="../classes/Constants (ODsC).html">Constants (ODsC)</a></li>
+                <li><a href="../classes/Constants (OFT).html">Constants (OFT)</a></li>
+                <li><a href="../classes/Constants (OJ).html">Constants (OJ)</a></li>
+                <li><a href="../classes/Constants (OLC).html">Constants (OLC)</a></li>
+                <li><a href="../classes/Constants (wkbByteOrder).html">Constants (wkbByteOrder)</a></li>
+                <li><a href="../classes/Constants (wkbGeometryType).html">Constants (wkbGeometryType)</a></li>
+                <li><a href="../classes/Constants (wkbVariant).html">Constants (wkbVariant)</a></li>
+                <li><a href="../classes/gdal.html">gdal</a></li>
+                <li><a href="../classes/gdal.ArrayAttributes.html">gdal.ArrayAttributes</a></li>
+                <li><a href="../classes/gdal.ArrayDimensions.html">gdal.ArrayDimensions</a></li>
+                <li><a href="../classes/gdal.Attribute.html">gdal.Attribute</a></li>
+                <li><a href="../classes/gdal.CircularString.html">gdal.CircularString</a></li>
+                <li><a href="../classes/gdal.CompoundCurve.html">gdal.CompoundCurve</a></li>
+                <li><a href="../classes/gdal.CompoundCurveCurves.html">gdal.CompoundCurveCurves</a></li>
+                <li><a href="../classes/gdal.config.html">gdal.config</a></li>
+                <li><a href="../classes/gdal.CoordinateTransformation.html">gdal.CoordinateTransformation</a></li>
+                <li><a href="../classes/gdal.Dataset.html">gdal.Dataset</a></li>
+                <li><a href="../classes/gdal.DatasetBands.html">gdal.DatasetBands</a></li>
+                <li><a href="../classes/gdal.DatasetLayers.html">gdal.DatasetLayers</a></li>
+                <li><a href="../classes/gdal.Dimension.html">gdal.Dimension</a></li>
+                <li><a href="../classes/gdal.Driver.html">gdal.Driver</a></li>
+                <li><a href="../classes/gdal.Envelope.html">gdal.Envelope</a></li>
+                <li><a href="../classes/gdal.Envelope3D.html">gdal.Envelope3D</a></li>
+                <li><a href="../classes/gdal.Feature.html">gdal.Feature</a></li>
+                <li><a href="../classes/gdal.FeatureDefn.html">gdal.FeatureDefn</a></li>
+                <li><a href="../classes/gdal.FeatureDefnFields.html">gdal.FeatureDefnFields</a></li>
+                <li><a href="../classes/gdal.FeatureFields.html">gdal.FeatureFields</a></li>
+                <li><a href="../classes/gdal.FieldDefn.html">gdal.FieldDefn</a></li>
+                <li><a href="../classes/gdal.GDALDrivers.html">gdal.GDALDrivers</a></li>
+                <li><a href="../classes/gdal.Geometry.html">gdal.Geometry</a></li>
+                <li><a href="../classes/gdal.GeometryCollection.html">gdal.GeometryCollection</a></li>
+                <li><a href="../classes/gdal.GeometryCollectionChildren.html">gdal.GeometryCollectionChildren</a></li>
+                <li><a href="../classes/gdal.Group.html">gdal.Group</a></li>
+                <li><a href="../classes/gdal.GroupArrays.html">gdal.GroupArrays</a></li>
+                <li><a href="../classes/gdal.GroupAttributes.html">gdal.GroupAttributes</a></li>
+                <li><a href="../classes/gdal.GroupDimensions.html">gdal.GroupDimensions</a></li>
+                <li><a href="../classes/gdal.GroupGroups.html">gdal.GroupGroups</a></li>
+                <li><a href="../classes/gdal.Layer.html">gdal.Layer</a></li>
+                <li><a href="../classes/gdal.LayerFeatures.html">gdal.LayerFeatures</a></li>
+                <li><a href="../classes/gdal.LayerFields.html">gdal.LayerFields</a></li>
+                <li><a href="../classes/gdal.LinearRing.html">gdal.LinearRing</a></li>
+                <li><a href="../classes/gdal.LineString.html">gdal.LineString</a></li>
+                <li><a href="../classes/gdal.LineStringPoints.html">gdal.LineStringPoints</a></li>
+                <li><a href="../classes/gdal.MDArray.html">gdal.MDArray</a></li>
+                <li><a href="../classes/gdal.MultiCurve.html">gdal.MultiCurve</a></li>
+                <li><a href="../classes/gdal.MultiLineString.html">gdal.MultiLineString</a></li>
+                <li><a href="../classes/gdal.MultiPoint.html">gdal.MultiPoint</a></li>
+                <li><a href="../classes/gdal.MultiPolygon.html">gdal.MultiPolygon</a></li>
+                <li><a href="../classes/gdal.Point.html">gdal.Point</a></li>
+                <li><a href="../classes/gdal.Polygon.html">gdal.Polygon</a></li>
+                <li><a href="../classes/gdal.PolygonRings.html">gdal.PolygonRings</a></li>
+                <li><a href="../classes/gdal.RasterBand.html">gdal.RasterBand</a></li>
+                <li><a href="../classes/gdal.RasterBandOverviews.html">gdal.RasterBandOverviews</a></li>
+                <li><a href="../classes/gdal.RasterBandPixels.html">gdal.RasterBandPixels</a></li>
+                <li><a href="../classes/gdal.SimpleCurve.html">gdal.SimpleCurve</a></li>
+                <li><a href="../classes/gdal.SpatialReference.html">gdal.SpatialReference</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>gdal.MDArray</h1>
+</div>
+
+
+
+
+
+
+<div class="yuidoc-class-description">
+<p>A representation of an array with access methods.</p>
+
+</div>
+
+<!-- table of contents -->
+
+<div id="class-toc" class="page-section">
+	<h2>Table of Contents</h2>
+    <ul>
+		<li>
+			<strong>Methods</strong>
+			<ul>
+				<li><a href="#method-asDataset"><span class="im">asDataset</span>(<span class="ia">x</span><span class="ia">y</span>)</a></li>
+				<li><a href="#method-getMask"><span class="im">getMask</span>()</a></li>
+				<li><a href="#method-getView"><span class="im">getView</span>(<span class="ia">view</span>)</a></li>
+				<li><a href="#method-read"><span class="im">read</span>(<span class="ia">options</span>)</a></li>
+				<li><a href="#method-readAsync"><span class="im">readAsync</span>(<span class="ia">options</span><span class="ia">callback</span>)</a></li>
+			</ul>
+		</li>
+
+
+		<li>
+			<strong>Attributes</strong>
+			<ul>
+				<li><a href="#attr-attributes"><span class="iattr">attributes</span></a></li>
+				<li><a href="#attr-dataType"><span class="iattr">dataType</span></a></li>
+				<li><a href="#attr-description"><span class="iattr">description</span></a></li>
+				<li><a href="#attr-dimensions"><span class="iattr">dimensions</span></a></li>
+				<li><a href="#attr-length"><span class="iattr">length</span></a></li>
+				<li><a href="#attr-noDataValue"><span class="iattr">noDataValue</span></a></li>
+				<li><a href="#attr-offset"><span class="iattr">offset</span></a></li>
+				<li><a href="#attr-scale"><span class="iattr">scale</span></a></li>
+				<li><a href="#attr-srs"><span class="iattr">srs</span></a></li>
+				<li><a href="#attr-unitType"><span class="iattr">unitType</span></a></li>
+			</ul>
+		</li>
+
+	</ul>
+</div>
+
+<!-- details -->
+
+
+    <div id="methods" class="page-section">
+        <h2 class="off-left">Methods</h2>
+        <div class="item-list">
+<div id="method-asDataset" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>asDataset</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>x</code>
+				</li>
+				<li class="arg">
+						<code>y</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_mdarray.cpp.html#l413"><code>src&#x2F;gdal_mdarray.cpp:413</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Return a view of this array as a gdal.Dataset (ie 2D)</p>
+<p>In the case of &gt; 2D arrays, additional dimensions will be represented as raster bands.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">x</code>
+						<span class="type">Number  |  String</span>
+
+
+					<div class="param-description"><p>dimension to be used as X axis</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">y</code>
+						<span class="type">Number  |  String</span>
+
+
+					<div class="param-description"><p>dimension to be used as Y axis</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-getMask" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>getMask</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/gdal.MDArray.html" class="crosslink">gdal.MDArray</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_mdarray.cpp.html#l386"><code>src&#x2F;gdal_mdarray.cpp:386</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Return an array that is a mask for the current array.</p>
+<p>This array will be of type Byte, with values set to 0 to indicate invalid pixels of the current array, and values set to 1 to indicate valid pixels.</p>
+<p>The generic implementation honours the NoDataValue, as well as various netCDF CF attributes: missing_value, _FillValue, valid_min, valid_max and valid_range.</p>
+</div>
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/gdal.MDArray.html" class="crosslink">gdal.MDArray</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-getView" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>getView</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>view</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/gdal.MDArray.html" class="crosslink">gdal.MDArray</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_mdarray.cpp.html#l358"><code>src&#x2F;gdal_mdarray.cpp:358</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Get a partial view of the MDArray</p>
+<p>The slice expression uses the same syntax as NumPy basic slicing and indexing. See (<a href="https://www.numpy.org/devdocs/reference/arrays.indexing.html#basic-slicing-and-indexing">https://www.numpy.org/devdocs/reference/arrays.indexing.html#basic-slicing-and-indexing</a>). Or it can use field access by name. See (<a href="https://www.numpy.org/devdocs/reference/arrays.indexing.html#field-access">https://www.numpy.org/devdocs/reference/arrays.indexing.html#field-access</a>).</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">view</code>
+						<span class="type">String</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/gdal.MDArray.html" class="crosslink">gdal.MDArray</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-read" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>read</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>options</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">TypedArray</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_mdarray.cpp.html#l206"><code>src&#x2F;gdal_mdarray.cpp:206</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Read data from the MDArray</p>
+<p>This will extract the context of a (hyper-)rectangle from the array into a buffer.
+If the buffer can be passed as an argument or it can be allocated by the function.
+Generalized n-dimensional strides are supported.</p>
+<p>Although this method can be used in its raw form, it works best when used with the ndarray plugin.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">options</code>
+						<span class="type">MDArrayOptions</span>
+
+
+
+						<ul class="params-list">
+							<li class="param">
+									<code class="param-name">origin</code>
+									<span class="type">Number[]</span>
+
+								<div class="param-description"><p>An array of the starting indices</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name">span</code>
+									<span class="type">Number[]</span>
+
+								<div class="param-description"><p>An array specifying the number of elements to read in each dimension</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[stride]</code>
+									<span class="type">Number[]</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>An array of strides for the output array, mandatory if the array is specified</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[data_type]</code>
+									<span class="type">String</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>See <a href="../classes/Constants (GDT).html" class="crosslink">GDT constants</a>.</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[data]</code>
+									<span class="type">TypedArray</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>The TypedArray (<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) to put the data in. A new array is created if not given.</p>
+</div>
+
+							</li>
+						</ul>
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">TypedArray</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-readAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>readAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>options</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback=undefined</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Promise<TypedArray></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_mdarray.cpp.html#l226"><code>src&#x2F;gdal_mdarray.cpp:226</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Read data from the MDArray
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+<p>This will extract the context of a (hyper-)rectangle from the array into a buffer.
+If the buffer can be passed as an argument or it can be allocated by the function.
+Generalized n-dimensional strides are supported.</p>
+<p>Although this method can be used in its raw form, it works best when used with the ndarray plugin.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">options</code>
+						<span class="type">MDArrayOptions</span>
+
+
+
+						<ul class="params-list">
+							<li class="param">
+									<code class="param-name">origin</code>
+									<span class="type">Number[]</span>
+
+								<div class="param-description"><p>An array of the starting indices</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name">span</code>
+									<span class="type">Number[]</span>
+
+								<div class="param-description"><p>An array specifying the number of elements to read in each dimension</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[stride]</code>
+									<span class="type">Number[]</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>An array of strides for the output array, mandatory if the array is specified</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[data_type]</code>
+									<span class="type">String</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>See <a href="../classes/Constants (GDT).html" class="crosslink">GDT constants</a>.</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[data]</code>
+									<span class="type">TypedArray</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>The TypedArray (<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) to put the data in. A new array is created if not given.</p>
+</div>
+
+							</li>
+							<li class="param">
+									<code class="param-name optional">[progress_cb]</code>
+									<span class="type">ProgressCb</span>
+									<span class="flag optional" title="This parameter is optional.">optional</span>
+
+								<div class="param-description"><p>
+optional progress callback. In sync mode at every invocation it will stop the GDAL operation until it returns.
+In async mode it will schedule the invocation to be executed at the next event loop iteration while the GDAL operation willl continues in the background.
+If the event loop is blocked and a second invocation is scheduled before the first one has been executed, the first one will be discarded.
+No progress callbacks will be delivered after the result callback has been triggered or the Promise has been resolved.
+If the event loop is blocked for the whole duration of the operation, no progress callbacks will be made at all.
+The callback takes two arguments, the first one, <code>complete</code>, is a number between 0 and 1 indicating the progress towards the operation finish and the second one,
+<code>message</code>, can be used by certain GDAL drivers to return text messages.
+</p>
+</div>
+
+							</li>
+						</ul>
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback<TypedArray></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+standard Node.js <code>(error, result)</code> callback. It is awalys the last paramater and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Promise<TypedArray></span>:
+					<p>A TypedArray (<a href="https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses">https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView#Typed_array_subclasses</a>) of values.</p>
+
+			</div>
+		</div>
+
+</div>
+        </div>
+    </div>
+
+
+    <div id="attrs" class="page-section">
+        <h2 class="off-left">Attributes</h2>
+
+<div id="attr-attributes" class="attr item">
+    <a name="config_attributes"></a> 
+    <h3 class="name"><code>attributes</code></h3>
+    <span class="type"><a href="../classes/gdal.ArrayAttributes.html" class="crosslink">gdal.ArrayAttributes</a></span>
+
+
+
+
+
+
+
+        <span class="flag readonly">readonly</span>
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_mdarray.cpp.html#l580"><code>src&#x2F;gdal_mdarray.cpp:580</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="attr-dataType" class="attr item">
+    <a name="config_dataType"></a> 
+    <h3 class="name"><code>dataType</code></h3>
+    <span class="type">String</span>
+
+
+
+
+
+
+
+        <span class="flag readonly">readonly</span>
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_mdarray.cpp.html#l548"><code>src&#x2F;gdal_mdarray.cpp:548</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="attr-description" class="attr item">
+    <a name="config_description"></a> 
+    <h3 class="name"><code>description</code></h3>
+    <span class="type">String</span>
+
+
+
+
+
+
+
+        <span class="flag readonly">readonly</span>
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_mdarray.cpp.html#l590"><code>src&#x2F;gdal_mdarray.cpp:590</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="attr-dimensions" class="attr item">
+    <a name="config_dimensions"></a> 
+    <h3 class="name"><code>dimensions</code></h3>
+    <span class="type"><a href="../classes/gdal.GroupDimensions.html" class="crosslink">gdal.GroupDimensions</a></span>
+
+
+
+
+
+
+
+        <span class="flag readonly">readonly</span>
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_mdarray.cpp.html#l570"><code>src&#x2F;gdal_mdarray.cpp:570</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="attr-length" class="attr item">
+    <a name="config_length"></a> 
+    <h3 class="name"><code>length</code></h3>
+    <span class="type">Number</span>
+
+
+
+
+
+
+
+        <span class="flag readonly">readonly</span>
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_mdarray.cpp.html#l605"><code>src&#x2F;gdal_mdarray.cpp:605</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>The flattened length of the array</p>
+
+    </div>
+
+
+
+</div>
+<div id="attr-noDataValue" class="attr item">
+    <a name="config_noDataValue"></a> 
+    <h3 class="name"><code>noDataValue</code></h3>
+    <span class="type">Number | Null</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_mdarray.cpp.html#l507"><code>src&#x2F;gdal_mdarray.cpp:507</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>No data value for this array.</p>
+
+    </div>
+
+
+
+</div>
+<div id="attr-offset" class="attr item">
+    <a name="config_offset"></a> 
+    <h3 class="name"><code>offset</code></h3>
+    <span class="type">Number</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_mdarray.cpp.html#l469"><code>src&#x2F;gdal_mdarray.cpp:469</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Raster value offset.</p>
+
+    </div>
+
+
+
+</div>
+<div id="attr-scale" class="attr item">
+    <a name="config_scale"></a> 
+    <h3 class="name"><code>scale</code></h3>
+    <span class="type">Number</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_mdarray.cpp.html#l488"><code>src&#x2F;gdal_mdarray.cpp:488</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Raster value scale.</p>
+
+    </div>
+
+
+
+</div>
+<div id="attr-srs" class="attr item">
+    <a name="config_srs"></a> 
+    <h3 class="name"><code>srs</code></h3>
+    <span class="type"><a href="../classes/gdal.SpatialReference.html" class="crosslink">gdal.SpatialReference</a></span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_mdarray.cpp.html#l447"><code>src&#x2F;gdal_mdarray.cpp:447</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Spatial reference associated with MDArray</p>
+
+    </div>
+
+
+
+</div>
+<div id="attr-unitType" class="attr item">
+    <a name="config_unitType"></a> 
+    <h3 class="name"><code>unitType</code></h3>
+    <span class="type">String</span>
+
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_mdarray.cpp.html#l530"><code>src&#x2F;gdal_mdarray.cpp:530</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Raster unit type (name for the units of this raster's values).
+For instance, it might be <code>"m"</code> for an elevation model in meters,
+or <code>"ft"</code> for feet. If no units are available, a value of <code>""</code>
+will be returned.</p>
+
+    </div>
+
+
+
+</div>
+    </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>
