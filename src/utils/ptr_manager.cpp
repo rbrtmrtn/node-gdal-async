@@ -189,6 +189,7 @@ template <> constexpr PtrMap<shared_ptr<GDALAttribute>> &ObjectStore::ptrMap() {
 template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, Local<Object> obj, long parent_uid) {
   lock();
   shared_ptr<ObjectStoreItem<GDALPTR>> item(new ObjectStoreItem<GDALPTR>);
+  item->uid = uid++;
   if (parent_uid) {
     shared_ptr<ObjectStoreItem<GDALDataset *>> parent = uidDatasets[parent_uid];
     item->parent = parent;
@@ -196,7 +197,6 @@ template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, Local<Object> obj
   } else {
     item->parent = nullptr;
   }
-  item->uid = uid++;
   item->ptr = ptr;
   item->obj.Reset(obj);
   item->obj.SetWeak(item.get(), weakCallback<GDALPTR>, Nan::WeakCallbackType::kParameter);
@@ -272,7 +272,6 @@ template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALDataset *>>
 
 template <typename GDALPTR> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALPTR>> item) {
   LOG("ObjectStore: Death by calling dispose from C++ [%p]", item->ptr);
-  lock();
   shared_ptr<uv_sem_t> async_lock = nullptr;
   try {
     async_lock = tryLockDataset(item->parent->uid);
@@ -282,11 +281,9 @@ template <typename GDALPTR> void ObjectStore::dispose(shared_ptr<ObjectStoreItem
   if (item->parent != nullptr) item->parent->children.remove(item->uid);
   if (async_lock != nullptr) uv_sem_post(async_lock.get());
   item->obj.Reset();
-  unlock();
 }
 
 template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<OGRLayer *>> item) {
-  lock();
   shared_ptr<uv_sem_t> async_lock = nullptr;
   try {
     async_lock = tryLockDataset(item->parent->uid);
@@ -298,7 +295,6 @@ template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<OGRLayer *>> it
   item->parent->children.remove(item->uid);
   if (async_lock != nullptr) uv_sem_post(async_lock.get());
   item->obj.Reset();
-  unlock();
 }
 
 // Death by GC

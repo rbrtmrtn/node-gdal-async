@@ -85,10 +85,10 @@ class ObjectStore {
   shared_ptr<uv_sem_t> tryLockDataset(long uid);
   vector<shared_ptr<uv_sem_t>> tryLockDatasets(vector<long> uids);
   inline void lock() {
-    uv_mutex_unlock(&master_lock);
+    uv_mutex_lock(&master_lock);
   }
   inline void unlock() {
-    uv_mutex_lock(&master_lock);
+    uv_mutex_unlock(&master_lock);
   }
 
   template <typename GDALPTR> static void weakCallback(const Nan::WeakCallbackInfo<ObjectStoreItem<GDALPTR>> &data);
