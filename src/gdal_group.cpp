@@ -16,7 +16,6 @@ namespace node_gdal {
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
 
 Nan::Persistent<FunctionTemplate> Group::constructor;
-ObjectCache<std::shared_ptr<GDALGroup>, Group> Group::group_cache;
 
 void Group::Initialize(Local<Object> target) {
   Nan::HandleScope scope;
@@ -55,7 +54,7 @@ void Group::dispose() {
 
     LOG("Disposing group [%p]", this_);
 
-    ptr_manager.dispose(uid);
+    object_store.dispose(uid);
 
     LOG("Disposed group [%p]", this_);
   }
@@ -102,8 +101,8 @@ NAN_METHOD(Group::New) {
 Local<Value> Group::New(std::shared_ptr<GDALGroup> raw, GDALDataset *parent_ds) {
   Nan::EscapableHandleScope scope;
 
-  if (Dataset::dataset_cache.has(parent_ds)) {
-    Local<Object> ds = Dataset::dataset_cache.get(parent_ds);
+  if (object_store.has(parent_ds)) {
+    Local<Object> ds = object_store.get(parent_ds);
     return Group::New(raw, ds);
   } else {
     LOG("Group's parent dataset disappeared from cache (group = %p, dataset = %p)", raw, parent_ds);
@@ -116,7 +115,7 @@ Local<Value> Group::New(std::shared_ptr<GDALGroup> raw, Local<Object> parent_ds)
   Nan::EscapableHandleScope scope;
 
   if (!raw) { return scope.Escape(Nan::Null()); }
-  if (group_cache.has(raw)) { return scope.Escape(group_cache.get(raw)); }
+  if (object_store.has(raw)) { return scope.Escape(object_store.get(raw)); }
 
   Group *wrapped = new Group(raw);
 
@@ -128,12 +127,10 @@ Local<Value> Group::New(std::shared_ptr<GDALGroup> raw, Local<Object> parent_ds)
   Local<Object> obj =
     Nan::NewInstance(Nan::GetFunction(Nan::New(Group::constructor)).ToLocalChecked(), 2, argv).ToLocalChecked();
 
-  group_cache.add(raw, obj);
-
   Dataset *unwrapped_ds = Nan::ObjectWrap::Unwrap<Dataset>(parent_ds);
   long parent_uid = unwrapped_ds->uid;
 
-  wrapped->uid = ptr_manager.add(raw, parent_uid);
+  wrapped->uid = object_store.add(raw, obj, parent_uid);
   wrapped->parent_ds = unwrapped_ds->getDataset();
   wrapped->parent_uid = parent_uid;
   Nan::SetPrivate(obj, Nan::New("ds_").ToLocalChecked(), parent_ds);

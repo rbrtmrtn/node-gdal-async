@@ -6,7 +6,6 @@
 namespace node_gdal {
 
 Nan::Persistent<FunctionTemplate> SpatialReference::constructor;
-ObjectCache<OGRSpatialReference *, SpatialReference> SpatialReference::cache;
 
 void SpatialReference::Initialize(Local<Object> target) {
   Nan::HandleScope scope;
@@ -78,7 +77,7 @@ SpatialReference::~SpatialReference() {
 void SpatialReference::dispose() {
   if (this_) {
     LOG("Disposing SpatialReference [%p] (%s)", this_, owned_ ? "owned" : "unowned");
-    cache.erase(this_);
+    object_store.dispose(uid);
     if (owned_) {
       // Decrements the reference count by one, and destroy if zero.
       this_->Release();
@@ -129,7 +128,7 @@ NAN_METHOD(SpatialReference::New) {
     f->owned_ = true;
     f->Wrap(info.This());
 
-    cache.add(srs, info.This());
+    f->uid = object_store.add(srs, info.This(), 0);
   }
 
   info.GetReturnValue().Set(info.This());
@@ -144,7 +143,7 @@ Local<Value> SpatialReference::New(OGRSpatialReference *raw, bool owned) {
   Nan::EscapableHandleScope scope;
 
   if (!raw) { return scope.Escape(Nan::Null()); }
-  if (cache.has(raw)) { return scope.Escape(cache.get(raw)); }
+  if (object_store.has(raw)) { return scope.Escape(object_store.get(raw)); }
 
   // make a copy of spatialreference owned by a layer, feature, etc
   // + no need to track when a layer is destroyed
@@ -162,7 +161,7 @@ Local<Value> SpatialReference::New(OGRSpatialReference *raw, bool owned) {
     Nan::NewInstance(Nan::GetFunction(Nan::New(SpatialReference::constructor)).ToLocalChecked(), 1, &ext)
       .ToLocalChecked();
 
-  cache.add(cloned_srs, raw, obj);
+  wrapped->uid = object_store.add(cloned_srs, obj, 0);
 
   return scope.Escape(obj);
 }

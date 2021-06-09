@@ -10,18 +10,24 @@
 #include <sstream>
 #include <thread>
 
-// This is the other half of the mechanism called ObjectCache found in every
-// JS-exposed class wrapping a GDAL base class
+// Here used to be dragons, but now there is a shopping mall
 //
-// It keeps track of created objects so that they can be reused
+// This is the object store, a singleton
 //
-// It is called ObjectCache but its proper name should be ObjectStore as objects
-// are not deleted unless expired by the GC
+// It serves 2 purposes:
 //
+// First, it keeps track of created objects so that they can be reused
 // The point of this mechanism is that it returns a reference to the same object
 // for two successive calls of `ds.bands.get(1)` for example
+// For this use, the V8 objects are indexed with the pointer to the GDAL
+// base object
+// uids won't work for this use
 //
-// TODO: Merge everything in a single template
+// Second, it is allocated entirely outside of the V8 memory management and the GC
+// Thus, it is accessible from the worker threads
+// The async locks and the I/O queues live here
+// For this use, the V8 objects are indexed with numeric uids
+// ptrs won't be safe for this use
 
 namespace node_gdal {
 
@@ -30,47 +36,51 @@ void uv_sem_deleter::operator()(uv_sem_t *p) {
   delete p;
 }
 
-PtrManager::PtrManager()
+ObjectStore::ObjectStore()
   : uid(1),
-    layers(),
-    bands(),
-    datasets()
+    uidDrivers(),
+    uidLayers(),
+    uidBands(),
+    uidDatasets(),
+    uidSpatialRefs(),
+    ptrDrivers(),
+    ptrLayers(),
+    ptrBands(),
+    ptrDatasets(),
+    ptrSpatialRefs()
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
     ,
-    groups(),
-    arrays(),
-    dimensions(),
-    attributes()
+    uidGroups(),
+    uidArrays(),
+    uidDimensions(),
+    uidAttributes(),
+    ptrGroups(),
+    ptrArrays(),
+    ptrDimensions(),
+    ptrAttributes()
 #endif
 {
   uv_mutex_init_recursive(&master_lock);
 }
 
-PtrManager::~PtrManager() {
+ObjectStore::~ObjectStore() {
 }
 
-inline void PtrManager::lock() {
-  uv_mutex_lock(&master_lock);
-}
-
-inline void PtrManager::unlock() {
-  uv_mutex_unlock(&master_lock);
-}
-
-bool PtrManager::isAlive(long uid) {
+bool ObjectStore::isAlive(long uid) {
   if (uid == 0) return true;
-  return bands.count(uid) > 0 || layers.count(uid) > 0 || datasets.count(uid) > 0
+  return uidBands.count(uid) > 0 || uidLayers.count(uid) > 0 || uidDatasets.count(uid) > 0
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
-    || groups.count(uid) > 0 || arrays.count(uid) > 0 || dimensions.count(uid) > 0 || attributes.count(uid) > 0
+    || uidGroups.count(uid) > 0 || uidArrays.count(uid) > 0 || uidDimensions.count(uid) > 0 ||
+    uidAttributes.count(uid) > 0
 #endif
     ;
 }
 
-shared_ptr<uv_sem_t> PtrManager::tryLockDataset(long uid) {
+shared_ptr<uv_sem_t> ObjectStore::tryLockDataset(long uid) {
   while (true) {
     lock();
-    auto parent = datasets.find(uid);
-    if (parent != datasets.end()) {
+    auto parent = uidDatasets.find(uid);
+    if (parent != uidDatasets.end()) {
       int r = uv_sem_trywait(parent->second->async_lock.get());
       unlock();
       if (r == 0) return parent->second->async_lock;
@@ -82,7 +92,7 @@ shared_ptr<uv_sem_t> PtrManager::tryLockDataset(long uid) {
   }
 }
 
-vector<shared_ptr<uv_sem_t>> PtrManager::tryLockDatasets(vector<long> uids) {
+vector<shared_ptr<uv_sem_t>> ObjectStore::tryLockDatasets(vector<long> uids) {
   // There is lots of copying around here but these vectors are never longer than 3 elements
   // Avoid deadlocks
   std::sort(uids.begin(), uids.end());
@@ -93,8 +103,8 @@ vector<shared_ptr<uv_sem_t>> PtrManager::tryLockDatasets(vector<long> uids) {
     lock();
     for (long uid : uids) {
       if (!uid) continue;
-      auto parent = datasets.find(uid);
-      if (parent == datasets.end()) {
+      auto parent = uidDatasets.find(uid);
+      if (parent == uidDatasets.end()) {
         unlock();
         throw "Parent Dataset object has already been destroyed";
       }
@@ -119,130 +129,163 @@ vector<shared_ptr<uv_sem_t>> PtrManager::tryLockDatasets(vector<long> uids) {
   }
 }
 
-template <> inline constexpr uidmap<GDALDataset *> &PtrManager::getUidMap() {
-  return datasets;
+template <> constexpr UidMap<GDALDriver *> &ObjectStore::uidMap() {
+  return uidDrivers;
 }
-template <> inline void PtrManager::erase(GDALDataset *ptr) {
-  Dataset::dataset_cache.erase(ptr);
+template <> constexpr PtrMap<GDALDriver *> &ObjectStore::ptrMap() {
+  return ptrDrivers;
 }
-template <> inline constexpr uidmap<OGRLayer *> &PtrManager::getUidMap() {
-  return layers;
+template <> constexpr UidMap<GDALDataset *> &ObjectStore::uidMap() {
+  return uidDatasets;
 }
-template <> inline void PtrManager::erase(OGRLayer *ptr) {
-  Layer::cache.erase(ptr);
+template <> constexpr PtrMap<GDALDataset *> &ObjectStore::ptrMap() {
+  return ptrDatasets;
 }
-template <> inline constexpr uidmap<GDALRasterBand *> &PtrManager::getUidMap() {
-  return bands;
+template <> constexpr UidMap<OGRLayer *> &ObjectStore::uidMap() {
+  return uidLayers;
 }
-template <> inline void PtrManager::erase(GDALRasterBand *ptr) {
-  RasterBand::cache.erase(ptr);
+template <> constexpr PtrMap<OGRLayer *> &ObjectStore::ptrMap() {
+  return ptrLayers;
+}
+template <> constexpr UidMap<GDALRasterBand *> &ObjectStore::uidMap() {
+  return uidBands;
+}
+template <> constexpr PtrMap<GDALRasterBand *> &ObjectStore::ptrMap() {
+  return ptrBands;
+}
+template <> constexpr UidMap<OGRSpatialReference *> &ObjectStore::uidMap() {
+  return uidSpatialRefs;
+}
+template <> constexpr PtrMap<OGRSpatialReference *> &ObjectStore::ptrMap() {
+  return ptrSpatialRefs;
 }
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
-template <> inline constexpr uidmap<shared_ptr<GDALGroup>> &PtrManager::getUidMap() {
-  return groups;
+template <> constexpr UidMap<shared_ptr<GDALGroup>> &ObjectStore::uidMap() {
+  return uidGroups;
 }
-template <> inline void PtrManager::erase(shared_ptr<GDALGroup> ptr) {
-  Group::group_cache.erase(ptr);
+template <> constexpr PtrMap<shared_ptr<GDALGroup>> &ObjectStore::ptrMap() {
+  return ptrGroups;
 }
-template <> inline constexpr uidmap<shared_ptr<GDALMDArray>> &PtrManager::getUidMap() {
-  return arrays;
+template <> constexpr UidMap<shared_ptr<GDALMDArray>> &ObjectStore::uidMap() {
+  return uidArrays;
 }
-template <> inline void PtrManager::erase(shared_ptr<GDALMDArray> ptr) {
-  MDArray::array_cache.erase(ptr);
+template <> constexpr PtrMap<shared_ptr<GDALMDArray>> &ObjectStore::ptrMap() {
+  return ptrArrays;
 }
-template <> inline constexpr uidmap<shared_ptr<GDALDimension>> &PtrManager::getUidMap() {
-  return dimensions;
+template <> constexpr UidMap<shared_ptr<GDALDimension>> &ObjectStore::uidMap() {
+  return uidDimensions;
 }
-template <> inline void PtrManager::erase(shared_ptr<GDALDimension> ptr) {
-  Dimension::dimension_cache.erase(ptr);
+template <> constexpr PtrMap<shared_ptr<GDALDimension>> &ObjectStore::ptrMap() {
+  return ptrDimensions;
 }
-template <> inline constexpr uidmap<shared_ptr<GDALAttribute>> &PtrManager::getUidMap() {
-  return attributes;
+template <> constexpr UidMap<shared_ptr<GDALAttribute>> &ObjectStore::uidMap() {
+  return uidAttributes;
 }
-template <> inline void PtrManager::erase(shared_ptr<GDALAttribute> ptr) {
-  Attribute::attribute_cache.erase(ptr);
+template <> constexpr PtrMap<shared_ptr<GDALAttribute>> &ObjectStore::ptrMap() {
+  return ptrAttributes;
 }
 #endif
 
-long PtrManager::add(OGRLayer *ptr, long parent_uid, bool is_result_set) {
+template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, Local<Object> obj, long parent_uid) {
   lock();
-  shared_ptr<PtrManagerItem<OGRLayer *>> item(new PtrManagerItem<OGRLayer *>);
-  shared_ptr<PtrManagerItem<GDALDataset *>> parent = datasets[parent_uid];
+  shared_ptr<ObjectStoreItem<GDALPTR>> item(new ObjectStoreItem<GDALPTR>);
+  if (parent_uid) {
+    shared_ptr<ObjectStoreItem<GDALDataset *>> parent = uidDatasets[parent_uid];
+    item->parent = parent;
+    parent->children.push_back(item->uid);
+  } else {
+    item->parent = nullptr;
+  }
   item->uid = uid++;
-  item->parent = parent;
-  item->is_result_set = is_result_set;
   item->ptr = ptr;
-  layers[item->uid] = item;
-  parent->children.push_back(item->uid);
+  item->obj.Reset(obj);
+  item->obj.SetWeak(item.get(), weakCallback<GDALPTR>, Nan::WeakCallbackType::kParameter);
+
+  uidMap<GDALPTR>()[item->uid] = item;
+  ptrMap<GDALPTR>()[ptr] = item;
   unlock();
   return item->uid;
 }
 
-long PtrManager::add(GDALDataset *ptr, shared_ptr<uv_sem_t> async_lock) {
-  lock();
-  shared_ptr<PtrManagerItem<GDALDataset *>> item(new PtrManagerItem<GDALDataset *>);
-  item->uid = uid++;
-  item->async_lock = async_lock;
-  item->ptr = ptr;
-  getUidMap<GDALDataset *>()[item->uid] = item;
-  unlock();
-  return item->uid;
+long ObjectStore::add(OGRLayer *ptr, Local<Object> obj, long parent_uid, bool is_result_set) {
+  long uid = ObjectStore::add<OGRLayer *>(ptr, obj, parent_uid);
+  uidLayers[uid]->is_result_set = is_result_set;
+  return uid;
 }
 
-template <typename GDALPTR> long PtrManager::add(GDALPTR ptr, long parent_uid) {
-  lock();
-  shared_ptr<PtrManagerItem<GDALPTR>> item(new PtrManagerItem<GDALPTR>);
-  shared_ptr<PtrManagerItem<GDALDataset *>> parent = datasets[parent_uid];
-  item->uid = uid++;
-  item->parent = parent;
-  item->ptr = ptr;
-  getUidMap<GDALPTR>()[item->uid] = item;
-  parent->children.push_back(item->uid);
-  unlock();
-  return item->uid;
+long ObjectStore::add(GDALDataset *ptr, Local<Object> obj, long parent_uid) {
+  long uid = ObjectStore::add<GDALDataset *>(ptr, obj, parent_uid);
+  if (parent_uid == 0) {
+    uidDatasets[uid]->async_lock = shared_ptr<uv_sem_t>(new uv_sem_t(), uv_sem_deleter());
+    uv_sem_init(uidDatasets[uid]->async_lock.get(), 1);
+  }
+  return uid;
 }
 
 // Explicit instantiation:
-// * allows calling ptr_manager.add without <>
+// * allows calling object_store.add without <>
 // * makes sure that this class template won't be accidentally instantiated with an unsupported type
-template long PtrManager::add(GDALRasterBand *, long);
+template long ObjectStore::add(GDALDriver *, Local<Object>, long);
+template long ObjectStore::add(GDALRasterBand *, Local<Object>, long);
+template long ObjectStore::add(OGRSpatialReference *, Local<Object>, long);
+template bool ObjectStore::has(GDALDriver *);
+template bool ObjectStore::has(GDALDataset *);
+template bool ObjectStore::has(OGRLayer *);
+template bool ObjectStore::has(GDALRasterBand *);
+template bool ObjectStore::has(OGRSpatialReference *);
+template Local<Object> ObjectStore::get(GDALDriver *);
+template Local<Object> ObjectStore::get(GDALDataset *);
+template Local<Object> ObjectStore::get(OGRLayer *);
+template Local<Object> ObjectStore::get(GDALRasterBand *);
+template Local<Object> ObjectStore::get(OGRSpatialReference *);
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
-template long PtrManager::add(shared_ptr<GDALAttribute>, long);
-template long PtrManager::add(shared_ptr<GDALDimension>, long);
-template long PtrManager::add(shared_ptr<GDALGroup>, long);
-template long PtrManager::add(shared_ptr<GDALMDArray>, long);
+template long ObjectStore::add(shared_ptr<GDALAttribute>, Local<Object>, long);
+template long ObjectStore::add(shared_ptr<GDALDimension>, Local<Object>, long);
+template long ObjectStore::add(shared_ptr<GDALGroup>, Local<Object>, long);
+template long ObjectStore::add(shared_ptr<GDALMDArray>, Local<Object>, long);
+template bool ObjectStore::has(shared_ptr<GDALAttribute>);
+template bool ObjectStore::has(shared_ptr<GDALDimension>);
+template bool ObjectStore::has(shared_ptr<GDALGroup>);
+template bool ObjectStore::has(shared_ptr<GDALMDArray>);
+template Local<Object> ObjectStore::get(shared_ptr<GDALAttribute>);
+template Local<Object> ObjectStore::get(shared_ptr<GDALDimension>);
+template Local<Object> ObjectStore::get(shared_ptr<GDALGroup>);
+template Local<Object> ObjectStore::get(shared_ptr<GDALMDArray>);
 #endif
 
-template <> void PtrManager::dispose(shared_ptr<PtrManagerItem<GDALDataset *>> item) {
+// Death by calling dispose from C++ code
+template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALDataset *>> item) {
   lock();
   uv_sem_wait(item->async_lock.get());
-  datasets.erase(item->uid);
+  uidDatasets.erase(item->uid);
   uv_sem_post(item->async_lock.get());
 
   while (!item->children.empty()) { dispose(item->children.back()); }
 
   if (item->ptr) {
-    Dataset::dataset_cache.erase(item->ptr);
+    ptrDatasets.erase(item->ptr);
     GDALClose(item->ptr);
   }
-
+  item->obj.Reset();
   unlock();
 }
 
-template <typename GDALPTR> void PtrManager::dispose(shared_ptr<PtrManagerItem<GDALPTR>> item) {
+template <typename GDALPTR> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALPTR>> item) {
+  LOG("ObjectStore: Death by calling dispose from C++ [%p]", item->ptr);
   lock();
   shared_ptr<uv_sem_t> async_lock = nullptr;
   try {
     async_lock = tryLockDataset(item->parent->uid);
   } catch (const char *) {};
-  erase(item->ptr);
-  getUidMap<GDALPTR>().erase(item->uid);
-  item->parent->children.remove(item->uid);
+  ptrMap<GDALPTR>().erase(item->ptr);
+  uidMap<GDALPTR>().erase(item->uid);
+  if (item->parent != nullptr) item->parent->children.remove(item->uid);
   if (async_lock != nullptr) uv_sem_post(async_lock.get());
+  item->obj.Reset();
   unlock();
 }
 
-template <> void PtrManager::dispose(shared_ptr<PtrManagerItem<OGRLayer *>> item) {
+template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<OGRLayer *>> item) {
   lock();
   shared_ptr<uv_sem_t> async_lock = nullptr;
   try {
@@ -250,30 +293,40 @@ template <> void PtrManager::dispose(shared_ptr<PtrManagerItem<OGRLayer *>> item
   } catch (const char *) {};
   GDALDataset *parent_ds = item->parent->ptr;
   if (item->is_result_set) { parent_ds->ReleaseResultSet(item->ptr); }
-  erase(item->ptr);
-  layers.erase(item->uid);
+  uidLayers.erase(item->uid);
+  ptrLayers.erase(item->ptr);
   item->parent->children.remove(item->uid);
   if (async_lock != nullptr) uv_sem_post(async_lock.get());
+  item->obj.Reset();
   unlock();
 }
 
-void PtrManager::dispose(long uid) {
+// Death by GC
+template <typename GDALPTR>
+void ObjectStore::weakCallback(const Nan::WeakCallbackInfo<ObjectStoreItem<GDALPTR>> &data) {
+  ObjectStoreItem<GDALPTR> *item = (ObjectStoreItem<GDALPTR> *)data.GetParameter();
+  LOG("ObjectStore: Death by GC [%p]", item->ptr);
+  object_store.dispose(item->uid);
+}
+
+void ObjectStore::dispose(long uid) {
   lock();
-  if (datasets.count(uid))
-    dispose(datasets[uid]);
-  else if (layers.count(uid))
-    dispose(layers[uid]);
-  else if (bands.count(uid))
-    dispose(bands[uid]);
+
+  if (uidDatasets.count(uid))
+    dispose(uidDatasets[uid]);
+  else if (uidLayers.count(uid))
+    dispose(uidLayers[uid]);
+  else if (uidBands.count(uid))
+    dispose(uidBands[uid]);
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
-  else if (groups.count(uid))
-    dispose(groups[uid]);
-  else if (arrays.count(uid))
-    dispose(arrays[uid]);
-  else if (dimensions.count(uid))
-    dispose(dimensions[uid]);
-  else if (attributes.count(uid))
-    dispose(attributes[uid]);
+  else if (uidGroups.count(uid))
+    dispose(uidGroups[uid]);
+  else if (uidArrays.count(uid))
+    dispose(uidArrays[uid]);
+  else if (uidDimensions.count(uid))
+    dispose(uidDimensions[uid]);
+  else if (uidAttributes.count(uid))
+    dispose(uidAttributes[uid]);
 #endif
   unlock();
 }
