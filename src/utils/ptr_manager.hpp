@@ -98,11 +98,11 @@ class ObjectStore {
   static void weakCallback(const Nan::WeakCallbackInfo<shared_ptr<ObjectStoreItem<GDALPTR>>> &data);
 
   template <typename GDALPTR> inline bool has(GDALPTR ptr) {
-    return ptrMap<GDALPTR>().count(ptr) > 0;
+    return ptrMap<GDALPTR>.count(ptr) > 0;
   }
   template <typename GDALPTR> inline Local<Object> get(GDALPTR ptr) {
     Nan::EscapableHandleScope scope;
-    return scope.Escape(Nan::New(ptrMap<GDALPTR>()[ptr]->obj));
+    return scope.Escape(Nan::New(ptrMap<GDALPTR>[ptr] -> obj));
   }
 
   ObjectStore();
@@ -113,88 +113,9 @@ class ObjectStore {
   uv_mutex_t master_lock;
   template <typename GDALPTR> void dispose(shared_ptr<ObjectStoreItem<GDALPTR>> item);
 
-  // this is a manual implementation of member overloading which does not exist in C++
-  template <typename GDALPTR> constexpr UidMap<GDALPTR> &uidMap();
-  template <typename GDALPTR> constexpr PtrMap<GDALPTR> &ptrMap();
-
-  UidMap<GDALDriver *> uidDrivers;
-  UidMap<OGRLayer *> uidLayers;
-  UidMap<GDALRasterBand *> uidBands;
-  UidMap<GDALDataset *> uidDatasets;
-  UidMap<OGRSpatialReference *> uidSpatialRefs;
-  PtrMap<GDALDriver *> ptrDrivers;
-  PtrMap<OGRLayer *> ptrLayers;
-  PtrMap<GDALRasterBand *> ptrBands;
-  PtrMap<GDALDataset *> ptrDatasets;
-  PtrMap<OGRSpatialReference *> ptrSpatialRefs;
-#if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
-  UidMap<shared_ptr<GDALGroup>> uidGroups;
-  UidMap<shared_ptr<GDALMDArray>> uidArrays;
-  UidMap<shared_ptr<GDALDimension>> uidDimensions;
-  UidMap<shared_ptr<GDALAttribute>> uidAttributes;
-  PtrMap<shared_ptr<GDALGroup>> ptrGroups;
-  PtrMap<shared_ptr<GDALMDArray>> ptrArrays;
-  PtrMap<shared_ptr<GDALDimension>> ptrDimensions;
-  PtrMap<shared_ptr<GDALAttribute>> ptrAttributes;
-#endif
+  template <typename GDALPTR> static UidMap<GDALPTR> uidMap;
+  template <typename GDALPTR> static PtrMap<GDALPTR> ptrMap;
 };
-
-template <> constexpr UidMap<GDALDriver *> &ObjectStore::uidMap() {
-  return uidDrivers;
-}
-template <> constexpr PtrMap<GDALDriver *> &ObjectStore::ptrMap() {
-  return ptrDrivers;
-}
-template <> constexpr UidMap<GDALDataset *> &ObjectStore::uidMap() {
-  return uidDatasets;
-}
-template <> constexpr PtrMap<GDALDataset *> &ObjectStore::ptrMap() {
-  return ptrDatasets;
-}
-template <> constexpr UidMap<OGRLayer *> &ObjectStore::uidMap() {
-  return uidLayers;
-}
-template <> constexpr PtrMap<OGRLayer *> &ObjectStore::ptrMap() {
-  return ptrLayers;
-}
-template <> constexpr UidMap<GDALRasterBand *> &ObjectStore::uidMap() {
-  return uidBands;
-}
-template <> constexpr PtrMap<GDALRasterBand *> &ObjectStore::ptrMap() {
-  return ptrBands;
-}
-template <> constexpr UidMap<OGRSpatialReference *> &ObjectStore::uidMap() {
-  return uidSpatialRefs;
-}
-template <> constexpr PtrMap<OGRSpatialReference *> &ObjectStore::ptrMap() {
-  return ptrSpatialRefs;
-}
-#if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
-template <> constexpr UidMap<shared_ptr<GDALGroup>> &ObjectStore::uidMap() {
-  return uidGroups;
-}
-template <> constexpr PtrMap<shared_ptr<GDALGroup>> &ObjectStore::ptrMap() {
-  return ptrGroups;
-}
-template <> constexpr UidMap<shared_ptr<GDALMDArray>> &ObjectStore::uidMap() {
-  return uidArrays;
-}
-template <> constexpr PtrMap<shared_ptr<GDALMDArray>> &ObjectStore::ptrMap() {
-  return ptrArrays;
-}
-template <> constexpr UidMap<shared_ptr<GDALDimension>> &ObjectStore::uidMap() {
-  return uidDimensions;
-}
-template <> constexpr PtrMap<shared_ptr<GDALDimension>> &ObjectStore::ptrMap() {
-  return ptrDimensions;
-}
-template <> constexpr UidMap<shared_ptr<GDALAttribute>> &ObjectStore::uidMap() {
-  return uidAttributes;
-}
-template <> constexpr PtrMap<shared_ptr<GDALAttribute>> &ObjectStore::ptrMap() {
-  return ptrAttributes;
-}
-#endif
 
 } // namespace node_gdal
 

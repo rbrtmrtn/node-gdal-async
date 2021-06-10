@@ -36,30 +36,7 @@ void uv_sem_deleter::operator()(uv_sem_t *p) {
   delete p;
 }
 
-ObjectStore::ObjectStore()
-  : uid(1),
-    uidDrivers(),
-    uidLayers(),
-    uidBands(),
-    uidDatasets(),
-    uidSpatialRefs(),
-    ptrDrivers(),
-    ptrLayers(),
-    ptrBands(),
-    ptrDatasets(),
-    ptrSpatialRefs()
-#if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
-    ,
-    uidGroups(),
-    uidArrays(),
-    uidDimensions(),
-    uidAttributes(),
-    ptrGroups(),
-    ptrArrays(),
-    ptrDimensions(),
-    ptrAttributes()
-#endif
-{
+ObjectStore::ObjectStore() : uid(1) {
   uv_mutex_init_recursive(&master_lock);
 }
 
@@ -68,10 +45,11 @@ ObjectStore::~ObjectStore() {
 
 bool ObjectStore::isAlive(long uid) {
   if (uid == 0) return true;
-  return uidBands.count(uid) > 0 || uidLayers.count(uid) > 0 || uidDatasets.count(uid) > 0
+  return uidMap<GDALRasterBand *>.count(uid) > 0 || uidMap<OGRLayer *>.count(uid) > 0 ||
+    uidMap<GDALDataset *>.count(uid) > 0
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
-    || uidGroups.count(uid) > 0 || uidArrays.count(uid) > 0 || uidDimensions.count(uid) > 0 ||
-    uidAttributes.count(uid) > 0
+    || uidMap<shared_ptr<GDALGroup>>.count(uid) > 0 || uidMap<shared_ptr<GDALMDArray>>.count(uid) > 0 ||
+    uidMap<shared_ptr<GDALDimension>>.count(uid) > 0 || uidMap<shared_ptr<GDALAttribute>>.count(uid) > 0
 #endif
     ;
 }
@@ -79,8 +57,8 @@ bool ObjectStore::isAlive(long uid) {
 shared_ptr<uv_sem_t> ObjectStore::tryLockDataset(long uid) {
   while (true) {
     lock();
-    auto parent = uidDatasets.find(uid);
-    if (parent != uidDatasets.end()) {
+    auto parent = uidMap<GDALDataset *>.find(uid);
+    if (parent != uidMap<GDALDataset *>.end()) {
       int r = uv_sem_trywait(parent->second->async_lock.get());
       unlock();
       if (r == 0) return parent->second->async_lock;
@@ -103,8 +81,8 @@ vector<shared_ptr<uv_sem_t>> ObjectStore::tryLockDatasets(vector<long> uids) {
     lock();
     for (long uid : uids) {
       if (!uid) continue;
-      auto parent = uidDatasets.find(uid);
-      if (parent == uidDatasets.end()) {
+      auto parent = uidMap<GDALDataset *>.find(uid);
+      if (parent == uidMap<GDALDataset *>.end()) {
         unlock();
         throw "Parent Dataset object has already been destroyed";
       }
@@ -146,7 +124,7 @@ template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, const Local<Objec
   shared_ptr<ObjectStoreItem<GDALPTR>> item(new ObjectStoreItem<GDALPTR>);
   item->uid = uid++;
   if (parent_uid) {
-    shared_ptr<ObjectStoreItem<GDALDataset *>> parent = uidDatasets[parent_uid];
+    shared_ptr<ObjectStoreItem<GDALDataset *>> parent = uidMap<GDALDataset *>[parent_uid];
     item->parent = parent;
     parent->children.push_back(item->uid);
   } else {
@@ -158,8 +136,8 @@ template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, const Local<Objec
   shared_ptr<ObjectStoreItem<GDALPTR>> *raw = new shared_ptr<ObjectStoreItem<GDALPTR>>(item);
   item->obj.SetWeak(raw, weakCallback<GDALPTR>, Nan::WeakCallbackType::kParameter);
 
-  uidMap<GDALPTR>()[item->uid] = item;
-  ptrMap<GDALPTR>()[ptr] = item;
+  uidMap<GDALPTR>[item->uid] = item;
+  ptrMap<GDALPTR>[ptr] = item;
   unlock();
   LOG("ObjectStore: Added %s [%ld]", typeid(ptr).name(), item->uid);
   return item->uid;
@@ -168,7 +146,7 @@ template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, const Local<Objec
 // Creating a Layer object is a special case - it can contain SQL results
 long ObjectStore::add(OGRLayer *ptr, const Local<Object> &obj, long parent_uid, bool is_result_set) {
   long uid = ObjectStore::add<OGRLayer *>(ptr, obj, parent_uid);
-  uidLayers[uid]->is_result_set = is_result_set;
+  uidMap<OGRLayer *>[uid] -> is_result_set = is_result_set;
   return uid;
 }
 
@@ -177,10 +155,10 @@ long ObjectStore::add(OGRLayer *ptr, const Local<Object> &obj, long parent_uid, 
 long ObjectStore::add(GDALDataset *ptr, const Local<Object> &obj, long parent_uid) {
   long uid = ObjectStore::add<GDALDataset *>(ptr, obj, parent_uid);
   if (parent_uid == 0) {
-    uidDatasets[uid]->async_lock = shared_ptr<uv_sem_t>(new uv_sem_t(), uv_sem_deleter());
-    uv_sem_init(uidDatasets[uid]->async_lock.get(), 1);
+    uidMap<GDALDataset *>[uid] -> async_lock = shared_ptr<uv_sem_t>(new uv_sem_t(), uv_sem_deleter());
+    uv_sem_init(uidMap<GDALDataset *>[uid] -> async_lock.get(), 1);
   } else {
-    uidDatasets[uid]->async_lock = uidDatasets[parent_uid]->async_lock;
+    uidMap<GDALDataset *>[uid] -> async_lock = uidMap<GDALDataset *>[parent_uid] -> async_lock;
   }
   return uid;
 }
@@ -188,6 +166,8 @@ long ObjectStore::add(GDALDataset *ptr, const Local<Object> &obj, long parent_ui
 // Explicit instantiation:
 // * allows calling object_store.add without <>
 // * makes sure that this class template won't be accidentally instantiated with an unsupported type
+template <typename GDALPTR> UidMap<GDALPTR> ObjectStore::uidMap;
+template <typename GDALPTR> PtrMap<GDALPTR> ObjectStore::ptrMap;
 template long ObjectStore::add(GDALDriver *, const Local<Object> &, long);
 template long ObjectStore::add(GDALRasterBand *, const Local<Object> &, long);
 template long ObjectStore::add(OGRSpatialReference *, const Local<Object> &, long);
@@ -219,8 +199,8 @@ template Local<Object> ObjectStore::get(shared_ptr<GDALMDArray>);
 // Disposing a Dataset is a special case - it has children
 template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALDataset *>> item) {
   uv_sem_wait(item->async_lock.get());
-  uidDatasets.erase(item->uid);
-  ptrDatasets.erase(item->ptr);
+  uidMap<GDALDataset *>.erase(item->uid);
+  ptrMap<GDALDataset *>.erase(item->ptr);
   if (item->parent != nullptr) item->parent->children.remove(item->uid);
   uv_sem_post(item->async_lock.get());
 
@@ -235,8 +215,8 @@ template <typename GDALPTR> void ObjectStore::dispose(shared_ptr<ObjectStoreItem
       async_lock = tryLockDataset(item->parent->uid);
     } catch (const char *) {};
   }
-  ptrMap<GDALPTR>().erase(item->ptr);
-  uidMap<GDALPTR>().erase(item->uid);
+  ptrMap<GDALPTR>.erase(item->ptr);
+  uidMap<GDALPTR>.erase(item->uid);
   if (item->parent != nullptr) item->parent->children.remove(item->uid);
   if (async_lock != nullptr) uv_sem_post(async_lock.get());
 }
@@ -257,21 +237,21 @@ void ObjectStore::dispose(long uid) {
   LOG("ObjectStore: Death by calling dispose from C++ [%ld]", uid);
   lock();
 
-  if (uidDatasets.count(uid))
-    dispose(uidDatasets[uid]);
-  else if (uidLayers.count(uid))
-    dispose(uidLayers[uid]);
-  else if (uidBands.count(uid))
-    dispose(uidBands[uid]);
+  if (uidMap<GDALDataset *>.count(uid))
+    dispose(uidMap<GDALDataset *>[uid]);
+  else if (uidMap<OGRLayer *>.count(uid))
+    dispose(uidMap<OGRLayer *>[uid]);
+  else if (uidMap<GDALRasterBand *>.count(uid))
+    dispose(uidMap<GDALRasterBand *>[uid]);
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
-  else if (uidGroups.count(uid))
-    dispose(uidGroups[uid]);
-  else if (uidArrays.count(uid))
-    dispose(uidArrays[uid]);
-  else if (uidDimensions.count(uid))
-    dispose(uidDimensions[uid]);
-  else if (uidAttributes.count(uid))
-    dispose(uidAttributes[uid]);
+  else if (uidMap<shared_ptr<GDALGroup>>.count(uid))
+    dispose(uidMap<shared_ptr<GDALGroup>>[uid]);
+  else if (uidMap<shared_ptr<GDALMDArray>>.count(uid))
+    dispose(uidMap<shared_ptr<GDALMDArray>>[uid]);
+  else if (uidMap<shared_ptr<GDALDimension>>.count(uid))
+    dispose(uidMap<shared_ptr<GDALDimension>>[uid]);
+  else if (uidMap<shared_ptr<GDALAttribute>>.count(uid))
+    dispose(uidMap<shared_ptr<GDALAttribute>>[uid]);
 #endif
   unlock();
 }
