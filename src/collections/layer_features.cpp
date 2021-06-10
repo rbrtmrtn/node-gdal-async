@@ -318,8 +318,9 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::count) {
   }
 
   Local<Object> ds;
-  if (object_store.has(layer->getParent())) { ds = object_store.get(layer->getParent()); }
-  if (!layer->isAlive()) {
+  if (object_store.has(layer->getParent())) {
+    ds = object_store.get(layer->getParent());
+  } else {
     Nan::ThrowError("Dataset object already destroyed");
     return;
   }
