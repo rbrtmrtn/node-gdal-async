@@ -57,7 +57,7 @@ class Dataset : public Nan::ObjectWrap {
   static NAN_SETTER(geoTransformSetter);
 
   Dataset(GDALDataset *ds);
-  inline GDALDataset *getDataset() {
+  inline GDALDataset *get() {
     return this_dataset;
   }
 

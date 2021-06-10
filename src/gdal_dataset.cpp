@@ -101,20 +101,17 @@ NAN_METHOD(Dataset::New) {
 
     Local<Value> rootObj, bandsObj;
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
-    GDALDataset *gdal_ds = f->getDataset();
+    GDALDataset *gdal_ds = f->get();
     std::shared_ptr<GDALGroup> root = gdal_ds->GetRootGroup();
     if (root == nullptr) {
 #endif
-      rootObj = Nan::Null();
       bandsObj = DatasetBands::New(info.This());
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
     } else {
       bandsObj = Nan::Null();
-      rootObj = Group::New(root, info.This());
     }
 #endif
     Nan::SetPrivate(info.This(), Nan::New("bands_").ToLocalChecked(), bandsObj);
-    Nan::SetPrivate(info.This(), Nan::New("root_").ToLocalChecked(), rootObj);
     if (f->parent_ds)
       // For dependent Datasets, keep a reference on the parent to protect it from the GC
       Nan::SetPrivate(info.This(), Nan::New("parent_").ToLocalChecked(), object_store.get(f->parent_ds));
@@ -173,7 +170,7 @@ NAN_METHOD(Dataset::getMetadata) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
   std::string domain("");
   NODE_ARG_OPT_STR(0, "domain", domain);
   shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
@@ -198,7 +195,7 @@ NAN_METHOD(Dataset::testCapability) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
 
   std::string capability("");
   NODE_ARG_STR(0, "capability", capability);
@@ -223,7 +220,7 @@ NAN_METHOD(Dataset::getGCPProjection) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
   shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
   info.GetReturnValue().Set(SafeString::New(raw->GetGCPProjection()));
   uv_sem_post(lock.get());
@@ -285,7 +282,7 @@ GDAL_ASYNCABLE_DEFINE(Dataset::flush) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
   if (!raw) {
     Nan::ThrowError("Dataset object has already been destroyed");
     return;
@@ -347,7 +344,7 @@ GDAL_ASYNCABLE_DEFINE(Dataset::executeSQL) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
 
   std::string sql;
   std::string sql_dialect;
@@ -396,7 +393,7 @@ NAN_METHOD(Dataset::getFileList) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
   if (!raw) {
     Nan::ThrowError("Dataset object has already been destroyed");
     return;
@@ -439,7 +436,7 @@ NAN_METHOD(Dataset::getGCPs) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
   if (!raw) {
     Nan::ThrowError("Dataset object has already been destroyed");
     return;
@@ -489,7 +486,7 @@ NAN_METHOD(Dataset::setGCPs) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
   if (!raw) {
     Nan::ThrowError("Dataset object has already been destroyed");
     return;
@@ -575,7 +572,7 @@ GDAL_ASYNCABLE_DEFINE(Dataset::buildOverviews) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
   std::string resampling = "";
   Local<Array> overviews;
   Local<Array> bands;
@@ -664,7 +661,7 @@ NAN_GETTER(Dataset::descriptionGetter) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
   if (!raw) {
     Nan::ThrowError("Dataset object has already been destroyed");
     return;
@@ -690,7 +687,7 @@ NAN_GETTER(Dataset::rasterSizeGetter) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
 
   // GDAL 2.x will return 512x512 for vector datasets... which doesn't really make
   // sense in JS where we can return null instead of a number
@@ -725,7 +722,7 @@ NAN_GETTER(Dataset::srsGetter) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
   shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
   // get projection wkt and return null if not set
   OGRChar *wkt = (OGRChar *)raw->GetProjectionRef();
@@ -770,7 +767,7 @@ NAN_GETTER(Dataset::geoTransformGetter) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
   double transform[6];
   shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
   CPLErr err = raw->GetGeoTransform(transform);
@@ -807,7 +804,7 @@ NAN_GETTER(Dataset::driverGetter) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
   if (raw->GetDriver() != nullptr) { info.GetReturnValue().Set(Driver::New(raw->GetDriver())); }
 }
 
@@ -820,7 +817,7 @@ NAN_SETTER(Dataset::srsSetter) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
   std::string wkt("");
   if (IS_WRAPPED(value, SpatialReference)) {
 
@@ -856,7 +853,7 @@ NAN_SETTER(Dataset::geoTransformSetter) {
     return;
   }
 
-  GDALDataset *raw = ds->getDataset();
+  GDALDataset *raw = ds->get();
 
   if (!value->IsArray()) {
     Nan::ThrowError("Transform must be an array");
@@ -913,7 +910,24 @@ NAN_GETTER(Dataset::layersGetter) {
  */
 NAN_GETTER(Dataset::rootGetter) {
   Nan::HandleScope scope;
-  info.GetReturnValue().Set(Nan::GetPrivate(info.This(), Nan::New("root_").ToLocalChecked()).ToLocalChecked());
+  MaybeLocal<Value> maybeRootObj = Nan::GetPrivate(info.This(), Nan::New("root_").ToLocalChecked());
+  Local<Value> rootObj;
+  if (rootObj.IsEmpty()) {
+    NODE_UNWRAP_CHECK(Dataset, info.This(), ds);
+    GDAL_RAW_CHECK(GDALDataset *, ds, gdal_ds);
+    shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
+    std::shared_ptr<GDALGroup> root = gdal_ds->GetRootGroup();
+    uv_sem_post(lock.get());
+    if (root == nullptr) {
+      rootObj = Nan::Null();
+    } else {
+      rootObj = Group::New(root, info.This());
+    }
+    Nan::SetPrivate(info.This(), Nan::New("root_").ToLocalChecked(), rootObj);
+  } else {
+    rootObj = maybeRootObj.ToLocalChecked();
+  }
+  info.GetReturnValue().Set(rootObj);
 }
 
 NAN_GETTER(Dataset::uidGetter) {

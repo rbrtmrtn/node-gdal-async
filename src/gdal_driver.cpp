@@ -293,7 +293,7 @@ GDAL_ASYNCABLE_DEFINE(Driver::createCopy) {
   }
 
   GDALDriver *raw = driver->getGDALDriver();
-  GDALDataset *raw_ds = src_dataset->getDataset();
+  GDALDataset *raw_ds = src_dataset->get();
   GDALAsyncableJob<GDALDataset *> job;
   job.rval = DatasetRval;
   job.main = [raw, filename, raw_ds, strict, options, async_lock](const GDALExecutionProgress &) {

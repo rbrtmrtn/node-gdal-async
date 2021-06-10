@@ -131,7 +131,7 @@ Local<Value> Group::New(std::shared_ptr<GDALGroup> raw, Local<Object> parent_ds)
   long parent_uid = unwrapped_ds->uid;
 
   wrapped->uid = object_store.add(raw, obj, parent_uid);
-  wrapped->parent_ds = unwrapped_ds->getDataset();
+  wrapped->parent_ds = unwrapped_ds->get();
   wrapped->parent_uid = parent_uid;
   Nan::SetPrivate(obj, Nan::New("ds_").ToLocalChecked(), parent_ds);
   if (parent_group_uid != 0) Nan::SetPrivate(obj, Nan::New("parent_").ToLocalChecked(), parent);
