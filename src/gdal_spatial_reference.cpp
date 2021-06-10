@@ -147,9 +147,11 @@ Local<Value> SpatialReference::New(OGRSpatialReference *raw, bool owned) {
 
   // make a copy of spatialreference owned by a layer, feature, etc
   // + no need to track when a layer is destroyed
-  // + no need to throw errors when a method trys to modify an owned read-only
-  // srs
+  // + no need to throw errors when a method tries to modify an owned read-only srs
   // - is slower
+
+  // Fixing this for srs obtained from a Layer is trivial
+  // But fixing it for srs obtained from a Feature required moving the Features to the ObjectStore
 
   OGRSpatialReference *cloned_srs = raw;
   if (!owned) cloned_srs = raw->Clone();
@@ -161,7 +163,7 @@ Local<Value> SpatialReference::New(OGRSpatialReference *raw, bool owned) {
     Nan::NewInstance(Nan::GetFunction(Nan::New(SpatialReference::constructor)).ToLocalChecked(), 1, &ext)
       .ToLocalChecked();
 
-  wrapped->uid = object_store.add(cloned_srs, obj, 0);
+  wrapped->uid = object_store.add(raw, obj, 0);
 
   return scope.Escape(obj);
 }
