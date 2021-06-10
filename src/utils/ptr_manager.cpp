@@ -115,8 +115,8 @@ vector<shared_ptr<uv_sem_t>> ObjectStore::tryLockDatasets(vector<long> uids) {
 // * and one dynamically allocated on the heap passed to the weakCallback
 
 // Do not forget that the destruction path is two-fold
-// * through dispose called from the C++ destructor
-// * through the weakCallback called from the GC
+// * through dispose called from the C++ destructor (when the GC calls Nan::ObjectWrap)
+// * through the weakCallback called from the GC (when the GC acts on the ObjectStore Persistent)
 // Both will happen and there is no order
 // Both will disable further use of the object (removing it from the store)
 // Only after both have happened, the ObjectStoreItem<GDALPTR> is destroyed
@@ -202,8 +202,7 @@ template Local<Object> ObjectStore::get(shared_ptr<GDALMDArray>);
 // Removes the object and all its children for the ObjectStore
 // Called twice
 //
-// The reason for the two paths are the tests in object_lifetime.test.ts
-// Is this really needed? It remains to be seen
+// Is there a simpler solution with a single code path? It remains to be seen
 
 // Disposing a Dataset is a special case - it has children
 template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALDataset *>> item) {
