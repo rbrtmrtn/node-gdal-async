@@ -179,6 +179,8 @@ long ObjectStore::add(GDALDataset *ptr, const Local<Object> &obj, long parent_ui
   if (parent_uid == 0) {
     uidDatasets[uid]->async_lock = shared_ptr<uv_sem_t>(new uv_sem_t(), uv_sem_deleter());
     uv_sem_init(uidDatasets[uid]->async_lock.get(), 1);
+  } else {
+    uidDatasets[uid]->async_lock = uidDatasets[parent_uid]->async_lock;
   }
   return uid;
 }
@@ -219,6 +221,7 @@ template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALDataset *>>
   uv_sem_wait(item->async_lock.get());
   uidDatasets.erase(item->uid);
   ptrDatasets.erase(item->ptr);
+  if (item->parent != nullptr) item->parent->children.remove(item->uid);
   uv_sem_post(item->async_lock.get());
 
   while (!item->children.empty()) { dispose(item->children.back()); }
