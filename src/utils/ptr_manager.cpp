@@ -129,7 +129,7 @@ vector<shared_ptr<uv_sem_t>> ObjectStore::tryLockDatasets(vector<long> uids) {
   }
 }
 
-template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, Local<Object> obj, long parent_uid) {
+template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, const Local<Object> &obj, long parent_uid) {
   LOG("ObjectStore: Add %s [<%ld]", typeid(ptr).name(), parent_uid);
   lock();
   shared_ptr<ObjectStoreItem<GDALPTR>> item(new ObjectStoreItem<GDALPTR>);
@@ -143,7 +143,9 @@ template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, Local<Object> obj
   }
   item->ptr = ptr;
   item->obj.Reset(obj);
-  item->obj.SetWeak(item.get(), weakCallback<GDALPTR>, Nan::WeakCallbackType::kParameter);
+  // The pointer to a shared_ptr is a necessary evil, SetWeak/WeakCallback take only raw pointers
+  shared_ptr<ObjectStoreItem<GDALPTR>> *raw = new shared_ptr<ObjectStoreItem<GDALPTR>>(item);
+  item->obj.SetWeak(raw, weakCallback<GDALPTR>, Nan::WeakCallbackType::kParameter);
 
   uidMap<GDALPTR>()[item->uid] = item;
   ptrMap<GDALPTR>()[ptr] = item;
@@ -152,13 +154,13 @@ template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, Local<Object> obj
   return item->uid;
 }
 
-long ObjectStore::add(OGRLayer *ptr, Local<Object> obj, long parent_uid, bool is_result_set) {
+long ObjectStore::add(OGRLayer *ptr, const Local<Object> &obj, long parent_uid, bool is_result_set) {
   long uid = ObjectStore::add<OGRLayer *>(ptr, obj, parent_uid);
   uidLayers[uid]->is_result_set = is_result_set;
   return uid;
 }
 
-long ObjectStore::add(GDALDataset *ptr, Local<Object> obj, long parent_uid) {
+long ObjectStore::add(GDALDataset *ptr, const Local<Object> &obj, long parent_uid) {
   long uid = ObjectStore::add<GDALDataset *>(ptr, obj, parent_uid);
   if (parent_uid == 0) {
     uidDatasets[uid]->async_lock = shared_ptr<uv_sem_t>(new uv_sem_t(), uv_sem_deleter());
@@ -170,9 +172,9 @@ long ObjectStore::add(GDALDataset *ptr, Local<Object> obj, long parent_uid) {
 // Explicit instantiation:
 // * allows calling object_store.add without <>
 // * makes sure that this class template won't be accidentally instantiated with an unsupported type
-template long ObjectStore::add(GDALDriver *, Local<Object>, long);
-template long ObjectStore::add(GDALRasterBand *, Local<Object>, long);
-template long ObjectStore::add(OGRSpatialReference *, Local<Object>, long);
+template long ObjectStore::add(GDALDriver *, const Local<Object> &, long);
+template long ObjectStore::add(GDALRasterBand *, const Local<Object> &, long);
+template long ObjectStore::add(OGRSpatialReference *, const Local<Object> &, long);
 template bool ObjectStore::has(GDALDriver *);
 template bool ObjectStore::has(GDALDataset *);
 template bool ObjectStore::has(OGRLayer *);
@@ -184,10 +186,10 @@ template Local<Object> ObjectStore::get(OGRLayer *);
 template Local<Object> ObjectStore::get(GDALRasterBand *);
 template Local<Object> ObjectStore::get(OGRSpatialReference *);
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
-template long ObjectStore::add(shared_ptr<GDALAttribute>, Local<Object>, long);
-template long ObjectStore::add(shared_ptr<GDALDimension>, Local<Object>, long);
-template long ObjectStore::add(shared_ptr<GDALGroup>, Local<Object>, long);
-template long ObjectStore::add(shared_ptr<GDALMDArray>, Local<Object>, long);
+template long ObjectStore::add(shared_ptr<GDALAttribute>, const Local<Object> &, long);
+template long ObjectStore::add(shared_ptr<GDALDimension>, const Local<Object> &, long);
+template long ObjectStore::add(shared_ptr<GDALGroup>, const Local<Object> &, long);
+template long ObjectStore::add(shared_ptr<GDALMDArray>, const Local<Object> &, long);
 template bool ObjectStore::has(shared_ptr<GDALAttribute>);
 template bool ObjectStore::has(shared_ptr<GDALDimension>);
 template bool ObjectStore::has(shared_ptr<GDALGroup>);
@@ -198,7 +200,6 @@ template Local<Object> ObjectStore::get(shared_ptr<GDALGroup>);
 template Local<Object> ObjectStore::get(shared_ptr<GDALMDArray>);
 #endif
 
-// Death by calling dispose from C++ code
 template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALDataset *>> item) {
   lock();
   uv_sem_wait(item->async_lock.get());
@@ -208,24 +209,25 @@ template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALDataset *>>
   while (!item->children.empty()) { dispose(item->children.back()); }
 
   if (item->ptr) {
+    LOG("Closing GDALDataset %ld [%p]", item->uid, item->ptr);
     ptrDatasets.erase(item->ptr);
     GDALClose(item->ptr);
+    item->ptr = nullptr;
   }
-  item->obj.Reset();
   unlock();
 }
 
 template <typename GDALPTR> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALPTR>> item) {
-  LOG("ObjectStore: Death by calling dispose from C++ %s [%ld]", typeid(item->ptr).name(), item->uid);
   shared_ptr<uv_sem_t> async_lock = nullptr;
-  try {
-    async_lock = tryLockDataset(item->parent->uid);
-  } catch (const char *) {};
+  if (item->parent) {
+    try {
+      async_lock = tryLockDataset(item->parent->uid);
+    } catch (const char *) {};
+  }
   ptrMap<GDALPTR>().erase(item->ptr);
   uidMap<GDALPTR>().erase(item->uid);
   if (item->parent != nullptr) item->parent->children.remove(item->uid);
   if (async_lock != nullptr) uv_sem_post(async_lock.get());
-  item->obj.Reset();
 }
 
 template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<OGRLayer *>> item) {
@@ -239,18 +241,22 @@ template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<OGRLayer *>> it
   ptrLayers.erase(item->ptr);
   item->parent->children.remove(item->uid);
   if (async_lock != nullptr) uv_sem_post(async_lock.get());
-  item->obj.Reset();
 }
 
 // Death by GC
 template <typename GDALPTR>
-void ObjectStore::weakCallback(const Nan::WeakCallbackInfo<ObjectStoreItem<GDALPTR>> &data) {
-  ObjectStoreItem<GDALPTR> *item = (ObjectStoreItem<GDALPTR> *)data.GetParameter();
-  LOG("ObjectStore: Death by GC %s [%ld]", typeid(item->ptr).name(), item->uid);
-  object_store.dispose(item->uid);
+void ObjectStore::weakCallback(const Nan::WeakCallbackInfo<shared_ptr<ObjectStoreItem<GDALPTR>>> &data) {
+  shared_ptr<ObjectStoreItem<GDALPTR>> *item = (shared_ptr<ObjectStoreItem<GDALPTR>> *)data.GetParameter();
+  LOG("ObjectStore: Death by GC %s [%ld]", typeid((*item)->ptr).name(), (*item)->uid);
+  object_store.lock();
+  object_store.dispose(*item);
+  object_store.unlock();
+  //delete item; // this is the shared_ptr
 }
 
+// Death by calling dispose from C++ code
 void ObjectStore::dispose(long uid) {
+  LOG("ObjectStore: Death by calling dispose from C++ [%ld]", uid);
   lock();
 
   if (uidDatasets.count(uid))

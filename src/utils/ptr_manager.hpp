@@ -76,9 +76,9 @@ template <typename GDALPTR> using UidMap = map<long, shared_ptr<ObjectStoreItem<
 template <typename GDALPTR> using PtrMap = map<GDALPTR, shared_ptr<ObjectStoreItem<GDALPTR>>>;
 class ObjectStore {
     public:
-  template <typename GDALPTR> long add(GDALPTR ptr, Local<Object> obj, long parent_uid);
-  long add(OGRLayer *ptr, Local<Object> obj, long parent_uid, bool is_result_set);
-  long add(GDALDataset *ptr, Local<Object> obj, long parent_uid);
+  template <typename GDALPTR> long add(GDALPTR ptr, const Local<Object> &obj, long parent_uid);
+  long add(OGRLayer *ptr, const Local<Object> &obj, long parent_uid, bool is_result_set);
+  long add(GDALDataset *ptr, const Local<Object> &obj, long parent_uid);
 
   void dispose(long uid);
   bool isAlive(long uid);
@@ -91,7 +91,8 @@ class ObjectStore {
     uv_mutex_unlock(&master_lock);
   }
 
-  template <typename GDALPTR> static void weakCallback(const Nan::WeakCallbackInfo<ObjectStoreItem<GDALPTR>> &data);
+  template <typename GDALPTR>
+  static void weakCallback(const Nan::WeakCallbackInfo<shared_ptr<ObjectStoreItem<GDALPTR>>> &data);
 
   template <typename GDALPTR> inline bool has(GDALPTR ptr) {
     return ptrMap<GDALPTR>().count(ptr) > 0;
