@@ -118,6 +118,8 @@ vector<shared_ptr<uv_sem_t>> ObjectStore::tryLockDatasets(vector<long> uids) {
 // * through dispose called from the C++ destructor
 // * through the weakCallback called from the GC
 // Both will happen and there is no order
+// Both will disable further use of the object (removing it from the store)
+// Only after both have happened, the ObjectStoreItem<GDALPTR> is destroyed
 template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, const Local<Object> &obj, long parent_uid) {
   LOG("ObjectStore: Add %s [<%ld]", typeid(ptr).name(), parent_uid);
   lock();
@@ -196,6 +198,13 @@ template Local<Object> ObjectStore::get(shared_ptr<GDALGroup>);
 template Local<Object> ObjectStore::get(shared_ptr<GDALMDArray>);
 #endif
 
+// Disposing = called by either the destructor or the GC (WeakCallback)
+// Removes the object and all its children for the ObjectStore
+// Called twice
+//
+// The reason for the two paths are the tests in object_lifetime.test.ts
+// Is this really needed? It remains to be seen
+
 // Disposing a Dataset is a special case - it has children
 template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALDataset *>> item) {
   uv_sem_wait(item->async_lock.get());
@@ -256,7 +265,10 @@ void ObjectStore::dispose(long uid) {
   unlock();
 }
 
-// This is the final phase of the disposal
+// Destruction = called after both disposals
+// Frees the memory and the resources
+
+// This is the final phase of the removal
 // This is triggered when all 3 shared_ptrs have been destroyed
 // The last one will call the class destructor
 template <typename GDALPTR> ObjectStoreItem<GDALPTR>::~ObjectStoreItem() {
