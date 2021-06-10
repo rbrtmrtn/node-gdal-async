@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ obj_store ]
   pull_request:
-    branches: [ master ]
+    branches: [ obj_store ]
   workflow_dispatch:
     inputs:
       testNetwork:
