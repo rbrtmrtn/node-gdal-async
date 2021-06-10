@@ -915,14 +915,18 @@ NAN_GETTER(Dataset::rootGetter) {
   if (rootObj.IsEmpty()) {
     NODE_UNWRAP_CHECK(Dataset, info.This(), ds);
     GDAL_RAW_CHECK(GDALDataset *, ds, gdal_ds);
+#if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
     shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
     std::shared_ptr<GDALGroup> root = gdal_ds->GetRootGroup();
     uv_sem_post(lock.get());
     if (root == nullptr) {
+#endif
       rootObj = Nan::Null();
+#if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
     } else {
       rootObj = Group::New(root, info.This());
     }
+#endif
     Nan::SetPrivate(info.This(), Nan::New("root_").ToLocalChecked(), rootObj);
   } else {
     rootObj = maybeRootObj.ToLocalChecked();
