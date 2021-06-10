@@ -129,6 +129,17 @@ vector<shared_ptr<uv_sem_t>> ObjectStore::tryLockDatasets(vector<long> uids) {
   }
 }
 
+// The basic unit of the ObjectStore is the ObjectStoreItem<GDALPTR>
+// There is only one such item per GDALPTR
+// There are three shared_ptr to it:
+// * one in the uidMap
+// * one in the ptrMap
+// * and one dynamically allocated on the heap passed to the weakCallback
+
+// Do not forget that the destruction path is two-fold
+// * through dispose called from the C++ destructor
+// * through the weakCallback called from the GC
+// Both will happen and there is no order
 template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, const Local<Object> &obj, long parent_uid) {
   LOG("ObjectStore: Add %s [<%ld]", typeid(ptr).name(), parent_uid);
   lock();
@@ -154,12 +165,15 @@ template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, const Local<Objec
   return item->uid;
 }
 
+// Creating a Layer object is a special case - it can contain SQL results
 long ObjectStore::add(OGRLayer *ptr, const Local<Object> &obj, long parent_uid, bool is_result_set) {
   long uid = ObjectStore::add<OGRLayer *>(ptr, obj, parent_uid);
   uidLayers[uid]->is_result_set = is_result_set;
   return uid;
 }
 
+// Creating a Dataset object is a special case
+// It contains a lock and an I/O queue (unless it is a dependant Dataset)
 long ObjectStore::add(GDALDataset *ptr, const Local<Object> &obj, long parent_uid) {
   long uid = ObjectStore::add<GDALDataset *>(ptr, obj, parent_uid);
   if (parent_uid == 0) {
@@ -200,23 +214,17 @@ template Local<Object> ObjectStore::get(shared_ptr<GDALGroup>);
 template Local<Object> ObjectStore::get(shared_ptr<GDALMDArray>);
 #endif
 
+// Disposing a Dataset is a special case - it has children
 template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALDataset *>> item) {
-  lock();
   uv_sem_wait(item->async_lock.get());
   uidDatasets.erase(item->uid);
+  ptrDatasets.erase(item->ptr);
   uv_sem_post(item->async_lock.get());
 
   while (!item->children.empty()) { dispose(item->children.back()); }
-
-  if (item->ptr) {
-    LOG("Closing GDALDataset %ld [%p]", item->uid, item->ptr);
-    ptrDatasets.erase(item->ptr);
-    GDALClose(item->ptr);
-    item->ptr = nullptr;
-  }
-  unlock();
 }
 
+// Generic disposal
 template <typename GDALPTR> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALPTR>> item) {
   shared_ptr<uv_sem_t> async_lock = nullptr;
   if (item->parent) {
@@ -230,19 +238,6 @@ template <typename GDALPTR> void ObjectStore::dispose(shared_ptr<ObjectStoreItem
   if (async_lock != nullptr) uv_sem_post(async_lock.get());
 }
 
-template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<OGRLayer *>> item) {
-  shared_ptr<uv_sem_t> async_lock = nullptr;
-  try {
-    async_lock = tryLockDataset(item->parent->uid);
-  } catch (const char *) {};
-  GDALDataset *parent_ds = item->parent->ptr;
-  if (item->is_result_set) { parent_ds->ReleaseResultSet(item->ptr); }
-  uidLayers.erase(item->uid);
-  ptrLayers.erase(item->ptr);
-  item->parent->children.remove(item->uid);
-  if (async_lock != nullptr) uv_sem_post(async_lock.get());
-}
-
 // Death by GC
 template <typename GDALPTR>
 void ObjectStore::weakCallback(const Nan::WeakCallbackInfo<shared_ptr<ObjectStoreItem<GDALPTR>>> &data) {
@@ -251,7 +246,7 @@ void ObjectStore::weakCallback(const Nan::WeakCallbackInfo<shared_ptr<ObjectStor
   object_store.lock();
   object_store.dispose(*item);
   object_store.unlock();
-  //delete item; // this is the shared_ptr
+  delete item; // this is the dynamically allocated shared_ptr
 }
 
 // Death by calling dispose from C++ code
@@ -276,6 +271,30 @@ void ObjectStore::dispose(long uid) {
     dispose(uidAttributes[uid]);
 #endif
   unlock();
+}
+
+// This is the final phase of the disposal
+// This is triggered when all 3 shared_ptrs have been destroyed
+// The last one will call the class destructor
+template <typename GDALPTR> ObjectStoreItem<GDALPTR>::~ObjectStoreItem() {
+}
+
+// Closing a Dataset is a special case - it requires a GDAL operation
+ObjectStoreItem<GDALDataset *>::~ObjectStoreItem() {
+  if (ptr) {
+    LOG("Closing GDALDataset %ld [%p]", uid, ptr);
+    GDALClose(ptr);
+    ptr = nullptr;
+  }
+}
+
+// Closing a Layer is a special case - it can contain SQL results
+ObjectStoreItem<OGRLayer *>::~ObjectStoreItem() {
+  GDALDataset *parent_ds = parent->ptr;
+  if (is_result_set) {
+    LOG("Closing OGRLayer with SQL results %ld [%p]", uid, ptr);
+    parent_ds->ReleaseResultSet(ptr);
+  }
 }
 
 } // namespace node_gdal
