@@ -36,8 +36,9 @@ void Dimension::Initialize(Local<Object> target) {
   constructor.Reset(lcons);
 }
 
-Dimension::Dimension(std::shared_ptr<GDALDimension> group) : Nan::ObjectWrap(), uid(0), this_(group), parent_ds(0) {
-  LOG("Created dimension [%p]", group);
+Dimension::Dimension(std::shared_ptr<GDALDimension> dimension)
+  : Nan::ObjectWrap(), uid(0), this_(dimension), parent_ds(0) {
+  LOG("Created dimension [%p]", dimension.get());
 }
 
 Dimension::Dimension() : Nan::ObjectWrap(), uid(0), this_(0), parent_ds(0) {
@@ -50,11 +51,11 @@ Dimension::~Dimension() {
 void Dimension::dispose() {
   if (this_) {
 
-    LOG("Disposing dimension [%p]", this_);
+    LOG("Disposing dimension [%p]", this_.get());
 
     object_store.dispose(uid);
 
-    LOG("Disposed dimension [%p]", this_);
+    LOG("Disposed dimension [%p]", this_.get());
   }
 };
 
@@ -99,7 +100,7 @@ Local<Value> Dimension::New(std::shared_ptr<GDALDimension> raw, GDALDataset *par
   if (object_store.has(parent_ds)) {
     ds = object_store.get(parent_ds);
   } else {
-    LOG("Dimension's parent dataset disappeared from cache (array = %p, dataset = %p)", raw, parent_ds);
+    LOG("Dimension's parent dataset disappeared from cache (array = %p, dataset = %p)", raw.get(), parent_ds);
     Nan::ThrowError("Dimension's parent dataset disappeared from cache");
     return scope.Escape(Nan::Undefined());
   }

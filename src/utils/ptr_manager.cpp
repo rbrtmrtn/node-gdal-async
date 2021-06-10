@@ -129,64 +129,8 @@ vector<shared_ptr<uv_sem_t>> ObjectStore::tryLockDatasets(vector<long> uids) {
   }
 }
 
-template <> constexpr UidMap<GDALDriver *> &ObjectStore::uidMap() {
-  return uidDrivers;
-}
-template <> constexpr PtrMap<GDALDriver *> &ObjectStore::ptrMap() {
-  return ptrDrivers;
-}
-template <> constexpr UidMap<GDALDataset *> &ObjectStore::uidMap() {
-  return uidDatasets;
-}
-template <> constexpr PtrMap<GDALDataset *> &ObjectStore::ptrMap() {
-  return ptrDatasets;
-}
-template <> constexpr UidMap<OGRLayer *> &ObjectStore::uidMap() {
-  return uidLayers;
-}
-template <> constexpr PtrMap<OGRLayer *> &ObjectStore::ptrMap() {
-  return ptrLayers;
-}
-template <> constexpr UidMap<GDALRasterBand *> &ObjectStore::uidMap() {
-  return uidBands;
-}
-template <> constexpr PtrMap<GDALRasterBand *> &ObjectStore::ptrMap() {
-  return ptrBands;
-}
-template <> constexpr UidMap<OGRSpatialReference *> &ObjectStore::uidMap() {
-  return uidSpatialRefs;
-}
-template <> constexpr PtrMap<OGRSpatialReference *> &ObjectStore::ptrMap() {
-  return ptrSpatialRefs;
-}
-#if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
-template <> constexpr UidMap<shared_ptr<GDALGroup>> &ObjectStore::uidMap() {
-  return uidGroups;
-}
-template <> constexpr PtrMap<shared_ptr<GDALGroup>> &ObjectStore::ptrMap() {
-  return ptrGroups;
-}
-template <> constexpr UidMap<shared_ptr<GDALMDArray>> &ObjectStore::uidMap() {
-  return uidArrays;
-}
-template <> constexpr PtrMap<shared_ptr<GDALMDArray>> &ObjectStore::ptrMap() {
-  return ptrArrays;
-}
-template <> constexpr UidMap<shared_ptr<GDALDimension>> &ObjectStore::uidMap() {
-  return uidDimensions;
-}
-template <> constexpr PtrMap<shared_ptr<GDALDimension>> &ObjectStore::ptrMap() {
-  return ptrDimensions;
-}
-template <> constexpr UidMap<shared_ptr<GDALAttribute>> &ObjectStore::uidMap() {
-  return uidAttributes;
-}
-template <> constexpr PtrMap<shared_ptr<GDALAttribute>> &ObjectStore::ptrMap() {
-  return ptrAttributes;
-}
-#endif
-
 template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, Local<Object> obj, long parent_uid) {
+  LOG("ObjectStore: Add %s [<%ld]", typeid(ptr).name(), parent_uid);
   lock();
   shared_ptr<ObjectStoreItem<GDALPTR>> item(new ObjectStoreItem<GDALPTR>);
   item->uid = uid++;
@@ -204,6 +148,7 @@ template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, Local<Object> obj
   uidMap<GDALPTR>()[item->uid] = item;
   ptrMap<GDALPTR>()[ptr] = item;
   unlock();
+  LOG("ObjectStore: Added %s [%ld]", typeid(ptr).name(), item->uid);
   return item->uid;
 }
 
@@ -271,7 +216,7 @@ template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALDataset *>>
 }
 
 template <typename GDALPTR> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALPTR>> item) {
-  LOG("ObjectStore: Death by calling dispose from C++ [%p]", item->ptr);
+  LOG("ObjectStore: Death by calling dispose from C++ %s [%ld]", typeid(item->ptr).name(), item->uid);
   shared_ptr<uv_sem_t> async_lock = nullptr;
   try {
     async_lock = tryLockDataset(item->parent->uid);
@@ -301,7 +246,7 @@ template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<OGRLayer *>> it
 template <typename GDALPTR>
 void ObjectStore::weakCallback(const Nan::WeakCallbackInfo<ObjectStoreItem<GDALPTR>> &data) {
   ObjectStoreItem<GDALPTR> *item = (ObjectStoreItem<GDALPTR> *)data.GetParameter();
-  LOG("ObjectStore: Death by GC [%p]", item->ptr);
+  LOG("ObjectStore: Death by GC %s [%ld]", typeid(item->ptr).name(), item->uid);
   object_store.dispose(item->uid);
 }
 

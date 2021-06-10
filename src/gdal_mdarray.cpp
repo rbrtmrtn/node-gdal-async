@@ -46,8 +46,8 @@ void MDArray::Initialize(Local<Object> target) {
   constructor.Reset(lcons);
 }
 
-MDArray::MDArray(std::shared_ptr<GDALMDArray> ds) : Nan::ObjectWrap(), uid(0), this_(ds) {
-  LOG("Created MDArray [%p]", ds);
+MDArray::MDArray(std::shared_ptr<GDALMDArray> md) : Nan::ObjectWrap(), uid(0), this_(md) {
+  LOG("Created MDArray [%p]", md.get());
 }
 
 MDArray::~MDArray() {
@@ -57,11 +57,11 @@ MDArray::~MDArray() {
 void MDArray::dispose() {
   if (this_) {
 
-    LOG("Disposing array [%p]", this_);
+    LOG("Disposing array [%p]", this_.get());
 
     object_store.dispose(uid);
 
-    LOG("Disposed array [%p]", this_);
+    LOG("Disposed array [%p]", this_.get());
   }
 };
 
@@ -113,7 +113,7 @@ Local<Value> MDArray::New(std::shared_ptr<GDALMDArray> raw, GDALDataset *parent_
   if (object_store.has(parent_ds)) {
     ds = object_store.get(parent_ds);
   } else {
-    LOG("MDArray's parent dataset disappeared from cache (array = %p, dataset = %p)", raw, parent_ds);
+    LOG("MDArray's parent dataset disappeared from cache (array = %p, dataset = %p)", raw.get(), parent_ds);
     Nan::ThrowError("MDArray's parent dataset disappeared from cache");
     return scope.Escape(Nan::Undefined());
   }

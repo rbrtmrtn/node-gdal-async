@@ -39,7 +39,7 @@ void Group::Initialize(Local<Object> target) {
 }
 
 Group::Group(std::shared_ptr<GDALGroup> group) : Nan::ObjectWrap(), uid(0), this_(group), parent_ds(0) {
-  LOG("Created group [%p]", group);
+  LOG("Created group [%p]", group.get());
 }
 
 Group::Group() : Nan::ObjectWrap(), uid(0), this_(0), parent_ds(0) {
@@ -52,11 +52,11 @@ Group::~Group() {
 void Group::dispose() {
   if (this_) {
 
-    LOG("Disposing group [%p]", this_);
+    LOG("Disposing group [%p]", this_.get());
 
     object_store.dispose(uid);
 
-    LOG("Disposed group [%p]", this_);
+    LOG("Disposed group [%p]", this_.get());
   }
 };
 
@@ -105,7 +105,7 @@ Local<Value> Group::New(std::shared_ptr<GDALGroup> raw, GDALDataset *parent_ds) 
     Local<Object> ds = object_store.get(parent_ds);
     return Group::New(raw, ds);
   } else {
-    LOG("Group's parent dataset disappeared from cache (group = %p, dataset = %p)", raw, parent_ds);
+    LOG("Group's parent dataset disappeared from cache (group = %p, dataset = %p)", raw.get(), parent_ds);
     Nan::ThrowError("Group's parent dataset disappeared from cache");
     return scope.Escape(Nan::Undefined());
   }
