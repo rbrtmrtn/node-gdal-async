@@ -370,7 +370,7 @@ NAN_METHOD(MDArray::getView) {
 
   std::string viewExpr;
   NODE_ARG_STR(0, "view", viewExpr);
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   std::shared_ptr<GDALMDArray> view = raw->GetView(viewExpr);
   GDAL_UNLOCK_PARENT;
   if (view == nullptr) {
@@ -397,7 +397,7 @@ NAN_METHOD(MDArray::getMask) {
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   GDAL_RAW_CHECK(std::shared_ptr<GDALMDArray>, array, raw);
 
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   std::shared_ptr<GDALMDArray> mask = raw->GetMask(NULL);
   GDAL_UNLOCK_PARENT;
   if (mask == nullptr) {
@@ -431,7 +431,7 @@ NAN_METHOD(MDArray::asDataset) {
   NODE_ARG_STR_INT(1, "y", dim, y, isYString);
   if (isYString) y = ArrayDimensions::__getIdx(raw, dim);
 
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   GDALDataset *ds = raw->AsClassicDataset(x, y);
   GDAL_UNLOCK_PARENT;
   if (ds == nullptr) {
@@ -453,7 +453,7 @@ NAN_GETTER(MDArray::srsGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   GDAL_RAW_CHECK(std::shared_ptr<GDALMDArray>, array, raw);
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   std::shared_ptr<OGRSpatialReference> srs = raw->GetSpatialRef();
   GDAL_UNLOCK_PARENT;
   if (srs == nullptr) {
@@ -474,7 +474,7 @@ NAN_GETTER(MDArray::offsetGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   bool hasOffset = false;
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   double result = array->this_->GetOffset(&hasOffset);
   GDAL_UNLOCK_PARENT;
   if (hasOffset)
@@ -493,7 +493,7 @@ NAN_GETTER(MDArray::scaleGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   bool hasScale = false;
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   double result = array->this_->GetScale(&hasScale);
   GDAL_UNLOCK_PARENT;
   if (hasScale)
@@ -512,7 +512,7 @@ NAN_GETTER(MDArray::noDataValueGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   bool hasNoData = false;
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   double result = array->this_->GetNoDataValueAsDouble(&hasNoData);
   GDAL_UNLOCK_PARENT;
 
@@ -537,7 +537,7 @@ NAN_GETTER(MDArray::noDataValueGetter) {
 NAN_GETTER(MDArray::unitTypeGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   std::string unit = array->this_->GetUnit();
   GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(SafeString::New(unit.c_str()));
@@ -552,7 +552,7 @@ NAN_GETTER(MDArray::typeGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   GDAL_RAW_CHECK(std::shared_ptr<GDALMDArray>, array, raw);
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   GDALExtendedDataType type = raw->GetDataType();
   const char *r;
   switch (type.GetClass()) {
@@ -594,7 +594,7 @@ NAN_GETTER(MDArray::descriptionGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   GDAL_RAW_CHECK(std::shared_ptr<GDALMDArray>, array, raw);
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   std::string description = raw->GetFullName();
   GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(SafeString::New(description.c_str()));

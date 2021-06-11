@@ -173,7 +173,7 @@ NAN_METHOD(Dataset::getMetadata) {
   GDALDataset *raw = ds->get();
   std::string domain("");
   NODE_ARG_OPT_STR(0, "domain", domain);
-  shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
+  shared_ptr<uv_sem_t> lock = object_store.lockDataset(ds->uid);
   info.GetReturnValue().Set(MajorObject::getMetadata(raw, domain.empty() ? NULL : domain.c_str()));
   uv_sem_post(lock.get());
 }
@@ -200,7 +200,7 @@ NAN_METHOD(Dataset::testCapability) {
   std::string capability("");
   NODE_ARG_STR(0, "capability", capability);
 
-  shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
+  shared_ptr<uv_sem_t> lock = object_store.lockDataset(ds->uid);
   info.GetReturnValue().Set(Nan::New<Boolean>(raw->TestCapability(capability.c_str())));
   uv_sem_post(lock.get());
 }
@@ -221,7 +221,7 @@ NAN_METHOD(Dataset::getGCPProjection) {
   }
 
   GDALDataset *raw = ds->get();
-  shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
+  shared_ptr<uv_sem_t> lock = object_store.lockDataset(ds->uid);
   info.GetReturnValue().Set(SafeString::New(raw->GetGCPProjection()));
   uv_sem_post(lock.get());
 }
@@ -399,7 +399,7 @@ NAN_METHOD(Dataset::getFileList) {
     return;
   }
 
-  shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
+  shared_ptr<uv_sem_t> lock = object_store.lockDataset(ds->uid);
   char **list = raw->GetFileList();
   if (!list) {
     info.GetReturnValue().Set(results);
@@ -442,7 +442,7 @@ NAN_METHOD(Dataset::getGCPs) {
     return;
   }
 
-  shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
+  shared_ptr<uv_sem_t> lock = object_store.lockDataset(ds->uid);
   int n = raw->GetGCPCount();
   const GDAL_GCP *gcps = raw->GetGCPs();
 
@@ -523,7 +523,7 @@ NAN_METHOD(Dataset::setGCPs) {
     gcp++;
   }
 
-  shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
+  shared_ptr<uv_sem_t> lock = object_store.lockDataset(ds->uid);
   CPLErr err = raw->SetGCPs(gcps->Length(), list.get(), projection.c_str());
   uv_sem_post(lock.get());
 
@@ -596,7 +596,7 @@ GDAL_ASYNCABLE_DEFINE(Dataset::buildOverviews) {
     o.get()[i] = Nan::To<int32_t>(val).ToChecked();
   }
 
-  shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
+  shared_ptr<uv_sem_t> lock = object_store.lockDataset(ds->uid);
   if (!bands.IsEmpty()) {
     n_bands = bands->Length();
     b = std::shared_ptr<int>(new int[n_bands], array_deleter<int>());
@@ -666,7 +666,7 @@ NAN_GETTER(Dataset::descriptionGetter) {
     Nan::ThrowError("Dataset object has already been destroyed");
     return;
   }
-  shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
+  shared_ptr<uv_sem_t> lock = object_store.lockDataset(ds->uid);
   info.GetReturnValue().Set(SafeString::New(raw->GetDescription()));
   uv_sem_post(lock.get());
 }
@@ -692,7 +692,7 @@ NAN_GETTER(Dataset::rasterSizeGetter) {
   // GDAL 2.x will return 512x512 for vector datasets... which doesn't really make
   // sense in JS where we can return null instead of a number
   // https://github.com/OSGeo/gdal/blob/beef45c130cc2778dcc56d85aed1104a9b31f7e6/gdal/gcore/gdaldataset.cpp#L173-L174
-  shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
+  shared_ptr<uv_sem_t> lock = object_store.lockDataset(ds->uid);
   if (raw->GetDriver() == nullptr || !raw->GetDriver()->GetMetadataItem(GDAL_DCAP_RASTER)) {
     info.GetReturnValue().Set(Nan::Null());
     uv_sem_post(lock.get());
@@ -723,7 +723,7 @@ NAN_GETTER(Dataset::srsGetter) {
   }
 
   GDALDataset *raw = ds->get();
-  shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
+  shared_ptr<uv_sem_t> lock = object_store.lockDataset(ds->uid);
   // get projection wkt and return null if not set
   OGRChar *wkt = (OGRChar *)raw->GetProjectionRef();
   if (*wkt == '\0') {
@@ -769,7 +769,7 @@ NAN_GETTER(Dataset::geoTransformGetter) {
 
   GDALDataset *raw = ds->get();
   double transform[6];
-  shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
+  shared_ptr<uv_sem_t> lock = object_store.lockDataset(ds->uid);
   CPLErr err = raw->GetGeoTransform(transform);
   uv_sem_post(lock.get());
   if (err) {
@@ -837,7 +837,7 @@ NAN_SETTER(Dataset::srsSetter) {
     return;
   }
 
-  shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
+  shared_ptr<uv_sem_t> lock = object_store.lockDataset(ds->uid);
   CPLErr err = raw->SetProjection(wkt.c_str());
   uv_sem_post(lock.get());
 
@@ -876,7 +876,7 @@ NAN_SETTER(Dataset::geoTransformSetter) {
     buffer[i] = Nan::To<double>(val).ToChecked();
   }
 
-  shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
+  shared_ptr<uv_sem_t> lock = object_store.lockDataset(ds->uid);
   CPLErr err = raw->SetGeoTransform(buffer);
   uv_sem_post(lock.get());
 
@@ -916,7 +916,7 @@ NAN_GETTER(Dataset::rootGetter) {
     NODE_UNWRAP_CHECK(Dataset, info.This(), ds);
     GDAL_RAW_CHECK(GDALDataset *, ds, gdal_ds);
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
-    shared_ptr<uv_sem_t> lock = object_store.tryLockDataset(ds->uid);
+    shared_ptr<uv_sem_t> lock = object_store.lockDataset(ds->uid);
     std::shared_ptr<GDALGroup> root = gdal_ds->GetRootGroup();
     uv_sem_post(lock.get());
     if (root == nullptr) {

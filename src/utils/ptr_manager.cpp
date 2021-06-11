@@ -63,57 +63,95 @@ bool ObjectStore::isAlive(long uid) {
     ;
 }
 
-shared_ptr<uv_sem_t> ObjectStore::tryLockDataset(long uid) {
+/*
+ * Lock a Dataset by uid, throws when the Dataset has been destroyed
+ * Doesn't sleep with the master lock but can active spin if the Dataset is locked
+ * (which should not happen with the new I/O scheduler except when calling a sync
+ * function while an async operation is running)
+ */
+shared_ptr<uv_sem_t> ObjectStore::lockDataset(long uid) {
   while (true) {
-    lock();
-    auto parent = uidMap<GDALDataset *>.find(uid);
-    if (parent != uidMap<GDALDataset *>.end()) {
-      int r = uv_sem_trywait(parent->second->async_lock.get());
-      unlock();
-      if (r == 0) return parent->second->async_lock;
-    } else {
-      unlock();
-      throw "Parent Dataset object has already been destroyed";
-    }
-    std::this_thread::yield();
+    shared_ptr<uv_sem_t> lock = tryLockDataset(uid);
+    if (lock != nullptr) return lock;
+    this_thread::yield();
   }
 }
 
+/*
+ * Lock several Datasets by uid avoiding deadlocks, same semantics as the previous one
+ */
+vector<shared_ptr<uv_sem_t>> ObjectStore::lockDatasets(vector<long> uids) {
+  // There is lots of copying around here but these vectors are never longer than 3 elements
+  // Avoid deadlocks
+  sort(uids.begin(), uids.end());
+  // Eliminate dupes and 0s
+  uids.erase(unique(uids.begin(), uids.end()), uids.end());
+  if (uids.front() == 0) uids.erase(uids.begin());
+  if (uids.size() == 0) return {};
+  while (true) {
+    vector<shared_ptr<uv_sem_t>> locks = _tryLockDatasets(uids);
+    if (locks.size() > 0) return locks;
+    this_thread::yield();
+  }
+}
+
+/*
+ * Acquire the lock only if it is free, do not block
+ */
+shared_ptr<uv_sem_t> ObjectStore::tryLockDataset(long uid) {
+  lock();
+  auto parent = uidMap<GDALDataset *>.find(uid);
+  if (parent == uidMap<GDALDataset *>.end()) {
+    unlock();
+    throw "Parent Dataset object has already been destroyed";
+  }
+  int r = uv_sem_trywait(parent->second->async_lock.get());
+  unlock();
+  if (r == 0) return parent->second->async_lock;
+  return nullptr;
+}
+
+vector<shared_ptr<uv_sem_t>> ObjectStore::_tryLockDatasets(vector<long> uids) {
+  vector<shared_ptr<uv_sem_t>> locks;
+  lock();
+  for (long uid : uids) {
+    auto parent = uidMap<GDALDataset *>.find(uid);
+    if (parent == uidMap<GDALDataset *>.end()) {
+      unlock();
+      throw "Parent Dataset object has already been destroyed";
+    }
+    locks.push_back(parent->second->async_lock);
+  }
+  vector<shared_ptr<uv_sem_t>> locked;
+  int r = 0;
+  for (shared_ptr<uv_sem_t> &async_lock : locks) {
+    r = uv_sem_trywait(async_lock.get());
+    if (r == 0) {
+      locked.push_back(async_lock);
+    } else {
+      // We failed acquiring one of the locks =>
+      // free all acquired locks and start a new cycle
+      for (shared_ptr<uv_sem_t> &lock : locked) { uv_sem_post(lock.get()); }
+      break;
+    }
+  }
+  unlock();
+  if (r == 0) return locks;
+  return {};
+}
+
+/*
+ * Try to acquire several locks avoiding deadlocks without blocking
+ */
 vector<shared_ptr<uv_sem_t>> ObjectStore::tryLockDatasets(vector<long> uids) {
   // There is lots of copying around here but these vectors are never longer than 3 elements
   // Avoid deadlocks
-  std::sort(uids.begin(), uids.end());
-  // Eliminate dupes
-  uids.erase(std::unique(uids.begin(), uids.end()), uids.end());
-  while (true) {
-    vector<shared_ptr<uv_sem_t>> locks;
-    lock();
-    for (long uid : uids) {
-      if (!uid) continue;
-      auto parent = uidMap<GDALDataset *>.find(uid);
-      if (parent == uidMap<GDALDataset *>.end()) {
-        unlock();
-        throw "Parent Dataset object has already been destroyed";
-      }
-      locks.push_back(parent->second->async_lock);
-    }
-    vector<shared_ptr<uv_sem_t>> locked;
-    int r = 0;
-    for (shared_ptr<uv_sem_t> &async_lock : locks) {
-      r = uv_sem_trywait(async_lock.get());
-      if (r == 0) {
-        locked.push_back(async_lock);
-      } else {
-        // We failed acquiring one of the locks =>
-        // free all acquired locks and start a new cycle
-        for (shared_ptr<uv_sem_t> &lock : locked) { uv_sem_post(lock.get()); }
-        break;
-      }
-    }
-    unlock();
-    if (r == 0) return locks;
-    std::this_thread::yield();
-  }
+  sort(uids.begin(), uids.end());
+  // Eliminate dupes and 0s
+  uids.erase(unique(uids.begin(), uids.end()), uids.end());
+  if (uids.front() == 0) uids.erase(uids.begin());
+  if (uids.size() == 0) return {};
+  return _tryLockDatasets(uids);
 }
 
 // The basic unit of the ObjectStore is the ObjectStoreItem<GDALPTR>
@@ -235,7 +273,7 @@ template <typename GDALPTR> void ObjectStore::dispose(shared_ptr<ObjectStoreItem
   shared_ptr<uv_sem_t> async_lock = nullptr;
   if (item->parent) {
     try {
-      async_lock = tryLockDataset(item->parent->uid);
+      async_lock = lockDataset(item->parent->uid);
     } catch (const char *) {};
   }
   ptrMap<GDALPTR>.erase(item->ptr);

@@ -135,7 +135,7 @@ NAN_GETTER(Attribute::valueGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(Attribute, info.This(), attribute);
   GDAL_RAW_CHECK(std::shared_ptr<GDALAttribute>, attribute, raw);
-  GDAL_TRYLOCK_PARENT(attribute);
+  GDAL_LOCK_PARENT(attribute);
   GDALExtendedDataType type = raw->GetDataType();
   Local<Value> r;
   switch (type.GetClass()) {
@@ -156,7 +156,7 @@ NAN_GETTER(Attribute::typeGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(Attribute, info.This(), attribute);
   GDAL_RAW_CHECK(std::shared_ptr<GDALAttribute>, attribute, raw);
-  GDAL_TRYLOCK_PARENT(attribute);
+  GDAL_LOCK_PARENT(attribute);
   GDALExtendedDataType type = raw->GetDataType();
   const char *r;
   switch (type.GetClass()) {

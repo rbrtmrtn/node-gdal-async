@@ -286,7 +286,7 @@ GDAL_ASYNCABLE_DEFINE(Driver::createCopy) {
 
   std::shared_ptr<uv_sem_t> async_lock = nullptr;
   try {
-    async_lock = object_store.tryLockDataset(src_dataset->uid);
+    async_lock = object_store.lockDataset(src_dataset->uid);
   } catch (const char *err) {
     Nan::ThrowError(err);
     return;

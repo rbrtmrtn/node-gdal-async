@@ -225,7 +225,7 @@ NODE_WRAPPED_METHOD_WITH_CPLERR_RESULT_1_INTEGER_PARAM(RasterBand, createMaskBan
 NAN_METHOD(RasterBand::getMaskBand) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   GDALRasterBand *mask_band = band->this_->GetMaskBand();
   GDAL_UNLOCK_PARENT;
 
@@ -313,7 +313,7 @@ NAN_METHOD(RasterBand::asMDArray) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   GDAL_RAW_CHECK(GDALRasterBand *, band, raw);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   std::shared_ptr<GDALMDArray> mdarray = raw->AsMDArray();
   GDAL_UNLOCK_PARENT;
   if (mdarray == nullptr) {
@@ -349,7 +349,7 @@ NAN_METHOD(RasterBand::getStatistics) {
   NODE_ARG_BOOL(0, "allow approximation", approx);
   NODE_ARG_BOOL(1, "force", force);
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   pushStatsErrorHandler();
   CPLErr err = band->this_->GetStatistics(approx, force, &min, &max, &mean, &std_dev);
   popStatsErrorHandler();
@@ -395,7 +395,7 @@ NAN_METHOD(RasterBand::computeStatistics) {
   int approx;
   NODE_ARG_BOOL(0, "allow approximation", approx);
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   pushStatsErrorHandler();
   CPLErr err = band->this_->ComputeStatistics(approx, &min, &max, &mean, &std_dev, NULL, NULL);
   popStatsErrorHandler();
@@ -436,7 +436,7 @@ NAN_METHOD(RasterBand::setStatistics) {
   NODE_ARG_DOUBLE(2, "mean", mean);
   NODE_ARG_DOUBLE(3, "standard deviation", std_dev);
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   CPLErr err = band->this_->SetStatistics(min, max, mean, std_dev);
   GDAL_UNLOCK_PARENT;
 
@@ -460,7 +460,7 @@ NAN_METHOD(RasterBand::getMetadata) {
   std::string domain("");
   NODE_ARG_OPT_STR(0, "domain", domain);
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   const Nan::ADDON_REGISTER_FUNCTION_ARGS_TYPE &meta =
     MajorObject::getMetadata(band->this_, domain.empty() ? NULL : domain.c_str());
   GDAL_UNLOCK_PARENT;
@@ -505,7 +505,7 @@ NAN_GETTER(RasterBand::pixelsGetter) {
 NAN_GETTER(RasterBand::idGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   int id = band->this_->GetBand();
   GDAL_UNLOCK_PARENT;
 
@@ -528,7 +528,7 @@ NAN_GETTER(RasterBand::idGetter) {
 NAN_GETTER(RasterBand::descriptionGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   const char *desc = band->this_->GetDescription();
   GDAL_UNLOCK_PARENT;
 
@@ -546,7 +546,7 @@ NAN_GETTER(RasterBand::sizeGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   Local<Object> result = Nan::New<Object>();
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   int x = band->this_->GetXSize();
   int y = band->this_->GetYSize();
   GDAL_UNLOCK_PARENT;
@@ -566,7 +566,7 @@ NAN_GETTER(RasterBand::blockSizeGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   int x, y;
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   band->this_->GetBlockSize(&x, &y);
   GDAL_UNLOCK_PARENT;
 
@@ -587,7 +587,7 @@ NAN_GETTER(RasterBand::minimumGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   int success = 0;
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   double result = band->this_->GetMinimum(&success);
   GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(Nan::New<Number>(result));
@@ -604,7 +604,7 @@ NAN_GETTER(RasterBand::maximumGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   int success = 0;
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   double result = band->this_->GetMaximum(&success);
   GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(Nan::New<Number>(result));
@@ -620,7 +620,7 @@ NAN_GETTER(RasterBand::offsetGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   int success = 0;
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   double result = band->this_->GetOffset(&success);
   GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(Nan::New<Number>(result));
@@ -636,7 +636,7 @@ NAN_GETTER(RasterBand::scaleGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   int success = 0;
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   double result = band->this_->GetScale(&success);
   GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(Nan::New<Number>(result));
@@ -652,7 +652,7 @@ NAN_GETTER(RasterBand::noDataValueGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   int success = 0;
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   double result = band->this_->GetNoDataValue(&success);
   GDAL_UNLOCK_PARENT;
 
@@ -677,7 +677,7 @@ NAN_GETTER(RasterBand::noDataValueGetter) {
 NAN_GETTER(RasterBand::unitTypeGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   const char *result = band->this_->GetUnitType();
   GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(SafeString::New(result));
@@ -695,7 +695,7 @@ NAN_GETTER(RasterBand::unitTypeGetter) {
 NAN_GETTER(RasterBand::dataTypeGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   GDALDataType type = band->this_->GetRasterDataType();
   GDAL_UNLOCK_PARENT;
 
@@ -713,7 +713,7 @@ NAN_GETTER(RasterBand::dataTypeGetter) {
 NAN_GETTER(RasterBand::readOnlyGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   GDALAccess result = band->this_->GetAccess();
   GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(result == GA_Update ? Nan::False() : Nan::True());
@@ -733,7 +733,7 @@ NAN_GETTER(RasterBand::readOnlyGetter) {
 NAN_GETTER(RasterBand::hasArbitraryOverviewsGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   bool result = band->this_->HasArbitraryOverviews();
   GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(Nan::New<Boolean>(result));
@@ -748,7 +748,7 @@ NAN_GETTER(RasterBand::hasArbitraryOverviewsGetter) {
 NAN_GETTER(RasterBand::categoryNamesGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   char **names = band->this_->GetCategoryNames();
   GDAL_UNLOCK_PARENT;
 
@@ -775,7 +775,7 @@ NAN_GETTER(RasterBand::categoryNamesGetter) {
 NAN_GETTER(RasterBand::colorInterpretationGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   GDALColorInterp interp = band->this_->GetColorInterpretation();
   GDAL_UNLOCK_PARENT;
   if (interp == GCI_Undefined)
@@ -792,7 +792,7 @@ NAN_SETTER(RasterBand::unitTypeSetter) {
     return;
   }
   std::string input = *Nan::Utf8String(value);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   CPLErr err = band->this_->SetUnitType(input.c_str());
   GDAL_UNLOCK_PARENT;
   if (err) { NODE_THROW_LAST_CPLERR; }
@@ -813,7 +813,7 @@ NAN_SETTER(RasterBand::noDataValueSetter) {
     return;
   }
 
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   CPLErr err = band->this_->SetNoDataValue(input);
   GDAL_UNLOCK_PARENT;
   if (err) { NODE_THROW_LAST_CPLERR; }
@@ -828,7 +828,7 @@ NAN_SETTER(RasterBand::scaleSetter) {
     return;
   }
   double input = Nan::To<double>(value).ToChecked();
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   CPLErr err = band->this_->SetScale(input);
   GDAL_UNLOCK_PARENT;
   if (err) { NODE_THROW_LAST_CPLERR; }
@@ -843,7 +843,7 @@ NAN_SETTER(RasterBand::offsetSetter) {
     return;
   }
   double input = Nan::To<double>(value).ToChecked();
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   CPLErr err = band->this_->SetOffset(input);
   GDAL_UNLOCK_PARENT;
   if (err) { NODE_THROW_LAST_CPLERR; }
@@ -873,7 +873,7 @@ NAN_SETTER(RasterBand::categoryNamesSetter) {
     list[i] = NULL;
   }
 
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   int err = band->this_->SetCategoryNames(list);
   GDAL_UNLOCK_PARENT;
 
@@ -896,7 +896,7 @@ NAN_SETTER(RasterBand::colorInterpretationSetter) {
     return;
   }
 
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   CPLErr err = band->this_->SetColorInterpretation(ci);
   GDAL_UNLOCK_PARENT;
   if (err) { NODE_THROW_LAST_CPLERR; }
