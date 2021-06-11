@@ -31,6 +31,15 @@
 
 namespace node_gdal {
 
+// Because of severe bugs linked to C++14 template variables in MSVC
+// these two must be here and must have file scope
+// MSVC throws an Internal Compiler Error when specializing templated variables
+// and the linker produces an off-by-one error when processing exported symbols
+template <typename GDALPTR> using UidMap = map<long, shared_ptr<ObjectStoreItem<GDALPTR>>>;
+template <typename GDALPTR> using PtrMap = map<GDALPTR, shared_ptr<ObjectStoreItem<GDALPTR>>>;
+template <typename GDALPTR> static UidMap<GDALPTR> uidMap;
+template <typename GDALPTR> static PtrMap<GDALPTR> ptrMap;
+
 void uv_sem_deleter::operator()(uv_sem_t *p) {
   uv_sem_destroy(p);
   delete p;
@@ -165,11 +174,17 @@ long ObjectStore::add(GDALDataset *ptr, const Local<Object> &obj, long parent_ui
   return uid;
 }
 
+template <typename GDALPTR> bool ObjectStore::has(GDALPTR ptr) {
+  return ptrMap<GDALPTR>.count(ptr) > 0;
+}
+template <typename GDALPTR> Local<Object> ObjectStore::get(GDALPTR ptr) {
+  Nan::EscapableHandleScope scope;
+  return scope.Escape(Nan::New(ptrMap<GDALPTR>[ptr] -> obj));
+}
+
 // Explicit instantiation:
 // * allows calling object_store.add without <>
 // * makes sure that this class template won't be accidentally instantiated with an unsupported type
-template <typename GDALPTR> UidMap<GDALPTR> ObjectStore::uidMap;
-template <typename GDALPTR> PtrMap<GDALPTR> ObjectStore::ptrMap;
 template long ObjectStore::add(GDALDriver *, const Local<Object> &, long);
 template long ObjectStore::add(GDALRasterBand *, const Local<Object> &, long);
 template long ObjectStore::add(OGRSpatialReference *, const Local<Object> &, long);

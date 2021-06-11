@@ -75,8 +75,6 @@ struct uv_sem_deleter {
 // - Multiple datasets are to be locked with .tryLockDataset which sorts locks
 //
 
-template <typename GDALPTR> using UidMap = map<long, shared_ptr<ObjectStoreItem<GDALPTR>>>;
-template <typename GDALPTR> using PtrMap = map<GDALPTR, shared_ptr<ObjectStoreItem<GDALPTR>>>;
 class ObjectStore {
     public:
   template <typename GDALPTR> long add(GDALPTR ptr, const Local<Object> &obj, long parent_uid);
@@ -97,13 +95,8 @@ class ObjectStore {
   template <typename GDALPTR>
   static void weakCallback(const Nan::WeakCallbackInfo<shared_ptr<ObjectStoreItem<GDALPTR>>> &data);
 
-  template <typename GDALPTR> inline bool has(GDALPTR ptr) {
-    return ptrMap<GDALPTR>.count(ptr) > 0;
-  }
-  template <typename GDALPTR> inline Local<Object> get(GDALPTR ptr) {
-    Nan::EscapableHandleScope scope;
-    return scope.Escape(Nan::New(ptrMap<GDALPTR>[ptr] -> obj));
-  }
+  template <typename GDALPTR> inline bool has(GDALPTR ptr);
+  template <typename GDALPTR> inline Local<Object> get(GDALPTR ptr);
 
   ObjectStore();
   ~ObjectStore();
@@ -112,9 +105,6 @@ class ObjectStore {
   long uid;
   uv_mutex_t master_lock;
   template <typename GDALPTR> void dispose(shared_ptr<ObjectStoreItem<GDALPTR>> item);
-
-  template <typename GDALPTR> static UidMap<GDALPTR> uidMap;
-  template <typename GDALPTR> static PtrMap<GDALPTR> ptrMap;
 };
 
 } // namespace node_gdal
