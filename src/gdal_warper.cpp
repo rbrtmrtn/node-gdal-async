@@ -427,19 +427,14 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
   GDALAsyncableJob<warpOutputResult> job;
   job.persist(ds->handle());
 
-  job.main = [gdal_ds, uid, s_srs_str, t_srs_str, maxError](const GDALExecutionProgress &) {
+  job.main = [gdal_ds, s_srs_str, t_srs_str, maxError](const GDALExecutionProgress &) {
     struct warpOutputResult r;
-
-    GDAL_ASYNCABLE_LOCK(uid);
 
     void *hTransformArg;
     void *hGenTransformArg =
       GDALCreateGenImgProjTransformer(gdal_ds, s_srs_str.c_str(), NULL, t_srs_str.c_str(), TRUE, 1000.0, 0);
 
-    if (!hGenTransformArg) {
-      GDAL_UNLOCK_PARENT;
-      throw CPLGetLastErrorMsg();
-    }
+    if (!hGenTransformArg) { throw CPLGetLastErrorMsg(); }
 
     GDALTransformerFunc pfnTransformer;
 
@@ -449,7 +444,6 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
 
       if (!hTransformArg) {
         GDALDestroyGenImgProjTransformer(hGenTransformArg);
-        GDAL_UNLOCK_PARENT;
         throw CPLGetLastErrorMsg();
       }
     } else {
@@ -461,7 +455,6 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
 
     GDALDestroyGenImgProjTransformer(hGenTransformArg);
     if (maxError > 0.0) { GDALDestroyApproxTransformer(hTransformArg); }
-    GDAL_UNLOCK_PARENT;
 
     if (err) { throw CPLGetLastErrorMsg(); }
     return r;
@@ -488,7 +481,7 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
     return scope.Escape(result);
   };
 
-  job.run(info, async, 1);
+  job.run(info, async, 1, uid);
 }
 
 } // namespace node_gdal

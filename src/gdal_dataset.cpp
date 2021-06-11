@@ -290,14 +290,12 @@ GDAL_ASYNCABLE_DEFINE(Dataset::flush) {
   GDALAsyncableJob<int> job;
   long ds_uid = ds->uid;
   job.persist(info.This());
-  job.main = [raw, ds_uid](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [raw](const GDALExecutionProgress &) {
     raw->FlushCache();
-    GDAL_UNLOCK_PARENT;
     return 0;
   };
   job.rval = [](int, GetFromPersistentFunc) { return Nan::Undefined().As<Value>(); };
-  job.run(info, async, 0);
+  job.run(info, async, 0, ds_uid);
 
   return;
 }
@@ -358,16 +356,14 @@ GDAL_ASYNCABLE_DEFINE(Dataset::executeSQL) {
   OGRGeometry *geom_filter = spatial_filter ? spatial_filter->get() : NULL;
   long ds_uid = ds->uid;
   job.persist(info.This());
-  job.main = [raw, ds_uid, sql, sql_dialect, geom_filter](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [raw, sql, sql_dialect, geom_filter](const GDALExecutionProgress &) {
     OGRLayer *layer = raw->ExecuteSQL(sql.c_str(), geom_filter, sql_dialect.empty() ? NULL : sql_dialect.c_str());
-    GDAL_UNLOCK_PARENT;
     if (layer == nullptr) throw CPLGetLastErrorMsg();
     return layer;
   };
   job.rval = [raw](OGRLayer *layer, GetFromPersistentFunc) { return Layer::New(layer, raw, true); };
 
-  job.run(info, async, 3);
+  job.run(info, async, 3, ds_uid);
 }
 
 /**
@@ -628,8 +624,7 @@ GDAL_ASYNCABLE_DEFINE(Dataset::buildOverviews) {
   // because the lambda becomes non-copyable
   // But we can use a shared_ptr because the lifetime of the lambda is limited by the lifetime
   // of the async worker
-  job.main = [raw, ds_uid, resampling, n_overviews, o, n_bands, b, progress_cb](const GDALExecutionProgress &progress) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [raw, resampling, n_overviews, o, n_bands, b, progress_cb](const GDALExecutionProgress &progress) {
     CPLErr err = raw->BuildOverviews(
       resampling.c_str(),
       n_overviews,
@@ -638,13 +633,12 @@ GDAL_ASYNCABLE_DEFINE(Dataset::buildOverviews) {
       b.get(),
       progress_cb ? ProgressTrampoline : nullptr,
       progress_cb ? (void *)&progress : nullptr);
-    GDAL_UNLOCK_PARENT;
     if (err != CE_None) { throw CPLGetLastErrorMsg(); }
     return err;
   };
   job.rval = [](CPLErr, GetFromPersistentFunc) { return Nan::Undefined().As<Value>(); };
 
-  job.run(info, async, 4);
+  job.run(info, async, 4, ds_uid);
 }
 
 /**

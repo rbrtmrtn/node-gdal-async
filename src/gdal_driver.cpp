@@ -3,7 +3,6 @@
 #include "gdal_common.hpp"
 #include "gdal_dataset.hpp"
 #include "gdal_majorobject.hpp"
-#include "async.hpp"
 #include "utils/string_list.hpp"
 
 namespace node_gdal {
@@ -284,26 +283,17 @@ GDAL_ASYNCABLE_DEFINE(Driver::createCopy) {
     return; // error parsing string list
   }
 
-  std::shared_ptr<uv_sem_t> async_lock = nullptr;
-  try {
-    async_lock = object_store.lockDataset(src_dataset->uid);
-  } catch (const char *err) {
-    Nan::ThrowError(err);
-    return;
-  }
-
   GDALDriver *raw = driver->getGDALDriver();
   GDALDataset *raw_ds = src_dataset->get();
   GDALAsyncableJob<GDALDataset *> job;
   job.rval = DatasetRval;
-  job.main = [raw, filename, raw_ds, strict, options, async_lock](const GDALExecutionProgress &) {
+  job.main = [raw, filename, raw_ds, strict, options](const GDALExecutionProgress &) {
     std::unique_ptr<StringList> options_ptr(options);
     GDALDataset *ds = raw->CreateCopy(filename.c_str(), raw_ds, strict, options->get(), NULL, NULL);
-    uv_sem_post(async_lock.get());
     if (!ds) CPLGetLastErrorMsg();
     return ds;
   };
-  job.run(info, async, 3);
+  job.run(info, async, 3, src_dataset->uid);
 }
 
 /**

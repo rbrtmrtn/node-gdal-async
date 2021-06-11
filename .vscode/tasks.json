@@ -4,9 +4,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build Debug",
+      "label": "Build",
       "type": "shell",
-      "command": "node-pre-gyp configure --debug && node-pre-gyp build -j max --debug",
+      "command": "node-pre-gyp build -j max",
       "problemMatcher": {
         "base": "$gcc",
         "fileLocation": [
@@ -16,23 +16,6 @@
       },
       "group": {
         "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Build ASAN",
-      "type": "shell",
-      "command": "node-pre-gyp configure --debug --enable_asan && node-pre-gyp build -j max --debug",
-      "problemMatcher": [],
-      "group": "build"
-    },
-    {
-      "label": "Unit Test",
-      "type": "shell",
-      "command": "npm test",
-      "problemMatcher": [],
-      "group": {
-        "kind": "test",
         "isDefault": true
       }
     }

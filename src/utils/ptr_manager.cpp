@@ -111,7 +111,7 @@ shared_ptr<uv_sem_t> ObjectStore::tryLockDataset(long uid) {
   return nullptr;
 }
 
-vector<shared_ptr<uv_sem_t>> ObjectStore::_tryLockDatasets(vector<long> uids) {
+vector<shared_ptr<uv_sem_t>> ObjectStore::_tryLockDatasets(const vector<long> &uids) {
   vector<shared_ptr<uv_sem_t>> locks;
   lock();
   for (long uid : uids) {
@@ -192,6 +192,28 @@ template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, const Local<Objec
   return item->uid;
 }
 
+void ObjectStore::enqueueJob(unique_ptr<GDALAsyncProgressWorker> job, long ds_uid) {
+  LOG("ObjectStore: Enqueue for %ld [%p]", ds_uid, job.get());
+  lock();
+  uidMap<GDALDataset *>[ds_uid] -> op_queue -> push(move(job));
+  unlock();
+}
+
+unique_ptr<GDALAsyncProgressWorker> ObjectStore::dequeueJob(long ds_uid) {
+  lock();
+  auto &queue = *(uidMap<GDALDataset *>[ds_uid] -> op_queue);
+  if (!queue.empty()) {
+    auto job = move(queue.front());
+    LOG("ObjectStore: Dequeue for %ld [%p]", ds_uid, job.get());
+    queue.pop();
+    unlock();
+    return job;
+  }
+
+  unlock();
+  return nullptr;
+}
+
 // Creating a Layer object is a special case - it can contain SQL results
 long ObjectStore::add(OGRLayer *ptr, const Local<Object> &obj, long parent_uid, bool is_result_set) {
   long uid = ObjectStore::add<OGRLayer *>(ptr, obj, parent_uid);
@@ -206,8 +228,10 @@ long ObjectStore::add(GDALDataset *ptr, const Local<Object> &obj, long parent_ui
   if (parent_uid == 0) {
     uidMap<GDALDataset *>[uid] -> async_lock = shared_ptr<uv_sem_t>(new uv_sem_t(), uv_sem_deleter());
     uv_sem_init(uidMap<GDALDataset *>[uid] -> async_lock.get(), 1);
+    uidMap<GDALDataset *>[uid] -> op_queue = make_shared<queue<unique_ptr<GDALAsyncProgressWorker>>>();
   } else {
     uidMap<GDALDataset *>[uid] -> async_lock = uidMap<GDALDataset *>[parent_uid] -> async_lock;
+    uidMap<GDALDataset *>[uid] -> op_queue = uidMap<GDALDataset *>[parent_uid] -> op_queue;
   }
   return uid;
 }
@@ -257,8 +281,11 @@ template Local<Object> ObjectStore::get(shared_ptr<GDALMDArray>);
 //
 // Is there a simpler solution with a single code path? It remains to be seen
 
-// Disposing a Dataset is a special case - it has children
+// Disposing a Dataset is a special case - it has children (shared by the 2 codepaths)
 template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALDataset *>> item) {
+  // If the Dataset being closed has a queue of waiting operations -> we destroy it
+  // There are no other solutions possible - at this point the Dataset fate is sealed and
+  // we cannot afford to block the GC or the main thread
   uv_sem_wait(item->async_lock.get());
   uidMap<GDALDataset *>.erase(item->uid);
   ptrMap<GDALDataset *>.erase(item->ptr);
@@ -268,7 +295,7 @@ template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALDataset *>>
   while (!item->children.empty()) { dispose(item->children.back()); }
 }
 
-// Generic disposal
+// Generic disposal (shared by the 2 codepaths)
 template <typename GDALPTR> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALPTR>> item) {
   shared_ptr<uv_sem_t> async_lock = nullptr;
   if (item->parent) {

@@ -752,15 +752,13 @@ NAN_SETTER(READ_ONLY_SETTER);
     long parent_uid = obj->parent_uid;                                                                                 \
     GDALAsyncableJob<OGRErr> job;                                                                                      \
     job.persist(info.This());                                                                                          \
-    job.main = [gdal_obj, parent_uid](const GDALExecutionProgress &) {                                                 \
-      GDAL_ASYNCABLE_LOCK(parent_uid);                                                                                 \
+    job.main = [gdal_obj](const GDALExecutionProgress &) {                                                             \
       int err = gdal_obj->wrapped_method();                                                                            \
-      GDAL_UNLOCK_PARENT;                                                                                              \
       if (err) throw getOGRErrMsg(err);                                                                                \
       return err;                                                                                                      \
     };                                                                                                                 \
     job.rval = [](OGRErr, GetFromPersistentFunc) { return Nan::Undefined().As<Value>(); };                             \
-    job.run(info, async, 1);                                                                                           \
+    job.run(info, async, 1, parent_uid);                                                                               \
   }
 
 #define NODE_WRAPPED_ASYNC_METHOD_WITH_OGRERR_RESULT_1_WRAPPED_PARAM(                                                  \

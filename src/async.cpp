@@ -2,6 +2,17 @@
 
 namespace node_gdal {
 
+GDALAsyncProgressWorker::GDALAsyncProgressWorker(Nan::Callback *resultCallback)
+  : Nan::AsyncProgressWorkerBase<GDALProgressInfo>(resultCallback, "node-gdal:GDALAsyncWorker"), async_lock(nullptr) {
+  // Save a pointer to the event loop when being called from the main thread
+  // It won't be accessible afterwards
+  event_loop = Nan::GetCurrentEventLoop();
+}
+
+void GDALAsyncProgressWorker::passLock(const std::shared_ptr<uv_sem_t> &lock) {
+  async_lock = lock;
+}
+
 // *message coming from GDAL points to a statically allocated buffer
 GDALProgressInfo::GDALProgressInfo(double complete, const char *message) : complete(complete), message(message) {
 }

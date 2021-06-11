@@ -1,7 +1,6 @@
 #include "rasterband_pixels.hpp"
 #include "../gdal_common.hpp"
 #include "../gdal_rasterband.hpp"
-#include "../async.hpp"
 #include "../utils/typed_array.hpp"
 
 #include <sstream>
@@ -142,17 +141,15 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::get) {
   GDALAsyncableJob<double> job;
   job.persist(band->handle());
 
-  job.main = [ds_uid, raw, x, y](const GDALExecutionProgress &) {
+  job.main = [raw, x, y](const GDALExecutionProgress &) {
     double val;
-    GDAL_ASYNCABLE_LOCK(ds_uid);
     CPLErr err = raw->RasterIO(GF_Read, x, y, 1, 1, &val, 1, 1, GDT_Float64, 0, 0);
-    GDAL_UNLOCK_PARENT;
     if (err) { throw CPLGetLastErrorMsg(); }
     return val;
   };
 
   job.rval = [](double val, GetFromPersistentFunc) { return Nan::New<Number>(val); };
-  job.run(info, async, 2);
+  job.run(info, async, 2, ds_uid);
 }
 
 /**
@@ -193,16 +190,14 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::set) {
   GDALAsyncableJob<CPLErr> job;
   job.persist(band->handle());
 
-  job.main = [ds_uid, raw, x, y, val](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [raw, x, y, val](const GDALExecutionProgress &) {
     CPLErr err = raw->RasterIO(GF_Write, x, y, 1, 1, (void *)&val, 1, 1, GDT_Float64, 0, 0);
-    GDAL_UNLOCK_PARENT;
     if (err) { throw CPLGetLastErrorMsg(); }
     return err;
   };
 
   job.rval = [](CPLErr r, GetFromPersistentFunc) { return Nan::Undefined(); };
-  job.run(info, async, 3);
+  job.run(info, async, 3, ds_uid);
 }
 
 inline GDALRIOResampleAlg parseResamplingAlg(Local<Value> value) {
@@ -393,7 +388,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::read) {
   }
 
   data = (uint8_t *)data + offset * bytes_per_pixel;
-  job.main = [gdal_band, ds_uid, x, y, w, h, data, buffer_w, buffer_h, type, pixel_space, line_space, resampling, cb](
+  job.main = [gdal_band, x, y, w, h, data, buffer_w, buffer_h, type, pixel_space, line_space, resampling, cb](
                const GDALExecutionProgress &progress) {
     std::shared_ptr<GDALRasterIOExtraArg> extra(new GDALRasterIOExtraArg);
     INIT_RASTERIO_EXTRA_ARG(*extra);
@@ -403,18 +398,15 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::read) {
       extra->pProgressData = (void *)&progress;
     }
 
-    GDAL_ASYNCABLE_LOCK(ds_uid);
-
     CPLErr err =
       gdal_band->RasterIO(GF_Read, x, y, w, h, data, buffer_w, buffer_h, type, pixel_space, line_space, extra.get());
 
-    GDAL_UNLOCK_PARENT;
     if (err != CE_None) throw CPLGetLastErrorMsg();
     return err;
   };
 
   job.rval = [](CPLErr err, GetFromPersistentFunc getter) { return getter("array"); };
-  job.run(info, async, 13);
+  job.run(info, async, 13, ds_uid);
 }
 
 /**
@@ -524,7 +516,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::write) {
   }
 
   data = (uint8_t *)data + offset * bytes_per_pixel;
-  job.main = [gdal_band, ds_uid, x, y, w, h, data, buffer_w, buffer_h, type, pixel_space, line_space, cb](
+  job.main = [gdal_band, x, y, w, h, data, buffer_w, buffer_h, type, pixel_space, line_space, cb](
                const GDALExecutionProgress &progress) {
     std::shared_ptr<GDALRasterIOExtraArg> extra(new GDALRasterIOExtraArg);
     INIT_RASTERIO_EXTRA_ARG(*extra);
@@ -533,16 +525,14 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::write) {
       extra->pProgressData = (void *)&progress;
     }
 
-    GDAL_ASYNCABLE_LOCK(ds_uid);
     CPLErr err =
       gdal_band->RasterIO(GF_Write, x, y, w, h, data, buffer_w, buffer_h, type, pixel_space, line_space, extra.get());
-    GDAL_UNLOCK_PARENT;
     if (err != CE_None) throw CPLGetLastErrorMsg();
     return err;
   };
   job.rval = [](CPLErr, GetFromPersistentFunc getter) { return getter("array"); };
 
-  job.run(info, async, 11);
+  job.run(info, async, 11, ds_uid);
 }
 
 /**
@@ -608,15 +598,13 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::readBlock) {
   GDALAsyncableJob<CPLErr> job;
   job.persist("array", obj);
   job.persist(band->handle());
-  job.main = [gdal_band, parent_uid, x, y, data](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(parent_uid);
+  job.main = [gdal_band, x, y, data](const GDALExecutionProgress &) {
     CPLErr err = gdal_band->ReadBlock(x, y, data);
-    GDAL_UNLOCK_PARENT;
     if (err) { throw CPLGetLastErrorMsg(); }
     return err;
   };
   job.rval = [](CPLErr r, GetFromPersistentFunc getter) { return getter("array"); };
-  job.run(info, async, 3);
+  job.run(info, async, 3, parent_uid);
 }
 
 /**
@@ -668,15 +656,13 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::writeBlock) {
 
   GDALAsyncableJob<CPLErr> job;
   job.persist(obj, band->handle());
-  job.main = [gdal_band, parent_uid, x, y, data](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(parent_uid);
+  job.main = [gdal_band, x, y, data](const GDALExecutionProgress &) {
     CPLErr err = gdal_band->WriteBlock(x, y, data);
-    GDAL_UNLOCK_PARENT;
     if (err) { throw CPLGetLastErrorMsg(); }
     return err;
   };
   job.rval = [](CPLErr r, GetFromPersistentFunc) { return Nan::Undefined(); };
-  job.run(info, async, 3);
+  job.run(info, async, 3, parent_uid);
 }
 
 /**

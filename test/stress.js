@@ -13,14 +13,14 @@ const tests = [
       .then((band) => band.pixels.readAsync(0, 0, size.x, size.y, staticBuffers[slot]))
       .then((data) => assert(data[magicOffset] === magicData))
   },
-  () => {
+  /*() => {
     const ds1q = datasetsRaster[Math.floor(Math.random() * openDatasets)]
     const ds2q = datasetsRaster[Math.floor(Math.random() * openDatasets)]
     const ds3q = datasetsVector[Math.floor(Math.random() * openDatasets)]
     return Promise.all([ ds1q, ds2q, ds3q ])
       // This is a method that artificially stresses the locking
       .then(([ ds1, ds2, ds3 ]) => gdal._acquireLocksAsync(ds1, ds2, ds3))
-  },
+  }*/
   () => {
     const dsq = datasetsVector[Math.floor(Math.random() * openDatasets)]
     return dsq.then((ds) => ds.layers.getAsync(1))

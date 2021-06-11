@@ -22,30 +22,33 @@ using namespace std;
 
 namespace node_gdal {
 
+class GDALAsyncProgressWorker;
+
 template <typename GDALPTR> struct ObjectStoreItem {
   long uid;
   shared_ptr<ObjectStoreItem<GDALDataset *>> parent;
-  GDALPTR ptr;
   Nan::Persistent<v8::Object> obj;
+  GDALPTR ptr;
   ~ObjectStoreItem();
 };
 
 template <> struct ObjectStoreItem<OGRLayer *> {
   long uid;
   shared_ptr<ObjectStoreItem<GDALDataset *>> parent;
+  Nan::Persistent<v8::Object> obj;
   OGRLayer *ptr;
   bool is_result_set;
-  Nan::Persistent<v8::Object> obj;
   ~ObjectStoreItem();
 };
 
 template <> struct ObjectStoreItem<GDALDataset *> {
   long uid;
   shared_ptr<ObjectStoreItem<GDALDataset *>> parent;
-  list<long> children;
-  GDALDataset *ptr;
-  shared_ptr<uv_sem_t> async_lock;
   Nan::Persistent<v8::Object> obj;
+  GDALDataset *ptr;
+  list<long> children;
+  shared_ptr<uv_sem_t> async_lock;
+  shared_ptr<queue<unique_ptr<GDALAsyncProgressWorker>>> op_queue;
   ~ObjectStoreItem();
 };
 
@@ -94,6 +97,9 @@ class ObjectStore {
   shared_ptr<uv_sem_t> tryLockDataset(long uid);
   vector<shared_ptr<uv_sem_t>> tryLockDatasets(vector<long> uids);
 
+  void enqueueJob(unique_ptr<GDALAsyncProgressWorker> job, long uid);
+  unique_ptr<GDALAsyncProgressWorker> dequeueJob(long uid);
+
   template <typename GDALPTR>
   static void weakCallback(const Nan::WeakCallbackInfo<shared_ptr<ObjectStoreItem<GDALPTR>>> &data);
 
@@ -106,7 +112,7 @@ class ObjectStore {
     private:
   long uid;
   uv_mutex_t master_lock;
-  vector<shared_ptr<uv_sem_t>> _tryLockDatasets(vector<long> uids);
+  vector<shared_ptr<uv_sem_t>> _tryLockDatasets(const vector<long> &uids);
   template <typename GDALPTR> void dispose(shared_ptr<ObjectStoreItem<GDALPTR>> item);
 };
 

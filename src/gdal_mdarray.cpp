@@ -331,26 +331,24 @@ GDAL_ASYNCABLE_DEFINE(MDArray::read) {
   Local<Object> ds = Nan::GetPrivate(info.This(), Nan::New("ds_").ToLocalChecked()).ToLocalChecked().As<Object>();
   job.persist(ds);
 
-  job.main = [parent_uid, buffer, gdal_mdarray, gdal_origin, gdal_span, gdal_stride, type, length, offset](
-               const GDALExecutionProgress &) {
-    int bytes_per_pixel = GDALGetDataTypeSize(type) / 8;
-    GDALExtendedDataType gdal_type = GDALExtendedDataType::Create(type);
-    GDAL_ASYNCABLE_LOCK(parent_uid);
-    bool success = gdal_mdarray->Read(
-      gdal_origin.get(),
-      gdal_span.get(),
-      nullptr,
-      gdal_stride.get(),
-      gdal_type,
-      (void *)((uint8_t *)buffer + offset * bytes_per_pixel),
-      buffer,
-      length * bytes_per_pixel);
-    GDAL_UNLOCK_PARENT;
-    if (!success) { throw CPLGetLastErrorMsg(); }
-    return success;
-  };
+  job.main =
+    [buffer, gdal_mdarray, gdal_origin, gdal_span, gdal_stride, type, length, offset](const GDALExecutionProgress &) {
+      int bytes_per_pixel = GDALGetDataTypeSize(type) / 8;
+      GDALExtendedDataType gdal_type = GDALExtendedDataType::Create(type);
+      bool success = gdal_mdarray->Read(
+        gdal_origin.get(),
+        gdal_span.get(),
+        nullptr,
+        gdal_stride.get(),
+        gdal_type,
+        (void *)((uint8_t *)buffer + offset * bytes_per_pixel),
+        buffer,
+        length * bytes_per_pixel);
+      if (!success) { throw CPLGetLastErrorMsg(); }
+      return success;
+    };
   job.rval = [](bool success, GetFromPersistentFunc getter) { return getter("array"); };
-  job.run(info, async, 1);
+  job.run(info, async, 1, parent_uid);
 }
 
 /**

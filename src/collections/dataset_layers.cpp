@@ -128,19 +128,15 @@ GDAL_ASYNCABLE_DEFINE(DatasetLayers::get) {
   job.persist(parent);
   if (info[0]->IsString()) {
     std::string *layer_name = new std::string(*Nan::Utf8String(info[0]));
-    job.main = [ds_uid, raw, layer_name](const GDALExecutionProgress &) {
+    job.main = [raw, layer_name](const GDALExecutionProgress &) {
       std::unique_ptr<std::string> layer_name_ptr(layer_name);
-      GDAL_ASYNCABLE_LOCK(ds_uid);
       OGRLayer *lyr = raw->GetLayerByName(layer_name->c_str());
-      GDAL_UNLOCK_PARENT;
       return lyr;
     };
   } else if (info[0]->IsNumber()) {
     int64_t id = Nan::To<int64_t>(info[0]).ToChecked();
-    job.main = [ds_uid, raw, id](const GDALExecutionProgress &) {
-      GDAL_ASYNCABLE_LOCK(ds_uid);
+    job.main = [raw, id](const GDALExecutionProgress &) {
       OGRLayer *lyr = raw->GetLayer(id);
-      GDAL_UNLOCK_PARENT;
       return lyr;
     };
   } else {
@@ -149,7 +145,7 @@ GDAL_ASYNCABLE_DEFINE(DatasetLayers::get) {
   }
 
   job.rval = [raw](OGRLayer *lyr, GetFromPersistentFunc) { return Layer::New(lyr, raw); };
-  job.run(info, async, 1);
+  job.run(info, async, 1, ds_uid);
 }
 
 /**
@@ -225,19 +221,17 @@ GDAL_ASYNCABLE_DEFINE(DatasetLayers::create) {
   long ds_uid = ds->uid;
   GDALAsyncableJob<OGRLayer *> job;
   job.persist(parent);
-  job.main = [raw, ds_uid, layer_name, srs, geom_type, options](const GDALExecutionProgress &) {
+  job.main = [raw, layer_name, srs, geom_type, options](const GDALExecutionProgress &) {
     std::unique_ptr<StringList> options_ptr(options);
     std::unique_ptr<std::string> layer_name_ptr(layer_name);
-    GDAL_ASYNCABLE_LOCK(ds_uid);
     OGRLayer *layer = raw->CreateLayer(layer_name->c_str(), srs, geom_type, options->get());
-    GDAL_UNLOCK_PARENT;
     if (layer == nullptr) throw CPLGetLastErrorMsg();
     return layer;
   };
 
   job.rval = [raw](OGRLayer *layer, GetFromPersistentFunc) { return Layer::New(layer, raw, false); };
 
-  job.run(info, async, 4);
+  job.run(info, async, 4, ds_uid);
 }
 
 /**
@@ -273,15 +267,13 @@ GDAL_ASYNCABLE_DEFINE(DatasetLayers::count) {
   long ds_uid = ds->uid;
   GDALAsyncableJob<int> job;
   job.persist(parent);
-  job.main = [raw, ds_uid](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [raw](const GDALExecutionProgress &) {
     int count = raw->GetLayerCount();
-    GDAL_UNLOCK_PARENT;
     return count;
   };
 
   job.rval = [](int count, GetFromPersistentFunc) { return Nan::New<Integer>(count); };
-  job.run(info, async, 0);
+  job.run(info, async, 0, ds_uid);
 }
 
 /**
@@ -332,19 +324,17 @@ GDAL_ASYNCABLE_DEFINE(DatasetLayers::copy) {
   OGRLayer *src = layer_to_copy->get();
   GDALAsyncableJob<OGRLayer *> job;
   job.persist(parent, info[0].As<Object>());
-  job.main = [raw, ds_uid, src, new_name, options](const GDALExecutionProgress &) {
+  job.main = [raw, src, new_name, options](const GDALExecutionProgress &) {
     std::unique_ptr<StringList> options_ptr(options);
     std::unique_ptr<std::string> new_name_ptr(new_name);
-    GDAL_ASYNCABLE_LOCK(ds_uid);
     OGRLayer *layer = raw->CopyLayer(src, new_name->c_str(), options->get());
-    GDAL_UNLOCK_PARENT;
     if (layer == nullptr) throw CPLGetLastErrorMsg();
     return layer;
   };
 
   job.rval = [raw](OGRLayer *layer, GetFromPersistentFunc) { return Layer::New(layer, raw); };
 
-  job.run(info, async, 3);
+  job.run(info, async, 3, ds_uid);
 }
 
 /**
@@ -385,16 +375,14 @@ GDAL_ASYNCABLE_DEFINE(DatasetLayers::remove) {
   long ds_uid = ds->uid;
   GDALAsyncableJob<OGRErr> job;
   job.persist(parent);
-  job.main = [raw, ds_uid, i](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [raw, i](const GDALExecutionProgress &) {
     OGRErr err = raw->DeleteLayer(i);
-    GDAL_UNLOCK_PARENT;
     if (err) throw getOGRErrMsg(err);
     return err;
   };
 
   job.rval = [](int count, GetFromPersistentFunc) { return Nan::Undefined().As<Value>(); };
-  job.run(info, async, 1);
+  job.run(info, async, 1, ds_uid);
 }
 
 /**

@@ -119,15 +119,13 @@ GDAL_ASYNCABLE_DEFINE(DatasetBands::get) {
 
   GDALAsyncableJob<GDALRasterBand *> job;
   job.persist(parent);
-  job.main = [ds_uid, raw, band_id](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [raw, band_id](const GDALExecutionProgress &) {
     GDALRasterBand *band = raw->GetRasterBand(band_id);
-    GDAL_UNLOCK_PARENT;
     if (band == nullptr) { throw CPLGetLastErrorMsg(); }
     return band;
   };
   job.rval = [raw](GDALRasterBand *band, GetFromPersistentFunc) { return RasterBand::New(band, raw); };
-  job.run(info, async, 1);
+  job.run(info, async, 1, ds_uid);
 }
 
 /**
@@ -191,15 +189,13 @@ GDAL_ASYNCABLE_DEFINE(DatasetBands::create) {
 
   GDALAsyncableJob<GDALRasterBand *> job;
   job.persist(parent);
-  job.main = [ds_uid, raw, type, options](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [raw, type, options](const GDALExecutionProgress &) {
     CPLErr err = raw->AddBand(type, options->get());
-    GDAL_UNLOCK_PARENT;
     if (err != CE_None) { throw CPLGetLastErrorMsg(); }
     return raw->GetRasterBand(raw->GetRasterCount());
   };
   job.rval = [raw](GDALRasterBand *r, GetFromPersistentFunc) { return RasterBand::New(r, raw); };
-  job.run(info, async, 2);
+  job.run(info, async, 2, ds_uid);
 }
 
 /**
@@ -235,14 +231,12 @@ GDAL_ASYNCABLE_DEFINE(DatasetBands::count) {
   GDALDataset *raw = ds->get();
   GDALAsyncableJob<int> job;
   job.persist(parent);
-  job.main = [ds_uid, raw](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [raw](const GDALExecutionProgress &) {
     int count = raw->GetRasterCount();
-    GDAL_UNLOCK_PARENT;
     return count;
   };
   job.rval = [](int count, GetFromPersistentFunc) { return Nan::New<Integer>(count); };
-  job.run(info, async, 0);
+  job.run(info, async, 0, ds_uid);
 }
 
 /**

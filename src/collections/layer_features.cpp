@@ -122,14 +122,12 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::get) {
   long ds_uid = layer->parent_uid;
   GDALAsyncableJob<OGRFeature *> job;
   job.persist(parent);
-  job.main = [ds_uid, gdal_layer, feature_id](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [gdal_layer, feature_id](const GDALExecutionProgress &) {
     OGRFeature *feature = gdal_layer->GetFeature(feature_id);
-    GDAL_UNLOCK_PARENT;
     return feature;
   };
   job.rval = [](OGRFeature *feature, GetFromPersistentFunc) { return Feature::New(feature); };
-  job.run(info, async, 1);
+  job.run(info, async, 1, ds_uid);
 }
 
 /**
@@ -164,15 +162,13 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::first) {
   long ds_uid = layer->parent_uid;
   GDALAsyncableJob<OGRFeature *> job;
   job.persist(parent);
-  job.main = [ds_uid, gdal_layer](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [gdal_layer](const GDALExecutionProgress &) {
     gdal_layer->ResetReading();
     OGRFeature *feature = gdal_layer->GetNextFeature();
-    GDAL_UNLOCK_PARENT;
     return feature;
   };
   job.rval = [](OGRFeature *feature, GetFromPersistentFunc) { return Feature::New(feature); };
-  job.run(info, async, 0);
+  job.run(info, async, 0, ds_uid);
 }
 
 /**
@@ -213,14 +209,12 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::next) {
   long ds_uid = layer->parent_uid;
   GDALAsyncableJob<OGRFeature *> job;
   job.persist(parent);
-  job.main = [ds_uid, gdal_layer](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [gdal_layer](const GDALExecutionProgress &) {
     OGRFeature *feature = gdal_layer->GetNextFeature();
-    GDAL_UNLOCK_PARENT;
     return feature;
   };
   job.rval = [](OGRFeature *feature, GetFromPersistentFunc) { return Feature::New(feature); };
-  job.run(info, async, 0);
+  job.run(info, async, 0, ds_uid);
 }
 
 /**
@@ -277,15 +271,13 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::add) {
   OGRFeature *gdal_f = f->get();
   GDALAsyncableJob<int> job;
   job.persist(parent);
-  job.main = [ds_uid, gdal_layer, gdal_f](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [gdal_layer, gdal_f](const GDALExecutionProgress &) {
     int err = gdal_layer->CreateFeature(gdal_f);
-    GDAL_UNLOCK_PARENT;
     if (err != CE_None) throw getOGRErrMsg(err);
     return err;
   };
   job.rval = [](int, GetFromPersistentFunc) { return Nan::Undefined(); };
-  job.run(info, async, 1);
+  job.run(info, async, 1, ds_uid);
 }
 
 /**
@@ -332,14 +324,12 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::count) {
   long ds_uid = layer->parent_uid;
   GDALAsyncableJob<GIntBig> job;
   job.persist(parent, ds);
-  job.main = [ds_uid, gdal_layer, force](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [gdal_layer, force](const GDALExecutionProgress &) {
     GIntBig count = gdal_layer->GetFeatureCount(force);
-    GDAL_UNLOCK_PARENT;
     return count;
   };
   job.rval = [](GIntBig count, GetFromPersistentFunc) { return Nan::New<Number>(count); };
-  job.run(info, async, 1);
+  job.run(info, async, 1, ds_uid);
 }
 
 /**
@@ -420,16 +410,14 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::set) {
   long ds_uid = layer->parent_uid;
   GDALAsyncableJob<OGRErr> job;
   job.persist({parent, feature, ds});
-  job.main = [ds_uid, gdal_layer, gdal_feature](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [gdal_layer, gdal_feature](const GDALExecutionProgress &) {
     OGRErr err = gdal_layer->SetFeature(gdal_feature);
-    GDAL_UNLOCK_PARENT;
     if (err != CE_None) throw getOGRErrMsg(err);
     return err;
   };
 
   job.rval = [](int, GetFromPersistentFunc) { return Nan::Undefined(); };
-  job.run(info, async, 2);
+  job.run(info, async, 2, ds_uid);
 }
 
 /**
@@ -468,15 +456,13 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::remove) {
   long ds_uid = layer->parent_uid;
   GDALAsyncableJob<int> job;
   job.persist(parent);
-  job.main = [ds_uid, gdal_layer, i](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  job.main = [gdal_layer, i](const GDALExecutionProgress &) {
     int err = gdal_layer->DeleteFeature(i);
-    GDAL_UNLOCK_PARENT;
     if (err) { throw getOGRErrMsg(err); }
     return err;
   };
   job.rval = [](int, GetFromPersistentFunc) { return Nan::Undefined(); };
-  job.run(info, async, 1);
+  job.run(info, async, 1, ds_uid);
 
   return;
 }

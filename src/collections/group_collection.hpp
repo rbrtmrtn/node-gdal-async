@@ -11,7 +11,6 @@
 // gdal
 #include <gdal_priv.h>
 
-#include "../async.hpp"
 #include "../gdal_dataset.hpp"
 #include "../gdal_group.hpp"
 
@@ -117,19 +116,17 @@ class GroupCollection : public Nan::ObjectWrap {
 
     GDALAsyncableJob<std::shared_ptr<GDALOBJ>> job;
     job.persist(parent_ds, parent_obj);
-    job.main = [ds_uid, raw, name, idx, isString](const GDALExecutionProgress &) {
-      GDAL_ASYNCABLE_LOCK(ds_uid);
+    job.main = [raw, name, idx, isString](const GDALExecutionProgress &) {
       std::shared_ptr<GDALOBJ> r = nullptr;
       if (!isString)
         r = SELF::__get(raw, idx);
       else
         r = SELF::__get(raw, name);
-      GDAL_UNLOCK_PARENT;
       if (r == nullptr) throw "Invalid element";
       return r;
     };
     job.rval = [gdal_ds](std::shared_ptr<GDALOBJ> r, GetFromPersistentFunc) { return NODEOBJ::New(r, gdal_ds); };
-    job.run(info, async, 1);
+    job.run(info, async, 1, ds_uid);
   }
 
   GDAL_ASYNCABLE_TEMPLATE(count) {
@@ -147,14 +144,12 @@ class GroupCollection : public Nan::ObjectWrap {
 
     GDALAsyncableJob<int> job;
     job.persist(parent_ds, parent_obj);
-    job.main = [ds_uid, raw](const GDALExecutionProgress &) {
-      GDAL_ASYNCABLE_LOCK(ds_uid);
+    job.main = [raw](const GDALExecutionProgress &) {
       int r = SELF::__count(raw);
-      GDAL_UNLOCK_PARENT;
       return r;
     };
     job.rval = [](int r, GetFromPersistentFunc) { return Nan::New<Number>(r); };
-    job.run(info, async, 0);
+    job.run(info, async, 0, ds_uid);
   }
 
   static NAN_GETTER(namesGetter) {

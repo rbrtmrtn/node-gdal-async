@@ -390,14 +390,12 @@ GDAL_ASYNCABLE_DEFINE(Algorithms::checksumImage) {
 
   GDALAsyncableJob<int> job;
 
-  job.main = [src_uid, gdal_src, x, y, w, h](const GDALExecutionProgress &) {
-    GDAL_ASYNCABLE_LOCK(src_uid);
+  job.main = [gdal_src, x, y, w, h](const GDALExecutionProgress &) {
     int r = GDALChecksumImage(gdal_src, x, y, w, h);
-    GDAL_UNLOCK_PARENT;
     return r;
   };
   job.rval = [](int r, GetFromPersistentFunc) { return Nan::New<Integer>(r); };
-  job.run(info, async, 5);
+  job.run(info, async, 5, src_uid);
 }
 
 /**

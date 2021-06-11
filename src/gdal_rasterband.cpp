@@ -275,7 +275,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBand::fill) {
   };
   job.rval = [](CPLErr, GetFromPersistentFunc) { return Nan::Undefined().As<Value>(); };
 
-  job.run(info, async, 2);
+  job.run(info, async, 2, band->parent_uid);
 }
 
 // --- Custom error handling to handle VRT errors ---
