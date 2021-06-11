@@ -9,7 +9,7 @@ GDALAsyncProgressWorker::GDALAsyncProgressWorker(Nan::Callback *resultCallback)
   event_loop = Nan::GetCurrentEventLoop();
 }
 
-void GDALAsyncProgressWorker::passLock(const std::shared_ptr<uv_sem_t> &lock) {
+void GDALAsyncProgressWorker::passLock(const AsyncLock &lock) {
   async_lock = lock;
 }
 

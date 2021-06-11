@@ -5,6 +5,20 @@
 #include "nan-wrapper.h"
 #include "gdal_common.hpp"
 
+// Finding you way around here
+// Processing a GDAL operation:
+// The usercode-facing methods create a GDALAsyncableJob
+// It can be executed both synchronously or asynchronously
+// When it is to be executed asynchronously, a GDALAsyncWorker is created
+// (GDALAsyncWorker is an encapsulation of a job, not a thread)
+// If the required Datasets can be locked without waiting then
+// the GDALAsyncWorker is immediately submitted to Nan::AsyncQueueWorker to be run in a thread from the pool
+// If the required Datasets cannot be locked, the GDALAsyncWorker is enqueued in the ObjectStore
+// When Node/Nan/libuv runs the job it will call GDALAsyncWorker::Execute in one of the worker threads
+// When the jobs is finished, Execute will eventually pull the next job from the queue
+// Finally, once we are back to the main thread (Node/Nan/libuv take care of this),
+// HandleOKCallback/HandleErrorCallback will be executed
+
 namespace node_gdal {
 
 // This generates method definitions for 2 methods: sync and async version and a hidden common block
@@ -41,7 +55,7 @@ namespace node_gdal {
 
 // Handle locking
 #define GDAL_LOCK_PARENT(p)                                                                                            \
-  std::shared_ptr<uv_sem_t> async_lock = nullptr;                                                                      \
+  AsyncLock async_lock = nullptr;                                                                                      \
   try {                                                                                                                \
     async_lock = object_store.lockDataset((p)->parent_uid);                                                            \
   } catch (const char *err) {                                                                                          \
@@ -49,7 +63,7 @@ namespace node_gdal {
     return;                                                                                                            \
   }
 #define GDAL_LOCK_DS(uid)                                                                                              \
-  std::shared_ptr<uv_sem_t> async_lock = nullptr;                                                                      \
+  AsyncLock async_lock = nullptr;                                                                                      \
   try {                                                                                                                \
     async_lock = object_store.lockDataset(uid);                                                                        \
   } catch (const char *err) {                                                                                          \
@@ -58,10 +72,9 @@ namespace node_gdal {
   }
 #define GDAL_UNLOCK_PARENT uv_sem_post(async_lock.get())
 
-#define GDAL_ASYNCABLE_LOCK_MANY(...)                                                                                  \
-  std::vector<std::shared_ptr<uv_sem_t>> async_locks = object_store.lockDatasets({__VA_ARGS__});
+#define GDAL_ASYNCABLE_LOCK_MANY(...) std::vector<AsyncLock> async_locks = object_store.lockDatasets({__VA_ARGS__});
 #define GDAL_UNLOCK_MANY                                                                                               \
-  for (std::shared_ptr<uv_sem_t> & async_lock : async_locks) { uv_sem_post(async_lock.get()); }
+  for (AsyncLock & async_lock : async_locks) { uv_sem_post(async_lock.get()); }
 
 // Node.js NAN null initializes and trivially copies objects of this class without asking permission
 struct GDALProgressInfo {
@@ -87,12 +100,12 @@ class GDALSyncExecutionProgress {
 typedef std::function<v8::Local<v8::Value>(const char *)> GetFromPersistentFunc;
 class GDALAsyncProgressWorker : public Nan::AsyncProgressWorkerBase<GDALProgressInfo> {
     protected:
-  std::shared_ptr<uv_sem_t> async_lock;
+  AsyncLock async_lock;
   uv_loop_t *event_loop;
 
     public:
   GDALAsyncProgressWorker(Nan::Callback *resultCallback);
-  void passLock(const std::shared_ptr<uv_sem_t> &lock);
+  void passLock(const AsyncLock &lock);
 };
 
 typedef GDALAsyncProgressWorker::ExecutionProgress GDALAsyncExecutionProgress;
@@ -326,7 +339,7 @@ template <class GDALType> class GDALAsyncableJob {
 
   // Run while locking a Dataset
   void run(const Nan::FunctionCallbackInfo<v8::Value> &info, bool async, int cb_arg, long ds_uid) {
-    std::shared_ptr<uv_sem_t> lock = nullptr;
+    AsyncLock lock = nullptr;
 
     // Async execution
     if (async) {

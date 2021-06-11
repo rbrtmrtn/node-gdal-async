@@ -47,7 +47,7 @@ template <> struct ObjectStoreItem<GDALDataset *> {
   Nan::Persistent<v8::Object> obj;
   GDALDataset *ptr;
   list<long> children;
-  shared_ptr<uv_sem_t> async_lock;
+  AsyncLock async_lock;
   shared_ptr<queue<unique_ptr<GDALAsyncProgressWorker>>> op_queue;
   ~ObjectStoreItem();
 };
@@ -92,10 +92,10 @@ class ObjectStore {
   inline void unlock() {
     uv_mutex_unlock(&master_lock);
   }
-  shared_ptr<uv_sem_t> lockDataset(long uid);
-  vector<shared_ptr<uv_sem_t>> lockDatasets(vector<long> uids);
-  shared_ptr<uv_sem_t> tryLockDataset(long uid);
-  vector<shared_ptr<uv_sem_t>> tryLockDatasets(vector<long> uids);
+  AsyncLock lockDataset(long uid);
+  vector<AsyncLock> lockDatasets(vector<long> uids);
+  AsyncLock tryLockDataset(long uid);
+  vector<AsyncLock> tryLockDatasets(vector<long> uids);
 
   void enqueueJob(unique_ptr<GDALAsyncProgressWorker> job, long uid);
   unique_ptr<GDALAsyncProgressWorker> dequeueJob(long uid);
@@ -112,7 +112,7 @@ class ObjectStore {
     private:
   long uid;
   uv_mutex_t master_lock;
-  vector<shared_ptr<uv_sem_t>> _tryLockDatasets(const vector<long> &uids);
+  vector<AsyncLock> _tryLockDatasets(const vector<long> &uids);
   template <typename GDALPTR> void dispose(shared_ptr<ObjectStoreItem<GDALPTR>> item);
 };
 
