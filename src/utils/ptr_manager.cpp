@@ -193,7 +193,7 @@ template <typename GDALPTR> long ObjectStore::add(GDALPTR ptr, const Local<Objec
 }
 
 void ObjectStore::enqueueJob(unique_ptr<GDALAsyncProgressWorker> job, long ds_uid) {
-  LOG("ObjectStore: Enqueue for %ld [%p]", ds_uid, job.get());
+  LOG("ObjectStore: Enqueue for [%ld]", ds_uid);
   lock();
   uidMap<GDALDataset *>[ds_uid] -> op_queue -> push(move(job));
   unlock();
@@ -204,7 +204,7 @@ unique_ptr<GDALAsyncProgressWorker> ObjectStore::dequeueJob(long ds_uid) {
   auto &queue = *(uidMap<GDALDataset *>[ds_uid] -> op_queue);
   if (!queue.empty()) {
     auto job = move(queue.front());
-    LOG("ObjectStore: Dequeue for %ld [%p]", ds_uid, job.get());
+    LOG("ObjectStore: Dequeue for [%ld]", ds_uid);
     queue.pop();
     unlock();
     return job;
@@ -288,7 +288,7 @@ template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALDataset *>>
   // we cannot afford to block the GC or the main thread
   uv_sem_wait(item->async_lock.get());
   if (!item->op_queue->empty()) {
-    fprintf(stderr, "disposing Dataset %ld with waiting operations on the queue\n", item->uid);
+    fprintf(stderr, "disposing Dataset [%ld] with waiting operations on the queue\n", item->uid);
   }
   uidMap<GDALDataset *>.erase(item->uid);
   ptrMap<GDALDataset *>.erase(item->ptr);
@@ -355,7 +355,7 @@ template <typename GDALPTR> ObjectStoreItem<GDALPTR>::~ObjectStoreItem() {
 // Closing a Dataset is a special case - it requires a GDAL operation
 ObjectStoreItem<GDALDataset *>::~ObjectStoreItem() {
   if (ptr) {
-    LOG("Closing GDALDataset %ld [%p]", uid, ptr);
+    LOG("Closing GDALDataset [%ld] [%p]", uid, ptr);
     GDALClose(ptr);
     ptr = nullptr;
   }
@@ -365,7 +365,7 @@ ObjectStoreItem<GDALDataset *>::~ObjectStoreItem() {
 ObjectStoreItem<OGRLayer *>::~ObjectStoreItem() {
   GDALDataset *parent_ds = parent->ptr;
   if (is_result_set) {
-    LOG("Closing OGRLayer with SQL results %ld [%p]", uid, ptr);
+    LOG("Closing OGRLayer with SQL results [%ld] [%p]", uid, ptr);
     parent_ds->ReleaseResultSet(ptr);
   }
 }

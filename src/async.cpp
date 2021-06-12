@@ -4,9 +4,6 @@ namespace node_gdal {
 
 GDALAsyncProgressWorker::GDALAsyncProgressWorker(Nan::Callback *resultCallback)
   : Nan::AsyncProgressWorkerBase<GDALProgressInfo>(resultCallback, "node-gdal:GDALAsyncWorker"), async_lock(nullptr) {
-  // Save a pointer to the event loop when being called from the main thread
-  // It won't be accessible afterwards
-  event_loop = Nan::GetCurrentEventLoop();
 }
 
 void GDALAsyncProgressWorker::passLock(const AsyncLock &lock) {

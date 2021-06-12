@@ -15,9 +15,10 @@
 // the GDALAsyncWorker is immediately submitted to Nan::AsyncQueueWorker to be run in a thread from the pool
 // If the required Datasets cannot be locked, the GDALAsyncWorker is enqueued in the ObjectStore
 // When Node/Nan/libuv runs the job it will call GDALAsyncWorker::Execute in one of the worker threads
-// When the jobs is finished, Execute will eventually pull the next job from the queue
 // Finally, once we are back to the main thread (Node/Nan/libuv take care of this),
 // HandleOKCallback/HandleErrorCallback will be executed
+// It is only here that another job will be pulled from the queue in DequeueNext
+// (as uv_queue_work must be called from the main thread)
 
 namespace node_gdal {
 
@@ -101,7 +102,6 @@ typedef std::function<v8::Local<v8::Value>(const char *)> GetFromPersistentFunc;
 class GDALAsyncProgressWorker : public Nan::AsyncProgressWorkerBase<GDALProgressInfo> {
     protected:
   AsyncLock async_lock;
-  uv_loop_t *event_loop;
 
     public:
   GDALAsyncProgressWorker(Nan::Callback *resultCallback);
@@ -177,6 +177,7 @@ template <class GDALType> class GDALAsyncWorker : public GDALAsyncProgressWorker
   void HandleOKCallback();
   void HandleErrorCallback();
   void HandleProgressCallback(const GDALProgressInfo *data, size_t count);
+  void DequeueNext();
 };
 
 template <class GDALType>
@@ -200,44 +201,55 @@ GDALAsyncWorker<GDALType>::GDALAsyncWorker(
 }
 
 template <class GDALType> GDALAsyncWorker<GDALType>::~GDALAsyncWorker() {
+  LOG("Destroying AsyncWorker for Dataset [%ld] (lock=%p)", ds_uid, async_lock.get());
   if (progressCallback) delete progressCallback;
 }
 
 template <class GDALType> void GDALAsyncWorker<GDALType>::Execute(const ExecutionProgress &progress) {
   // Aux thread with the JS world running
   // V8 objects are not acessible here
-  LOG("Running async job for Dataset %ld", ds_uid);
+  LOG("Running async job for Dataset [%ld]", ds_uid);
   try {
     GDALExecutionProgress executionProgress(&progress);
     raw = doit(executionProgress);
   } catch (const char *err) { this->SetErrorMessage(err); }
-  LOG("Finished async job for Dataset %ld", ds_uid);
+  if (async_lock != nullptr) {
+    uv_sem_post(async_lock.get());
+    async_lock = nullptr;
+  }
+  LOG("Finished async job for Dataset [%ld]", ds_uid);
+}
 
+// uv_queue_work (used by Nan::AsyncQueueWorker) can't be called from multiple threads
+// this function will be called on the main thread just before going back to JS
+template <class GDALType> void GDALAsyncWorker<GDALType>::DequeueNext() {
+  LOG("DequeueNext for Dataset [%ld]", ds_uid);
   // This can be a single job without a Dataset
   if (ds_uid == 0) { return; }
+
+  AsyncLock lock = object_store.tryLockDataset(ds_uid);
+  if (lock == nullptr) {
+    LOG("An op cut in front of the queue, this is not fair, for Dataset [%ld]", ds_uid);
+    return;
+  }
 
   std::unique_ptr<GDALAsyncProgressWorker> next_job = object_store.dequeueJob(ds_uid);
   if (next_job != nullptr) {
     // If there is another job waiting for this Dataset, we enqueue it in libuv and we pass the lock
-    LOG("Chaining another async job for Dataset %ld [%p]", ds_uid, next_job.get());
-    next_job->passLock(async_lock);
-    // This is a manual call of Nan::AsyncQueueWorker with the saved pointer to the event loop
-    // The unique_ptr to the job is released as Nan::AsyncQueueWorker expects ownership of the pointer
-    // TODO: Maybe this should be a Nan feature (Note: uv_queue_work is not thread_safe)
-    object_store.lock();
-    uv_queue_work(event_loop, &(next_job.release()->request), Nan::AsyncExecute, Nan::AsyncExecuteComplete);
-    object_store.unlock();
+    LOG("Chaining another async job for Dataset [%ld]", ds_uid);
+    next_job->passLock(lock);
+    Nan::AsyncQueueWorker(next_job.release());
   } else {
     // Otherwise we can unlock the Dataset
-    LOG("Queue is empty for Dataset %ld", ds_uid);
-    uv_sem_post(async_lock.get());
+    LOG("Queue is empty for Dataset [%ld]", ds_uid);
+    uv_sem_post(lock.get());
   }
-  async_lock = nullptr;
 }
 
 template <class GDALType> void GDALAsyncWorker<GDALType>::HandleOKCallback() {
   // Back to the main thread with the JS world not running
   Nan::HandleScope scope;
+  DequeueNext();
 
   // rval is the user function that will create the returned value
   // we give it a lambda that can access the persistent storage created for this operation
@@ -249,6 +261,7 @@ template <class GDALType> void GDALAsyncWorker<GDALType>::HandleOKCallback() {
 template <class GDALType> void GDALAsyncWorker<GDALType>::HandleErrorCallback() {
   // Back to the main thread with the JS world not running
   Nan::HandleScope scope;
+  DequeueNext();
   v8::Local<v8::Value> argv[] = {Nan::Error(this->ErrorMessage())};
   callback->Call(1, argv, async_resource);
 }
@@ -356,16 +369,16 @@ template <class GDALType> class GDALAsyncableJob {
       object_store.lock();
       lock = object_store.tryLockDataset(ds_uid);
       if (lock != nullptr) {
+        object_store.unlock();
         // The Dataset is available, we start the job right away and pass it the lock (semaphore)
         // it will unlock it when it is finished
-        LOG("Will start immediately an async job for Dataset %ld", ds_uid);
+        LOG("Will start immediately an async job for Dataset [%ld]", ds_uid);
         async_job->passLock(lock);
         Nan::AsyncQueueWorker(async_job.release());
-        object_store.unlock();
       } else {
         // An async operation is already in progress for this Dataset and we couldn't acquire the lock
         // The object store will take care of enqueuing
-        LOG("Enqueuing an async job for Dataset %ld", ds_uid);
+        LOG("Enqueuing an async job for Dataset [%ld]", ds_uid);
         object_store.enqueueJob(std::move(async_job), ds_uid);
         object_store.unlock();
       }
