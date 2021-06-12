@@ -223,8 +223,10 @@ template <class GDALType> void GDALAsyncWorker<GDALType>::Execute(const Executio
     next_job->passLock(async_lock);
     // This is a manual call of Nan::AsyncQueueWorker with the saved pointer to the event loop
     // The unique_ptr to the job is released as Nan::AsyncQueueWorker expects ownership of the pointer
-    // TODO: Maybe this should be a Nan feature
+    // TODO: Maybe this should be a Nan feature (Note: uv_queue_work is not thread_safe)
+    object_store.lock();
     uv_queue_work(event_loop, &(next_job.release()->request), Nan::AsyncExecute, Nan::AsyncExecuteComplete);
+    object_store.unlock();
   } else {
     // Otherwise we can unlock the Dataset
     LOG("Queue is empty for Dataset %ld", ds_uid);
@@ -354,12 +356,12 @@ template <class GDALType> class GDALAsyncableJob {
       object_store.lock();
       lock = object_store.tryLockDataset(ds_uid);
       if (lock != nullptr) {
-        object_store.unlock();
         // The Dataset is available, we start the job right away and pass it the lock (semaphore)
         // it will unlock it when it is finished
         LOG("Will start immediately an async job for Dataset %ld", ds_uid);
         async_job->passLock(lock);
         Nan::AsyncQueueWorker(async_job.release());
+        object_store.unlock();
       } else {
         // An async operation is already in progress for this Dataset and we couldn't acquire the lock
         // The object store will take care of enqueuing
