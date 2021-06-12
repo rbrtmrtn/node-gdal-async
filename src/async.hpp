@@ -14,11 +14,17 @@
 // If the required Datasets can be locked without waiting then
 // the GDALAsyncWorker is immediately submitted to Nan::AsyncQueueWorker to be run in a thread from the pool
 // If the required Datasets cannot be locked, the GDALAsyncWorker is enqueued in the ObjectStore
+// The Dataset semaphore is passed from the main thread to the worker
 // When Node/Nan/libuv runs the job it will call GDALAsyncWorker::Execute in one of the worker threads
+// The Dataset semaphore is released in the worker
 // Finally, once we are back to the main thread (Node/Nan/libuv take care of this),
 // HandleOKCallback/HandleErrorCallback will be executed
 // It is only here that another job will be pulled from the queue in DequeueNext
 // (as uv_queue_work must be called from the main thread)
+
+// Lock invariant:
+// A Dataset lock (semaphore) is always acquired in the main thread before calling Nan::AsyncQueueWorker
+// It is always freed in the worker thread immediately after the operation
 
 namespace node_gdal {
 
