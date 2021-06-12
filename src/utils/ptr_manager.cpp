@@ -287,6 +287,9 @@ template <> void ObjectStore::dispose(shared_ptr<ObjectStoreItem<GDALDataset *>>
   // There are no other solutions possible - at this point the Dataset fate is sealed and
   // we cannot afford to block the GC or the main thread
   uv_sem_wait(item->async_lock.get());
+  if (!item->op_queue->empty()) {
+    fprintf(stderr, "disposing Dataset %ld with waiting operations on the queue\n", item->uid);
+  }
   uidMap<GDALDataset *>.erase(item->uid);
   ptrMap<GDALDataset *>.erase(item->ptr);
   if (item->parent != nullptr) item->parent->children.remove(item->uid);
@@ -314,16 +317,13 @@ template <typename GDALPTR>
 void ObjectStore::weakCallback(const Nan::WeakCallbackInfo<shared_ptr<ObjectStoreItem<GDALPTR>>> &data) {
   shared_ptr<ObjectStoreItem<GDALPTR>> *item = (shared_ptr<ObjectStoreItem<GDALPTR>> *)data.GetParameter();
   LOG("ObjectStore: Death by GC %s [%ld]", typeid((*item)->ptr).name(), (*item)->uid);
-  object_store.lock();
   object_store.dispose(*item);
-  object_store.unlock();
   delete item; // this is the dynamically allocated shared_ptr
 }
 
 // Death by calling dispose from C++ code
 void ObjectStore::dispose(long uid) {
   LOG("ObjectStore: Death by calling dispose from C++ [%ld]", uid);
-  lock();
 
   if (uidMap<GDALDataset *>.count(uid))
     dispose(uidMap<GDALDataset *>[uid]);
@@ -341,7 +341,6 @@ void ObjectStore::dispose(long uid) {
   else if (uidMap<shared_ptr<GDALAttribute>>.count(uid))
     dispose(uidMap<shared_ptr<GDALAttribute>>[uid]);
 #endif
-  unlock();
 }
 
 // Destruction = called after both disposals
