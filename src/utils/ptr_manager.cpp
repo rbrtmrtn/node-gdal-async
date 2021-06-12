@@ -40,8 +40,6 @@ template <typename GDALPTR> using PtrMap = map<GDALPTR, shared_ptr<ObjectStoreIt
 template <typename GDALPTR> static UidMap<GDALPTR> uidMap;
 template <typename GDALPTR> static PtrMap<GDALPTR> ptrMap;
 
-typedef shared_ptr<uv_sem_t> AsyncLock;
-
 void uv_sem_deleter::operator()(uv_sem_t *p) {
   uv_sem_destroy(p);
   delete p;

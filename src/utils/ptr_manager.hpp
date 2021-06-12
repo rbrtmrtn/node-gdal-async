@@ -23,7 +23,7 @@ using namespace std;
 namespace node_gdal {
 
 class GDALAsyncProgressWorker;
-
+typedef shared_ptr<uv_sem_t> AsyncLock;
 template <typename GDALPTR> struct ObjectStoreItem {
   long uid;
   shared_ptr<ObjectStoreItem<GDALDataset *>> parent;
