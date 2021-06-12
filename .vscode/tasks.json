@@ -6,7 +6,7 @@
     {
       "label": "Build",
       "type": "shell",
-      "command": "node-pre-gyp build -j max",
+      "command": "npx node-pre-gyp build -j max",
       "problemMatcher": {
         "base": "$gcc",
         "fileLocation": [
@@ -18,6 +18,30 @@
         "kind": "build",
         "isDefault": true
       }
+    },
+    {
+      "label": "Configure Release",
+      "type": "shell",
+      "command": "npx node-pre-gyp configure",
+      "problemMatcher": []
+    },
+    {
+      "label": "Configure Debug",
+      "type": "shell",
+      "command": "npx node-pre-gyp configure --debug",
+      "problemMatcher": []
+    },
+    {
+      "label": "Configure Debug with logging",
+      "type": "shell",
+      "command": "npx node-pre-gyp configure --debug --enable_logging",
+      "problemMatcher": []
+    },
+    {
+      "label": "Configure Debug with logging and ASAN",
+      "type": "shell",
+      "command": "npx node-pre-gyp configure --debug --enable_logging --enable_asan",
+      "problemMatcher": []
     }
   ]
 }
