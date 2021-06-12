@@ -211,6 +211,7 @@ template <class GDALType> void GDALAsyncWorker<GDALType>::Execute(const Executio
     GDALExecutionProgress executionProgress(&progress);
     raw = doit(executionProgress);
   } catch (const char *err) { this->SetErrorMessage(err); }
+  LOG("Finished async job for Dataset %ld", ds_uid);
 
   // This can be a single job without a Dataset
   if (ds_uid == 0) { return; }
@@ -373,14 +374,17 @@ template <class GDALType> class GDALAsyncableJob {
     try {
       GDALExecutionProgress executionProgress(new GDALSyncExecutionProgress(progress));
       lock = object_store.tryLockDataset(ds_uid);
+      clock_t clockStart = 0;
       if (lock == nullptr) {
         fprintf(
           stderr,
-          "Warning, synchronous function call during asynchronous operation, waiting while holding the event loop\n");
+          "Warning, synchronous function call during asynchronous operation, waiting while holding the event loop...");
+        clockStart = clock();
         lock = object_store.lockDataset(ds_uid);
       }
       GDALType obj = main(executionProgress);
       uv_sem_post(lock.get());
+      if (clockStart) fprintf(stderr, "%ld µs\n", (clock() - clockStart) * 1000000 / CLOCKS_PER_SEC);
       // rval is the user function that will create the returned value
       // we give it a lambda that can access the persistent storage created for this operation
       info.GetReturnValue().Set(rval(obj, [this](const char *key) { return this->persistent[key]; }));
