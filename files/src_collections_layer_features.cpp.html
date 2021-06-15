@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.992</b>
+                    API Docs for Version: <b>3.3.0</b>
                 </p>
             </li>
         </div>
@@ -262,13 +262,10 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::get) {
   int feature_id;
   NODE_ARG_INT(0, &quot;feature id&quot;, feature_id);
   OGRLayer *gdal_layer = layer-&gt;get();
-  long ds_uid = layer-&gt;parent_uid;
-  GDALAsyncableJob&lt;OGRFeature *&gt; job;
-  job.persist(parent);
-  job.main = [ds_uid, gdal_layer, feature_id](const GDALExecutionProgress &amp;) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  GDALAsyncableJob&lt;OGRFeature *&gt; job(layer-&gt;parent_uid);
+  job.persist(layer-&gt;handle());
+  job.main = [gdal_layer, feature_id](const GDALExecutionProgress &amp;) {
     OGRFeature *feature = gdal_layer-&gt;GetFeature(feature_id);
-    GDAL_UNLOCK_PARENT;
     return feature;
   };
   job.rval = [](OGRFeature *feature, GetFromPersistentFunc) { return Feature::New(feature); };
@@ -304,14 +301,11 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::first) {
   }
 
   OGRLayer *gdal_layer = layer-&gt;get();
-  long ds_uid = layer-&gt;parent_uid;
-  GDALAsyncableJob&lt;OGRFeature *&gt; job;
-  job.persist(parent);
-  job.main = [ds_uid, gdal_layer](const GDALExecutionProgress &amp;) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  GDALAsyncableJob&lt;OGRFeature *&gt; job(layer-&gt;parent_uid);
+  job.persist(layer-&gt;handle());
+  job.main = [gdal_layer](const GDALExecutionProgress &amp;) {
     gdal_layer-&gt;ResetReading();
     OGRFeature *feature = gdal_layer-&gt;GetNextFeature();
-    GDAL_UNLOCK_PARENT;
     return feature;
   };
   job.rval = [](OGRFeature *feature, GetFromPersistentFunc) { return Feature::New(feature); };
@@ -353,13 +347,10 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::next) {
   }
 
   OGRLayer *gdal_layer = layer-&gt;get();
-  long ds_uid = layer-&gt;parent_uid;
-  GDALAsyncableJob&lt;OGRFeature *&gt; job;
-  job.persist(parent);
-  job.main = [ds_uid, gdal_layer](const GDALExecutionProgress &amp;) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  GDALAsyncableJob&lt;OGRFeature *&gt; job(layer-&gt;parent_uid);
+  job.persist(layer-&gt;handle());
+  job.main = [gdal_layer](const GDALExecutionProgress &amp;) {
     OGRFeature *feature = gdal_layer-&gt;GetNextFeature();
-    GDAL_UNLOCK_PARENT;
     return feature;
   };
   job.rval = [](OGRFeature *feature, GetFromPersistentFunc) { return Feature::New(feature); };
@@ -416,14 +407,11 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::add) {
   NODE_ARG_WRAPPED(0, &quot;feature&quot;, Feature, f)
 
   OGRLayer *gdal_layer = layer-&gt;get();
-  long ds_uid = layer-&gt;parent_uid;
   OGRFeature *gdal_f = f-&gt;get();
-  GDALAsyncableJob&lt;int&gt; job;
-  job.persist(parent);
-  job.main = [ds_uid, gdal_layer, gdal_f](const GDALExecutionProgress &amp;) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  GDALAsyncableJob&lt;int&gt; job(layer-&gt;parent_uid);
+  job.persist(layer-&gt;handle());
+  job.main = [gdal_layer, gdal_f](const GDALExecutionProgress &amp;) {
     int err = gdal_layer-&gt;CreateFeature(gdal_f);
-    GDAL_UNLOCK_PARENT;
     if (err != CE_None) throw getOGRErrMsg(err);
     return err;
   };
@@ -461,8 +449,9 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::count) {
   }
 
   Local&lt;Object&gt; ds;
-  if (Dataset::dataset_cache.has(layer-&gt;getParent())) { ds = Dataset::dataset_cache.get(layer-&gt;getParent()); }
-  if (!layer-&gt;isAlive()) {
+  if (object_store.has(layer-&gt;getParent())) {
+    ds = object_store.get(layer-&gt;getParent());
+  } else {
     Nan::ThrowError(&quot;Dataset object already destroyed&quot;);
     return;
   }
@@ -471,13 +460,10 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::count) {
   NODE_ARG_BOOL_OPT(0, &quot;force&quot;, force);
 
   OGRLayer *gdal_layer = layer-&gt;get();
-  long ds_uid = layer-&gt;parent_uid;
-  GDALAsyncableJob&lt;GIntBig&gt; job;
-  job.persist(parent, ds);
-  job.main = [ds_uid, gdal_layer, force](const GDALExecutionProgress &amp;) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  GDALAsyncableJob&lt;GIntBig&gt; job(layer-&gt;parent_uid);
+  job.persist(layer-&gt;handle());
+  job.main = [gdal_layer, force](const GDALExecutionProgress &amp;) {
     GIntBig count = gdal_layer-&gt;GetFeatureCount(force);
-    GDAL_UNLOCK_PARENT;
     return count;
   };
   job.rval = [](GIntBig count, GetFromPersistentFunc) { return Nan::New&lt;Number&gt;(count); };
@@ -524,7 +510,7 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::set) {
   }
 
   Local&lt;Object&gt; ds;
-  if (Dataset::dataset_cache.has(layer-&gt;getParent())) { ds = Dataset::dataset_cache.get(layer-&gt;getParent()); }
+  if (object_store.has(layer-&gt;getParent())) { ds = object_store.get(layer-&gt;getParent()); }
   if (!layer-&gt;isAlive()) {
     Nan::ThrowError(&quot;Dataset object already destroyed&quot;);
     return;
@@ -559,13 +545,10 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::set) {
 
   OGRLayer *gdal_layer = layer-&gt;get();
   OGRFeature *gdal_feature = f-&gt;get();
-  long ds_uid = layer-&gt;parent_uid;
-  GDALAsyncableJob&lt;OGRErr&gt; job;
-  job.persist({parent, feature, ds});
-  job.main = [ds_uid, gdal_layer, gdal_feature](const GDALExecutionProgress &amp;) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  GDALAsyncableJob&lt;OGRErr&gt; job(layer-&gt;parent_uid);
+  job.persist(layer-&gt;handle(), f-&gt;handle());
+  job.main = [gdal_layer, gdal_feature](const GDALExecutionProgress &amp;) {
     OGRErr err = gdal_layer-&gt;SetFeature(gdal_feature);
-    GDAL_UNLOCK_PARENT;
     if (err != CE_None) throw getOGRErrMsg(err);
     return err;
   };
@@ -607,13 +590,10 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::remove) {
   NODE_ARG_INT(0, &quot;feature id&quot;, i);
 
   OGRLayer *gdal_layer = layer-&gt;get();
-  long ds_uid = layer-&gt;parent_uid;
-  GDALAsyncableJob&lt;int&gt; job;
-  job.persist(parent);
-  job.main = [ds_uid, gdal_layer, i](const GDALExecutionProgress &amp;) {
-    GDAL_ASYNCABLE_LOCK(ds_uid);
+  GDALAsyncableJob&lt;int&gt; job(layer-&gt;parent_uid);
+  job.persist(layer-&gt;handle());
+  job.main = [gdal_layer, i](const GDALExecutionProgress &amp;) {
     int err = gdal_layer-&gt;DeleteFeature(i);
-    GDAL_UNLOCK_PARENT;
     if (err) { throw getOGRErrMsg(err); }
     return err;
   };

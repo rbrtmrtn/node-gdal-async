@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.992</b>
+                    API Docs for Version: <b>3.3.0</b>
                 </p>
             </li>
         </div>
@@ -158,7 +158,6 @@ namespace node_gdal {
 #if GDAL_VERSION_MAJOR &gt; 3 || (GDAL_VERSION_MAJOR == 3 &amp;&amp; GDAL_VERSION_MINOR &gt;= 1)
 
 Nan::Persistent&lt;FunctionTemplate&gt; Dimension::constructor;
-ObjectCache&lt;std::shared_ptr&lt;GDALDimension&gt;, Dimension&gt; Dimension::dimension_cache;
 
 void Dimension::Initialize(Local&lt;Object&gt; target) {
   Nan::HandleScope scope;
@@ -180,8 +179,9 @@ void Dimension::Initialize(Local&lt;Object&gt; target) {
   constructor.Reset(lcons);
 }
 
-Dimension::Dimension(std::shared_ptr&lt;GDALDimension&gt; group) : Nan::ObjectWrap(), uid(0), this_(group), parent_ds(0) {
-  LOG(&quot;Created dimension [%p]&quot;, group);
+Dimension::Dimension(std::shared_ptr&lt;GDALDimension&gt; dimension)
+  : Nan::ObjectWrap(), uid(0), this_(dimension), parent_ds(0) {
+  LOG(&quot;Created dimension [%p]&quot;, dimension.get());
 }
 
 Dimension::Dimension() : Nan::ObjectWrap(), uid(0), this_(0), parent_ds(0) {
@@ -194,11 +194,11 @@ Dimension::~Dimension() {
 void Dimension::dispose() {
   if (this_) {
 
-    LOG(&quot;Disposing dimension [%p]&quot;, this_);
+    LOG(&quot;Disposing dimension [%p]&quot;, this_.get());
 
-    ptr_manager.dispose(uid);
+    object_store.dispose(uid);
 
-    LOG(&quot;Disposed dimension [%p]&quot;, this_);
+    LOG(&quot;Disposed dimension [%p]&quot;, this_.get());
   }
 };
 
@@ -235,15 +235,15 @@ Local&lt;Value&gt; Dimension::New(std::shared_ptr&lt;GDALDimension&gt; raw, GDAL
   Nan::EscapableHandleScope scope;
 
   if (!raw) { return scope.Escape(Nan::Null()); }
-  if (dimension_cache.has(raw)) { return scope.Escape(dimension_cache.get(raw)); }
+  if (object_store.has(raw)) { return scope.Escape(object_store.get(raw)); }
 
   Dimension *wrapped = new Dimension(raw);
 
   Local&lt;Object&gt; ds;
-  if (Dataset::dataset_cache.has(parent_ds)) {
-    ds = Dataset::dataset_cache.get(parent_ds);
+  if (object_store.has(parent_ds)) {
+    ds = object_store.get(parent_ds);
   } else {
-    LOG(&quot;Dimension&#x27;s parent dataset disappeared from cache (array = %p, dataset = %p)&quot;, raw, parent_ds);
+    LOG(&quot;Dimension&#x27;s parent dataset disappeared from cache (array = %p, dataset = %p)&quot;, raw.get(), parent_ds);
     Nan::ThrowError(&quot;Dimension&#x27;s parent dataset disappeared from cache&quot;);
     return scope.Escape(Nan::Undefined());
   }
@@ -252,12 +252,10 @@ Local&lt;Value&gt; Dimension::New(std::shared_ptr&lt;GDALDimension&gt; raw, GDAL
   Local&lt;Object&gt; obj =
     Nan::NewInstance(Nan::GetFunction(Nan::New(Dimension::constructor)).ToLocalChecked(), 1, &amp;ext).ToLocalChecked();
 
-  dimension_cache.add(raw, obj);
-
   Dataset *unwrapped_ds = Nan::ObjectWrap::Unwrap&lt;Dataset&gt;(ds);
   long parent_uid = unwrapped_ds-&gt;uid;
 
-  wrapped-&gt;uid = ptr_manager.add(raw, parent_uid);
+  wrapped-&gt;uid = object_store.add(raw, wrapped-&gt;persistent(), parent_uid);
   wrapped-&gt;parent_ds = parent_ds;
   wrapped-&gt;parent_uid = parent_uid;
 

@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.992</b>
+                    API Docs for Version: <b>3.3.0</b>
                 </p>
             </li>
         </div>
@@ -202,7 +202,6 @@ GDAL_ASYNCABLE_DEFINE(Algorithms::fillNodata) {
   RasterBand *mask = NULL;
   double search_dist;
   int smooth_iterations = 0;
-  GDALAsyncableJob&lt;CPLErr&gt; job;
 
   NODE_ARG_OBJECT(0, &quot;options&quot;, obj);
 
@@ -214,13 +213,14 @@ GDAL_ASYNCABLE_DEFINE(Algorithms::fillNodata) {
   GDALRasterBand *gdal_src = src-&gt;get();
   GDALRasterBand *gdal_mask = mask ? mask-&gt;get() : nullptr;
 
-  long src_uid = src-&gt;parent_uid;
-  long mask_uid = mask ? mask-&gt;parent_uid : 0;
+  std::vector&lt;long&gt; ds_uids = {src-&gt;parent_uid};
+  if (mask) ds_uids.push_back(mask-&gt;parent_uid);
 
-  job.main = [src_uid, mask_uid, gdal_src, gdal_mask, search_dist, smooth_iterations](const GDALExecutionProgress &amp;) {
-    GDAL_ASYNCABLE_LOCK_MANY(src_uid, mask_uid);
+  GDALAsyncableJob&lt;CPLErr&gt; job(ds_uids);
+  job.persist(src-&gt;handle());
+  if (mask) job.persist(mask-&gt;handle());
+  job.main = [gdal_src, gdal_mask, search_dist, smooth_iterations](const GDALExecutionProgress &amp;) {
     CPLErr err = GDALFillNodata(gdal_src, gdal_mask, search_dist, 0, smooth_iterations, NULL, NULL, NULL);
-    GDAL_UNLOCK_MANY;
     if (err) { throw CPLGetLastErrorMsg(); }
     return err;
   };
@@ -331,14 +331,9 @@ GDAL_ASYNCABLE_DEFINE(Algorithms::contourGenerate) {
   long src_uid = src-&gt;parent_uid;
   long dst_uid = dst-&gt;parent_uid;
 
-  GDALAsyncableJob&lt;CPLErr&gt; job;
-  if (progress_cb) {
-    job.persist(progress_cb-&gt;GetFunction());
-    job.progress = progress_cb;
-  }
-  job.main = [src_uid,
-              dst_uid,
-              gdal_src,
+  GDALAsyncableJob&lt;CPLErr&gt; job({src_uid, dst_uid});
+  job.progress = progress_cb;
+  job.main = [gdal_src,
               interval,
               base,
               n_fixed_levels,
@@ -349,7 +344,6 @@ GDAL_ASYNCABLE_DEFINE(Algorithms::contourGenerate) {
               id_field,
               elev_field,
               progress_cb](const GDALExecutionProgress &amp;progress) {
-    GDAL_ASYNCABLE_LOCK_MANY(src_uid, dst_uid);
     CPLErr err = GDALContourGenerate(
       gdal_src,
       interval,
@@ -363,7 +357,6 @@ GDAL_ASYNCABLE_DEFINE(Algorithms::contourGenerate) {
       elev_field,
       progress_cb ? ProgressTrampoline : nullptr,
       progress_cb ? (void *)&amp;progress : nullptr);
-    GDAL_UNLOCK_MANY;
     if (err) { throw CPLGetLastErrorMsg(); }
     return err;
   };
@@ -438,31 +431,25 @@ GDAL_ASYNCABLE_DEFINE(Algorithms::sieveFilter) {
   GDALRasterBand *gdal_dst = dst-&gt;get();
   GDALRasterBand *gdal_mask = mask ? mask-&gt;get() : nullptr;
 
-  long src_uid = src-&gt;parent_uid;
-  long dst_uid = dst-&gt;parent_uid;
-  long mask_uid = mask ? mask-&gt;parent_uid : 0;
+  std::vector&lt;long&gt; ds_uids = {src-&gt;parent_uid, dst-&gt;parent_uid};
+  if (mask) ds_uids.push_back(mask-&gt;parent_uid);
 
-  GDALAsyncableJob&lt;CPLErr&gt; job;
-  if (progress_cb) {
-    job.persist(progress_cb-&gt;GetFunction());
-    job.progress = progress_cb;
-  }
-  job.main = [src_uid, dst_uid, mask_uid, gdal_src, gdal_dst, gdal_mask, threshold, connectedness, progress_cb](
-               const GDALExecutionProgress &amp;progress) {
-    GDAL_ASYNCABLE_LOCK_MANY(src_uid, dst_uid, mask_uid);
-    CPLErr err = GDALSieveFilter(
-      gdal_src,
-      gdal_mask,
-      gdal_dst,
-      threshold,
-      connectedness,
-      NULL,
-      progress_cb ? ProgressTrampoline : nullptr,
-      progress_cb ? (void *)&amp;progress : nullptr);
-    GDAL_UNLOCK_MANY;
-    if (err) { throw CPLGetLastErrorMsg(); }
-    return err;
-  };
+  GDALAsyncableJob&lt;CPLErr&gt; job(ds_uids);
+  job.progress = progress_cb;
+  job.main =
+    [gdal_src, gdal_dst, gdal_mask, threshold, connectedness, progress_cb](const GDALExecutionProgress &amp;progress) {
+      CPLErr err = GDALSieveFilter(
+        gdal_src,
+        gdal_mask,
+        gdal_dst,
+        threshold,
+        connectedness,
+        NULL,
+        progress_cb ? ProgressTrampoline : nullptr,
+        progress_cb ? (void *)&amp;progress : nullptr);
+      if (err) { throw CPLGetLastErrorMsg(); }
+      return err;
+    };
   job.rval = [](CPLErr r, GetFromPersistentFunc) { return Nan::Undefined().As&lt;Value&gt;(); };
   job.run(info, async, 1);
 }
@@ -531,12 +518,9 @@ GDAL_ASYNCABLE_DEFINE(Algorithms::checksumImage) {
   GDALRasterBand *gdal_src = src-&gt;get();
   long src_uid = src-&gt;parent_uid;
 
-  GDALAsyncableJob&lt;int&gt; job;
-
-  job.main = [src_uid, gdal_src, x, y, w, h](const GDALExecutionProgress &amp;) {
-    GDAL_ASYNCABLE_LOCK(src_uid);
+  GDALAsyncableJob&lt;int&gt; job(src_uid);
+  job.main = [gdal_src, x, y, w, h](const GDALExecutionProgress &amp;) {
     int r = GDALChecksumImage(gdal_src, x, y, w, h);
-    GDAL_UNLOCK_PARENT;
     return r;
   };
   job.rval = [](int r, GetFromPersistentFunc) { return Nan::New&lt;Integer&gt;(r); };
@@ -620,52 +604,44 @@ GDAL_ASYNCABLE_DEFINE(Algorithms::polygonize) {
   OGRLayer *gdal_dst = dst-&gt;get();
   GDALRasterBand *gdal_mask = mask ? mask-&gt;get() : nullptr;
 
-  long src_uid = src-&gt;parent_uid;
-  long dst_uid = dst-&gt;parent_uid;
-  long mask_uid = mask ? mask-&gt;parent_uid : 0;
+  std::vector&lt;long&gt; ds_uids = {src-&gt;parent_uid, dst-&gt;parent_uid};
+  if (mask) ds_uids.push_back(mask-&gt;parent_uid);
 
-  GDALAsyncableJob&lt;CPLErr&gt; job;
-  if (progress_cb) {
-    job.persist(progress_cb-&gt;GetFunction());
-    job.progress = progress_cb;
-  }
+  GDALAsyncableJob&lt;CPLErr&gt; job(ds_uids);
+  job.progress = progress_cb;
 
   if (
     Nan::HasOwnProperty(obj, Nan::New(&quot;useFloats&quot;).ToLocalChecked()).FromMaybe(false) &amp;&amp;
     Nan::To&lt;bool&gt;(Nan::Get(obj, Nan::New(&quot;useFloats&quot;).ToLocalChecked()).ToLocalChecked()).ToChecked()) {
-    job.main = [src_uid, dst_uid, mask_uid, gdal_src, gdal_mask, gdal_dst, pix_val_field, papszOptions, progress_cb](
-                 const GDALExecutionProgress &amp;progress) {
-      GDAL_ASYNCABLE_LOCK_MANY(src_uid, dst_uid, mask_uid);
-      CPLErr err = GDALFPolygonize(
-        gdal_src,
-        gdal_mask,
-        reinterpret_cast&lt;OGRLayerH&gt;(gdal_dst),
-        pix_val_field,
-        papszOptions,
-        progress_cb ? ProgressTrampoline : nullptr,
-        progress_cb ? (void *)&amp;progress : nullptr);
-      GDAL_UNLOCK_MANY;
-      if (papszOptions) CSLDestroy(papszOptions);
-      if (err) throw CPLGetLastErrorMsg();
-      return err;
-    };
+    job.main =
+      [gdal_src, gdal_mask, gdal_dst, pix_val_field, papszOptions, progress_cb](const GDALExecutionProgress &amp;progress) {
+        CPLErr err = GDALFPolygonize(
+          gdal_src,
+          gdal_mask,
+          reinterpret_cast&lt;OGRLayerH&gt;(gdal_dst),
+          pix_val_field,
+          papszOptions,
+          progress_cb ? ProgressTrampoline : nullptr,
+          progress_cb ? (void *)&amp;progress : nullptr);
+        if (papszOptions) CSLDestroy(papszOptions);
+        if (err) throw CPLGetLastErrorMsg();
+        return err;
+      };
   } else {
-    job.main = [src_uid, dst_uid, mask_uid, gdal_src, gdal_mask, gdal_dst, pix_val_field, papszOptions, progress_cb](
-                 const GDALExecutionProgress &amp;progress) {
-      GDAL_ASYNCABLE_LOCK_MANY(src_uid, dst_uid, mask_uid);
-      CPLErr err = GDALPolygonize(
-        gdal_src,
-        gdal_mask,
-        reinterpret_cast&lt;OGRLayerH&gt;(gdal_dst),
-        pix_val_field,
-        papszOptions,
-        progress_cb ? ProgressTrampoline : nullptr,
-        progress_cb ? (void *)&amp;progress : nullptr);
-      GDAL_UNLOCK_MANY;
-      if (papszOptions) CSLDestroy(papszOptions);
-      if (err) throw CPLGetLastErrorMsg();
-      return err;
-    };
+    job.main =
+      [gdal_src, gdal_mask, gdal_dst, pix_val_field, papszOptions, progress_cb](const GDALExecutionProgress &amp;progress) {
+        CPLErr err = GDALPolygonize(
+          gdal_src,
+          gdal_mask,
+          reinterpret_cast&lt;OGRLayerH&gt;(gdal_dst),
+          pix_val_field,
+          papszOptions,
+          progress_cb ? ProgressTrampoline : nullptr,
+          progress_cb ? (void *)&amp;progress : nullptr);
+        if (papszOptions) CSLDestroy(papszOptions);
+        if (err) throw CPLGetLastErrorMsg();
+        return err;
+      };
   }
   job.rval = [](CPLErr r, GetFromPersistentFunc) { return Nan::Undefined().As&lt;Value&gt;(); };
   job.run(info, async, 1);
@@ -681,17 +657,11 @@ GDAL_ASYNCABLE_DEFINE(Algorithms::_acquireLocks) {
   NODE_ARG_WRAPPED(1, &quot;ds2&quot;, Dataset, ds2);
   NODE_ARG_WRAPPED(2, &quot;ds3&quot;, Dataset, ds3);
 
-  long ds1_uid = ds1-&gt;uid;
-  long ds2_uid = ds2-&gt;uid;
-  long ds3_uid = ds3-&gt;uid;
-  GDALAsyncableJob&lt;int&gt; job;
-  job.persist({ds1-&gt;handle(), ds2-&gt;handle(), ds3-&gt;handle()});
-  job.main = [ds1_uid, ds2_uid, ds3_uid](const GDALExecutionProgress &amp;) {
-    GDAL_ASYNCABLE_LOCK_MANY(ds1_uid, ds2_uid, ds3_uid);
+  GDALAsyncableJob&lt;int&gt; job({ds1-&gt;uid, ds2-&gt;uid, ds3-&gt;uid});
+  job.main = [](const GDALExecutionProgress &amp;) {
     int i, sum = 0;
     // make sure the optimizer won&#x27;t surprise us
     for (i = 0; i &lt; 1e4; i++) sum += i;
-    GDAL_UNLOCK_MANY;
     return sum;
   };
   job.rval = [](int, GetFromPersistentFunc) { return Nan::Undefined().As&lt;Value&gt;(); };

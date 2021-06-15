@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.992</b>
+                    API Docs for Version: <b>3.3.0</b>
                 </p>
             </li>
         </div>
@@ -182,21 +182,68 @@ namespace node_gdal {
 
 #define GDAL_ISASYNC async
 
-// Handle locking
-#define GDAL_TRYLOCK_PARENT(p)                                                                                         \
-  std::shared_ptr&lt;uv_sem_t&gt; async_lock = nullptr;                                                                      \
+// Handle locking (used only for sync methods)
+#define GDAL_LOCK_PARENT(p)                                                                                            \
+  AsyncGuard lock;                                                                                                     \
   try {                                                                                                                \
-    async_lock = ptr_manager.tryLockDataset((p)-&gt;parent_uid);                                                          \
+    lock.acquire((p)-&gt;parent_uid);                                                                                     \
   } catch (const char *err) {                                                                                          \
     Nan::ThrowError(err);                                                                                              \
     return;                                                                                                            \
   }
-#define GDAL_ASYNCABLE_LOCK(uid) std::shared_ptr&lt;uv_sem_t&gt; async_lock = ptr_manager.tryLockDataset(uid);
-#define GDAL_UNLOCK_PARENT uv_sem_post(async_lock.get())
-#define GDAL_ASYNCABLE_LOCK_MANY(...)                                                                                  \
-  std::vector&lt;std::shared_ptr&lt;uv_sem_t&gt;&gt; async_locks = ptr_manager.tryLockDatasets({__VA_ARGS__});
-#define GDAL_UNLOCK_MANY                                                                                               \
-  for (std::shared_ptr&lt;uv_sem_t&gt; &amp; async_lock : async_locks) { uv_sem_post(async_lock.get()); }
+
+static const char eventLoopWarning[] =
+  &quot;Synchronous method called while an asynchronous operation is running in the background, check node_modules/gdal-async/ASYNCIO.md, event loop blocked for &quot;;
+// These constructors throw
+// Only one use case never throws: on the main thread
+// and after checking that the Dataset is alive
+class AsyncGuard {
+    public:
+  inline AsyncGuard() : lock(nullptr), locks(nullptr) {
+  }
+  inline AsyncGuard(long uid) : locks(nullptr) {
+    lock = object_store.lockDataset(uid);
+  }
+  inline AsyncGuard(vector&lt;long&gt; uids) : lock(nullptr), locks(nullptr) {
+    if (uids.size() == 1)
+      lock = object_store.lockDataset(uids[0]);
+    else
+      locks = make_shared&lt;vector&lt;AsyncLock&gt;&gt;(object_store.lockDatasets(uids));
+  }
+  inline AsyncGuard(vector&lt;long&gt; uids, bool warning) : lock(nullptr), locks(nullptr) {
+    if (uids.size() == 1) {
+      if (uids[0] == 0) return;
+      lock = warning ? object_store.tryLockDataset(uids[0]) : object_store.lockDataset(uids[0]);
+      if (lock == nullptr) {
+        auto startTime = clock();
+        fprintf(stderr, eventLoopWarning);
+        lock = object_store.lockDataset(uids[0]);
+        fprintf(stderr, &quot;%ld µs\n&quot;, clock() - startTime);
+      }
+    } else {
+      locks = warning ? make_shared&lt;vector&lt;AsyncLock&gt;&gt;(object_store.tryLockDatasets(uids))
+                      : make_shared&lt;vector&lt;AsyncLock&gt;&gt;(object_store.lockDatasets(uids));
+      if (locks-&gt;size() == 0) {
+        auto startTime = clock();
+        fprintf(stderr, eventLoopWarning);
+        locks = make_shared&lt;vector&lt;AsyncLock&gt;&gt;(object_store.lockDatasets(uids));
+        fprintf(stderr, &quot;%ld µs\n&quot;, clock() - startTime);
+      }
+    }
+  }
+  inline void acquire(long uid) {
+    if (lock != nullptr) throw &quot;Trying to acquire multiple locks&quot;;
+    lock = object_store.lockDataset(uid);
+  }
+  inline ~AsyncGuard() {
+    if (lock != nullptr) object_store.unlockDataset(lock);
+    if (locks != nullptr) object_store.unlockDatasets(*locks);
+  }
+
+    private:
+  AsyncLock lock;
+  shared_ptr&lt;vector&lt;AsyncLock&gt;&gt; locks;
+};
 
 // Node.js NAN null initializes and trivially copies objects of this class without asking permission
 struct GDALProgressInfo {
@@ -272,6 +319,7 @@ template &lt;class GDALType&gt; class GDALAsyncWorker : public GDALAsyncProgress
   Nan::Callback *progressCallback;
   const GDALMainFunc doit;
   const GDALRValFunc rval;
+  const std::vector&lt;long&gt; ds_uids;
   GDALType raw;
 
     public:
@@ -280,7 +328,8 @@ template &lt;class GDALType&gt; class GDALAsyncWorker : public GDALAsyncProgress
     Nan::Callback *progressCallback,
     const GDALMainFunc &amp;doit,
     const GDALRValFunc &amp;rval,
-    const std::map&lt;std::string, v8::Local&lt;v8::Object&gt;&gt; &amp;objects);
+    const std::map&lt;std::string, v8::Local&lt;v8::Object&gt;&gt; &amp;objects,
+    const std::vector&lt;long&gt; &amp;ds_uids);
 
   ~GDALAsyncWorker();
 
@@ -296,16 +345,20 @@ GDALAsyncWorker&lt;GDALType&gt;::GDALAsyncWorker(
   Nan::Callback *progressCallback,
   const GDALMainFunc &amp;doit,
   const GDALRValFunc &amp;rval,
-  const std::map&lt;std::string, v8::Local&lt;v8::Object&gt;&gt; &amp;objects)
+  const std::map&lt;std::string, v8::Local&lt;v8::Object&gt;&gt; &amp;objects,
+  const std::vector&lt;long&gt; &amp;ds_uids)
   : Nan::AsyncProgressWorkerBase&lt;GDALProgressInfo&gt;(resultCallback, &quot;node-gdal:GDALAsyncWorker&quot;),
     progressCallback(progressCallback),
     // These members are not references! These functions must be copied
     // as they will be executed in async context!
     doit(doit),
-    rval(rval) {
+    rval(rval),
+    ds_uids(ds_uids) {
   // Main thread with the JS world is not running
   // Get persistent handles
   for (auto i = objects.begin(); i != objects.end(); i++) SaveToPersistent(i-&gt;first.c_str(), i-&gt;second);
+  for (auto i = ds_uids.begin(); i != ds_uids.end(); i++)
+    if (*i != 0) SaveToPersistent((&quot;ds&quot; + std::to_string(*i)).c_str(), object_store.get&lt;GDALDataset *&gt;(*i));
 }
 
 template &lt;class GDALType&gt; GDALAsyncWorker&lt;GDALType&gt;::~GDALAsyncWorker() {
@@ -317,6 +370,7 @@ template &lt;class GDALType&gt; void GDALAsyncWorker&lt;GDALType&gt;::Execute(co
   // V8 objects are not acessible here
   try {
     GDALExecutionProgress executionProgress(&amp;progress);
+    AsyncGuard lock(ds_uids);
     raw = doit(executionProgress);
   } catch (const char *err) { this-&gt;SetErrorMessage(err); }
 }
@@ -375,7 +429,7 @@ void GDALAsyncWorker&lt;GDALType&gt;::HandleProgressCallback(const GDALProgressI
 // If a GDALDataset is locked, but not persisted, the GC could still
 // try to free it - in this case it will stop the JS world and then it will wait
 // on the Dataset lock in PtrManager::dispose() blocking the event loop - the situation
-// is safe but it is still best if it is avoided
+// is safe but it is still best if it is avoided (see the comments in ptr_manager.cpp)
 
 template &lt;class GDALType&gt; class GDALAsyncableJob {
     public:
@@ -387,7 +441,9 @@ template &lt;class GDALType&gt; class GDALAsyncableJob {
   GDALRValFunc rval;
   Nan::Callback *progress;
 
-  GDALAsyncableJob() : main(), rval(), progress(nullptr), persistent(), autoIndex(0){};
+  GDALAsyncableJob(long ds_uid) : main(), rval(), progress(nullptr), persistent(), ds_uids({ds_uid}), autoIndex(0){};
+  GDALAsyncableJob(std::vector&lt;long&gt; ds_uids)
+    : main(), rval(), progress(nullptr), persistent(), ds_uids(ds_uids), autoIndex(0){};
 
   inline void persist(const std::string &amp;key, const v8::Local&lt;v8::Object&gt; &amp;obj) {
     persistent[key] = obj;
@@ -408,13 +464,16 @@ template &lt;class GDALType&gt; class GDALAsyncableJob {
 
   void run(const Nan::FunctionCallbackInfo&lt;v8::Value&gt; &amp;info, bool async, int cb_arg) {
     if (async) {
+      if (progress) persist(&quot;progress_cb&quot;, progress-&gt;GetFunction());
+      if (!info.This().IsEmpty() &amp;&amp; info.This()-&gt;IsObject()) persist(&quot;this&quot;, info.This());
       Nan::Callback *callback;
       NODE_ARG_CB(cb_arg, &quot;callback&quot;, callback);
-      Nan::AsyncQueueWorker(new GDALAsyncWorker&lt;GDALType&gt;(callback, progress, main, rval, persistent));
+      Nan::AsyncQueueWorker(new GDALAsyncWorker&lt;GDALType&gt;(callback, progress, main, rval, persistent, ds_uids));
       return;
     }
     try {
       GDALExecutionProgress executionProgress(new GDALSyncExecutionProgress(progress));
+      AsyncGuard lock(ds_uids, eventLoopWarn);
       GDALType obj = main(executionProgress);
       // rval is the user function that will create the returned value
       // we give it a lambda that can access the persistent storage created for this operation
@@ -424,6 +483,7 @@ template &lt;class GDALType&gt; class GDALAsyncableJob {
 
     private:
   std::map&lt;std::string, v8::Local&lt;v8::Object&gt;&gt; persistent;
+  const std::vector&lt;long&gt; ds_uids;
   unsigned autoIndex;
 };
 } // namespace node_gdal

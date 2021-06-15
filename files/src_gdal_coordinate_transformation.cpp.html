@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.992</b>
+                    API Docs for Version: <b>3.3.0</b>
                 </p>
             </li>
         </div>
@@ -239,7 +239,7 @@ NAN_METHOD(CoordinateTransformation::New) {
 
       ds = Nan::ObjectWrap::Unwrap&lt;Dataset&gt;(info[1].As&lt;Object&gt;());
 
-      if (!ds-&gt;getDataset()) {
+      if (!ds-&gt;get()) {
         Nan::ThrowError(&quot;Dataset already closed&quot;);
         return;
       }
@@ -254,7 +254,7 @@ NAN_METHOD(CoordinateTransformation::New) {
       papszTO = CSLSetNameValue(papszTO, &quot;INSERT_CENTER_LONG&quot;, &quot;FALSE&quot;);
 
       GeoTransformTransformer *transform = new GeoTransformTransformer();
-      transform-&gt;hSrcImageTransformer = GDALCreateGenImgProjTransformer2(ds-&gt;getDataset(), NULL, papszTO);
+      transform-&gt;hSrcImageTransformer = GDALCreateGenImgProjTransformer2(ds-&gt;get(), NULL, papszTO);
       if (!transform-&gt;hSrcImageTransformer) {
         NODE_THROW_LAST_CPLERR;
         return;

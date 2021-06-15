@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.992</b>
+                    API Docs for Version: <b>3.3.0</b>
                 </p>
             </li>
         </div>
@@ -726,8 +726,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::convexHull) {
   Nan::HandleScope scope;
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
   OGRGeometry *gdal_geom = geom-&gt;this_;
-  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job(0);
   job.main = [gdal_geom](const GDALExecutionProgress &amp;) { return gdal_geom-&gt;ConvexHull(); };
   job.rval = [](OGRGeometry *r, GetFromPersistentFunc) { return Geometry::New(r); };
   job.run(info, async, 0);
@@ -753,8 +752,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::boundary) {
   Nan::HandleScope scope;
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
   OGRGeometry *gdal_geom = geom-&gt;this_;
-  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job(0);
   job.main = [gdal_geom](const GDALExecutionProgress &amp;) { return gdal_geom-&gt;Boundary(); };
   job.rval = [](OGRGeometry *r, GetFromPersistentFunc) { return Geometry::New(r); };
   job.run(info, async, 0);
@@ -788,8 +786,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::intersection) {
 
   OGRGeometry *gdal_geom = geom-&gt;this_;
   OGRGeometry *gdal_x = x-&gt;this_;
-  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job(0);
   job.main = [gdal_geom, gdal_x](const GDALExecutionProgress &amp;) { return gdal_geom-&gt;Intersection(gdal_x); };
   job.rval = [](OGRGeometry *r, GetFromPersistentFunc) { return Geometry::New(r); };
   job.run(info, async, 1);
@@ -823,8 +820,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::unionGeometry) {
 
   OGRGeometry *gdal_geom = geom-&gt;this_;
   OGRGeometry *gdal_x = x-&gt;this_;
-  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job(0);
   job.main = [gdal_geom, gdal_x](const GDALExecutionProgress &amp;) { return gdal_geom-&gt;Union(gdal_x); };
   job.rval = [](OGRGeometry *r, GetFromPersistentFunc) { return Geometry::New(r); };
   job.run(info, async, 1);
@@ -858,8 +854,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::difference) {
 
   OGRGeometry *gdal_geom = geom-&gt;this_;
   OGRGeometry *gdal_x = x-&gt;this_;
-  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job(0);
   job.main = [gdal_geom, gdal_x](const GDALExecutionProgress &amp;) { return gdal_geom-&gt;Difference(gdal_x); };
   job.rval = [](OGRGeometry *r, GetFromPersistentFunc) { return Geometry::New(r); };
   job.run(info, async, 1);
@@ -893,8 +888,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::symDifference) {
 
   OGRGeometry *gdal_geom = geom-&gt;this_;
   OGRGeometry *gdal_x = x-&gt;this_;
-  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job(0);
   job.main = [gdal_geom, gdal_x](const GDALExecutionProgress &amp;) { return gdal_geom-&gt;SymDifference(gdal_x); };
   job.rval = [](OGRGeometry *r, GetFromPersistentFunc) { return Geometry::New(r); };
   job.run(info, async, 1);
@@ -927,8 +921,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::simplify) {
   NODE_ARG_DOUBLE(0, &quot;tolerance&quot;, tolerance);
   OGRGeometry *gdal_geom = geom-&gt;this_;
 
-  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job(0);
   job.main = [gdal_geom, tolerance](const GDALExecutionProgress &amp;) { return gdal_geom-&gt;Simplify(tolerance); };
   job.rval = [](OGRGeometry *r, GetFromPersistentFunc) { return Geometry::New(r); };
   job.run(info, async, 1);
@@ -961,8 +954,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::simplifyPreserveTopology) {
   NODE_ARG_DOUBLE(0, &quot;tolerance&quot;, tolerance);
   OGRGeometry *gdal_geom = geom-&gt;this_;
 
-  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job(0);
   job.main = [gdal_geom, tolerance](const GDALExecutionProgress &amp;) {
     return gdal_geom-&gt;SimplifyPreserveTopology(tolerance);
   };
@@ -1003,8 +995,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::buffer) {
 
   OGRGeometry *gdal_geom = geom-&gt;this_;
 
-  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job(0);
   job.main = [gdal_geom, distance, number_of_segments](const GDALExecutionProgress &amp;) {
     return gdal_geom-&gt;Buffer(distance, number_of_segments);
   };
@@ -1035,8 +1026,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKT) {
 
   OGRGeometry *gdal_geom = geom-&gt;this_;
   uv_sem_t *async_lock = geom-&gt;async_lock;
-  GDALAsyncableJob&lt;char *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;char *&gt; job(0);
   job.main = [async_lock, gdal_geom](const GDALExecutionProgress &amp;) {
     char *text = NULL;
     uv_sem_wait(async_lock);
@@ -1117,8 +1107,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKB) {
   }
   OGRGeometry *gdal_geom = geom-&gt;this_;
   uv_sem_t *async_lock = geom-&gt;async_lock;
-  GDALAsyncableJob&lt;unsigned char *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;unsigned char *&gt; job(0);
   job.main = [async_lock, gdal_geom, data, byte_order, wkb_variant](const GDALExecutionProgress &amp;) {
     uv_sem_wait(async_lock);
     OGRErr err = gdal_geom-&gt;exportToWkb(byte_order, data, wkb_variant);
@@ -1160,8 +1149,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToKML) {
 
   OGRGeometry *gdal_geom = geom-&gt;this_;
   uv_sem_t *async_lock = geom-&gt;async_lock;
-  GDALAsyncableJob&lt;char *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;char *&gt; job(0);
   job.main = [async_lock, gdal_geom](const GDALExecutionProgress &amp;) {
     uv_sem_wait(async_lock);
     char *text = gdal_geom-&gt;exportToKML();
@@ -1202,8 +1190,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToGML) {
 
   OGRGeometry *gdal_geom = geom-&gt;this_;
   uv_sem_t *async_lock = geom-&gt;async_lock;
-  GDALAsyncableJob&lt;char *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;char *&gt; job(0);
   job.main = [async_lock, gdal_geom](const GDALExecutionProgress &amp;) {
     uv_sem_wait(async_lock);
     char *text = gdal_geom-&gt;exportToGML();
@@ -1244,8 +1231,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToJSON) {
 
   OGRGeometry *gdal_geom = geom-&gt;this_;
   uv_sem_t *async_lock = geom-&gt;async_lock;
-  GDALAsyncableJob&lt;char *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;char *&gt; job(0);
   job.main = [async_lock, gdal_geom](const GDALExecutionProgress &amp;) {
     uv_sem_wait(async_lock);
     char *text = gdal_geom-&gt;exportToJson();
@@ -1289,8 +1275,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::centroid) {
 
   OGRGeometry *gdal_geom = geom-&gt;this_;
   uv_sem_t *async_lock = geom-&gt;async_lock;
-  GDALAsyncableJob&lt;OGRPoint *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;OGRPoint *&gt; job(0);
   job.main = [async_lock, gdal_geom](const GDALExecutionProgress &amp;) {
     OGRPoint *point = new OGRPoint();
     uv_sem_wait(async_lock);
@@ -1332,8 +1317,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::getEnvelope) {
   OGRGeometry *gdal_geom = geom-&gt;this_;
   uv_sem_t *async_lock = geom-&gt;async_lock;
 
-  GDALAsyncableJob&lt;OGREnvelope *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;OGREnvelope *&gt; job(0);
   job.main = [async_lock, gdal_geom](const GDALExecutionProgress &amp;) {
     OGREnvelope *envelope = new OGREnvelope();
     uv_sem_wait(async_lock);
@@ -1381,8 +1365,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::getEnvelope3D) {
   OGRGeometry *gdal_geom = geom-&gt;this_;
   uv_sem_t *async_lock = geom-&gt;async_lock;
 
-  GDALAsyncableJob&lt;OGREnvelope3D *&gt; job;
-  job.persist(info.This());
+  GDALAsyncableJob&lt;OGREnvelope3D *&gt; job(0);
   job.main = [async_lock, gdal_geom](const GDALExecutionProgress &amp;) {
     OGREnvelope3D *envelope = new OGREnvelope3D();
     uv_sem_wait(async_lock);
@@ -1461,7 +1444,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::createFromWkt) {
   OGRSpatialReference *ogr_srs = NULL;
   if (srs) { ogr_srs = srs-&gt;get(); }
 
-  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job(0);
   job.main = [wkt_string, ogr_srs](const GDALExecutionProgress &amp;) {
     std::unique_ptr&lt;std::string&gt; wkt_string_ptr(wkt_string);
     OGRGeometry *geom = NULL;
@@ -1521,7 +1504,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::createFromWkb) {
   OGRSpatialReference *ogr_srs = NULL;
   if (srs) { ogr_srs = srs-&gt;get(); }
 
-  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job(0);
   job.main = [data, length, ogr_srs](const GDALExecutionProgress &amp;) {
     OGRGeometry *geom = NULL;
     OGRErr err = OGRGeometryFactory::createFromWkb(data, ogr_srs, &amp;geom, length);
@@ -1584,7 +1567,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::createFromGeoJson) {
   Local&lt;String&gt; stringified = result.ToLocalChecked();
   std::string *val = new std::string(*Nan::Utf8String(stringified));
 
-  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job(0);
   job.main = [val](const GDALExecutionProgress &amp;) {
     std::unique_ptr&lt;std::string&gt; val_ptr(val);
     OGRGeometry *geom = OGRGeometryFactory::createFromGeoJson(val-&gt;c_str());
@@ -1639,7 +1622,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::createFromGeoJsonBuffer) {
   char *data = Buffer::Data(geojson_obj);
   size_t length = Buffer::Length(geojson_obj);
 
-  GDALAsyncableJob&lt;OGRGeometry *&gt; job;
+  GDALAsyncableJob&lt;OGRGeometry *&gt; job(0);
   job.main = [data, length](const GDALExecutionProgress &amp;) {
     CPLJSONDocument oDocument;
     if (!oDocument.LoadMemory(reinterpret_cast&lt;const GByte *&gt;(data), length)) {

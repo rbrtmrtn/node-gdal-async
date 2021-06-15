@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.992</b>
+                    API Docs for Version: <b>3.3.0</b>
                 </p>
             </li>
         </div>
@@ -152,7 +152,6 @@
 namespace node_gdal {
 
 Nan::Persistent&lt;FunctionTemplate&gt; Driver::constructor;
-ObjectCache&lt;GDALDriver *, Driver&gt; Driver::cache;
 
 void Driver::Initialize(Local&lt;Object&gt; target) {
   Nan::HandleScope scope;
@@ -190,7 +189,7 @@ Driver::~Driver() {
 void Driver::dispose() {
   if (this_gdaldriver) {
     LOG(&quot;Disposing GDAL Driver [%p]&quot;, this_gdaldriver);
-    cache.erase(this_gdaldriver);
+    object_store.dispose(uid);
     LOG(&quot;Disposed GDAL Driver [%p]&quot;, this_gdaldriver);
     this_gdaldriver = NULL;
   }
@@ -233,7 +232,7 @@ Local&lt;Value&gt; Driver::New(GDALDriver *driver) {
   Nan::EscapableHandleScope scope;
 
   if (!driver) { return scope.Escape(Nan::Null()); }
-  if (cache.has(driver)) { return scope.Escape(cache.get(driver)); }
+  if (object_store.has(driver)) { return scope.Escape(object_store.get(driver)); }
 
   Driver *wrapped = new Driver(driver);
   Local&lt;Value&gt; ext = Nan::New&lt;External&gt;(wrapped);
@@ -241,7 +240,7 @@ Local&lt;Value&gt; Driver::New(GDALDriver *driver) {
     Nan::NewInstance(Nan::GetFunction(Nan::New(Driver::constructor)).ToLocalChecked(), 1, &amp;ext).ToLocalChecked();
 
   // LOG(&quot;ADDING DRIVER TO CACHE [%p]&quot;, driver);
-  cache.add(driver, obj);
+  wrapped-&gt;uid = object_store.add(driver, wrapped-&gt;persistent(), 0);
   // LOG(&quot;DONE ADDING DRIVER TO CACHE [%p]&quot;, driver);
 
   return scope.Escape(obj);
@@ -357,7 +356,8 @@ GDAL_ASYNCABLE_DEFINE(Driver::create) {
 
   // Very careful here
   // we can&#x27;t reference automatic variables, thus the *options object
-  GDALAsyncableJob&lt;GDALDataset *&gt; job;
+  GDALAsyncableJob&lt;GDALDataset *&gt; job(0);
+  job.persist(driver-&gt;handle());
   job.main = [raw, filename, x_size, y_size, n_bands, type, options](const GDALExecutionProgress &amp;) {
     std::unique_ptr&lt;StringList&gt; options_ptr(options);
     GDALDataset *ds = raw-&gt;Create(filename.c_str(), x_size, y_size, n_bands, type, options-&gt;get());
@@ -428,22 +428,14 @@ GDAL_ASYNCABLE_DEFINE(Driver::createCopy) {
     return; // error parsing string list
   }
 
-  std::shared_ptr&lt;uv_sem_t&gt; async_lock = nullptr;
-  try {
-    async_lock = ptr_manager.tryLockDataset(src_dataset-&gt;uid);
-  } catch (const char *err) {
-    Nan::ThrowError(err);
-    return;
-  }
-
   GDALDriver *raw = driver-&gt;getGDALDriver();
-  GDALDataset *raw_ds = src_dataset-&gt;getDataset();
-  GDALAsyncableJob&lt;GDALDataset *&gt; job;
+  GDALDataset *raw_ds = src_dataset-&gt;get();
+  GDALAsyncableJob&lt;GDALDataset *&gt; job(src_dataset-&gt;uid);
   job.rval = DatasetRval;
-  job.main = [raw, filename, raw_ds, strict, options, async_lock](const GDALExecutionProgress &amp;) {
+  job.persist(driver-&gt;handle());
+  job.main = [raw, filename, raw_ds, strict, options](const GDALExecutionProgress &amp;) {
     std::unique_ptr&lt;StringList&gt; options_ptr(options);
     GDALDataset *ds = raw-&gt;CreateCopy(filename.c_str(), raw_ds, strict, options-&gt;get(), NULL, NULL);
-    uv_sem_post(async_lock.get());
     if (!ds) CPLGetLastErrorMsg();
     return ds;
   };
@@ -566,7 +558,8 @@ GDAL_ASYNCABLE_DEFINE(Driver::open) {
 
   GDALDriver *raw = driver-&gt;getGDALDriver();
 
-  GDALAsyncableJob&lt;GDALDataset *&gt; job;
+  GDALAsyncableJob&lt;GDALDataset *&gt; job(0);
+  job.persist(driver-&gt;handle());
   job.main = [raw, path, access](const GDALExecutionProgress &amp;) {
     const char *driver_list[2] = {raw-&gt;GetDescription(), nullptr};
     GDALDataset *ds = (GDALDataset *)GDALOpenEx(path.c_str(), access, driver_list, NULL, NULL);

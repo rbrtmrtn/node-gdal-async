@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.992</b>
+                    API Docs for Version: <b>3.3.0</b>
                 </p>
             </li>
         </div>
@@ -149,7 +149,6 @@
 namespace node_gdal {
 
 Nan::Persistent&lt;FunctionTemplate&gt; SpatialReference::constructor;
-ObjectCache&lt;OGRSpatialReference *, SpatialReference&gt; SpatialReference::cache;
 
 void SpatialReference::Initialize(Local&lt;Object&gt; target) {
   Nan::HandleScope scope;
@@ -221,7 +220,7 @@ SpatialReference::~SpatialReference() {
 void SpatialReference::dispose() {
   if (this_) {
     LOG(&quot;Disposing SpatialReference [%p] (%s)&quot;, this_, owned_ ? &quot;owned&quot; : &quot;unowned&quot;);
-    cache.erase(this_);
+    object_store.dispose(uid);
     if (owned_) {
       // Decrements the reference count by one, and destroy if zero.
       this_-&gt;Release();
@@ -272,7 +271,7 @@ NAN_METHOD(SpatialReference::New) {
     f-&gt;owned_ = true;
     f-&gt;Wrap(info.This());
 
-    cache.add(srs, info.This());
+    f-&gt;uid = object_store.add(srs, f-&gt;persistent(), 0);
   }
 
   info.GetReturnValue().Set(info.This());
@@ -287,13 +286,15 @@ Local&lt;Value&gt; SpatialReference::New(OGRSpatialReference *raw, bool owned) {
   Nan::EscapableHandleScope scope;
 
   if (!raw) { return scope.Escape(Nan::Null()); }
-  if (cache.has(raw)) { return scope.Escape(cache.get(raw)); }
+  if (object_store.has(raw)) { return scope.Escape(object_store.get(raw)); }
 
   // make a copy of spatialreference owned by a layer, feature, etc
   // + no need to track when a layer is destroyed
-  // + no need to throw errors when a method trys to modify an owned read-only
-  // srs
+  // + no need to throw errors when a method tries to modify an owned read-only srs
   // - is slower
+
+  // Fixing this for srs obtained from a Layer is trivial
+  // But fixing it for srs obtained from a Feature required moving the Features to the ObjectStore
 
   OGRSpatialReference *cloned_srs = raw;
   if (!owned) cloned_srs = raw-&gt;Clone();
@@ -305,7 +306,7 @@ Local&lt;Value&gt; SpatialReference::New(OGRSpatialReference *raw, bool owned) {
     Nan::NewInstance(Nan::GetFunction(Nan::New(SpatialReference::constructor)).ToLocalChecked(), 1, &amp;ext)
       .ToLocalChecked();
 
-  cache.add(cloned_srs, raw, obj);
+  wrapped-&gt;uid = object_store.add(raw, wrapped-&gt;persistent(), 0);
 
   return scope.Escape(obj);
 }

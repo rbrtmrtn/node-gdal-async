@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.992</b>
+                    API Docs for Version: <b>3.3.0</b>
                 </p>
             </li>
         </div>
@@ -158,7 +158,6 @@ namespace node_gdal {
 #if GDAL_VERSION_MAJOR &gt; 3 || (GDAL_VERSION_MAJOR == 3 &amp;&amp; GDAL_VERSION_MINOR &gt;= 1)
 
 Nan::Persistent&lt;FunctionTemplate&gt; MDArray::constructor;
-ObjectCache&lt;std::shared_ptr&lt;GDALMDArray&gt;, MDArray&gt; MDArray::array_cache;
 
 void MDArray::Initialize(Local&lt;Object&gt; target) {
   Nan::HandleScope scope;
@@ -190,8 +189,8 @@ void MDArray::Initialize(Local&lt;Object&gt; target) {
   constructor.Reset(lcons);
 }
 
-MDArray::MDArray(std::shared_ptr&lt;GDALMDArray&gt; ds) : Nan::ObjectWrap(), uid(0), this_(ds) {
-  LOG(&quot;Created MDArray [%p]&quot;, ds);
+MDArray::MDArray(std::shared_ptr&lt;GDALMDArray&gt; md) : Nan::ObjectWrap(), uid(0), this_(md) {
+  LOG(&quot;Created MDArray [%p]&quot;, md.get());
 }
 
 MDArray::~MDArray() {
@@ -201,11 +200,11 @@ MDArray::~MDArray() {
 void MDArray::dispose() {
   if (this_) {
 
-    LOG(&quot;Disposing array [%p]&quot;, this_);
+    LOG(&quot;Disposing array [%p]&quot;, this_.get());
 
-    ptr_manager.dispose(uid);
+    object_store.dispose(uid);
 
-    LOG(&quot;Disposed array [%p]&quot;, this_);
+    LOG(&quot;Disposed array [%p]&quot;, this_.get());
   }
 };
 
@@ -247,17 +246,17 @@ Local&lt;Value&gt; MDArray::New(std::shared_ptr&lt;GDALMDArray&gt; raw, GDALData
   Nan::EscapableHandleScope scope;
 
   if (!raw) { return scope.Escape(Nan::Null()); }
-  if (array_cache.has(raw)) { return scope.Escape(array_cache.get(raw)); }
+  if (object_store.has(raw)) { return scope.Escape(object_store.get(raw)); }
 
   MDArray *wrapped = new MDArray(raw);
 
   // add reference to datasource so datasource doesnt get GC&#x27;ed while group is
   // alive
   Local&lt;Object&gt; ds, group;
-  if (Dataset::dataset_cache.has(parent_ds)) {
-    ds = Dataset::dataset_cache.get(parent_ds);
+  if (object_store.has(parent_ds)) {
+    ds = object_store.get(parent_ds);
   } else {
-    LOG(&quot;MDArray&#x27;s parent dataset disappeared from cache (array = %p, dataset = %p)&quot;, raw, parent_ds);
+    LOG(&quot;MDArray&#x27;s parent dataset disappeared from cache (array = %p, dataset = %p)&quot;, raw.get(), parent_ds);
     Nan::ThrowError(&quot;MDArray&#x27;s parent dataset disappeared from cache&quot;);
     return scope.Escape(Nan::Undefined());
   }
@@ -268,12 +267,11 @@ Local&lt;Value&gt; MDArray::New(std::shared_ptr&lt;GDALMDArray&gt; raw, GDALData
     Nan::NewInstance(Nan::GetFunction(Nan::New(MDArray::constructor)).ToLocalChecked(), 2, argv).ToLocalChecked();
 
   size_t dim = raw-&gt;GetDimensionCount();
-  array_cache.add(raw, obj);
 
   Dataset *unwrapped_ds = Nan::ObjectWrap::Unwrap&lt;Dataset&gt;(ds);
   long parent_uid = unwrapped_ds-&gt;uid;
 
-  wrapped-&gt;uid = ptr_manager.add(raw, parent_uid);
+  wrapped-&gt;uid = object_store.add(raw, wrapped-&gt;persistent(), parent_uid);
   wrapped-&gt;parent_ds = parent_ds;
   wrapped-&gt;parent_uid = parent_uid;
   wrapped-&gt;dimensions = dim;
@@ -468,32 +466,25 @@ GDAL_ASYNCABLE_DEFINE(MDArray::read) {
     return; // TypedArray::Validate threw an error
   }
 
-  long parent_uid = self-&gt;parent_uid;
-
-  GDALAsyncableJob&lt;bool&gt; job;
+  GDALAsyncableJob&lt;bool&gt; job(self-&gt;parent_uid);
   job.persist(&quot;array&quot;, array);
-  job.persist(self-&gt;handle());
-  Local&lt;Object&gt; ds = Nan::GetPrivate(info.This(), Nan::New(&quot;ds_&quot;).ToLocalChecked()).ToLocalChecked().As&lt;Object&gt;();
-  job.persist(ds);
 
-  job.main = [parent_uid, buffer, gdal_mdarray, gdal_origin, gdal_span, gdal_stride, type, length, offset](
-               const GDALExecutionProgress &amp;) {
-    int bytes_per_pixel = GDALGetDataTypeSize(type) / 8;
-    GDALExtendedDataType gdal_type = GDALExtendedDataType::Create(type);
-    GDAL_ASYNCABLE_LOCK(parent_uid);
-    bool success = gdal_mdarray-&gt;Read(
-      gdal_origin.get(),
-      gdal_span.get(),
-      nullptr,
-      gdal_stride.get(),
-      gdal_type,
-      (void *)((uint8_t *)buffer + offset * bytes_per_pixel),
-      buffer,
-      length * bytes_per_pixel);
-    GDAL_UNLOCK_PARENT;
-    if (!success) { throw CPLGetLastErrorMsg(); }
-    return success;
-  };
+  job.main =
+    [buffer, gdal_mdarray, gdal_origin, gdal_span, gdal_stride, type, length, offset](const GDALExecutionProgress &amp;) {
+      int bytes_per_pixel = GDALGetDataTypeSize(type) / 8;
+      GDALExtendedDataType gdal_type = GDALExtendedDataType::Create(type);
+      bool success = gdal_mdarray-&gt;Read(
+        gdal_origin.get(),
+        gdal_span.get(),
+        nullptr,
+        gdal_stride.get(),
+        gdal_type,
+        (void *)((uint8_t *)buffer + offset * bytes_per_pixel),
+        buffer,
+        length * bytes_per_pixel);
+      if (!success) { throw CPLGetLastErrorMsg(); }
+      return success;
+    };
   job.rval = [](bool success, GetFromPersistentFunc getter) { return getter(&quot;array&quot;); };
   job.run(info, async, 1);
 }
@@ -515,9 +506,8 @@ NAN_METHOD(MDArray::getView) {
 
   std::string viewExpr;
   NODE_ARG_STR(0, &quot;view&quot;, viewExpr);
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   std::shared_ptr&lt;GDALMDArray&gt; view = raw-&gt;GetView(viewExpr);
-  GDAL_UNLOCK_PARENT;
   if (view == nullptr) {
     Nan::ThrowError(CPLGetLastErrorMsg());
     return;
@@ -542,9 +532,8 @@ NAN_METHOD(MDArray::getMask) {
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   GDAL_RAW_CHECK(std::shared_ptr&lt;GDALMDArray&gt;, array, raw);
 
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   std::shared_ptr&lt;GDALMDArray&gt; mask = raw-&gt;GetMask(NULL);
-  GDAL_UNLOCK_PARENT;
   if (mask == nullptr) {
     Nan::ThrowError(CPLGetLastErrorMsg());
     return;
@@ -576,9 +565,8 @@ NAN_METHOD(MDArray::asDataset) {
   NODE_ARG_STR_INT(1, &quot;y&quot;, dim, y, isYString);
   if (isYString) y = ArrayDimensions::__getIdx(raw, dim);
 
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   GDALDataset *ds = raw-&gt;AsClassicDataset(x, y);
-  GDAL_UNLOCK_PARENT;
   if (ds == nullptr) {
     Nan::ThrowError(CPLGetLastErrorMsg());
     return;
@@ -598,9 +586,8 @@ NAN_GETTER(MDArray::srsGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   GDAL_RAW_CHECK(std::shared_ptr&lt;GDALMDArray&gt;, array, raw);
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   std::shared_ptr&lt;OGRSpatialReference&gt; srs = raw-&gt;GetSpatialRef();
-  GDAL_UNLOCK_PARENT;
   if (srs == nullptr) {
     info.GetReturnValue().Set(Nan::Null());
     return;
@@ -619,9 +606,8 @@ NAN_GETTER(MDArray::offsetGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   bool hasOffset = false;
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   double result = array-&gt;this_-&gt;GetOffset(&amp;hasOffset);
-  GDAL_UNLOCK_PARENT;
   if (hasOffset)
     info.GetReturnValue().Set(Nan::New&lt;Number&gt;(result));
   else
@@ -638,9 +624,8 @@ NAN_GETTER(MDArray::scaleGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   bool hasScale = false;
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   double result = array-&gt;this_-&gt;GetScale(&amp;hasScale);
-  GDAL_UNLOCK_PARENT;
   if (hasScale)
     info.GetReturnValue().Set(Nan::New&lt;Number&gt;(result));
   else
@@ -657,9 +642,8 @@ NAN_GETTER(MDArray::noDataValueGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   bool hasNoData = false;
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   double result = array-&gt;this_-&gt;GetNoDataValueAsDouble(&amp;hasNoData);
-  GDAL_UNLOCK_PARENT;
 
   if (hasNoData &amp;&amp; !std::isnan(result)) {
     info.GetReturnValue().Set(Nan::New&lt;Number&gt;(result));
@@ -682,9 +666,8 @@ NAN_GETTER(MDArray::noDataValueGetter) {
 NAN_GETTER(MDArray::unitTypeGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   std::string unit = array-&gt;this_-&gt;GetUnit();
-  GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(SafeString::New(unit.c_str()));
 }
 
@@ -697,7 +680,7 @@ NAN_GETTER(MDArray::typeGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   GDAL_RAW_CHECK(std::shared_ptr&lt;GDALMDArray&gt;, array, raw);
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   GDALExtendedDataType type = raw-&gt;GetDataType();
   const char *r;
   switch (type.GetClass()) {
@@ -706,7 +689,6 @@ NAN_GETTER(MDArray::typeGetter) {
     case GEDTC_COMPOUND: r = &quot;Compound&quot;; break;
     default: Nan::ThrowError(&quot;Invalid attribute type&quot;); return;
   }
-  GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(SafeString::New(r));
 }
 
@@ -739,9 +721,8 @@ NAN_GETTER(MDArray::descriptionGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   GDAL_RAW_CHECK(std::shared_ptr&lt;GDALMDArray&gt;, array, raw);
-  GDAL_TRYLOCK_PARENT(array);
+  GDAL_LOCK_PARENT(array);
   std::string description = raw-&gt;GetFullName();
-  GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(SafeString::New(description.c_str()));
 }
 

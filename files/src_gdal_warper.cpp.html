@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.992</b>
+                    API Docs for Version: <b>3.3.0</b>
                 </p>
             </li>
         </div>
@@ -411,55 +411,45 @@ GDAL_ASYNCABLE_DEFINE(Warper::reprojectImage) {
   t_srs_str = std::string(t_srs_wkt);
   CPLFree(t_srs_wkt);
 
-  GDALAsyncableJob&lt;CPLErr&gt; job;
-  job.persist(options-&gt;datasetObjects());
   std::vector&lt;long&gt; uids = options-&gt;datasetUids();
+  GDALAsyncableJob&lt;CPLErr&gt; job(uids);
 
-  if (progress_cb) {
-    job.persist(progress_cb-&gt;GetFunction());
-    job.progress = progress_cb;
-  }
+  job.progress = progress_cb;
 
   // opts is a pointer inside options memory space
   // the lifetime of the options shared_ptr is limited by the lifetime of the lambda
   if (options-&gt;useMultithreading()) {
-    job.main =
-      [uids, options, opts, s_srs_str, t_srs_str, maxError, progress_cb](const GDALExecutionProgress &amp;progress) {
-        GDAL_ASYNCABLE_LOCK_MANY(uids[0], uids[1]);
-        CPLErr err = GDALReprojectImageMulti(
-          opts-&gt;hSrcDS,
-          s_srs_str.c_str(),
-          opts-&gt;hDstDS,
-          t_srs_str.c_str(),
-          opts-&gt;eResampleAlg,
-          opts-&gt;dfWarpMemoryLimit,
-          maxError,
-          progress_cb ? ProgressTrampoline : nullptr,
-          progress_cb ? (void *)&amp;progress : nullptr,
-          opts);
-        GDAL_UNLOCK_MANY;
-        if (err) { throw CPLGetLastErrorMsg(); }
-        return err;
-      };
+    job.main = [options, opts, s_srs_str, t_srs_str, maxError, progress_cb](const GDALExecutionProgress &amp;progress) {
+      CPLErr err = GDALReprojectImageMulti(
+        opts-&gt;hSrcDS,
+        s_srs_str.c_str(),
+        opts-&gt;hDstDS,
+        t_srs_str.c_str(),
+        opts-&gt;eResampleAlg,
+        opts-&gt;dfWarpMemoryLimit,
+        maxError,
+        progress_cb ? ProgressTrampoline : nullptr,
+        progress_cb ? (void *)&amp;progress : nullptr,
+        opts);
+      if (err) { throw CPLGetLastErrorMsg(); }
+      return err;
+    };
   } else {
-    job.main =
-      [uids, options, opts, s_srs_str, t_srs_str, maxError, progress_cb](const GDALExecutionProgress &amp;progress) {
-        GDAL_ASYNCABLE_LOCK_MANY(uids[0], uids[1]);
-        CPLErr err = GDALReprojectImage(
-          opts-&gt;hSrcDS,
-          s_srs_str.c_str(),
-          opts-&gt;hDstDS,
-          t_srs_str.c_str(),
-          opts-&gt;eResampleAlg,
-          opts-&gt;dfWarpMemoryLimit,
-          maxError,
-          progress_cb ? ProgressTrampoline : nullptr,
-          progress_cb ? (void *)&amp;progress : nullptr,
-          opts);
-        GDAL_UNLOCK_MANY;
-        if (err) { throw CPLGetLastErrorMsg(); }
-        return err;
-      };
+    job.main = [options, opts, s_srs_str, t_srs_str, maxError, progress_cb](const GDALExecutionProgress &amp;progress) {
+      CPLErr err = GDALReprojectImage(
+        opts-&gt;hSrcDS,
+        s_srs_str.c_str(),
+        opts-&gt;hDstDS,
+        t_srs_str.c_str(),
+        opts-&gt;eResampleAlg,
+        opts-&gt;dfWarpMemoryLimit,
+        maxError,
+        progress_cb ? ProgressTrampoline : nullptr,
+        progress_cb ? (void *)&amp;progress : nullptr,
+        opts);
+      if (err) { throw CPLGetLastErrorMsg(); }
+      return err;
+    };
   }
 
   job.rval = [](CPLErr r, GetFromPersistentFunc) { return Nan::Undefined(); };
@@ -525,7 +515,7 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
     prop = Nan::Get(obj, Nan::New(&quot;src&quot;).ToLocalChecked()).ToLocalChecked();
     if (prop-&gt;IsObject() &amp;&amp; !prop-&gt;IsNull() &amp;&amp; Nan::New(Dataset::constructor)-&gt;HasInstance(prop)) {
       ds = Nan::ObjectWrap::Unwrap&lt;Dataset&gt;(prop.As&lt;Object&gt;());
-      if (!ds-&gt;getDataset()) {
+      if (!ds-&gt;get()) {
         Nan::ThrowError(&quot;src dataset already closed&quot;);
         return;
       }
@@ -562,27 +552,20 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
   };
 
 #if GDAL_VERSION_MAJOR == 2 &amp;&amp; GDAL_VERSION_MINOR &lt; 3
-  GDALDatasetH gdal_ds = static_cast&lt;GDALDatasetH&gt;(ds-&gt;getDataset());
+  GDALDatasetH gdal_ds = static_cast&lt;GDALDatasetH&gt;(ds-&gt;get());
 #else
-  GDALDatasetH gdal_ds = GDALDataset::ToHandle(ds-&gt;getDataset());
+  GDALDatasetH gdal_ds = GDALDataset::ToHandle(ds-&gt;get());
 #endif
-  long uid = ds-&gt;uid;
-  GDALAsyncableJob&lt;warpOutputResult&gt; job;
-  job.persist(ds-&gt;handle());
+  GDALAsyncableJob&lt;warpOutputResult&gt; job(ds-&gt;uid);
 
-  job.main = [gdal_ds, uid, s_srs_str, t_srs_str, maxError](const GDALExecutionProgress &amp;) {
+  job.main = [gdal_ds, s_srs_str, t_srs_str, maxError](const GDALExecutionProgress &amp;) {
     struct warpOutputResult r;
-
-    GDAL_ASYNCABLE_LOCK(uid);
 
     void *hTransformArg;
     void *hGenTransformArg =
       GDALCreateGenImgProjTransformer(gdal_ds, s_srs_str.c_str(), NULL, t_srs_str.c_str(), TRUE, 1000.0, 0);
 
-    if (!hGenTransformArg) {
-      GDAL_UNLOCK_PARENT;
-      throw CPLGetLastErrorMsg();
-    }
+    if (!hGenTransformArg) { throw CPLGetLastErrorMsg(); }
 
     GDALTransformerFunc pfnTransformer;
 
@@ -592,7 +575,6 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
 
       if (!hTransformArg) {
         GDALDestroyGenImgProjTransformer(hGenTransformArg);
-        GDAL_UNLOCK_PARENT;
         throw CPLGetLastErrorMsg();
       }
     } else {
@@ -604,7 +586,6 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
 
     GDALDestroyGenImgProjTransformer(hGenTransformArg);
     if (maxError &gt; 0.0) { GDALDestroyApproxTransformer(hTransformArg); }
-    GDAL_UNLOCK_PARENT;
 
     if (err) { throw CPLGetLastErrorMsg(); }
     return r;

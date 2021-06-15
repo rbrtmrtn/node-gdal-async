@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.992</b>
+                    API Docs for Version: <b>3.3.0</b>
                 </p>
             </li>
         </div>
@@ -153,11 +153,11 @@
 
 #include &lt;cpl_port.h&gt;
 #include &lt;limits&gt;
+#include &lt;mutex&gt;
 
 namespace node_gdal {
 
 Nan::Persistent&lt;FunctionTemplate&gt; RasterBand::constructor;
-ObjectCache&lt;GDALRasterBand *, RasterBand&gt; RasterBand::cache;
 
 void RasterBand::Initialize(Local&lt;Object&gt; target) {
   Nan::HandleScope scope;
@@ -174,7 +174,7 @@ void RasterBand::Initialize(Local&lt;Object&gt; target) {
 #endif
   Nan::SetPrototypeMethod(lcons, &quot;getStatistics&quot;, getStatistics);
   Nan::SetPrototypeMethod(lcons, &quot;setStatistics&quot;, setStatistics);
-  Nan::SetPrototypeMethod(lcons, &quot;computeStatistics&quot;, computeStatistics);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;computeStatistics&quot;, computeStatistics);
   Nan::SetPrototypeMethod(lcons, &quot;getMaskBand&quot;, getMaskBand);
   Nan::SetPrototypeMethod(lcons, &quot;getMaskFlags&quot;, getMaskFlags);
   Nan::SetPrototypeMethod(lcons, &quot;createMaskBand&quot;, createMaskBand);
@@ -229,7 +229,7 @@ void RasterBand::dispose() {
   if (this_) {
     LOG(&quot;Disposing band [%p]&quot;, this_);
 
-    ptr_manager.dispose(uid);
+    object_store.dispose(uid);
 
     LOG(&quot;Disposed band [%p]&quot;, this_);
 
@@ -272,7 +272,7 @@ Local&lt;Value&gt; RasterBand::New(GDALRasterBand *raw, GDALDataset *raw_parent)
   Nan::EscapableHandleScope scope;
 
   if (!raw) { return scope.Escape(Nan::Null()); }
-  if (cache.has(raw)) { return scope.Escape(cache.get(raw)); }
+  if (object_store.has(raw)) { return scope.Escape(object_store.get(raw)); }
 
   RasterBand *wrapped = new RasterBand(raw);
 
@@ -281,7 +281,6 @@ Local&lt;Value&gt; RasterBand::New(GDALRasterBand *raw, GDALDataset *raw_parent)
     Nan::NewInstance(Nan::GetFunction(Nan::New(RasterBand::constructor)).ToLocalChecked(), 1, &amp;ext).ToLocalChecked();
 
   LOG(&quot;Adding band to cache[%p] (parent=%p)&quot;, raw, raw_parent);
-  cache.add(raw, obj);
 
   // add reference to dataset so dataset doesnt get GC&#x27;ed while band is alive
   // DONT USE GDALRasterBand.GetDataset() ... it will return a &quot;fake&quot; dataset
@@ -289,17 +288,17 @@ Local&lt;Value&gt; RasterBand::New(GDALRasterBand *raw, GDALDataset *raw_parent)
   // https://github.com/naturalatlas/node-gdal/blob/master/deps/libgdal/gdal/frmts/gtiff/geotiff.cpp#L84
 
   Local&lt;Object&gt; ds;
-  if (!Dataset::dataset_cache.has(raw_parent)) {
+  if (!object_store.has(raw_parent)) {
     LOG(&quot;Band&#x27;s parent dataset disappeared from cache (band = %p, dataset = %p)&quot;, raw, raw_parent);
     Nan::ThrowError(&quot;Band&#x27;s parent dataset disappeared from cache&quot;);
     return scope.Escape(Nan::Undefined());
     // ds = Dataset::New(raw_parent); //this should never happen
   }
 
-  ds = Dataset::dataset_cache.get(raw_parent);
+  ds = object_store.get(raw_parent);
   Dataset *parent = Nan::ObjectWrap::Unwrap&lt;Dataset&gt;(ds);
   long parent_uid = parent-&gt;uid;
-  wrapped-&gt;uid = ptr_manager.add(raw, parent_uid);
+  wrapped-&gt;uid = object_store.add(raw, wrapped-&gt;persistent(), parent_uid);
   wrapped-&gt;parent_ds = raw_parent;
   wrapped-&gt;parent_uid = parent_uid;
   Nan::SetPrivate(obj, Nan::New(&quot;ds_&quot;).ToLocalChecked(), ds);
@@ -370,9 +369,8 @@ NODE_WRAPPED_METHOD_WITH_CPLERR_RESULT_1_INTEGER_PARAM(RasterBand, createMaskBan
 NAN_METHOD(RasterBand::getMaskBand) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   GDALRasterBand *mask_band = band-&gt;this_-&gt;GetMaskBand();
-  GDAL_UNLOCK_PARENT;
 
   if (!mask_band) {
     info.GetReturnValue().Set(Nan::Null());
@@ -411,8 +409,9 @@ GDAL_ASYNCABLE_DEFINE(RasterBand::fill) {
 
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
 
-  GDALAsyncableJob&lt;CPLErr&gt; job;
+  GDALAsyncableJob&lt;CPLErr&gt; job(band-&gt;parent_uid);
   GDALRasterBand *gdal_obj = band-&gt;this_;
+
   job.main = [gdal_obj, real, imaginary](const GDALExecutionProgress &amp;) {
     CPLErr err = gdal_obj-&gt;Fill(real, imaginary);
     if (err) { throw CPLGetLastErrorMsg(); }
@@ -426,6 +425,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBand::fill) {
 // --- Custom error handling to handle VRT errors ---
 // see: https://github.com/mapbox/mapnik-omnivore/issues/10
 
+std::mutex stats_lock;
 std::string stats_file_err = &quot;&quot;;
 CPLErrorHandler last_err_handler;
 void CPL_STDCALL statisticsErrorHandler(CPLErr eErrClass, int err_no, const char *msg) {
@@ -458,9 +458,8 @@ NAN_METHOD(RasterBand::asMDArray) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   GDAL_RAW_CHECK(GDALRasterBand *, band, raw);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   std::shared_ptr&lt;GDALMDArray&gt; mdarray = raw-&gt;AsMDArray();
-  GDAL_UNLOCK_PARENT;
   if (mdarray == nullptr) {
     Nan::ThrowError(CPLGetLastErrorMsg());
     return;
@@ -494,11 +493,10 @@ NAN_METHOD(RasterBand::getStatistics) {
   NODE_ARG_BOOL(0, &quot;allow approximation&quot;, approx);
   NODE_ARG_BOOL(1, &quot;force&quot;, force);
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   pushStatsErrorHandler();
   CPLErr err = band-&gt;this_-&gt;GetStatistics(approx, force, &amp;min, &amp;max, &amp;mean, &amp;std_dev);
   popStatsErrorHandler();
-  GDAL_UNLOCK_PARENT;
   if (!stats_file_err.empty()) {
     Nan::ThrowError(stats_file_err.c_str());
   } else if (err) {
@@ -520,6 +518,10 @@ NAN_METHOD(RasterBand::getStatistics) {
 }
 
 /**
+ * @typedef stats { min: number, max: number, mean: number, std_dev: number }
+ */
+
+/**
  * Computes image statistics.
  *
  * Returns the minimum, maximum, mean and standard deviation of all pixel values
@@ -531,34 +533,67 @@ NAN_METHOD(RasterBand::getStatistics) {
  * @method computeStatistics
  * @param {boolean} allow_approximation If &#x60;true&#x60; statistics may be computed
  * based on overviews or a subset of all tiles.
- * @return {any} Statistics containing &#x60;&quot;min&quot;&#x60;, &#x60;&quot;max&quot;&#x60;, &#x60;&quot;mean&quot;&#x60;,
+ * @return {stats} Statistics containing &#x60;&quot;min&quot;&#x60;, &#x60;&quot;max&quot;&#x60;, &#x60;&quot;mean&quot;&#x60;,
  * &#x60;&quot;std_dev&quot;&#x60; properties.
  */
-NAN_METHOD(RasterBand::computeStatistics) {
+
+/**
+ * Computes image statistics.
+ * {{async}}
+ *
+ * Returns the minimum, maximum, mean and standard deviation of all pixel values
+ * in this band. If approximate statistics are sufficient, the
+ * &#x60;allow_approximation&#x60; argument can be set to &#x60;true&#x60; in which case overviews,
+ * or a subset of image tiles may be used in computing the statistics.
+ *
+ * @throws Error
+ * @method computeStatisticsAsync
+ * @param {boolean} allow_approximation If &#x60;true&#x60; statistics may be computed
+ * based on overviews or a subset of all tiles.
+ * @param {callback&lt;stats&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;stats&gt;} Statistics containing &#x60;&quot;min&quot;&#x60;, &#x60;&quot;max&quot;&#x60;, &#x60;&quot;mean&quot;&#x60;,
+ * &#x60;&quot;std_dev&quot;&#x60; properties.
+ */
+GDAL_ASYNCABLE_DEFINE(RasterBand::computeStatistics) {
   Nan::HandleScope scope;
-  double min, max, mean, std_dev;
+  struct stats_t {
+    double min, max, mean, std_dev;
+  };
   int approx;
+
   NODE_ARG_BOOL(0, &quot;allow approximation&quot;, approx);
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
-  pushStatsErrorHandler();
-  CPLErr err = band-&gt;this_-&gt;ComputeStatistics(approx, &amp;min, &amp;max, &amp;mean, &amp;std_dev, NULL, NULL);
-  popStatsErrorHandler();
-  GDAL_UNLOCK_PARENT;
-  if (!stats_file_err.empty()) {
-    Nan::ThrowError(stats_file_err.c_str());
-  } else if (err) {
-    NODE_THROW_LAST_CPLERR;
-    return;
-  }
 
-  Local&lt;Object&gt; result = Nan::New&lt;Object&gt;();
-  Nan::Set(result, Nan::New(&quot;min&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(min));
-  Nan::Set(result, Nan::New(&quot;max&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(max));
-  Nan::Set(result, Nan::New(&quot;mean&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(mean));
-  Nan::Set(result, Nan::New(&quot;std_dev&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(std_dev));
+  GDALAsyncableJob&lt;stats_t&gt; job(band-&gt;parent_uid);
+  GDALRasterBand *gdal_obj = band-&gt;this_;
 
-  info.GetReturnValue().Set(result);
+  job.main = [gdal_obj, approx](const GDALExecutionProgress &amp;) {
+    struct stats_t stats;
+    std::lock_guard&lt;std::mutex&gt; guard(stats_lock);
+
+    pushStatsErrorHandler();
+    CPLErr err = gdal_obj-&gt;ComputeStatistics(approx, &amp;stats.min, &amp;stats.max, &amp;stats.mean, &amp;stats.std_dev, NULL, NULL);
+    popStatsErrorHandler();
+    if (!stats_file_err.empty()) {
+      throw stats_file_err.c_str();
+    } else if (err != CPLE_None) {
+      throw CPLGetLastErrorMsg();
+    }
+
+    return stats;
+  };
+
+  job.rval = [](stats_t r, GetFromPersistentFunc) {
+    Nan::EscapableHandleScope scope;
+    Local&lt;Object&gt; result = Nan::New&lt;Object&gt;();
+    Nan::Set(result, Nan::New(&quot;min&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(r.min));
+    Nan::Set(result, Nan::New(&quot;max&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(r.max));
+    Nan::Set(result, Nan::New(&quot;mean&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(r.mean));
+    Nan::Set(result, Nan::New(&quot;std_dev&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(r.std_dev));
+    return scope.Escape(result);
+  };
+
+  job.run(info, async, 1);
 }
 
 /**
@@ -581,9 +616,8 @@ NAN_METHOD(RasterBand::setStatistics) {
   NODE_ARG_DOUBLE(2, &quot;mean&quot;, mean);
   NODE_ARG_DOUBLE(3, &quot;standard deviation&quot;, std_dev);
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   CPLErr err = band-&gt;this_-&gt;SetStatistics(min, max, mean, std_dev);
-  GDAL_UNLOCK_PARENT;
 
   if (err) {
     NODE_THROW_LAST_CPLERR;
@@ -605,10 +639,9 @@ NAN_METHOD(RasterBand::getMetadata) {
   std::string domain(&quot;&quot;);
   NODE_ARG_OPT_STR(0, &quot;domain&quot;, domain);
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   const Nan::ADDON_REGISTER_FUNCTION_ARGS_TYPE &amp;meta =
     MajorObject::getMetadata(band-&gt;this_, domain.empty() ? NULL : domain.c_str());
-  GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(meta);
 }
 
@@ -650,9 +683,8 @@ NAN_GETTER(RasterBand::pixelsGetter) {
 NAN_GETTER(RasterBand::idGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   int id = band-&gt;this_-&gt;GetBand();
-  GDAL_UNLOCK_PARENT;
 
   if (id == 0) {
     info.GetReturnValue().Set(Nan::Null());
@@ -673,9 +705,8 @@ NAN_GETTER(RasterBand::idGetter) {
 NAN_GETTER(RasterBand::descriptionGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   const char *desc = band-&gt;this_-&gt;GetDescription();
-  GDAL_UNLOCK_PARENT;
 
   info.GetReturnValue().Set(SafeString::New(desc));
 }
@@ -691,10 +722,9 @@ NAN_GETTER(RasterBand::sizeGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   Local&lt;Object&gt; result = Nan::New&lt;Object&gt;();
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   int x = band-&gt;this_-&gt;GetXSize();
   int y = band-&gt;this_-&gt;GetYSize();
-  GDAL_UNLOCK_PARENT;
   Nan::Set(result, Nan::New(&quot;x&quot;).ToLocalChecked(), Nan::New&lt;Integer&gt;(x));
   Nan::Set(result, Nan::New(&quot;y&quot;).ToLocalChecked(), Nan::New&lt;Integer&gt;(y));
   info.GetReturnValue().Set(result);
@@ -711,9 +741,8 @@ NAN_GETTER(RasterBand::blockSizeGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   int x, y;
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   band-&gt;this_-&gt;GetBlockSize(&amp;x, &amp;y);
-  GDAL_UNLOCK_PARENT;
 
   Local&lt;Object&gt; result = Nan::New&lt;Object&gt;();
   Nan::Set(result, Nan::New(&quot;x&quot;).ToLocalChecked(), Nan::New&lt;Integer&gt;(x));
@@ -732,9 +761,8 @@ NAN_GETTER(RasterBand::minimumGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   int success = 0;
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   double result = band-&gt;this_-&gt;GetMinimum(&amp;success);
-  GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(Nan::New&lt;Number&gt;(result));
 }
 
@@ -749,9 +777,8 @@ NAN_GETTER(RasterBand::maximumGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   int success = 0;
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   double result = band-&gt;this_-&gt;GetMaximum(&amp;success);
-  GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(Nan::New&lt;Number&gt;(result));
 }
 
@@ -765,9 +792,8 @@ NAN_GETTER(RasterBand::offsetGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   int success = 0;
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   double result = band-&gt;this_-&gt;GetOffset(&amp;success);
-  GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(Nan::New&lt;Number&gt;(result));
 }
 
@@ -781,9 +807,8 @@ NAN_GETTER(RasterBand::scaleGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   int success = 0;
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   double result = band-&gt;this_-&gt;GetScale(&amp;success);
-  GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(Nan::New&lt;Number&gt;(result));
 }
 
@@ -797,9 +822,8 @@ NAN_GETTER(RasterBand::noDataValueGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   int success = 0;
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   double result = band-&gt;this_-&gt;GetNoDataValue(&amp;success);
-  GDAL_UNLOCK_PARENT;
 
   if (success &amp;&amp; !std::isnan(result)) {
     info.GetReturnValue().Set(Nan::New&lt;Number&gt;(result));
@@ -822,9 +846,8 @@ NAN_GETTER(RasterBand::noDataValueGetter) {
 NAN_GETTER(RasterBand::unitTypeGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   const char *result = band-&gt;this_-&gt;GetUnitType();
-  GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(SafeString::New(result));
 }
 
@@ -840,9 +863,8 @@ NAN_GETTER(RasterBand::unitTypeGetter) {
 NAN_GETTER(RasterBand::dataTypeGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   GDALDataType type = band-&gt;this_-&gt;GetRasterDataType();
-  GDAL_UNLOCK_PARENT;
 
   if (type == GDT_Unknown) return;
   info.GetReturnValue().Set(SafeString::New(GDALGetDataTypeName(type)));
@@ -858,9 +880,8 @@ NAN_GETTER(RasterBand::dataTypeGetter) {
 NAN_GETTER(RasterBand::readOnlyGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   GDALAccess result = band-&gt;this_-&gt;GetAccess();
-  GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(result == GA_Update ? Nan::False() : Nan::True());
 }
 
@@ -878,9 +899,8 @@ NAN_GETTER(RasterBand::readOnlyGetter) {
 NAN_GETTER(RasterBand::hasArbitraryOverviewsGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   bool result = band-&gt;this_-&gt;HasArbitraryOverviews();
-  GDAL_UNLOCK_PARENT;
   info.GetReturnValue().Set(Nan::New&lt;Boolean&gt;(result));
 }
 
@@ -893,9 +913,8 @@ NAN_GETTER(RasterBand::hasArbitraryOverviewsGetter) {
 NAN_GETTER(RasterBand::categoryNamesGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   char **names = band-&gt;this_-&gt;GetCategoryNames();
-  GDAL_UNLOCK_PARENT;
 
   Local&lt;Array&gt; results = Nan::New&lt;Array&gt;();
 
@@ -920,9 +939,8 @@ NAN_GETTER(RasterBand::categoryNamesGetter) {
 NAN_GETTER(RasterBand::colorInterpretationGetter) {
   Nan::HandleScope scope;
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   GDALColorInterp interp = band-&gt;this_-&gt;GetColorInterpretation();
-  GDAL_UNLOCK_PARENT;
   if (interp == GCI_Undefined)
     return;
   else
@@ -937,9 +955,8 @@ NAN_SETTER(RasterBand::unitTypeSetter) {
     return;
   }
   std::string input = *Nan::Utf8String(value);
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   CPLErr err = band-&gt;this_-&gt;SetUnitType(input.c_str());
-  GDAL_UNLOCK_PARENT;
   if (err) { NODE_THROW_LAST_CPLERR; }
 }
 
@@ -958,9 +975,8 @@ NAN_SETTER(RasterBand::noDataValueSetter) {
     return;
   }
 
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   CPLErr err = band-&gt;this_-&gt;SetNoDataValue(input);
-  GDAL_UNLOCK_PARENT;
   if (err) { NODE_THROW_LAST_CPLERR; }
 }
 
@@ -973,9 +989,8 @@ NAN_SETTER(RasterBand::scaleSetter) {
     return;
   }
   double input = Nan::To&lt;double&gt;(value).ToChecked();
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   CPLErr err = band-&gt;this_-&gt;SetScale(input);
-  GDAL_UNLOCK_PARENT;
   if (err) { NODE_THROW_LAST_CPLERR; }
 }
 
@@ -988,9 +1003,8 @@ NAN_SETTER(RasterBand::offsetSetter) {
     return;
   }
   double input = Nan::To&lt;double&gt;(value).ToChecked();
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   CPLErr err = band-&gt;this_-&gt;SetOffset(input);
-  GDAL_UNLOCK_PARENT;
   if (err) { NODE_THROW_LAST_CPLERR; }
 }
 
@@ -1018,9 +1032,8 @@ NAN_SETTER(RasterBand::categoryNamesSetter) {
     list[i] = NULL;
   }
 
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   int err = band-&gt;this_-&gt;SetCategoryNames(list);
-  GDAL_UNLOCK_PARENT;
 
   if (list) { delete[] list; }
 
@@ -1041,9 +1054,8 @@ NAN_SETTER(RasterBand::colorInterpretationSetter) {
     return;
   }
 
-  GDAL_TRYLOCK_PARENT(band);
+  GDAL_LOCK_PARENT(band);
   CPLErr err = band-&gt;this_-&gt;SetColorInterpretation(ci);
-  GDAL_UNLOCK_PARENT;
   if (err) { NODE_THROW_LAST_CPLERR; }
 }
 

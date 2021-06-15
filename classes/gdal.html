@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.2.992</b>
+                    API Docs for Version: <b>3.3.0</b>
                 </p>
             </li>
         </div>
@@ -189,6 +189,7 @@ height="20"></iframe></p>
 			<ul>
 				<li><a href="#prop-gdal.bundled"><span class="ip">gdal.bundled</span></a></li>
 				<li><a href="#prop-gdal.drivers"><span class="ip">gdal.drivers</span></a></li>
+				<li><a href="#prop-gdal.eventLoopWarning"><span class="ip">gdal.eventLoopWarning</span></a></li>
 				<li><a href="#prop-gdal.lastError"><span class="ip">gdal.lastError</span></a></li>
 				<li><a href="#prop-gdal.version"><span class="ip">gdal.version</span></a></li>
 			</ul>
@@ -250,7 +251,7 @@ height="20"></iframe></p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1556"><code>src&#x2F;node_gdal.cpp:1556</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l1571"><code>src&#x2F;node_gdal.cpp:1571</code></a>
         </p>
 
 
@@ -276,7 +277,7 @@ height="20"></iframe></p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l448"><code>src&#x2F;node_gdal.cpp:448</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l463"><code>src&#x2F;node_gdal.cpp:463</code></a>
         </p>
 
 
@@ -284,6 +285,34 @@ height="20"></iframe></p>
 
     <div class="description">
         <p>The collection of all drivers registered with GDAL</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-gdal.eventLoopWarning" class="property item">
+    <h3 class="name"><code>gdal.eventLoopWarning</code></h3>
+    <span class="type">Boolean</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_node_gdal.cpp.html#l1597"><code>src&#x2F;node_gdal.cpp:1597</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Should a warning be emitted to stderr when a synchronous operation
+is blocking the event loop, can be safely disabled unless
+the user application needs to remain responsive at all times
+Use <code>(gdal as any).eventLoopWarning = false</code> to set the value from TypeScript</p>
 
     </div>
 
@@ -302,7 +331,7 @@ height="20"></iframe></p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1570"><code>src&#x2F;node_gdal.cpp:1570</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l1585"><code>src&#x2F;node_gdal.cpp:1585</code></a>
         </p>
 
 
@@ -330,7 +359,7 @@ will be null or an object containing three properties: "number",
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1546"><code>src&#x2F;node_gdal.cpp:1546</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l1561"><code>src&#x2F;node_gdal.cpp:1561</code></a>
         </p>
 
 
@@ -365,7 +394,7 @@ will be null or an object containing three properties: "number",
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l121"><code>src&#x2F;node_gdal.cpp:121</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l122"><code>src&#x2F;node_gdal.cpp:122</code></a>
         </p>
 
 
@@ -420,7 +449,7 @@ will be null or an object containing three properties: "number",
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l327"><code>src&#x2F;gdal_algorithms.cpp:327</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l314"><code>src&#x2F;gdal_algorithms.cpp:314</code></a>
 		</p>
 
 
@@ -524,7 +553,7 @@ will be null or an object containing three properties: "number",
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l342"><code>src&#x2F;gdal_algorithms.cpp:342</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l329"><code>src&#x2F;gdal_algorithms.cpp:329</code></a>
 		</p>
 
 
@@ -944,7 +973,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_node_gdal.cpp.html#l304"><code>src&#x2F;node_gdal.cpp:304</code></a>
+		<a href="../files/src_node_gdal.cpp.html#l319"><code>src&#x2F;node_gdal.cpp:319</code></a>
 		</p>
 
 
@@ -1632,7 +1661,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l407"><code>src&#x2F;gdal_algorithms.cpp:407</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l391"><code>src&#x2F;gdal_algorithms.cpp:391</code></a>
 		</p>
 
 
@@ -1755,7 +1784,7 @@ The callback takes two arguments, the first one, <code>complete</code>, is a num
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l427"><code>src&#x2F;gdal_algorithms.cpp:427</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l411"><code>src&#x2F;gdal_algorithms.cpp:411</code></a>
 		</p>
 
 
@@ -1888,7 +1917,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_node_gdal.cpp.html#l1588"><code>src&#x2F;node_gdal.cpp:1588</code></a>
+		<a href="../files/src_node_gdal.cpp.html#l1616"><code>src&#x2F;node_gdal.cpp:1616</code></a>
 		</p>
 
 
@@ -2342,7 +2371,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_node_gdal.cpp.html#l335"><code>src&#x2F;node_gdal.cpp:335</code></a>
+		<a href="../files/src_node_gdal.cpp.html#l350"><code>src&#x2F;node_gdal.cpp:350</code></a>
 		</p>
 
 
@@ -2391,7 +2420,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l235"><code>src&#x2F;gdal_algorithms.cpp:235</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l228"><code>src&#x2F;gdal_algorithms.cpp:228</code></a>
 		</p>
 
 
@@ -2504,7 +2533,7 @@ The callback takes two arguments, the first one, <code>complete</code>, is a num
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l251"><code>src&#x2F;gdal_algorithms.cpp:251</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l244"><code>src&#x2F;gdal_algorithms.cpp:244</code></a>
 		</p>
 
 
@@ -2642,7 +2671,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_warper.cpp.html#l334"><code>src&#x2F;gdal_warper.cpp:334</code></a>
+		<a href="../files/src_gdal_warper.cpp.html#l324"><code>src&#x2F;gdal_warper.cpp:324</code></a>
 		</p>
 
 
@@ -2739,7 +2768,7 @@ properties.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_warper.cpp.html#l351"><code>src&#x2F;gdal_warper.cpp:351</code></a>
+		<a href="../files/src_gdal_warper.cpp.html#l341"><code>src&#x2F;gdal_warper.cpp:341</code></a>
 		</p>
 
 
@@ -2842,7 +2871,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_node_gdal.cpp.html#l1597"><code>src&#x2F;node_gdal.cpp:1597</code></a>
+		<a href="../files/src_node_gdal.cpp.html#l1625"><code>src&#x2F;node_gdal.cpp:1625</code></a>
 		</p>
 
 
