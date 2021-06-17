@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.0</b>
+                    API Docs for Version: <b>3.3.1</b>
                 </p>
             </li>
         </div>
@@ -246,6 +246,7 @@ NAN_METHOD(CompoundCurveCurves::count) {
  *
  * @method get
  * @param {number} index
+ * @throws Error
  * @return {gdal.CompoundCurve|gdal.SimpleCurve}
  */
 NAN_METHOD(CompoundCurveCurves::get) {
@@ -260,6 +261,8 @@ NAN_METHOD(CompoundCurveCurves::get) {
 
   if (i &gt;= 0 &amp;&amp; i &lt; geom-&gt;get()-&gt;getNumCurves())
     info.GetReturnValue().Set(Geometry::New(geom-&gt;get()-&gt;getCurve(i), false));
+  else
+    Nan::ThrowRangeError(&quot;Invalid curve requested&quot;);
 }
 
 /**

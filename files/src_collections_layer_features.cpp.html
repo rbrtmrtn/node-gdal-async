@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.0</b>
+                    API Docs for Version: <b>3.3.1</b>
                 </p>
             </li>
         </div>
@@ -232,6 +232,7 @@ NAN_METHOD(LayerFeatures::toString) {
  *
  * @method get
  * @param {number} id The feature ID of the feature to read.
+ * @throws Error
  * @return {gdal.Feature}
  */
 
@@ -246,6 +247,7 @@ NAN_METHOD(LayerFeatures::toString) {
  * @method getAsync
  * @param {number} id The feature ID of the feature to read.
  * @param {callback&lt;gdal.Feature&gt;} [callback=undefined] {{{cb}}}
+ * @throws Error
  * @return {Promise&lt;gdal.Feature&gt;}
  */
 GDAL_ASYNCABLE_DEFINE(LayerFeatures::get) {
@@ -265,7 +267,9 @@ GDAL_ASYNCABLE_DEFINE(LayerFeatures::get) {
   GDALAsyncableJob&lt;OGRFeature *&gt; job(layer-&gt;parent_uid);
   job.persist(layer-&gt;handle());
   job.main = [gdal_layer, feature_id](const GDALExecutionProgress &amp;) {
+    CPLErrorReset();
     OGRFeature *feature = gdal_layer-&gt;GetFeature(feature_id);
+    if (feature == nullptr) throw CPLGetLastErrorMsg();
     return feature;
   };
   job.rval = [](OGRFeature *feature, GetFromPersistentFunc) { return Feature::New(feature); };

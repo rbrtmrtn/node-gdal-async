@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.0</b>
+                    API Docs for Version: <b>3.3.1</b>
                 </p>
             </li>
         </div>
@@ -241,8 +241,7 @@ NAN_METHOD(RasterBandOverviews::get) {
 
   GDALRasterBand *result = band-&gt;get()-&gt;GetOverview(id);
 
-  // TODO: return null instead?
-  if (result == NULL) {
+  if (result == nullptr) {
     Nan::ThrowError(&quot;Specified overview not found&quot;);
     return;
   }

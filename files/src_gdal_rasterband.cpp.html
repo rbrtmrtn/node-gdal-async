@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.0</b>
+                    API Docs for Version: <b>3.3.1</b>
                 </p>
             </li>
         </div>
@@ -345,7 +345,7 @@ NODE_WRAPPED_ASYNC_METHOD_WITH_OGRERR_RESULT_LOCKED(RasterBand, flush, FlushCach
  * @method getMaskFlags
  * @return {number} Mask flags
  */
-NODE_WRAPPED_METHOD_WITH_RESULT(RasterBand, getMaskFlags, Integer, GetMaskFlags);
+NODE_WRAPPED_METHOD_WITH_RESULT_LOCKED(RasterBand, getMaskFlags, Integer, GetMaskFlags);
 // TODO: expose GMF constants in API
 // ({{#crossLink &quot;Constants (GMF)&quot;}}see flags{{/crossLink}})
 
@@ -356,7 +356,7 @@ NODE_WRAPPED_METHOD_WITH_RESULT(RasterBand, getMaskFlags, Integer, GetMaskFlags)
  * @method createMaskBand
  * @param {number} flags Mask flags
  */
-NODE_WRAPPED_METHOD_WITH_CPLERR_RESULT_1_INTEGER_PARAM(RasterBand, createMaskBand, CreateMaskBand, &quot;mask flags&quot;);
+NODE_WRAPPED_METHOD_WITH_CPLERR_RESULT_1_INTEGER_PARAM_LOCKED(RasterBand, createMaskBand, CreateMaskBand, &quot;mask flags&quot;);
 // TODO: expose GMF constants in API
 // ({{#crossLink &quot;Constants (GMF)&quot;}}see flags{{/crossLink}})
 
@@ -413,6 +413,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBand::fill) {
   GDALRasterBand *gdal_obj = band-&gt;this_;
 
   job.main = [gdal_obj, real, imaginary](const GDALExecutionProgress &amp;) {
+    CPLErrorReset();
     CPLErr err = gdal_obj-&gt;Fill(real, imaginary);
     if (err) { throw CPLGetLastErrorMsg(); }
     return err;
@@ -459,6 +460,7 @@ NAN_METHOD(RasterBand::asMDArray) {
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
   GDAL_RAW_CHECK(GDALRasterBand *, band, raw);
   GDAL_LOCK_PARENT(band);
+  CPLErrorReset();
   std::shared_ptr&lt;GDALMDArray&gt; mdarray = raw-&gt;AsMDArray();
   if (mdarray == nullptr) {
     Nan::ThrowError(CPLGetLastErrorMsg());
@@ -571,6 +573,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBand::computeStatistics) {
     struct stats_t stats;
     std::lock_guard&lt;std::mutex&gt; guard(stats_lock);
 
+    CPLErrorReset();
     pushStatsErrorHandler();
     CPLErr err = gdal_obj-&gt;ComputeStatistics(approx, &amp;stats.min, &amp;stats.max, &amp;stats.mean, &amp;stats.std_dev, NULL, NULL);
     popStatsErrorHandler();

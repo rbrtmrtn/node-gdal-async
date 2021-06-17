@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.0</b>
+                    API Docs for Version: <b>3.3.1</b>
                 </p>
             </li>
         </div>
@@ -280,6 +280,7 @@ NAN_METHOD(LineStringPoints::resize) {
  *
  * @method get
  * @param {number} index 0-based index
+ * @throws Error
  * @return {gdal.Point}
  */
 NAN_METHOD(LineStringPoints::get) {
@@ -294,7 +295,7 @@ NAN_METHOD(LineStringPoints::get) {
 
   NODE_ARG_INT(0, &quot;index&quot;, i);
   if (i &lt; 0 || i &gt;= geom-&gt;get()-&gt;getNumPoints()) {
-    info.GetReturnValue().Set(Nan::Null());
+    Nan::ThrowError(&quot;Invalid point requested&quot;);
     return;
   }
 

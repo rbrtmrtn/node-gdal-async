@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.0</b>
+                    API Docs for Version: <b>3.3.1</b>
                 </p>
             </li>
         </div>
@@ -248,6 +248,7 @@ NAN_METHOD(PolygonRings::count) {
  *
  * @method get
  * @param {number} index
+ * @throws Error
  * @return {gdal.LinearRing}
  */
 NAN_METHOD(PolygonRings::get) {
@@ -260,13 +261,17 @@ NAN_METHOD(PolygonRings::get) {
   int i;
   NODE_ARG_INT(0, &quot;index&quot;, i);
 
+  OGRLinearRing *r;
   if (i == 0) {
-    info.GetReturnValue().Set(LinearRing::New(geom-&gt;get()-&gt;getExteriorRing(), false));
-    return;
+    r = geom-&gt;get()-&gt;getExteriorRing();
   } else {
-    info.GetReturnValue().Set(LinearRing::New(geom-&gt;get()-&gt;getInteriorRing(i - 1), false));
+    r = geom-&gt;get()-&gt;getInteriorRing(i - 1);
+  }
+  if (r == nullptr) {
+    NODE_THROW_LAST_CPLERR;
     return;
   }
+  info.GetReturnValue().Set(LinearRing::New(r, false));
 }
 
 /**

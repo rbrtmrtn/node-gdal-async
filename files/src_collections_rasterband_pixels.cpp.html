@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.0</b>
+                    API Docs for Version: <b>3.3.1</b>
                 </p>
             </li>
         </div>
@@ -256,6 +256,7 @@ NAN_METHOD(RasterBandPixels::toString) {
  * @method get
  * @param {number} x
  * @param {number} y
+ * @throws Error
  * @return {number}
  */
 
@@ -286,6 +287,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::get) {
 
   job.main = [raw, x, y](const GDALExecutionProgress &amp;) {
     double val;
+    CPLErrorReset();
     CPLErr err = raw-&gt;RasterIO(GF_Read, x, y, 1, 1, &amp;val, 1, 1, GDT_Float64, 0, 0);
     if (err) { throw CPLGetLastErrorMsg(); }
     return val;
@@ -333,6 +335,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::set) {
   job.persist(band-&gt;handle());
 
   job.main = [raw, x, y, val](const GDALExecutionProgress &amp;) {
+    CPLErrorReset();
     CPLErr err = raw-&gt;RasterIO(GF_Write, x, y, 1, 1, (void *)&amp;val, 1, 1, GDT_Float64, 0, 0);
     if (err) { throw CPLGetLastErrorMsg(); }
     return err;
@@ -536,6 +539,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::read) {
       extra-&gt;pProgressData = (void *)&amp;progress;
     }
 
+    CPLErrorReset();
     CPLErr err =
       gdal_band-&gt;RasterIO(GF_Read, x, y, w, h, data, buffer_w, buffer_h, type, pixel_space, line_space, extra.get());
 
@@ -662,6 +666,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::write) {
       extra-&gt;pProgressData = (void *)&amp;progress;
     }
 
+    CPLErrorReset();
     CPLErr err =
       gdal_band-&gt;RasterIO(GF_Write, x, y, w, h, data, buffer_w, buffer_h, type, pixel_space, line_space, extra.get());
     if (err != CE_None) throw CPLGetLastErrorMsg();
@@ -735,6 +740,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::readBlock) {
   job.persist(&quot;array&quot;, obj);
   job.persist(band-&gt;handle());
   job.main = [gdal_band, x, y, data](const GDALExecutionProgress &amp;) {
+    CPLErrorReset();
     CPLErr err = gdal_band-&gt;ReadBlock(x, y, data);
     if (err) { throw CPLGetLastErrorMsg(); }
     return err;
@@ -792,6 +798,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::writeBlock) {
   GDALAsyncableJob&lt;CPLErr&gt; job(band-&gt;parent_uid);
   job.persist(obj, band-&gt;handle());
   job.main = [gdal_band, x, y, data](const GDALExecutionProgress &amp;) {
+    CPLErrorReset();
     CPLErr err = gdal_band-&gt;WriteBlock(x, y, data);
     if (err) { throw CPLGetLastErrorMsg(); }
     return err;

@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.0</b>
+                    API Docs for Version: <b>3.3.1</b>
                 </p>
             </li>
         </div>
@@ -233,6 +233,7 @@ NAN_METHOD(DatasetLayers::toString) {
  *
  * @method get
  * @param {string|number} key Layer name or ID.
+ * @throws Error
  * @return {gdal.Layer}
  */
 
@@ -243,6 +244,7 @@ NAN_METHOD(DatasetLayers::toString) {
  * @method getAsync
  * @param {string|number} key Layer name or ID.
  * @param {callback&lt;gdal.Layer&gt;} [callback=undefined] {{{cb}}}
+ * @throws Error
  * @return {Promise&lt;gdal.Layer&gt;}
  */
 
@@ -271,13 +273,17 @@ GDAL_ASYNCABLE_DEFINE(DatasetLayers::get) {
     std::string *layer_name = new std::string(*Nan::Utf8String(info[0]));
     job.main = [raw, layer_name](const GDALExecutionProgress &amp;) {
       std::unique_ptr&lt;std::string&gt; layer_name_ptr(layer_name);
+      CPLErrorReset();
       OGRLayer *lyr = raw-&gt;GetLayerByName(layer_name-&gt;c_str());
+      if (lyr == nullptr) { throw CPLGetLastErrorMsg(); }
       return lyr;
     };
   } else if (info[0]-&gt;IsNumber()) {
     int64_t id = Nan::To&lt;int64_t&gt;(info[0]).ToChecked();
     job.main = [raw, id](const GDALExecutionProgress &amp;) {
+      CPLErrorReset();
       OGRLayer *lyr = raw-&gt;GetLayer(id);
+      if (lyr == nullptr) { throw CPLGetLastErrorMsg(); }
       return lyr;
     };
   } else {
@@ -364,6 +370,7 @@ GDAL_ASYNCABLE_DEFINE(DatasetLayers::create) {
   job.main = [raw, layer_name, srs, geom_type, options](const GDALExecutionProgress &amp;) {
     std::unique_ptr&lt;StringList&gt; options_ptr(options);
     std::unique_ptr&lt;std::string&gt; layer_name_ptr(layer_name);
+    CPLErrorReset();
     OGRLayer *layer = raw-&gt;CreateLayer(layer_name-&gt;c_str(), srs, geom_type, options-&gt;get());
     if (layer == nullptr) throw CPLGetLastErrorMsg();
     return layer;
@@ -465,6 +472,7 @@ GDAL_ASYNCABLE_DEFINE(DatasetLayers::copy) {
   job.main = [raw, src, new_name, options](const GDALExecutionProgress &amp;) {
     std::unique_ptr&lt;StringList&gt; options_ptr(options);
     std::unique_ptr&lt;std::string&gt; new_name_ptr(new_name);
+    CPLErrorReset();
     OGRLayer *layer = raw-&gt;CopyLayer(src, new_name-&gt;c_str(), options-&gt;get());
     if (layer == nullptr) throw CPLGetLastErrorMsg();
     return layer;

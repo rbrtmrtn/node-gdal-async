@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.0</b>
+                    API Docs for Version: <b>3.3.1</b>
                 </p>
             </li>
         </div>
@@ -497,12 +497,13 @@ NAN_METHOD(FeatureFields::toObject) {
     }
 
     // get field value
-    Local&lt;Value&gt; val = FeatureFields::get(f-&gt;get(), i);
-    if (val.IsEmpty()) {
-      return; // get method threw an exception
+    try {
+      Local&lt;Value&gt; val = FeatureFields::get(f-&gt;get(), i);
+      Nan::Set(obj, Nan::New(key).ToLocalChecked(), val);
+    } catch (const char *err) {
+      Nan::ThrowError(err);
+      return;
     }
-
-    Nan::Set(obj, Nan::New(key).ToLocalChecked(), val);
   }
   info.GetReturnValue().Set(obj);
 }
@@ -530,20 +531,22 @@ NAN_METHOD(FeatureFields::toArray) {
 
   for (int i = 0; i &lt; n; i++) {
     // get field value
-    Local&lt;Value&gt; val = FeatureFields::get(f-&gt;get(), i);
-    if (val.IsEmpty()) {
-      return; // get method threw an exception
+    try {
+      Local&lt;Value&gt; val = FeatureFields::get(f-&gt;get(), i);
+      Nan::Set(array, i, val);
+    } catch (const char *err) {
+      Nan::ThrowError(err);
+      return;
     }
-
-    Nan::Set(array, i, val);
   }
   info.GetReturnValue().Set(array);
 }
 
 Local&lt;Value&gt; FeatureFields::get(OGRFeature *f, int field_index) {
-  //#throws : caller must check if return_val.IsEmpty() and bail out if true
+  //throws
   Nan::EscapableHandleScope scope;
 
+  if (field_index &lt; 0 || field_index &gt;= f-&gt;GetFieldCount()) throw &quot;Invalid field&quot;;
   if (!f-&gt;IsFieldSet(field_index)) return scope.Escape(Nan::Null());
 
   OGRFieldDefn *field_def = f-&gt;GetFieldDefnRef(field_index);
@@ -560,7 +563,7 @@ Local&lt;Value&gt; FeatureFields::get(OGRFeature *f, int field_index) {
     case OFTDate:
     case OFTTime:
     case OFTDateTime: return scope.Escape(getFieldAsDateTime(f, field_index));
-    default: Nan::ThrowError(&quot;Unsupported field type&quot;); return scope.Escape(Nan::Undefined());
+    default: throw &quot;Unsupported field type&quot;;
   }
 }
 
@@ -574,6 +577,7 @@ Local&lt;Value&gt; FeatureFields::get(OGRFeature *f, int field_index) {
  *
  * @method get
  * @param {string|number} key Feature name or index.
+ * @throws Error
  * @return {any}
  */
 NAN_METHOD(FeatureFields::get) {
@@ -595,14 +599,10 @@ NAN_METHOD(FeatureFields::get) {
   int field_index;
   ARG_FIELD_ID(0, f-&gt;get(), field_index);
 
-  Local&lt;Value&gt; result = FeatureFields::get(f-&gt;get(), field_index);
-
-  if (result.IsEmpty()) {
-    return;
-  } else {
+  try {
+    Local&lt;Value&gt; result = FeatureFields::get(f-&gt;get(), field_index);
     info.GetReturnValue().Set(result);
-    return;
-  }
+  } catch (const char *err) { Nan::ThrowError(err); }
 }
 
 /**

@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.0</b>
+                    API Docs for Version: <b>3.3.1</b>
                 </p>
             </li>
         </div>
@@ -274,6 +274,7 @@ NAN_METHOD(FeatureDefnFields::indexOf) {
  *
  * @method get
  * @param {string|number} key Field name or index
+ * @throws Error
  * @return {gdal.FieldDefn}
  */
 NAN_METHOD(FeatureDefnFields::get) {
@@ -295,7 +296,10 @@ NAN_METHOD(FeatureDefnFields::get) {
   int field_index;
   ARG_FIELD_ID(0, feature_def-&gt;get(), field_index);
 
-  info.GetReturnValue().Set(FieldDefn::New(feature_def-&gt;get()-&gt;GetFieldDefn(field_index)));
+  CPLErrorReset();
+  auto r = feature_def-&gt;get()-&gt;GetFieldDefn(field_index);
+  if (r == nullptr) { throw CPLGetLastErrorMsg(); }
+  info.GetReturnValue().Set(FieldDefn::New(r));
 }
 
 /**

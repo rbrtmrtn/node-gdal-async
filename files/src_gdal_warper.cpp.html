@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.0</b>
+                    API Docs for Version: <b>3.3.1</b>
                 </p>
             </li>
         </div>
@@ -420,6 +420,7 @@ GDAL_ASYNCABLE_DEFINE(Warper::reprojectImage) {
   // the lifetime of the options shared_ptr is limited by the lifetime of the lambda
   if (options-&gt;useMultithreading()) {
     job.main = [options, opts, s_srs_str, t_srs_str, maxError, progress_cb](const GDALExecutionProgress &amp;progress) {
+      CPLErrorReset();
       CPLErr err = GDALReprojectImageMulti(
         opts-&gt;hSrcDS,
         s_srs_str.c_str(),
@@ -436,6 +437,7 @@ GDAL_ASYNCABLE_DEFINE(Warper::reprojectImage) {
     };
   } else {
     job.main = [options, opts, s_srs_str, t_srs_str, maxError, progress_cb](const GDALExecutionProgress &amp;progress) {
+      CPLErrorReset();
       CPLErr err = GDALReprojectImage(
         opts-&gt;hSrcDS,
         s_srs_str.c_str(),
@@ -560,6 +562,7 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
 
   job.main = [gdal_ds, s_srs_str, t_srs_str, maxError](const GDALExecutionProgress &amp;) {
     struct warpOutputResult r;
+    CPLErrorReset();
 
     void *hTransformArg;
     void *hGenTransformArg =

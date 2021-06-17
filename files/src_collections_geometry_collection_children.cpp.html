@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.0</b>
+                    API Docs for Version: <b>3.3.1</b>
                 </p>
             </li>
         </div>
@@ -240,6 +240,7 @@ NAN_METHOD(GeometryCollectionChildren::count) {
  *
  * @method get
  * @param {number} index 0-based index
+ * @throws Error
  * @return {gdal.Geometry}
  */
 NAN_METHOD(GeometryCollectionChildren::get) {
@@ -252,7 +253,12 @@ NAN_METHOD(GeometryCollectionChildren::get) {
   int i;
   NODE_ARG_INT(0, &quot;index&quot;, i);
 
-  info.GetReturnValue().Set(Geometry::New(geom-&gt;get()-&gt;getGeometryRef(i), false));
+  auto r = geom-&gt;get()-&gt;getGeometryRef(i);
+  if (r == nullptr) {
+    NODE_THROW_LAST_CPLERR;
+    return;
+  }
+  info.GetReturnValue().Set(Geometry::New(r, false));
 }
 
 /**

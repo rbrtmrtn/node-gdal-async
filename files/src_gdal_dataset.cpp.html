@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.0</b>
+                    API Docs for Version: <b>3.3.1</b>
                 </p>
             </li>
         </div>
@@ -483,6 +483,7 @@ GDAL_ASYNCABLE_DEFINE(Dataset::executeSQL) {
   GDALAsyncableJob&lt;OGRLayer *&gt; job(ds-&gt;uid);
   OGRGeometry *geom_filter = spatial_filter ? spatial_filter-&gt;get() : NULL;
   job.main = [raw, sql, sql_dialect, geom_filter](const GDALExecutionProgress &amp;) {
+    CPLErrorReset();
     OGRLayer *layer = raw-&gt;ExecuteSQL(sql.c_str(), geom_filter, sql_dialect.empty() ? NULL : sql_dialect.c_str());
     if (layer == nullptr) throw CPLGetLastErrorMsg();
     return layer;
@@ -737,6 +738,7 @@ GDAL_ASYNCABLE_DEFINE(Dataset::buildOverviews) {
         if (b.get()[i] &gt; raw-&gt;GetRasterCount() || b.get()[i] &lt; 1) { throw &quot;invalid band id&quot;; }
       }
     }
+    CPLErrorReset();
     CPLErr err = raw-&gt;BuildOverviews(
       resampling.c_str(),
       n_overviews,

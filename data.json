@@ -4,7 +4,7 @@
         "description": "Node.js bindings for GDAL (Geospatial Data Abstraction Library) [Fork]",
         "url": "https://github.com/mmomtchev/node-gdal-async",
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/GDALLogoColor.svg/200px-GDALLogoColor.svg.png",
-        "version": "3.3.0"
+        "version": "3.3.1"
     },
     "files": {
         "lib/envelope.js": {
@@ -1095,7 +1095,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/gdal_feature.cpp",
-            "line": 67,
+            "line": 66,
             "description": "A simple feature, including geometry and attributes. Its fields and geometry\ntype is defined by the given definition.\n\n```\n//create layer and specify geometry type\nvar layer = dataset.layers.create('mylayer', null, gdal.Point);\n\n//setup fields for the given layer\nlayer.fields.add(new gdal.FieldDefn('elevation', gdal.OFTInteger));\nlayer.fields.add(new gdal.FieldDefn('name', gdal.OFTString));\n\n//create feature using layer definition and then add it to the layer\nvar feature = new gdal.Feature(layer);\nfeature.fields.set('elevation', 13775);\nfeature.fields.set('name', 'Grand Teton');\nfeature.setGeometry(new gdal.Point(43.741208, -110.802414));\nlayer.features.add(feature);```",
             "is_constructor": 1,
             "params": [
@@ -3215,6 +3215,9 @@
                     "type": "Number"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.CompoundCurve|gdal.SimpleCurve"
@@ -3223,7 +3226,7 @@
         },
         {
             "file": "src/collections/compound_curves.cpp",
-            "line": 122,
+            "line": 125,
             "description": "Adds a curve to the collection.",
             "example": [
                 "\n```\nvar ring1 = new gdal.CircularString();\nring1.points.add(0,0);\nring1.points.add(1,0);\nring1.points.add(1,1);\nring1.points.add(0,1);\nring1.points.add(0,0);\n\n// one at a time:\ncompound.curves.add(ring1);\n\n// many at once:\ncompound.curves.add([ring1, ...]);```"
@@ -3281,6 +3284,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<gdal.RasterBand>"
@@ -3289,7 +3295,7 @@
         },
         {
             "file": "src/collections/dataset_bands.cpp",
-            "line": 130,
+            "line": 132,
             "description": "Adds a new band.",
             "itemtype": "method",
             "name": "create",
@@ -3317,7 +3323,7 @@
         },
         {
             "file": "src/collections/dataset_bands.cpp",
-            "line": 140,
+            "line": 142,
             "description": "Adds a new band.\n{{{async}}}",
             "itemtype": "method",
             "name": "createAsync",
@@ -3352,7 +3358,7 @@
         },
         {
             "file": "src/collections/dataset_bands.cpp",
-            "line": 198,
+            "line": 201,
             "description": "Returns the number of bands.",
             "itemtype": "method",
             "name": "count",
@@ -3364,7 +3370,7 @@
         },
         {
             "file": "src/collections/dataset_bands.cpp",
-            "line": 205,
+            "line": 208,
             "description": "Returns the number of bands.\n {{{async}}}",
             "itemtype": "method",
             "name": "countAsync",
@@ -3385,7 +3391,7 @@
         },
         {
             "file": "src/collections/dataset_bands.cpp",
-            "line": 238,
+            "line": 241,
             "description": "Parent dataset",
             "readonly": "",
             "itemtype": "attribute",
@@ -3406,6 +3412,9 @@
                     "type": "String|number"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.Layer"
@@ -3414,7 +3423,7 @@
         },
         {
             "file": "src/collections/dataset_layers.cpp",
-            "line": 96,
+            "line": 97,
             "description": "Returns the layer with the given name or identifier.\n{{{async}}}",
             "itemtype": "method",
             "name": "getAsync",
@@ -3432,6 +3441,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<gdal.Layer>"
@@ -3440,7 +3452,7 @@
         },
         {
             "file": "src/collections/dataset_layers.cpp",
-            "line": 149,
+            "line": 155,
             "description": "Adds a new layer.",
             "example": [
                 "\n```\ndataset.layers.create('layername', null, gdal.Point);\n```"
@@ -3481,7 +3493,7 @@
         },
         {
             "file": "src/collections/dataset_layers.cpp",
-            "line": 168,
+            "line": 174,
             "description": "Adds a new layer.\n{{{async}}}",
             "example": [
                 "\n```\nawait dataset.layers.createAsync('layername', null, gdal.Point);\ndataset.layers.createAsync('layername', null, gdal.Point, (e, r) => console.log(e, r));\n```"
@@ -3529,7 +3541,7 @@
         },
         {
             "file": "src/collections/dataset_layers.cpp",
-            "line": 234,
+            "line": 241,
             "description": "Returns the number of layers.",
             "itemtype": "method",
             "name": "count",
@@ -3541,7 +3553,7 @@
         },
         {
             "file": "src/collections/dataset_layers.cpp",
-            "line": 241,
+            "line": 248,
             "description": "Returns the number of layers.\n{{{async}}}",
             "itemtype": "method",
             "name": "countAsync",
@@ -3562,7 +3574,7 @@
         },
         {
             "file": "src/collections/dataset_layers.cpp",
-            "line": 275,
+            "line": 282,
             "description": "Copies a layer.",
             "itemtype": "method",
             "name": "copy",
@@ -3593,7 +3605,7 @@
         },
         {
             "file": "src/collections/dataset_layers.cpp",
-            "line": 285,
+            "line": 292,
             "description": "Copies a layer.\n{{{async}}}",
             "itemtype": "method",
             "name": "copyAsync",
@@ -3631,7 +3643,7 @@
         },
         {
             "file": "src/collections/dataset_layers.cpp",
-            "line": 335,
+            "line": 343,
             "description": "Removes a layer.",
             "itemtype": "method",
             "name": "remove",
@@ -3649,7 +3661,7 @@
         },
         {
             "file": "src/collections/dataset_layers.cpp",
-            "line": 343,
+            "line": 351,
             "description": "Removes a layer.\n{{{async}}}",
             "itemtype": "method",
             "name": "removeAsync",
@@ -3678,7 +3690,7 @@
         },
         {
             "file": "src/collections/dataset_layers.cpp",
-            "line": 382,
+            "line": 390,
             "description": "Parent dataset",
             "readonly": "",
             "itemtype": "attribute",
@@ -3730,6 +3742,9 @@
                     "type": "String|number"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.FieldDefn"
@@ -3738,7 +3753,7 @@
         },
         {
             "file": "src/collections/feature_defn_fields.cpp",
-            "line": 158,
+            "line": 162,
             "description": "Returns a list of field names.",
             "itemtype": "method",
             "name": "getNames",
@@ -3750,7 +3765,7 @@
         },
         {
             "file": "src/collections/feature_defn_fields.cpp",
-            "line": 186,
+            "line": 190,
             "description": "Removes a field definition.",
             "itemtype": "method",
             "name": "remove",
@@ -3768,7 +3783,7 @@
         },
         {
             "file": "src/collections/feature_defn_fields.cpp",
-            "line": 221,
+            "line": 225,
             "description": "Adds field definition(s).",
             "itemtype": "method",
             "name": "add",
@@ -3786,7 +3801,7 @@
         },
         {
             "file": "src/collections/feature_defn_fields.cpp",
-            "line": 269,
+            "line": 273,
             "description": "Reorders the fields.",
             "example": [
                 "\n```\n// reverse fields:\nfeatureDef.fields.reorder([2, 1, 0]);```"
@@ -3807,7 +3822,7 @@
         },
         {
             "file": "src/collections/feature_defn_fields.cpp",
-            "line": 334,
+            "line": 338,
             "description": "Parent feature definition.",
             "readonly": "",
             "itemtype": "attribute",
@@ -3938,7 +3953,7 @@
         },
         {
             "file": "src/collections/feature_fields.cpp",
-            "line": 367,
+            "line": 368,
             "description": "Outputs the field values as a pure JS array.",
             "throws": {
                 "description": "Error"
@@ -3953,7 +3968,7 @@
         },
         {
             "file": "src/collections/feature_fields.cpp",
-            "line": 424,
+            "line": 427,
             "description": "Returns a field's value.",
             "example": [
                 "\n```\nvalue = feature.fields.get(0);\nvalue = feature.fields.get('field');```"
@@ -3967,6 +3982,9 @@
                     "type": "String|number"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Any"
@@ -4011,6 +4029,9 @@
                     "type": "Number|string"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.Driver"
@@ -4019,7 +4040,7 @@
         },
         {
             "file": "src/collections/gdal_drivers.cpp",
-            "line": 130,
+            "line": 131,
             "description": "Returns an array with the names of all the drivers registered with GDAL.",
             "itemtype": "method",
             "name": "getNames",
@@ -4031,7 +4052,7 @@
         },
         {
             "file": "src/collections/gdal_drivers.cpp",
-            "line": 155,
+            "line": 156,
             "description": "Returns the number of drivers registered with GDAL.",
             "itemtype": "method",
             "name": "count",
@@ -4066,6 +4087,9 @@
                     "type": "Number"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.Geometry"
@@ -4074,7 +4098,7 @@
         },
         {
             "file": "src/collections/geometry_collection_children.cpp",
-            "line": 115,
+            "line": 121,
             "description": "Removes the geometry at the specified index.",
             "itemtype": "method",
             "name": "remove",
@@ -4089,7 +4113,7 @@
         },
         {
             "file": "src/collections/geometry_collection_children.cpp",
-            "line": 140,
+            "line": 146,
             "description": "Adds geometry(s) to the collection.",
             "example": [
                 "\n```\n// one at a time:\ngeometryCollection.children.add(new Point(0,0,0));\n\n// add many at once:\ngeometryCollection.children.add([\n    new Point(1,0,0),\n    new Point(1,0,0)\n]);```"
@@ -4506,6 +4530,9 @@
                     "type": "Number"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.Feature"
@@ -4514,7 +4541,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 95,
+            "line": 96,
             "description": "Fetch a feature by its identifier.\n\n**Important:** The `id` argument is not an index. In most cases it will be\nzero-based, but in some cases it will not. If iterating, it's best to use the\n`next()` method.\n{{{async}}}",
             "itemtype": "method",
             "name": "getAsync",
@@ -4532,6 +4559,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<gdal.Feature>"
@@ -4540,7 +4570,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 132,
+            "line": 136,
             "description": "Resets the feature pointer used by `next()` and\nreturns the first feature in the layer.",
             "itemtype": "method",
             "name": "first",
@@ -4552,7 +4582,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 140,
+            "line": 144,
             "description": "Resets the feature pointer used by `next()` and\nreturns the first feature in the layer.\n{{{async}}}",
             "itemtype": "method",
             "name": "firstAsync",
@@ -4573,7 +4603,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 172,
+            "line": 176,
             "description": "Returns the next feature in the layer. Returns null if no more features.",
             "example": [
                 "\n```\nwhile (feature = layer.features.next()) { ... }```"
@@ -4588,7 +4618,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 183,
+            "line": 187,
             "description": "Returns the next feature in the layer. Returns null if no more features.\n{{{async}}}",
             "example": [
                 "\n```\nwhile (feature = await layer.features.nextAsync()) { ... }```"
@@ -4612,7 +4642,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 217,
+            "line": 221,
             "description": "Adds a feature to the layer. The feature should be created using the current\nlayer as the definition.",
             "example": [
                 "\n```\nvar feature = new gdal.Feature(layer);\nfeature.setGeometry(new gdal.Point(0, 1));\nfeature.fields.set('name', 'somestring');\nlayer.features.add(feature);```"
@@ -4633,7 +4663,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 233,
+            "line": 237,
             "description": "Adds a feature to the layer. The feature should be created using the current\nlayer as the definition.\n{{{async}}}",
             "example": [
                 "\n```\nvar feature = new gdal.Feature(layer);\nfeature.setGeometry(new gdal.Point(0, 1));\nfeature.fields.set('name', 'somestring');\nawait layer.features.addAsync(feature);```"
@@ -4665,7 +4695,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 279,
+            "line": 283,
             "description": "Returns the number of features in the layer.",
             "itemtype": "method",
             "name": "count",
@@ -4686,7 +4716,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 287,
+            "line": 291,
             "description": "Returns the number of features in the layer.\n{{{async}}}",
             "itemtype": "method",
             "name": "countAsync",
@@ -4714,7 +4744,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 330,
+            "line": 334,
             "description": "Sets a feature in the layer.",
             "itemtype": "method",
             "name": "set",
@@ -4732,7 +4762,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 338,
+            "line": 342,
             "description": "Sets a feature in the layer.",
             "itemtype": "method",
             "name": "set",
@@ -4755,7 +4785,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 347,
+            "line": 351,
             "description": "Sets a feature in the layer.\n{{{async}}}",
             "itemtype": "method",
             "name": "setAsync",
@@ -4789,7 +4819,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 417,
+            "line": 421,
             "description": "Removes a feature from the layer.",
             "itemtype": "method",
             "name": "remove",
@@ -4807,7 +4837,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 425,
+            "line": 429,
             "description": "Removes a feature from the layer.",
             "itemtype": "method",
             "name": "removeAsync",
@@ -4836,7 +4866,7 @@
         },
         {
             "file": "src/collections/layer_features.cpp",
-            "line": 463,
+            "line": 467,
             "description": "Parent layer",
             "itemtype": "attribute",
             "name": "layer",
@@ -4898,7 +4928,7 @@
         },
         {
             "file": "src/collections/layer_fields.cpp",
-            "line": 173,
+            "line": 178,
             "description": "Returns a list of field names.",
             "throws": {
                 "description": "Error"
@@ -4913,7 +4943,7 @@
         },
         {
             "file": "src/collections/layer_fields.cpp",
-            "line": 208,
+            "line": 213,
             "description": "Removes a field.",
             "throws": {
                 "description": "Error"
@@ -4931,7 +4961,7 @@
         },
         {
             "file": "src/collections/layer_fields.cpp",
-            "line": 249,
+            "line": 254,
             "description": "Adds field(s).",
             "throws": {
                 "description": "Error"
@@ -4956,7 +4986,7 @@
         },
         {
             "file": "src/collections/layer_fields.cpp",
-            "line": 310,
+            "line": 315,
             "description": "Reorders fields.",
             "example": [
                 "\n```\n// reverse field order\nlayer.fields.reorder([2,1,0]);```"
@@ -4977,7 +5007,7 @@
         },
         {
             "file": "src/collections/layer_fields.cpp",
-            "line": 381,
+            "line": 386,
             "description": "Parent layer",
             "readonly": "",
             "itemtype": "attribute",
@@ -5033,6 +5063,9 @@
                     "type": "Number"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.Point"
@@ -5041,7 +5074,7 @@
         },
         {
             "file": "src/collections/linestring_points.cpp",
-            "line": 164,
+            "line": 165,
             "description": "Sets the point at the specified index.",
             "example": [
                 "\n```\nlineString.points.set(0, new gdal.Point(1, 2));```"
@@ -5067,7 +5100,7 @@
         },
         {
             "file": "src/collections/linestring_points.cpp",
-            "line": 177,
+            "line": 178,
             "itemtype": "method",
             "name": "set",
             "throws": {
@@ -5100,7 +5133,7 @@
         },
         {
             "file": "src/collections/linestring_points.cpp",
-            "line": 261,
+            "line": 262,
             "description": "Adds point(s) to the line string. Also accepts any object with an x and y\nproperty.",
             "example": [
                 "\n```\nlineString.points.add(new gdal.Point(1, 2));\nlineString.points.add([\n    new gdal.Point(1, 2)\n    new gdal.Point(3, 4)\n]);```"
@@ -5121,7 +5154,7 @@
         },
         {
             "file": "src/collections/linestring_points.cpp",
-            "line": 278,
+            "line": 279,
             "itemtype": "method",
             "name": "add",
             "throws": {
@@ -5175,6 +5208,9 @@
                     "type": "Number"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.LinearRing"
@@ -5183,7 +5219,7 @@
         },
         {
             "file": "src/collections/polygon_rings.cpp",
-            "line": 129,
+            "line": 134,
             "description": "Adds a ring to the collection.",
             "example": [
                 "\n```\nvar ring1 = new gdal.LinearRing();\nring1.points.add(0,0);\nring1.points.add(1,0);\nring1.points.add(1,1);\nring1.points.add(0,1);\nring1.points.add(0,0);\n\n// one at a time:\npolygon.rings.add(ring1);\n\n// many at once:\npolygon.rings.add([ring1, ...]);```"
@@ -5223,7 +5259,7 @@
         },
         {
             "file": "src/collections/rasterband_overviews.cpp",
-            "line": 110,
+            "line": 109,
             "description": "Fetch best sampling overview.\n\nReturns the most reduced overview of the given band that still satisfies the\ndesired number of samples. This function can be used with zero as the number\nof desired samples to fetch the most reduced overview. The same band as was\npassed in will be returned if it has not overviews, or if none of the\noverviews have enough samples.",
             "itemtype": "method",
             "name": "getBySampleCount",
@@ -5242,7 +5278,7 @@
         },
         {
             "file": "src/collections/rasterband_overviews.cpp",
-            "line": 142,
+            "line": 141,
             "description": "Returns the number of overviews.",
             "itemtype": "method",
             "name": "count",
@@ -5276,6 +5312,9 @@
                     "type": "Number"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Number"
@@ -5284,7 +5323,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 119,
+            "line": 120,
             "description": "Returns the value at the x, y coordinate.\n{{{async}}}",
             "itemtype": "method",
             "name": "getAsync",
@@ -5315,7 +5354,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 155,
+            "line": 157,
             "description": "Sets the value at the x, y coordinate.",
             "itemtype": "method",
             "name": "set",
@@ -5340,7 +5379,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 164,
+            "line": 166,
             "description": "Sets the value at the x, y coordinate.\n{{{async}}}",
             "itemtype": "method",
             "name": "setAsync",
@@ -5376,13 +5415,13 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 254,
+            "line": 257,
             "typedef": "ReadOptions { buffer_width?: number, buffer_height?: number, type?: string, pixel_space?: number, line_space?: number, resampling?: string, progress_cb?: ProgressCb, offset?: number }",
             "class": "gdal.RasterBandPixels"
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 258,
+            "line": 261,
             "description": "Reads a region of pixels.",
             "itemtype": "method",
             "name": "read",
@@ -5477,7 +5516,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 279,
+            "line": 282,
             "description": "Asynchronously reads a region of pixels.\n{{{async}}}",
             "itemtype": "method",
             "name": "readAsync",
@@ -5576,13 +5615,13 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 407,
+            "line": 411,
             "typedef": "WriteOptions { buffer_width?: number, buffer_height?: number, pixel_space?: number, line_space?: number, progress_cb?: ProgressCb, offset?: number }",
             "class": "gdal.RasterBandPixels"
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 411,
+            "line": 415,
             "description": "Writes a region of pixels.",
             "itemtype": "method",
             "name": "write",
@@ -5661,7 +5700,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 429,
+            "line": 433,
             "description": "Asynchronously writes a region of pixels.\n{{{async}}}",
             "itemtype": "method",
             "name": "writeAsync",
@@ -5748,7 +5787,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 532,
+            "line": 537,
             "description": "Reads a block of pixels.",
             "itemtype": "method",
             "name": "readBlock",
@@ -5781,7 +5820,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 543,
+            "line": 548,
             "description": "Reads a block of pixels.\n{{{async}}}",
             "itemtype": "method",
             "name": "readBlockAsync",
@@ -5821,7 +5860,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 603,
+            "line": 609,
             "description": "Writes a block of pixels.",
             "itemtype": "method",
             "name": "writeBlock",
@@ -5849,7 +5888,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 613,
+            "line": 619,
             "description": "Writes a block of pixels.\n{{{async}}}",
             "itemtype": "method",
             "name": "writeBlockAsync",
@@ -5888,7 +5927,7 @@
         },
         {
             "file": "src/collections/rasterband_pixels.cpp",
-            "line": 660,
+            "line": 667,
             "description": "Parent raster band",
             "readonly": "",
             "itemtype": "attribute",
@@ -6660,6 +6699,9 @@
             "description": "Compute convex hull.",
             "itemtype": "method",
             "name": "convexHull",
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.Geometry"
@@ -6668,10 +6710,13 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 573,
+            "line": 574,
             "description": "Compute convex hull.\n{{{async}}}",
             "itemtype": "method",
             "name": "convexHullAsync",
+            "throws": {
+                "description": "Error"
+            },
             "params": [
                 {
                     "name": "callback",
@@ -6684,27 +6729,33 @@
             "return": {
                 "description": "",
                 "type": "Promise<gdal.Geometry>"
-            },
-            "class": "gdal.Geometry"
-        },
-        {
-            "file": "src/geometry/gdal_geometry.cpp",
-            "line": 592,
-            "description": "Compute boundary.",
-            "itemtype": "method",
-            "name": "boundary",
-            "return": {
-                "description": "",
-                "type": "gdal.Geometry"
             },
             "class": "gdal.Geometry"
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
             "line": 599,
+            "description": "Compute boundary.",
+            "itemtype": "method",
+            "name": "boundary",
+            "throws": {
+                "description": "Error"
+            },
+            "return": {
+                "description": "",
+                "type": "gdal.Geometry"
+            },
+            "class": "gdal.Geometry"
+        },
+        {
+            "file": "src/geometry/gdal_geometry.cpp",
+            "line": 607,
             "description": "Compute boundary.\n{{{async}}}",
             "itemtype": "method",
             "name": "boundaryAsync",
+            "throws": {
+                "description": "Error"
+            },
             "params": [
                 {
                     "name": "callback",
@@ -6722,7 +6773,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 618,
+            "line": 632,
             "description": "Compute intersection with another geometry.",
             "itemtype": "method",
             "name": "intersection",
@@ -6733,6 +6784,9 @@
                     "type": "gdal.Geometry"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.Geometry"
@@ -6741,7 +6795,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 626,
+            "line": 641,
             "description": "Compute intersection with another geometry.\n{{{async}}}",
             "itemtype": "method",
             "name": "intersectionAsync",
@@ -6759,6 +6813,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<gdal.Geometry>"
@@ -6767,7 +6824,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 652,
+            "line": 673,
             "description": "Compute the union of this geometry with another.",
             "itemtype": "method",
             "name": "union",
@@ -6778,6 +6835,9 @@
                     "type": "gdal.Geometry"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.Geometry"
@@ -6786,7 +6846,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 660,
+            "line": 682,
             "description": "Compute the union of this geometry with another.\n{{{async}}}",
             "itemtype": "method",
             "name": "unionAsync",
@@ -6804,6 +6864,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<gdal.Geometry>"
@@ -6812,7 +6875,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 686,
+            "line": 714,
             "description": "Compute the difference of this geometry with another.",
             "itemtype": "method",
             "name": "difference",
@@ -6823,6 +6886,9 @@
                     "type": "gdal.Geometry"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.Geometry"
@@ -6831,7 +6897,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 694,
+            "line": 723,
             "description": "Compute the difference of this geometry with another.\n{{{async}}}",
             "itemtype": "method",
             "name": "differenceAsync",
@@ -6849,6 +6915,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<gdal.Geometry>"
@@ -6857,7 +6926,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 720,
+            "line": 755,
             "description": "Computes the symmetric difference of this geometry and the second geometry.",
             "itemtype": "method",
             "name": "symDifference",
@@ -6868,6 +6937,9 @@
                     "type": "gdal.Geometry"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.Geometry"
@@ -6876,7 +6948,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 728,
+            "line": 764,
             "description": "Computes the symmetric difference of this geometry and the second geometry.\n{{{async}}}",
             "itemtype": "method",
             "name": "symDifferenceAsync",
@@ -6894,6 +6966,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<gdal.Geometry>"
@@ -6902,7 +6977,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 754,
+            "line": 796,
             "description": "Reduces the geometry complexity.",
             "itemtype": "method",
             "name": "simplify",
@@ -6913,6 +6988,9 @@
                     "type": "Number"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.Geometry"
@@ -6921,7 +6999,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 762,
+            "line": 805,
             "description": "Reduces the geometry complexity.\n{{{async}}}",
             "itemtype": "method",
             "name": "simplifyAsync",
@@ -6939,6 +7017,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<gdal.Geometry>"
@@ -6947,7 +7028,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 787,
+            "line": 836,
             "description": "Reduces the geometry complexity while preserving the topology.",
             "itemtype": "method",
             "name": "simplifyPreserveTopology",
@@ -6958,6 +7039,9 @@
                     "type": "Number"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.Geometry"
@@ -6966,7 +7050,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 795,
+            "line": 845,
             "description": "Reduces the geometry complexity while preserving the topology.\n{{{async}}}",
             "itemtype": "method",
             "name": "simplifyPreserveTopologyAsync",
@@ -6984,6 +7068,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<gdal.Geometry>"
@@ -6992,7 +7079,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 822,
+            "line": 876,
             "description": "Buffers the geometry by the given distance.",
             "itemtype": "method",
             "name": "buffer",
@@ -7008,6 +7095,9 @@
                     "type": "Number"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.Geometry"
@@ -7016,7 +7106,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 831,
+            "line": 886,
             "description": "Buffers the geometry by the given distance.\n{{{async}}}",
             "itemtype": "method",
             "name": "bufferAsync",
@@ -7039,6 +7129,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<gdal.Geometry>"
@@ -7047,10 +7140,13 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 863,
+            "line": 922,
             "description": "Convert a geometry into well known text format.",
             "itemtype": "method",
             "name": "toWKT",
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "String"
@@ -7059,7 +7155,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 870,
+            "line": 930,
             "description": "Convert a geometry into well known text format.\n{{{async}}}",
             "itemtype": "method",
             "name": "toWKTAsync",
@@ -7072,6 +7168,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<string>"
@@ -7080,7 +7179,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 908,
+            "line": 969,
             "description": "Convert a geometry into well known binary format.",
             "itemtype": "method",
             "name": "toWKB",
@@ -7100,6 +7199,9 @@
                     "optdefault": "\"OGC\""
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Buffer"
@@ -7108,7 +7210,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 919,
+            "line": 981,
             "description": "Convert a geometry into well known binary format.\n{{{async}}}",
             "itemtype": "method",
             "name": "toWKBAsync",
@@ -7135,6 +7237,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<Buffer>"
@@ -7143,10 +7248,13 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 986,
+            "line": 1049,
             "description": "Convert a geometry into KML format.",
             "itemtype": "method",
             "name": "toKML",
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "String"
@@ -7155,7 +7263,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 993,
+            "line": 1057,
             "description": "Convert a geometry into KML format.\n{{{async}}}",
             "itemtype": "method",
             "name": "toKMLAsync",
@@ -7168,6 +7276,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<string>"
@@ -7176,10 +7287,13 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1027,
+            "line": 1094,
             "description": "Convert a geometry into GML format.",
             "itemtype": "method",
             "name": "toGML",
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "String"
@@ -7188,7 +7302,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1034,
+            "line": 1102,
             "description": "Convert a geometry into GML format.\n{{{async}}}",
             "itemtype": "method",
             "name": "toGMLAsync",
@@ -7201,6 +7315,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<string>"
@@ -7209,10 +7326,13 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1068,
+            "line": 1139,
             "description": "Convert a geometry into JSON format.",
             "itemtype": "method",
             "name": "toJSON",
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "String"
@@ -7221,7 +7341,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1075,
+            "line": 1147,
             "description": "Convert a geometry into JSON format.\n{{{async}}}",
             "itemtype": "method",
             "name": "toJSONAsync",
@@ -7234,6 +7354,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<string>"
@@ -7242,10 +7365,13 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1109,
+            "line": 1184,
             "description": "Compute the centroid of the geometry.",
             "itemtype": "method",
             "name": "centroid",
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "gdal.Point"
@@ -7254,7 +7380,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1116,
+            "line": 1192,
             "description": "Compute the centroid of the geometry.\n{{{async}}}",
             "itemtype": "method",
             "name": "centroidAsync",
@@ -7267,6 +7393,9 @@
                     "optdefault": "undefined"
                 }
             ],
+            "throws": {
+                "description": "Error"
+            },
             "return": {
                 "description": "",
                 "type": "Promise<gdal.Geometry>"
@@ -7275,7 +7404,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1151,
+            "line": 1228,
             "description": "Computes the bounding box (envelope).",
             "itemtype": "method",
             "name": "getEnvelope",
@@ -7287,7 +7416,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1158,
+            "line": 1235,
             "description": "Computes the bounding box (envelope).\n{{{async}}}",
             "itemtype": "method",
             "name": "getEnvelopeAsync",
@@ -7308,7 +7437,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1198,
+            "line": 1275,
             "description": "Computes the 3D bounding box (envelope).",
             "itemtype": "method",
             "name": "getEnvelope3D",
@@ -7320,7 +7449,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1205,
+            "line": 1282,
             "description": "Computes the 3D bounding box (envelope).\n{{{async}}}",
             "itemtype": "method",
             "name": "getEnvelope3DAsync",
@@ -7341,7 +7470,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1248,
+            "line": 1325,
             "description": "Convert geometry to strictly 2D",
             "itemtype": "method",
             "name": "flattenTo2D",
@@ -7353,7 +7482,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1255,
+            "line": 1332,
             "description": "Convert geometry to strictly 2D\n{{{async}}}",
             "itemtype": "method",
             "name": "flattenTo2DAsync",
@@ -7374,7 +7503,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1268,
+            "line": 1345,
             "description": "Creates a Geometry from a WKT string.",
             "static": 1,
             "itemtype": "method",
@@ -7403,7 +7532,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1279,
+            "line": 1356,
             "description": "Creates a Geometry from a WKT string.\n{{{async}}}",
             "static": 1,
             "itemtype": "method",
@@ -7439,7 +7568,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1317,
+            "line": 1394,
             "description": "Creates a Geometry from a WKB buffer.",
             "static": 1,
             "itemtype": "method",
@@ -7468,7 +7597,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1328,
+            "line": 1405,
             "description": "Creates a Geometry from a WKB buffer.\n{{{async}}}",
             "static": 1,
             "itemtype": "method",
@@ -7504,7 +7633,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1375,
+            "line": 1452,
             "description": "Creates a Geometry from a GeoJSON object fragment.\nThe async version depends on V8 for object serialization and this part is not parallelizable.\nV8 objects cannot be accessed outside of the main thread. This function should not be used\nfor importing objects of more than few tens of Kbytes when low latency is needed. If you need\nto import very large GeoJSON geometries in server code, use the much faster and completely\nparallel fromGeoJonBuffer(Async)",
             "static": 1,
             "itemtype": "method",
@@ -7527,7 +7656,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1390,
+            "line": 1467,
             "description": "Creates a Geometry from a GeoJSON object fragment.\nThe async version depends on V8 for object serialization and this part is not parallelizable.\nV8 objects cannot be accessed outside of the main thread. This function should not be used\nfor importing objects of more than few tens of Kbytes when low latency is needed. If you need\nto import very large GeoJSON geometries in server code, use the much faster and completely\nparallel fromGeoJonBuffer(Async)\n{{{async}}}",
             "static": 1,
             "itemtype": "method",
@@ -7557,7 +7686,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1439,
+            "line": 1517,
             "description": "Creates a Geometry from a buffer containing a GeoJSON fragment in UT8 format.",
             "static": 1,
             "itemtype": "method",
@@ -7580,7 +7709,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1449,
+            "line": 1527,
             "description": "Creates a Geometry from a buffer containing a GeoJSON fragment in UT8 format.\n{{{async}}}",
             "static": 1,
             "itemtype": "method",
@@ -7610,7 +7739,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1498,
+            "line": 1577,
             "description": "Creates an empty Geometry from a WKB type.",
             "static": 1,
             "itemtype": "method",
@@ -7630,7 +7759,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1516,
+            "line": 1595,
             "itemtype": "attribute",
             "name": "srs",
             "type": "{gdal.SpatialReference}",
@@ -7638,7 +7767,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1542,
+            "line": 1621,
             "readonly": "",
             "itemtype": "attribute",
             "name": "name",
@@ -7647,7 +7776,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1553,
+            "line": 1632,
             "description": "See {{#crossLink \"Constants\n(wkbGeometryType)\"}}wkbGeometryTypes{{/crossLink}}.",
             "readonly": "",
             "itemtype": "attribute",
@@ -7657,7 +7786,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1566,
+            "line": 1645,
             "readonly": "",
             "itemtype": "attribute",
             "name": "wkbSize",
@@ -7666,7 +7795,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1577,
+            "line": 1656,
             "readonly": "",
             "itemtype": "attribute",
             "name": "dimension",
@@ -7675,7 +7804,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1588,
+            "line": 1667,
             "itemtype": "attribute",
             "name": "coordinateDimension",
             "type": "{number}",
@@ -7683,7 +7812,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1638,
+            "line": 1717,
             "description": "Returns the Geometry subclass that matches the\ngiven WKB geometry type.",
             "static": 1,
             "itemtype": "method",
@@ -7703,7 +7832,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1655,
+            "line": 1734,
             "description": "Returns the Geometry subclass name that matches the\ngiven WKB geometry type.",
             "static": 1,
             "itemtype": "method",
@@ -7804,7 +7933,7 @@
         },
         {
             "file": "src/geometry/gdal_multipolygon.cpp",
-            "line": 56,
+            "line": 61,
             "description": "Computes the combined area of the collection.",
             "itemtype": "method",
             "name": "getArea",
@@ -8051,13 +8180,13 @@
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 88,
+            "line": 89,
             "typedef": "ContourOptions { src: gdal.RasterBand, dst: gdal.Layer, offset?: number, interval?: number, fixedLevels?: number[], nodata?: number, idField?: number, elevField?: number, progress_cb?: ProgressCb }",
             "class": "gdal"
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 92,
+            "line": 93,
             "description": "Create vector contours from raster DEM.\n\nThis algorithm will generate contour vectors for the input raster band on the\nrequested set of contour levels. The vector contours are written to the\npassed in vector layer. Also, a NODATA value may be specified to identify\npixels that should not be considered in contour line generation.",
             "throws": {
                 "description": "Error"
@@ -8132,7 +8261,7 @@
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 116,
+            "line": 117,
             "description": "Create vector contours from raster DEM.\n{{{async}}}\n\nThis algorithm will generate contour vectors for the input raster band on the\nrequested set of contour levels. The vector contours are written to the\npassed in vector layer. Also, a NODATA value may be specified to identify\npixels that should not be considered in contour line generation.",
             "throws": {
                 "description": "Error"
@@ -8218,13 +8347,13 @@
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 224,
+            "line": 226,
             "typedef": "SieveOptions { src: gdal.RasterBand, dst: gdal.RasterBand, mask?: gdal.RasterBand, threshold: number, connectedness?: number, progress_cb?: ProgressCb }",
             "class": "gdal"
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 228,
+            "line": 230,
             "description": "Removes small raster polygons.",
             "throws": {
                 "description": "Error"
@@ -8279,7 +8408,7 @@
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 244,
+            "line": 246,
             "description": "Removes small raster polygons.\n{{{async}}}",
             "throws": {
                 "description": "Error"
@@ -8345,7 +8474,7 @@
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 314,
+            "line": 317,
             "description": "Compute checksum for image region.",
             "throws": {
                 "description": "Error"
@@ -8396,7 +8525,7 @@
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 329,
+            "line": 332,
             "description": "Compute checksum for image region.",
             "throws": {
                 "description": "Error"
@@ -8454,13 +8583,13 @@
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 387,
+            "line": 390,
             "typedef": "PolygonizeOptions { src: gdal.RasterBand, dst: gdal.Layer, mask?: gdal.RasterBand, pixValField: number, connectedness?: number, useFloats?: boolean, progress_cb?: ProgressCb }",
             "class": "gdal"
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 391,
+            "line": 394,
             "description": "Creates vector polygons for all connected regions of pixels in the raster\nsharing a common pixel value. Each polygon is created with an attribute\nindicating the pixel value of that polygon. A raster mask may also be\nprovided to determine which pixels are eligible for processing.",
             "throws": {
                 "description": "Error"
@@ -8522,7 +8651,7 @@
         },
         {
             "file": "src/gdal_algorithms.cpp",
-            "line": 411,
+            "line": 414,
             "description": "Creates vector polygons for all connected regions of pixels in the raster\nsharing a common pixel value. Each polygon is created with an attribute\nindicating the pixel value of that polygon. A raster mask may also be\nprovided to determine which pixels are eligible for processing.",
             "throws": {
                 "description": "Error"
@@ -8823,7 +8952,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 352,
+            "line": 353,
             "description": "Fetch files forming dataset.\n\nReturns a list of files believed to be part of this dataset. If it returns an\nempty list of files it means there is believed to be no local file system\nfiles associated with the dataset (for instance a virtual dataset).\n\nReturns an empty array for vector datasets if GDAL version is below 2.0",
             "itemtype": "method",
             "name": "getFileList",
@@ -8835,7 +8964,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 399,
+            "line": 400,
             "description": "Fetches GCPs.",
             "itemtype": "method",
             "name": "getGCPs",
@@ -8847,7 +8976,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 447,
+            "line": 448,
             "description": "Sets GCPs.",
             "throws": {
                 "description": "Error"
@@ -8871,7 +9000,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 512,
+            "line": 513,
             "description": "Builds dataset overviews.",
             "throws": {
                 "description": "Error"
@@ -8914,7 +9043,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 525,
+            "line": 526,
             "description": "Builds dataset overviews.\n{{{async}}}",
             "throws": {
                 "description": "Error"
@@ -8968,7 +9097,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 613,
+            "line": 615,
             "readonly": "",
             "itemtype": "attribute",
             "name": "description",
@@ -8977,7 +9106,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 636,
+            "line": 638,
             "description": "Raster dimensions. An object containing `x` and `y` properties.",
             "readonly": "",
             "itemtype": "attribute",
@@ -8987,7 +9116,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 669,
+            "line": 671,
             "description": "Spatial reference associated with raster dataset",
             "throws": {
                 "description": "Error"
@@ -8999,7 +9128,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 706,
+            "line": 708,
             "description": "An affine transform which maps pixel/line coordinates into georeferenced\nspace using the following relationship:",
             "example": [
                 "\n```\nvar GT = dataset.geoTransform;\nvar Xgeo = GT[0] + Xpixel*GT[1] + Yline*GT[2];\nvar Ygeo = GT[3] + Xpixel*GT[4] + Yline*GT[5];```"
@@ -9011,7 +9140,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 750,
+            "line": 752,
             "readonly": "",
             "itemtype": "attribute",
             "name": "driver",
@@ -9020,7 +9149,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 841,
+            "line": 843,
             "readonly": "",
             "itemtype": "attribute",
             "name": "bands",
@@ -9029,7 +9158,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 851,
+            "line": 853,
             "readonly": "",
             "itemtype": "attribute",
             "name": "layers",
@@ -9038,7 +9167,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 861,
+            "line": 863,
             "readonly": "",
             "itemtype": "attribute",
             "name": "root",
@@ -9228,7 +9357,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 229,
+            "line": 230,
             "description": "Create a copy of a dataset.",
             "throws": {
                 "description": "Error"
@@ -9269,7 +9398,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 242,
+            "line": 243,
             "description": "Asynchronously create a copy of a dataset.",
             "throws": {
                 "description": "Error"
@@ -9317,7 +9446,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 302,
+            "line": 304,
             "description": "Copy the files of a dataset.",
             "throws": {
                 "description": "Error"
@@ -9340,7 +9469,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 328,
+            "line": 330,
             "description": "Renames the dataset.",
             "throws": {
                 "description": "Error"
@@ -9363,7 +9492,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 354,
+            "line": 356,
             "description": "Returns metadata about the driver.",
             "throws": {
                 "description": "Error"
@@ -9386,7 +9515,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 376,
+            "line": 378,
             "description": "Opens a dataset.",
             "throws": {
                 "description": "Error"
@@ -9415,7 +9544,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 387,
+            "line": 389,
             "description": "Opens a dataset.",
             "throws": {
                 "description": "Error"
@@ -9451,7 +9580,7 @@
         },
         {
             "file": "src/gdal_feature.cpp",
-            "line": 166,
+            "line": 165,
             "description": "Returns the geometry of the feature.",
             "itemtype": "method",
             "name": "getGeometry",
@@ -9464,25 +9593,12 @@
         {
             "file": "src/gdal_feature.cpp",
             "line": 190,
-            "description": "Returns the definition of a particular field at an index.",
-            "itemtype": "method",
-            "name": "getFieldDefn",
-            "params": [
-                {
-                    "name": "index",
-                    "description": "Field index (0-based)",
-                    "type": "Number"
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "gdal.FieldDefn"
-            },
+            "description": "Returns the definition of a particular field at an index.\n\n_method getFieldDefn\n_param {number} index Field index (0-based)\n_return {gdal.FieldDefn}",
             "class": "gdal.Feature"
         },
         {
             "file": "src/gdal_feature.cpp",
-            "line": 219,
+            "line": 220,
             "description": "Sets the feature's geometry.",
             "throws": {
                 "description": "Error"
@@ -9500,7 +9616,7 @@
         },
         {
             "file": "src/gdal_feature.cpp",
-            "line": 244,
+            "line": 245,
             "description": "Determines if the features are the same.",
             "itemtype": "method",
             "name": "equals",
@@ -9519,7 +9635,7 @@
         },
         {
             "file": "src/gdal_feature.cpp",
-            "line": 253,
+            "line": 254,
             "description": "Clones the feature.",
             "itemtype": "method",
             "name": "clone",
@@ -9531,7 +9647,7 @@
         },
         {
             "file": "src/gdal_feature.cpp",
-            "line": 269,
+            "line": 270,
             "description": "Releases the feature from memory.",
             "itemtype": "method",
             "name": "destroy",
@@ -9539,7 +9655,7 @@
         },
         {
             "file": "src/gdal_feature.cpp",
-            "line": 285,
+            "line": 286,
             "description": "Set one feature from another. Overwrites the contents of this feature\nfrom the geometry and attributes of another.",
             "example": [
                 "\n```\nvar feature1 = new gdal.Feature(defn);\nvar feature2 = new gdal.Feature(defn);\nfeature1.setGeometry(new gdal.Point(5, 10));\nfeature1.fields.set([5, 'test', 3.14]);\nfeature2.setFrom(feature1);```"
@@ -9573,7 +9689,7 @@
         },
         {
             "file": "src/gdal_feature.cpp",
-            "line": 363,
+            "line": 364,
             "readonly": "",
             "itemtype": "attribute",
             "name": "fields",
@@ -9582,7 +9698,7 @@
         },
         {
             "file": "src/gdal_feature.cpp",
-            "line": 373,
+            "line": 374,
             "itemtype": "attribute",
             "name": "fid",
             "type": "{number}",
@@ -9590,7 +9706,7 @@
         },
         {
             "file": "src/gdal_feature.cpp",
-            "line": 387,
+            "line": 388,
             "readonly": "",
             "itemtype": "attribute",
             "name": "defn",
@@ -10079,7 +10195,7 @@
         },
         {
             "file": "src/gdal_mdarray.cpp",
-            "line": 349,
+            "line": 350,
             "description": "Get a partial view of the MDArray\n\nThe slice expression uses the same syntax as NumPy basic slicing and indexing. See (https://www.numpy.org/devdocs/reference/arrays.indexing.html#basic-slicing-and-indexing). Or it can use field access by name. See (https://www.numpy.org/devdocs/reference/arrays.indexing.html#field-access).",
             "itemtype": "method",
             "name": "getView",
@@ -10101,7 +10217,7 @@
         },
         {
             "file": "src/gdal_mdarray.cpp",
-            "line": 376,
+            "line": 378,
             "description": "Return an array that is a mask for the current array.\n\nThis array will be of type Byte, with values set to 0 to indicate invalid pixels of the current array, and values set to 1 to indicate valid pixels.\n\nThe generic implementation honours the NoDataValue, as well as various netCDF CF attributes: missing_value, _FillValue, valid_min, valid_max and valid_range.",
             "itemtype": "method",
             "name": "getMask",
@@ -10116,7 +10232,7 @@
         },
         {
             "file": "src/gdal_mdarray.cpp",
-            "line": 402,
+            "line": 405,
             "description": "Return a view of this array as a gdal.Dataset (ie 2D)\n\nIn the case of > 2D arrays, additional dimensions will be represented as raster bands.",
             "itemtype": "method",
             "name": "asDataset",
@@ -10143,7 +10259,7 @@
         },
         {
             "file": "src/gdal_mdarray.cpp",
-            "line": 435,
+            "line": 439,
             "description": "Spatial reference associated with MDArray",
             "throws": {
                 "description": "Error"
@@ -10155,7 +10271,7 @@
         },
         {
             "file": "src/gdal_mdarray.cpp",
-            "line": 456,
+            "line": 460,
             "description": "Raster value offset.",
             "itemtype": "attribute",
             "name": "offset",
@@ -10164,7 +10280,7 @@
         },
         {
             "file": "src/gdal_mdarray.cpp",
-            "line": 474,
+            "line": 478,
             "description": "Raster value scale.",
             "itemtype": "attribute",
             "name": "scale",
@@ -10173,7 +10289,7 @@
         },
         {
             "file": "src/gdal_mdarray.cpp",
-            "line": 492,
+            "line": 496,
             "description": "No data value for this array.",
             "itemtype": "attribute",
             "name": "noDataValue",
@@ -10182,7 +10298,7 @@
         },
         {
             "file": "src/gdal_mdarray.cpp",
-            "line": 514,
+            "line": 518,
             "description": "Raster unit type (name for the units of this raster's values).\nFor instance, it might be `\"m\"` for an elevation model in meters,\nor `\"ft\"` for feet. If no units are available, a value of `\"\"`\nwill be returned.",
             "itemtype": "attribute",
             "name": "unitType",
@@ -10191,7 +10307,7 @@
         },
         {
             "file": "src/gdal_mdarray.cpp",
-            "line": 531,
+            "line": 535,
             "readonly": "",
             "itemtype": "attribute",
             "name": "dataType",
@@ -10200,7 +10316,7 @@
         },
         {
             "file": "src/gdal_mdarray.cpp",
-            "line": 552,
+            "line": 556,
             "readonly": "",
             "itemtype": "attribute",
             "name": "dimensions",
@@ -10209,7 +10325,7 @@
         },
         {
             "file": "src/gdal_mdarray.cpp",
-            "line": 562,
+            "line": 566,
             "readonly": "",
             "itemtype": "attribute",
             "name": "attributes",
@@ -10218,7 +10334,7 @@
         },
         {
             "file": "src/gdal_mdarray.cpp",
-            "line": 572,
+            "line": 576,
             "readonly": "",
             "itemtype": "attribute",
             "name": "description",
@@ -10227,7 +10343,7 @@
         },
         {
             "file": "src/gdal_mdarray.cpp",
-            "line": 586,
+            "line": 590,
             "description": "The flattened length of the array",
             "readonly": "",
             "itemtype": "attribute",
@@ -10367,7 +10483,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 300,
+            "line": 301,
             "description": "Return a view of this raster band as a 2D multidimensional GDALMDArray.\n\nThe band must be linked to a GDALDataset.\n\nIf the dataset has a geotransform attached, the X and Y dimensions of the returned array will have an associated indexing variable.\n\nRequires GDAL>=3.3 with MDArray support, won't be defined otherwise",
             "throws": {
                 "description": "Error"
@@ -10382,7 +10498,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 329,
+            "line": 331,
             "description": "Fetch image statistics.\n\nReturns the minimum, maximum, mean and standard deviation of all pixel values\nin this band. If approximate statistics are sufficient, the\n`allow_approximation` argument can be set to `true` in which case overviews,\nor a subset of image tiles may be used in computing the statistics.",
             "throws": {
                 "description": "Error"
@@ -10409,13 +10525,13 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 377,
+            "line": 379,
             "typedef": "stats { min: number, max: number, mean: number, std_dev: number }",
             "class": "gdal.RasterBand"
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 381,
+            "line": 383,
             "description": "Computes image statistics.\n\nReturns the minimum, maximum, mean and standard deviation of all pixel values\nin this band. If approximate statistics are sufficient, the\n`allow_approximation` argument can be set to `true` in which case overviews,\nor a subset of image tiles may be used in computing the statistics.",
             "throws": {
                 "description": "Error"
@@ -10437,7 +10553,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 397,
+            "line": 399,
             "description": "Computes image statistics.\n{{async}}\n\nReturns the minimum, maximum, mean and standard deviation of all pixel values\nin this band. If approximate statistics are sufficient, the\n`allow_approximation` argument can be set to `true` in which case overviews,\nor a subset of image tiles may be used in computing the statistics.",
             "throws": {
                 "description": "Error"
@@ -10466,7 +10582,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 456,
+            "line": 459,
             "description": "Set statistics on the band. This method can be used to store\nmin/max/mean/standard deviation statistics.",
             "throws": {
                 "description": "Error"
@@ -10499,7 +10615,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 486,
+            "line": 489,
             "description": "Returns band metadata",
             "itemtype": "method",
             "name": "getMetadata",
@@ -10519,7 +10635,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 505,
+            "line": 508,
             "readonly": "",
             "itemtype": "attribute",
             "name": "ds",
@@ -10528,7 +10644,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 515,
+            "line": 518,
             "readonly": "",
             "itemtype": "attribute",
             "name": "overviews",
@@ -10537,7 +10653,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 525,
+            "line": 528,
             "readonly": "",
             "itemtype": "attribute",
             "name": "pixels",
@@ -10546,7 +10662,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 535,
+            "line": 538,
             "readonly": "",
             "itemtype": "attribute",
             "name": "id",
@@ -10555,7 +10671,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 555,
+            "line": 558,
             "description": "Name of of band.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10565,7 +10681,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 571,
+            "line": 574,
             "description": "Size object containing `\"x\"` and `\"y\"` properties.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10575,7 +10691,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 590,
+            "line": 593,
             "description": "Size object containing `\"x\"` and `\"y\"` properties.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10585,7 +10701,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 610,
+            "line": 613,
             "description": "Minimum value for this band.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10595,7 +10711,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 626,
+            "line": 629,
             "description": "Maximum value for this band.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10605,7 +10721,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 642,
+            "line": 645,
             "description": "Raster value offset.",
             "itemtype": "attribute",
             "name": "offset",
@@ -10614,7 +10730,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 657,
+            "line": 660,
             "description": "Raster value scale.",
             "itemtype": "attribute",
             "name": "scale",
@@ -10623,7 +10739,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 672,
+            "line": 675,
             "description": "No data value for this band.",
             "itemtype": "attribute",
             "name": "noDataValue",
@@ -10632,7 +10748,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 694,
+            "line": 697,
             "description": "Raster unit type (name for the units of this raster's values).\nFor instance, it might be `\"m\"` for an elevation model in meters,\nor `\"ft\"` for feet. If no units are available, a value of `\"\"`\nwill be returned.",
             "itemtype": "attribute",
             "name": "unitType",
@@ -10641,7 +10757,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 711,
+            "line": 714,
             "description": "Pixel data type ({{#crossLink \"Constants (GDT)\"}}see GDT\n constants{{/crossLink}}) used for this band.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10651,7 +10767,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 730,
+            "line": 733,
             "description": "Indicates if the band is read-only.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10661,7 +10777,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 745,
+            "line": 748,
             "description": "An indicator if the underlying datastore can compute arbitrary overviews\nefficiently, such as is the case with OGDI over a network. Datastores with\narbitrary overviews don't generally have any fixed overviews, but GDAL's\n`RasterIO()` method can be used in downsampling mode to get overview\ndata efficiently.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10671,7 +10787,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 764,
+            "line": 767,
             "description": "List of list of category names for this raster.",
             "itemtype": "attribute",
             "name": "categoryNames",
@@ -10680,7 +10796,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 789,
+            "line": 792,
             "description": "Color interpretation mode ({{#crossLink \"Constants (GCI)\"}}see GCI\nconstants{{/crossLink}}).",
             "itemtype": "attribute",
             "name": "colorInterpretation",
@@ -11637,19 +11753,19 @@
         },
         {
             "file": "src/gdal_warper.cpp",
-            "line": 316,
+            "line": 318,
             "typedef": "WarpOptions { src: gdal.Dataset, s_srs: gdal.SpatialReference, t_srs: gdal.SpatialReference, maxError?: number }",
             "class": "gdal"
         },
         {
             "file": "src/gdal_warper.cpp",
-            "line": 320,
+            "line": 322,
             "typedef": "WarpOutput { rasterSize: xyz, geoTransform: number[] }",
             "class": "gdal"
         },
         {
             "file": "src/gdal_warper.cpp",
-            "line": 324,
+            "line": 326,
             "description": "Used to determine the bounds and resolution of the output virtual file which\nshould be large enough to include all the input image.",
             "throws": {
                 "description": "Error"
@@ -11696,7 +11812,7 @@
         },
         {
             "file": "src/gdal_warper.cpp",
-            "line": 341,
+            "line": 343,
             "description": "Used to determine the bounds and resolution of the output virtual file which\nshould be large enough to include all the input image.\n{{{async}}}",
             "throws": {
                 "description": "Error"
@@ -13185,11 +13301,11 @@
         },
         {
             "message": "unknown tag: typedef",
-            "line": " src/collections/rasterband_pixels.cpp:254"
+            "line": " src/collections/rasterband_pixels.cpp:257"
         },
         {
             "message": "unknown tag: typedef",
-            "line": " src/collections/rasterband_pixels.cpp:407"
+            "line": " src/collections/rasterband_pixels.cpp:411"
         },
         {
             "message": "unknown tag: typedef",
@@ -13205,15 +13321,15 @@
         },
         {
             "message": "unknown tag: typedef",
-            "line": " src/gdal_algorithms.cpp:88"
+            "line": " src/gdal_algorithms.cpp:89"
         },
         {
             "message": "unknown tag: typedef",
-            "line": " src/gdal_algorithms.cpp:224"
+            "line": " src/gdal_algorithms.cpp:226"
         },
         {
             "message": "unknown tag: typedef",
-            "line": " src/gdal_algorithms.cpp:387"
+            "line": " src/gdal_algorithms.cpp:390"
         },
         {
             "message": "unknown tag: typedef",
@@ -13221,7 +13337,7 @@
         },
         {
             "message": "unknown tag: typedef",
-            "line": " src/gdal_rasterband.cpp:377"
+            "line": " src/gdal_rasterband.cpp:379"
         },
         {
             "message": "unknown tag: typedef",
@@ -13233,11 +13349,11 @@
         },
         {
             "message": "unknown tag: typedef",
-            "line": " src/gdal_warper.cpp:316"
+            "line": " src/gdal_warper.cpp:318"
         },
         {
             "message": "unknown tag: typedef",
-            "line": " src/gdal_warper.cpp:320"
+            "line": " src/gdal_warper.cpp:322"
         },
         {
             "message": "Missing item type",
@@ -13253,11 +13369,11 @@
         },
         {
             "message": "Missing item type",
-            "line": " src/collections/rasterband_pixels.cpp:254"
+            "line": " src/collections/rasterband_pixels.cpp:257"
         },
         {
             "message": "Missing item type",
-            "line": " src/collections/rasterband_pixels.cpp:407"
+            "line": " src/collections/rasterband_pixels.cpp:411"
         },
         {
             "message": "Missing item type",
@@ -13273,15 +13389,19 @@
         },
         {
             "message": "Missing item type",
-            "line": " src/gdal_algorithms.cpp:88"
+            "line": " src/gdal_algorithms.cpp:89"
         },
         {
             "message": "Missing item type",
-            "line": " src/gdal_algorithms.cpp:224"
+            "line": " src/gdal_algorithms.cpp:226"
         },
         {
             "message": "Missing item type",
-            "line": " src/gdal_algorithms.cpp:387"
+            "line": " src/gdal_algorithms.cpp:390"
+        },
+        {
+            "message": "Missing item type\nReturns the definition of a particular field at an index.\n\n_method getFieldDefn\n_param {number} index Field index (0-based)\n_return {gdal.FieldDefn}",
+            "line": " src/gdal_feature.cpp:190"
         },
         {
             "message": "Missing item type",
@@ -13289,7 +13409,7 @@
         },
         {
             "message": "Missing item type",
-            "line": " src/gdal_rasterband.cpp:377"
+            "line": " src/gdal_rasterband.cpp:379"
         },
         {
             "message": "Missing item type",
@@ -13305,11 +13425,11 @@
         },
         {
             "message": "Missing item type",
-            "line": " src/gdal_warper.cpp:316"
+            "line": " src/gdal_warper.cpp:318"
         },
         {
             "message": "Missing item type",
-            "line": " src/gdal_warper.cpp:320"
+            "line": " src/gdal_warper.cpp:322"
         }
     ]
 }

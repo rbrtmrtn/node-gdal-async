@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.0</b>
+                    API Docs for Version: <b>3.3.1</b>
                 </p>
             </li>
         </div>
@@ -241,6 +241,7 @@ NAN_METHOD(DatasetBands::toString) {
  *
  * @param {number} id
  * @param {callback&lt;gdal.RasterBand&gt;} [callback=undefined] {{{cb}}}
+ * @throws Error
  * @return {Promise&lt;gdal.RasterBand&gt;}
  */
 GDAL_ASYNCABLE_DEFINE(DatasetBands::get) {
@@ -262,6 +263,7 @@ GDAL_ASYNCABLE_DEFINE(DatasetBands::get) {
   GDALAsyncableJob&lt;GDALRasterBand *&gt; job(ds-&gt;uid);
   job.persist(parent);
   job.main = [raw, band_id](const GDALExecutionProgress &amp;) {
+    CPLErrorReset();
     GDALRasterBand *band = raw-&gt;GetRasterBand(band_id);
     if (band == nullptr) { throw CPLGetLastErrorMsg(); }
     return band;
@@ -330,6 +332,7 @@ GDAL_ASYNCABLE_DEFINE(DatasetBands::create) {
   GDALAsyncableJob&lt;GDALRasterBand *&gt; job(ds-&gt;uid);
   job.persist(parent);
   job.main = [raw, type, options](const GDALExecutionProgress &amp;) {
+    CPLErrorReset();
     CPLErr err = raw-&gt;AddBand(type, options-&gt;get());
     if (err != CE_None) { throw CPLGetLastErrorMsg(); }
     return raw-&gt;GetRasterBand(raw-&gt;GetRasterCount());

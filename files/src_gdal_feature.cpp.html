@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.0</b>
+                    API Docs for Version: <b>3.3.1</b>
                 </p>
             </li>
         </div>
@@ -172,11 +172,10 @@ void Feature::Initialize(Local&lt;Object&gt; target) {
   // defn.fields.get() instead)
   Nan::SetPrototypeMethod(lcons, &quot;setFrom&quot;, setFrom);
 
-  // Note: We should let node GC handle destroying features when they arent
-  // being used
+  // Note: This is used mainly for testing
   // TODO: Give node more info on the amount of memory a feature is using
   //      Nan::AdjustExternalMemory()
-  // Nan::SetPrototypeMethod(lcons, &quot;destroy&quot;, destroy);
+  Nan::SetPrototypeMethod(lcons, &quot;destroy&quot;, destroy);
 
   ATTR(lcons, &quot;fields&quot;, fieldsGetter, READ_ONLY_SETTER);
   ATTR(lcons, &quot;defn&quot;, defnGetter, READ_ONLY_SETTER);
@@ -330,12 +329,13 @@ NAN_METHOD(Feature::getGeometry) {
   info.GetReturnValue().Set(Geometry::New(geom, false));
 }
 
+#if 0
 /**
  * Returns the definition of a particular field at an index.
  *
- * @method getFieldDefn
- * @param {number} index Field index (0-based)
- * @return {gdal.FieldDefn}
+ * _method getFieldDefn
+ * _param {number} index Field index (0-based)
+ * _return {gdal.FieldDefn}
  */
 NAN_METHOD(Feature::getFieldDefn) {
   Nan::HandleScope scope;
@@ -349,12 +349,13 @@ NAN_METHOD(Feature::getFieldDefn) {
   }
 
   if (field_index &lt; 0 || field_index &gt;= feature-&gt;this_-&gt;GetFieldCount()) {
-    Nan::ThrowError(&quot;Invalid field index&quot;);
+    Nan::ThrowRangeError(&quot;Invalid field index&quot;);
     return;
   }
 
   info.GetReturnValue().Set(FieldDefn::New(feature-&gt;this_-&gt;GetFieldDefnRef(field_index), false));
 }
+#endif
 
 // NODE_WRAPPED_METHOD_WITH_RESULT(Feature, stealGeometry, Geometry,
 // StealGeometry);
