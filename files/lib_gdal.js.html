@@ -22,12 +22,13 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.1</b>
+                    API Docs for Version: <b>3.3.2</b>
                 </p>
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DIM)", "classes/Constants (DIR)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.ArrayAttributes", "classes/gdal.ArrayDimensions", "classes/gdal.Attribute", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Dimension", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Group", "classes/gdal.GroupArrays", "classes/gdal.GroupAttributes", "classes/gdal.GroupDimensions", "classes/gdal.GroupGroups", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MDArray", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DIM)", "classes/Constants (DIR)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.ArrayAttributes", "classes/gdal.ArrayDimensions", "classes/gdal.Attribute", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Dimension", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Group", "classes/gdal.GroupArrays", "classes/gdal.GroupAttributes", "classes/gdal.GroupDimensions", "classes/gdal.GroupGroups", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MDArray", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference", "classes/vsimem
+Operations on in-memory /vsimem/ files"]'>
         </form>
     </div>
 </div>
@@ -103,6 +104,9 @@
                 <li><a href="../classes/gdal.RasterBandPixels.html">gdal.RasterBandPixels</a></li>
                 <li><a href="../classes/gdal.SimpleCurve.html">gdal.SimpleCurve</a></li>
                 <li><a href="../classes/gdal.SpatialReference.html">gdal.SpatialReference</a></li>
+                <li><a href="../classes/vsimem
+Operations on in-memory /vsimem/ files.html">vsimem
+Operations on in-memory /vsimem/ files</a></li>
         </ul>
     </div>
     </div>
@@ -269,6 +273,31 @@ const getExtent = gdal.Layer.prototype.getExtent
 gdal.Layer.prototype.getExtent = function () {
   const obj = getExtent.apply(this, arguments)
   return new gdal.Envelope(obj)
+}
+
+/**
+ * Returns a {{#crossLink &quot;Envelope&quot;}}gdal.Envelope{{/crossLink}} object for the raster bands
+ *
+ * @example
+ * &#x60;&#x60;&#x60;
+ * const extent = dataset.getEnvelope()
+ * &#x60;&#x60;&#x60;&#x60;
+ *
+ * @for gdal.DatasetBands
+ * @method getEnvelope
+ * @return {Envelope}
+ */
+gdal.DatasetBands.prototype.getEnvelope = function () {
+  const ulx = this.ds.geoTransform[0]
+  const uly = this.ds.geoTransform[3]
+  const lrx = this.ds.geoTransform[0] + this.ds.geoTransform[1] * this.ds.rasterSize.x
+  const lry = this.ds.geoTransform[3] + this.ds.geoTransform[5] * this.ds.rasterSize.y
+  return new gdal.Envelope({
+    minX: Math.min(ulx, lrx),
+    minY: Math.min(uly, lry),
+    maxX: Math.max(ulx, lrx),
+    maxY: Math.max(uly, lry)
+  })
 }
 
 /**
@@ -1230,7 +1259,7 @@ gdal.open = (function () {
   ) {
     if (filename instanceof Buffer) {
       const buffer = filename
-      arguments[0] = gdal._getMemFileName(filename)
+      arguments[0] = gdal.vsimem._anonymous(filename)
       const ds = gdal.open.apply(gdal, arguments)
       ds.buffer = buffer
       return ds
@@ -1351,8 +1380,8 @@ gdal.openAsync = (function () {
       if (filename instanceof Buffer) {
         const buffer = filename
         try {
-          // getMemFileName is always synchronous
-          arguments[0] = gdal._getMemFileName(filename)
+          // vsimem._anonymous is always synchronous
+          arguments[0] = gdal.vsimem._anonymous(filename)
         } catch (e) {
           return Promise.reject(e)
         }
@@ -1709,6 +1738,7 @@ const promisifiables = {
     swapXYAsync: 0,
     isEmptyAsync: 0,
     isValidAsync: 0,
+    makeValidAsync: 0,
     isSimpleAsync: 0,
     isRingAsync: 0,
     intersectsAsync: 1,
@@ -1768,6 +1798,9 @@ for (const c of Object.keys(promisifiables)) {
     const { base, m } = _m.startsWith(&#x27;$&#x27;) ?
       { base: klass, m: _m.slice(1) } :
       { base: klass.prototype, m: _m }
+    if (base[m] === undefined) {
+      continue
+    }
     base[m] = (function () {
       const promisified = promisify(base[m])
       const original = base[m]

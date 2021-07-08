@@ -22,12 +22,13 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.1</b>
+                    API Docs for Version: <b>3.3.2</b>
                 </p>
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DIM)", "classes/Constants (DIR)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.ArrayAttributes", "classes/gdal.ArrayDimensions", "classes/gdal.Attribute", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Dimension", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Group", "classes/gdal.GroupArrays", "classes/gdal.GroupAttributes", "classes/gdal.GroupDimensions", "classes/gdal.GroupGroups", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MDArray", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DIM)", "classes/Constants (DIR)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.ArrayAttributes", "classes/gdal.ArrayDimensions", "classes/gdal.Attribute", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Dimension", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Group", "classes/gdal.GroupArrays", "classes/gdal.GroupAttributes", "classes/gdal.GroupDimensions", "classes/gdal.GroupGroups", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MDArray", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference", "classes/vsimem
+Operations on in-memory /vsimem/ files"]'>
         </form>
     </div>
 </div>
@@ -103,6 +104,9 @@
                 <li><a href="../classes/gdal.RasterBandPixels.html">gdal.RasterBandPixels</a></li>
                 <li><a href="../classes/gdal.SimpleCurve.html">gdal.SimpleCurve</a></li>
                 <li><a href="../classes/gdal.SpatialReference.html">gdal.SpatialReference</a></li>
+                <li><a href="../classes/vsimem
+Operations on in-memory /vsimem/ files.html">vsimem
+Operations on in-memory /vsimem/ files</a></li>
         </ul>
     </div>
     </div>
@@ -180,11 +184,11 @@ void Dataset::Initialize(Local&lt;Object&gt; target) {
   ATTR(lcons, &quot;description&quot;, descriptionGetter, READ_ONLY_SETTER);
   ATTR(lcons, &quot;bands&quot;, bandsGetter, READ_ONLY_SETTER);
   ATTR(lcons, &quot;layers&quot;, layersGetter, READ_ONLY_SETTER);
-  ATTR(lcons, &quot;rasterSize&quot;, rasterSizeGetter, READ_ONLY_SETTER);
+  ATTR_ASYNCABLE(lcons, &quot;rasterSize&quot;, rasterSizeGetter, READ_ONLY_SETTER);
   ATTR(lcons, &quot;driver&quot;, driverGetter, READ_ONLY_SETTER);
   ATTR(lcons, &quot;root&quot;, rootGetter, READ_ONLY_SETTER);
-  ATTR(lcons, &quot;srs&quot;, srsGetter, srsSetter);
-  ATTR(lcons, &quot;geoTransform&quot;, geoTransformGetter, geoTransformSetter);
+  ATTR_ASYNCABLE(lcons, &quot;srs&quot;, srsGetter, srsSetter);
+  ATTR_ASYNCABLE(lcons, &quot;geoTransform&quot;, geoTransformGetter, geoTransformSetter);
 
   Nan::Set(target, Nan::New(&quot;Dataset&quot;).ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
 
@@ -785,30 +789,56 @@ NAN_GETTER(Dataset::descriptionGetter) {
  * @attribute rasterSize
  * @type {xyz}
  */
-NAN_GETTER(Dataset::rasterSizeGetter) {
+
+/**
+ * Raster dimensions. An object containing &#x60;x&#x60; and &#x60;y&#x60; properties.
+ * {{async_getter}}
+ *
+ * @readOnly
+ * @attribute rasterSizeAsync
+ * @type {Promise&lt;xyz&gt;}
+ */
+GDAL_ASYNCABLE_GETTER_DEFINE(Dataset::rasterSizeGetter) {
   Nan::HandleScope scope;
   Dataset *ds = Nan::ObjectWrap::Unwrap&lt;Dataset&gt;(info.This());
+  struct xy {
+    int x, y;
+    bool null;
+  };
 
   if (!ds-&gt;isAlive()) {
-    Nan::ThrowError(&quot;Dataset object has already been destroyed&quot;);
+    THROW_OR_REJECT(&quot;Dataset object has already been destroyed&quot;)
     return;
   }
 
   GDALDataset *raw = ds-&gt;get();
 
-  // GDAL 2.x will return 512x512 for vector datasets... which doesn&#x27;t really make
-  // sense in JS where we can return null instead of a number
-  // https://github.com/OSGeo/gdal/blob/beef45c130cc2778dcc56d85aed1104a9b31f7e6/gdal/gcore/gdaldataset.cpp#L173-L174
-  AsyncGuard lock({ds-&gt;uid}, eventLoopWarn);
-  if (raw-&gt;GetDriver() == nullptr || !raw-&gt;GetDriver()-&gt;GetMetadataItem(GDAL_DCAP_RASTER)) {
-    info.GetReturnValue().Set(Nan::Null());
-    return;
-  }
+  GDALAsyncableJob&lt;xy&gt; job(ds-&gt;uid);
 
-  Local&lt;Object&gt; result = Nan::New&lt;Object&gt;();
-  Nan::Set(result, Nan::New(&quot;x&quot;).ToLocalChecked(), Nan::New&lt;Integer&gt;(raw-&gt;GetRasterXSize()));
-  Nan::Set(result, Nan::New(&quot;y&quot;).ToLocalChecked(), Nan::New&lt;Integer&gt;(raw-&gt;GetRasterYSize()));
-  info.GetReturnValue().Set(result);
+  job.main = [raw](const GDALExecutionProgress &amp;) {
+    xy result;
+    // GDAL 2.x will return 512x512 for vector datasets... which doesn&#x27;t really make
+    // sense in JS where we can return null instead of a number
+    // https://github.com/OSGeo/gdal/blob/beef45c130cc2778dcc56d85aed1104a9b31f7e6/gdal/gcore/gdaldataset.cpp#L173-L174
+    if (raw-&gt;GetDriver() == nullptr || !raw-&gt;GetDriver()-&gt;GetMetadataItem(GDAL_DCAP_RASTER)) {
+      result.null = true;
+      return result;
+    }
+    result.x = raw-&gt;GetRasterXSize();
+    result.y = raw-&gt;GetRasterYSize();
+    result.null = false;
+    return result;
+  };
+
+  job.rval = [](xy xy, GetFromPersistentFunc) {
+    if (xy.null) return Nan::Null().As&lt;Value&gt;();
+    Local&lt;Object&gt; result = Nan::New&lt;Object&gt;();
+    Nan::Set(result, Nan::New(&quot;x&quot;).ToLocalChecked(), Nan::New&lt;Integer&gt;(xy.x));
+    Nan::Set(result, Nan::New(&quot;y&quot;).ToLocalChecked(), Nan::New&lt;Integer&gt;(xy.y));
+    return result.As&lt;Value&gt;();
+  };
+
+  job.run(info, async);
 }
 
 /**
@@ -818,34 +848,49 @@ NAN_GETTER(Dataset::rasterSizeGetter) {
  * @attribute srs
  * @type {gdal.SpatialReference}
  */
-NAN_GETTER(Dataset::srsGetter) {
+
+/**
+ * Spatial reference associated with raster dataset
+ * {{async_getter}}
+ *
+ * @throws Error
+ * @attribute srsAsync
+ * @type {Promise&lt;gdal.SpatialReference&gt;}
+ */
+GDAL_ASYNCABLE_GETTER_DEFINE(Dataset::srsGetter) {
   Nan::HandleScope scope;
   Dataset *ds = Nan::ObjectWrap::Unwrap&lt;Dataset&gt;(info.This());
 
   if (!ds-&gt;isAlive()) {
-    Nan::ThrowError(&quot;Dataset object has already been destroyed&quot;);
+    THROW_OR_REJECT(&quot;Dataset object has already been destroyed&quot;);
     return;
   }
 
   GDALDataset *raw = ds-&gt;get();
-  AsyncGuard lock({ds-&gt;uid}, eventLoopWarn);
-  // get projection wkt and return null if not set
-  OGRChar *wkt = (OGRChar *)raw-&gt;GetProjectionRef();
-  if (*wkt == &#x27;\0&#x27;) {
-    // getProjectionRef returns string of length 0 if no srs set
-    info.GetReturnValue().Set(Nan::Null());
-    return;
-  }
-  // otherwise construct and return SpatialReference from wkt
-  OGRSpatialReference *srs = new OGRSpatialReference();
-  int err = srs-&gt;importFromWkt(&amp;wkt);
 
-  if (err) {
-    NODE_THROW_OGRERR(err);
-    return;
-  }
+  GDALAsyncableJob&lt;OGRSpatialReference *&gt; job(ds-&gt;uid);
 
-  info.GetReturnValue().Set(SpatialReference::New(srs, true));
+  job.main = [raw](const GDALExecutionProgress &amp;) {
+    // get projection wkt and return null if not set
+    OGRChar *wkt = (OGRChar *)raw-&gt;GetProjectionRef();
+    if (*wkt == &#x27;\0&#x27;) {
+      // getProjectionRef returns string of length 0 if no srs set
+      return (OGRSpatialReference *)nullptr;
+    }
+    // otherwise construct and return SpatialReference from wkt
+    OGRSpatialReference *srs = new OGRSpatialReference();
+    int err = srs-&gt;importFromWkt(&amp;wkt);
+    if (err) throw getOGRErrMsg(err);
+    return srs;
+  };
+
+  job.rval = [](OGRSpatialReference *srs, GetFromPersistentFunc) {
+    if (srs != nullptr)
+      return SpatialReference::New(srs, true);
+    else
+      return Nan::Null().As&lt;Value&gt;();
+  };
+  job.run(info, async);
 }
 
 /**
@@ -861,35 +906,56 @@ NAN_GETTER(Dataset::srsGetter) {
  * @attribute geoTransform
  * @type {number[]}
  */
-NAN_GETTER(Dataset::geoTransformGetter) {
+
+/**
+ * An affine transform which maps pixel/line coordinates into georeferenced
+ * space using the following relationship:
+ *
+ * @example
+ * &#x60;&#x60;&#x60;
+ * var GT = dataset.geoTransform;
+ * var Xgeo = GT[0] + Xpixel*GT[1] + Yline*GT[2];
+ * var Ygeo = GT[3] + Xpixel*GT[4] + Yline*GT[5];&#x60;&#x60;&#x60;
+ *
+ * {{async_getter}}
+ * @attribute geoTransformAsync
+ * @type {Promise&lt;number[]&gt;}
+ */
+GDAL_ASYNCABLE_GETTER_DEFINE(Dataset::geoTransformGetter) {
   Nan::HandleScope scope;
   Dataset *ds = Nan::ObjectWrap::Unwrap&lt;Dataset&gt;(info.This());
 
   if (!ds-&gt;isAlive()) {
-    Nan::ThrowError(&quot;Dataset object has already been destroyed&quot;);
+    THROW_OR_REJECT(&quot;Dataset object has already been destroyed&quot;);
     return;
   }
 
   GDALDataset *raw = ds-&gt;get();
-  double transform[6];
-  AsyncGuard lock({ds-&gt;uid}, eventLoopWarn);
-  CPLErr err = raw-&gt;GetGeoTransform(transform);
-  if (err) {
+
+  GDALAsyncableJob&lt;std::shared_ptr&lt;double&gt;&gt; job(ds-&gt;uid);
+
+  job.main = [raw](const GDALExecutionProgress &amp;) {
+    auto transform = std::shared_ptr&lt;double&gt;(new double[6], array_deleter&lt;double&gt;());
+    CPLErr err = raw-&gt;GetGeoTransform(transform.get());
     // This is mostly (always?) a sign that it has not been set
-    info.GetReturnValue().Set(Nan::Null());
-    return;
-    // NODE_THROW_LAST_CPLERR;
-  }
+    if (err) { return std::shared_ptr&lt;double&gt;(nullptr); }
+    return transform;
+  };
 
-  Local&lt;Array&gt; result = Nan::New&lt;Array&gt;(6);
-  Nan::Set(result, 0, Nan::New&lt;Number&gt;(transform[0]));
-  Nan::Set(result, 1, Nan::New&lt;Number&gt;(transform[1]));
-  Nan::Set(result, 2, Nan::New&lt;Number&gt;(transform[2]));
-  Nan::Set(result, 3, Nan::New&lt;Number&gt;(transform[3]));
-  Nan::Set(result, 4, Nan::New&lt;Number&gt;(transform[4]));
-  Nan::Set(result, 5, Nan::New&lt;Number&gt;(transform[5]));
+  job.rval = [](std::shared_ptr&lt;double&gt; transform, GetFromPersistentFunc) {
+    if (transform == nullptr) return Nan::Null().As&lt;v8::Value&gt;();
+    Local&lt;Array&gt; result = Nan::New&lt;Array&gt;(6);
+    Nan::Set(result, 0, Nan::New&lt;Number&gt;(transform.get()[0]));
+    Nan::Set(result, 1, Nan::New&lt;Number&gt;(transform.get()[1]));
+    Nan::Set(result, 2, Nan::New&lt;Number&gt;(transform.get()[2]));
+    Nan::Set(result, 3, Nan::New&lt;Number&gt;(transform.get()[3]));
+    Nan::Set(result, 4, Nan::New&lt;Number&gt;(transform.get()[4]));
+    Nan::Set(result, 5, Nan::New&lt;Number&gt;(transform.get()[5]));
 
-  info.GetReturnValue().Set(result);
+    return result.As&lt;v8::Value&gt;();
+  };
+
+  job.run(info, async);
 }
 
 /**
@@ -1010,9 +1076,8 @@ NAN_GETTER(Dataset::layersGetter) {
  */
 NAN_GETTER(Dataset::rootGetter) {
   Nan::HandleScope scope;
-  MaybeLocal&lt;Value&gt; maybeRootObj = Nan::GetPrivate(info.This(), Nan::New(&quot;root_&quot;).ToLocalChecked());
-  Local&lt;Value&gt; rootObj;
-  if (rootObj.IsEmpty()) {
+  Local&lt;Value&gt; rootObj = Nan::GetPrivate(info.This(), Nan::New(&quot;root_&quot;).ToLocalChecked()).ToLocalChecked();
+  if (rootObj-&gt;IsUndefined()) {
 #if GDAL_VERSION_MAJOR &gt; 3 || (GDAL_VERSION_MAJOR == 3 &amp;&amp; GDAL_VERSION_MINOR &gt;= 1)
     NODE_UNWRAP_CHECK(Dataset, info.This(), ds);
     GDAL_RAW_CHECK(GDALDataset *, ds, gdal_ds);
@@ -1027,8 +1092,6 @@ NAN_GETTER(Dataset::rootGetter) {
     }
 #endif
     Nan::SetPrivate(info.This(), Nan::New(&quot;root_&quot;).ToLocalChecked(), rootObj);
-  } else {
-    rootObj = maybeRootObj.ToLocalChecked();
   }
   info.GetReturnValue().Set(rootObj);
 }

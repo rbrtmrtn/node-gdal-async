@@ -65,7 +65,8 @@ YUI.add("yuidoc-meta", function(Y) {
         "gdal.RasterBandPixels",
         "gdal.SimpleCurve",
         "gdal.SpatialReference",
-        "gdal.config"
+        "gdal.config",
+        "vsimem\nOperations on in-memory /vsimem/ files"
     ],
     "modules": [],
     "allModules": [],

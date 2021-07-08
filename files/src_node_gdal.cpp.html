@@ -22,12 +22,13 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.1</b>
+                    API Docs for Version: <b>3.3.2</b>
                 </p>
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DIM)", "classes/Constants (DIR)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.ArrayAttributes", "classes/gdal.ArrayDimensions", "classes/gdal.Attribute", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Dimension", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Group", "classes/gdal.GroupArrays", "classes/gdal.GroupAttributes", "classes/gdal.GroupDimensions", "classes/gdal.GroupGroups", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MDArray", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DIM)", "classes/Constants (DIR)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.ArrayAttributes", "classes/gdal.ArrayDimensions", "classes/gdal.Attribute", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Dimension", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Group", "classes/gdal.GroupArrays", "classes/gdal.GroupAttributes", "classes/gdal.GroupDimensions", "classes/gdal.GroupGroups", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MDArray", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference", "classes/vsimem
+Operations on in-memory /vsimem/ files"]'>
         </form>
     </div>
 </div>
@@ -103,6 +104,9 @@
                 <li><a href="../classes/gdal.RasterBandPixels.html">gdal.RasterBandPixels</a></li>
                 <li><a href="../classes/gdal.SimpleCurve.html">gdal.SimpleCurve</a></li>
                 <li><a href="../classes/gdal.SpatialReference.html">gdal.SpatialReference</a></li>
+                <li><a href="../classes/vsimem
+Operations on in-memory /vsimem/ files.html">vsimem
+Operations on in-memory /vsimem/ files</a></li>
         </ul>
     </div>
     </div>
@@ -524,19 +528,6 @@ static NAN_METHOD(isAlive) {
   info.GetReturnValue().Set(Nan::New(object_store.isAlive(uid)));
 }
 
-static NAN_METHOD(getMemfileName) {
-  Nan::HandleScope scope;
-  Local&lt;Object&gt; buffer;
-
-  NODE_ARG_OBJECT(0, &quot;buffer&quot;, buffer);
-
-  Memfile *memfile = Memfile::get(buffer);
-  if (memfile == nullptr)
-    Nan::ThrowError(&quot;Failed creating in-memory file&quot;);
-  else
-    info.GetReturnValue().Set(Nan::New&lt;String&gt;(memfile-&gt;filename).ToLocalChecked());
-}
-
 static void Init(Local&lt;Object&gt; target, Local&lt;v8::Value&gt;, void *) {
 
   Nan__SetAsyncableMethod(target, &quot;open&quot;, gdal_open);
@@ -546,7 +537,6 @@ static void Init(Local&lt;Object&gt; target, Local&lt;v8::Value&gt;, void *) {
   Nan::SetMethod(target, &quot;setPROJSearchPath&quot;, setPROJSearchPath);
   Nan::SetMethod(target, &quot;_triggerCPLError&quot;, ThrowDummyCPLError); // for tests
   Nan::SetMethod(target, &quot;_isAlive&quot;, isAlive);                    // for tests
-  Nan::SetMethod(target, &quot;_getMemFileName&quot;, getMemfileName);      // not a public API
 
   Warper::Initialize(target);
   Algorithms::Initialize(target);
@@ -602,6 +592,7 @@ static void Init(Local&lt;Object&gt; target, Local&lt;v8::Value&gt;, void *) {
   CompoundCurveCurves::Initialize(target);
   RasterBandOverviews::Initialize(target);
   RasterBandPixels::Initialize(target);
+  Memfile::Initialize(target);
 
   /**
    * The collection of all drivers registered with GDAL

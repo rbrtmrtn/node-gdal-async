@@ -22,12 +22,13 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.1</b>
+                    API Docs for Version: <b>3.3.2</b>
                 </p>
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DIM)", "classes/Constants (DIR)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.ArrayAttributes", "classes/gdal.ArrayDimensions", "classes/gdal.Attribute", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Dimension", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Group", "classes/gdal.GroupArrays", "classes/gdal.GroupAttributes", "classes/gdal.GroupDimensions", "classes/gdal.GroupGroups", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MDArray", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DIM)", "classes/Constants (DIR)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.ArrayAttributes", "classes/gdal.ArrayDimensions", "classes/gdal.Attribute", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Dimension", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Group", "classes/gdal.GroupArrays", "classes/gdal.GroupAttributes", "classes/gdal.GroupDimensions", "classes/gdal.GroupGroups", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MDArray", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference", "classes/vsimem
+Operations on in-memory /vsimem/ files"]'>
         </form>
     </div>
 </div>
@@ -103,6 +104,9 @@
                 <li><a href="../classes/gdal.RasterBandPixels.html">gdal.RasterBandPixels</a></li>
                 <li><a href="../classes/gdal.SimpleCurve.html">gdal.SimpleCurve</a></li>
                 <li><a href="../classes/gdal.SpatialReference.html">gdal.SpatialReference</a></li>
+                <li><a href="../classes/vsimem
+Operations on in-memory /vsimem/ files.html">vsimem
+Operations on in-memory /vsimem/ files</a></li>
         </ul>
     </div>
     </div>
@@ -145,6 +149,7 @@
 #define __NODE_GDAL_ASYNC_WORKER_H__
 
 #include &lt;functional&gt;
+#include &lt;chrono&gt;
 #include &quot;nan-wrapper.h&quot;
 #include &quot;gdal_common.hpp&quot;
 
@@ -160,11 +165,29 @@ namespace node_gdal {
   }                                                                                                                    \
   void method##_do(const Nan::FunctionCallbackInfo&lt;v8::Value&gt; &amp;info, bool async)
 
+// This generates getter definitions for 2 getters: sync and async version and a hidden common block
+#define GDAL_ASYNCABLE_GETTER_DEFINE(method)                                                                           \
+  NAN_GETTER(method) {                                                                                                 \
+    method##_do(property, info, false);                                                                                \
+  }                                                                                                                    \
+  NAN_GETTER(method##Async) {                                                                                          \
+    method##_do(property, info, true);                                                                                 \
+  }                                                                                                                    \
+  Nan::NAN_GETTER_RETURN_TYPE method##_do(                                                                             \
+    v8::Local&lt;v8::String&gt; property, const Nan::NAN_GETTER_ARGS_TYPE &amp;info, bool async)
+
 // This generates method declarations for 2 methods: sync and async version and a hidden common block
 #define GDAL_ASYNCABLE_DECLARE(method)                                                                                 \
   static NAN_METHOD(method);                                                                                           \
   static NAN_METHOD(method##Async);                                                                                    \
   static void method##_do(const Nan::FunctionCallbackInfo&lt;v8::Value&gt; &amp;info, bool async)
+
+// This generates getter declarations for 2 getters: sync and async version and a hidden common block
+#define GDAL_ASYNCABLE_GETTER_DECLARE(method)                                                                          \
+  static NAN_GETTER(method);                                                                                           \
+  static NAN_GETTER(method##Async);                                                                                    \
+  static Nan::NAN_GETTER_RETURN_TYPE method##_do(                                                                      \
+    v8::Local&lt;v8::String&gt; property, const Nan::NAN_GETTER_ARGS_TYPE &amp;info, bool async)
 
 #define GDAL_ASYNCABLE_GLOBAL(method)                                                                                  \
   NAN_METHOD(method);                                                                                                  \
@@ -181,6 +204,15 @@ namespace node_gdal {
   static void method##_do(const Nan::FunctionCallbackInfo&lt;v8::Value&gt; &amp;info, bool async)
 
 #define GDAL_ISASYNC async
+
+#define THROW_OR_REJECT(msg)                                                                                           \
+  if (async) {                                                                                                         \
+    auto context = info.GetIsolate()-&gt;GetCurrentContext();                                                             \
+    auto resolver = v8::Promise::Resolver::New(context).ToLocalChecked();                                              \
+    resolver-&gt;Reject(context, Nan::Error(msg)).FromJust();                                                             \
+    info.GetReturnValue().Set(resolver-&gt;GetPromise());                                                                 \
+  } else                                                                                                               \
+    Nan::ThrowError(msg);
 
 // Handle locking (used only for sync methods)
 #define GDAL_LOCK_PARENT(p)                                                                                            \
@@ -215,19 +247,26 @@ class AsyncGuard {
       if (uids[0] == 0) return;
       lock = warning ? object_store.tryLockDataset(uids[0]) : object_store.lockDataset(uids[0]);
       if (lock == nullptr) {
-        auto startTime = clock();
+        auto start = std::chrono::high_resolution_clock::now();
         fprintf(stderr, eventLoopWarning);
         lock = object_store.lockDataset(uids[0]);
-        fprintf(stderr, &quot;%ld µs\n&quot;, clock() - startTime);
+        auto elapsed = std::chrono::high_resolution_clock::now() - start;
+        fprintf(
+          stderr,
+          &quot;%ld µs\n&quot;,
+          static_cast&lt;long&gt;(std::chrono::duration_cast&lt;std::chrono::microseconds&gt;(elapsed).count()));
       }
     } else {
       locks = warning ? make_shared&lt;vector&lt;AsyncLock&gt;&gt;(object_store.tryLockDatasets(uids))
                       : make_shared&lt;vector&lt;AsyncLock&gt;&gt;(object_store.lockDatasets(uids));
       if (locks-&gt;size() == 0) {
-        auto startTime = clock();
+        auto start = std::chrono::high_resolution_clock::now();
         fprintf(stderr, eventLoopWarning);
-        locks = make_shared&lt;vector&lt;AsyncLock&gt;&gt;(object_store.lockDatasets(uids));
-        fprintf(stderr, &quot;%ld µs\n&quot;, clock() - startTime);
+        auto elapsed = std::chrono::high_resolution_clock::now() - start;
+        fprintf(
+          stderr,
+          &quot;%ld µs\n&quot;,
+          static_cast&lt;long&gt;(std::chrono::duration_cast&lt;std::chrono::microseconds&gt;(elapsed).count()));
       }
     }
   }
@@ -300,8 +339,9 @@ class GDALExecutionProgress {
 int ProgressTrampoline(double dfComplete, const char *pszMessage, void *pProgressArg);
 
 //
-// This class handles async operations
-// It is meant to be used by GDALAsyncableJob defined below
+// This is the common class for handling async operations
+// It has two subclasses: GDALCallbackWorker and GDALPromiseWorker
+// They are meant to be used by GDALAsyncableJob defined below
 //
 // It takes the lambdas as input
 // GDALType is the type of the object that will be carried from
@@ -334,8 +374,7 @@ template &lt;class GDALType&gt; class GDALAsyncWorker : public GDALAsyncProgress
   ~GDALAsyncWorker();
 
   void Execute(const ExecutionProgress &amp;progress);
-  void HandleOKCallback();
-  void HandleErrorCallback();
+  Local&lt;Value&gt; ProduceRVal();
   void HandleProgressCallback(const GDALProgressInfo *data, size_t count);
 };
 
@@ -347,7 +386,7 @@ GDALAsyncWorker&lt;GDALType&gt;::GDALAsyncWorker(
   const GDALRValFunc &amp;rval,
   const std::map&lt;std::string, v8::Local&lt;v8::Object&gt;&gt; &amp;objects,
   const std::vector&lt;long&gt; &amp;ds_uids)
-  : Nan::AsyncProgressWorkerBase&lt;GDALProgressInfo&gt;(resultCallback, &quot;node-gdal:GDALAsyncWorker&quot;),
+  : GDALAsyncProgressWorker(resultCallback, &quot;node-gdal:GDALAsyncWorker&quot;),
     progressCallback(progressCallback),
     // These members are not references! These functions must be copied
     // as they will be executed in async context!
@@ -361,8 +400,8 @@ GDALAsyncWorker&lt;GDALType&gt;::GDALAsyncWorker(
     if (*i != 0) SaveToPersistent((&quot;ds&quot; + std::to_string(*i)).c_str(), object_store.get&lt;GDALDataset *&gt;(*i));
 }
 
-template &lt;class GDALType&gt; GDALAsyncWorker&lt;GDALType&gt;::~GDALAsyncWorker() {
-  if (progressCallback) delete progressCallback;
+template &lt;class GDALType&gt; Local&lt;Value&gt; GDALAsyncWorker&lt;GDALType&gt;::ProduceRVal() {
+  return rval(raw, [this](const char *key) { return this-&gt;GetFromPersistent(key); });
 }
 
 template &lt;class GDALType&gt; void GDALAsyncWorker&lt;GDALType&gt;::Execute(const ExecutionProgress &amp;progress) {
@@ -375,26 +414,13 @@ template &lt;class GDALType&gt; void GDALAsyncWorker&lt;GDALType&gt;::Execute(co
   } catch (const char *err) { this-&gt;SetErrorMessage(err); }
 }
 
-template &lt;class GDALType&gt; void GDALAsyncWorker&lt;GDALType&gt;::HandleOKCallback() {
-  // Back to the main thread with the JS world not running
-  Nan::HandleScope scope;
-
-  // rval is the user function that will create the returned value
-  // we give it a lambda that can access the persistent storage created for this operation
-  v8::Local&lt;v8::Value&gt; argv[] = {
-    Nan::Null(), rval(raw, [this](const char *key) { return this-&gt;GetFromPersistent(key); })};
-  callback-&gt;Call(2, argv, async_resource);
-}
-
-template &lt;class GDALType&gt; void GDALAsyncWorker&lt;GDALType&gt;::HandleErrorCallback() {
-  // Back to the main thread with the JS world not running
-  Nan::HandleScope scope;
-  v8::Local&lt;v8::Value&gt; argv[] = {Nan::Error(this-&gt;ErrorMessage())};
-  callback-&gt;Call(1, argv, async_resource);
+template &lt;class GDALType&gt; GDALAsyncWorker&lt;GDALType&gt;::~GDALAsyncWorker() {
+  if (progressCallback != nullptr) delete progressCallback;
 }
 
 template &lt;class GDALType&gt;
 void GDALAsyncWorker&lt;GDALType&gt;::HandleProgressCallback(const GDALProgressInfo *data, size_t count) {
+  if (progressCallback == nullptr) return;
   // Back to the main thread with the JS world not running
   Nan::HandleScope scope;
   // A mutex-protected pop in the calling function (in Node.js NAN) can sometimes produce a spurious call
@@ -405,8 +431,94 @@ void GDALAsyncWorker&lt;GDALType&gt;::HandleProgressCallback(const GDALProgressI
   const GDALProgressInfo *to_send = data + (count - 1);
   if (data != nullptr &amp;&amp; count &gt; 0) {
     v8::Local&lt;v8::Value&gt; argv[] = {Nan::New&lt;Number&gt;(to_send-&gt;complete), SafeString::New(to_send-&gt;message)};
-    progressCallback-&gt;Call(2, argv, async_resource);
+    progressCallback-&gt;Call(2, argv, this-&gt;async_resource);
   }
+}
+
+// This async worker calls a callback
+template &lt;class GDALType&gt; class GDALCallbackWorker : public GDALAsyncWorker&lt;GDALType&gt; {
+    public:
+  using GDALAsyncWorker&lt;GDALType&gt;::GDALAsyncWorker;
+  void HandleOKCallback();
+  void HandleErrorCallback();
+};
+
+template &lt;class GDALType&gt; void GDALCallbackWorker&lt;GDALType&gt;::HandleOKCallback() {
+  // Back to the main thread with the JS world not running
+  Nan::HandleScope scope;
+
+  // rval is the user function that will create the returned value
+  // we give it a lambda that can access the persistent storage created for this operation
+  // It uses our HandleScope so it can return a Local without escaping
+  v8::Local&lt;v8::Value&gt; argv[] = {Nan::Null(), this-&gt;ProduceRVal()};
+  this-&gt;callback-&gt;Call(2, argv, this-&gt;async_resource);
+}
+
+template &lt;class GDALType&gt; void GDALCallbackWorker&lt;GDALType&gt;::HandleErrorCallback() {
+  // Back to the main thread with the JS world not running
+  Nan::HandleScope scope;
+  v8::Local&lt;v8::Value&gt; argv[] = {Nan::Error(this-&gt;ErrorMessage())};
+  this-&gt;callback-&gt;Call(1, argv, this-&gt;async_resource);
+}
+
+// This async worker returns a Promise
+template &lt;class GDALType&gt; class GDALPromiseWorker : public GDALAsyncWorker&lt;GDALType&gt; {
+    public:
+  typedef typename GDALAsyncWorker&lt;GDALType&gt;::GDALMainFunc GDALMainFunc;
+  typedef typename GDALAsyncWorker&lt;GDALType&gt;::GDALRValFunc GDALRValFunc;
+
+    private:
+  Nan::Persistent&lt;v8::Promise::Resolver&gt; *resolver_handle;
+  Nan::Persistent&lt;v8::Context&gt; *context_handle;
+
+    public:
+  explicit GDALPromiseWorker(
+    const Nan::NAN_GETTER_ARGS_TYPE &amp;info,
+    const GDALMainFunc &amp;doit,
+    const GDALRValFunc &amp;rval,
+    const std::map&lt;std::string, v8::Local&lt;v8::Object&gt;&gt; &amp;objects,
+    const std::vector&lt;long&gt; &amp;ds_uids);
+
+  ~GDALPromiseWorker();
+
+  void HandleOKCallback();
+  void HandleErrorCallback();
+  inline Local&lt;Value&gt; Promise() {
+    return Nan::New(*resolver_handle)-&gt;GetPromise();
+  };
+};
+
+template &lt;class GDALType&gt;
+GDALPromiseWorker&lt;GDALType&gt;::GDALPromiseWorker(
+  const Nan::NAN_GETTER_ARGS_TYPE &amp;info,
+  const GDALMainFunc &amp;doit,
+  const GDALRValFunc &amp;rval,
+  const std::map&lt;std::string, v8::Local&lt;v8::Object&gt;&gt; &amp;objects,
+  const std::vector&lt;long&gt; &amp;ds_uids)
+  : GDALAsyncWorker&lt;GDALType&gt;(nullptr, nullptr, doit, rval, objects, ds_uids) {
+  auto context = info.GetIsolate()-&gt;GetCurrentContext();
+  context_handle = new Nan::Persistent&lt;v8::Context&gt;(context);
+  auto resolver = v8::Promise::Resolver::New(context).ToLocalChecked();
+  resolver_handle = new Nan::Persistent&lt;v8::Promise::Resolver&gt;(resolver);
+}
+
+template &lt;class GDALType&gt; void GDALPromiseWorker&lt;GDALType&gt;::HandleOKCallback() {
+  Nan::HandleScope scope;
+  v8::Local&lt;v8::Context&gt; context = Nan::New(*context_handle);
+  v8::Local&lt;v8::Promise::Resolver&gt; resolver = Nan::New(*resolver_handle);
+  resolver-&gt;Resolve(context, this-&gt;ProduceRVal()).FromJust();
+}
+
+template &lt;class GDALType&gt; void GDALPromiseWorker&lt;GDALType&gt;::HandleErrorCallback() {
+  Nan::HandleScope scope;
+  v8::Local&lt;v8::Context&gt; context = Nan::New(*context_handle);
+  v8::Local&lt;v8::Promise::Resolver&gt; resolver = Nan::New(*resolver_handle);
+  resolver-&gt;Reject(context, Nan::Error(this-&gt;ErrorMessage())).FromJust();
+}
+
+template &lt;class GDALType&gt; GDALPromiseWorker&lt;GDALType&gt;::~GDALPromiseWorker() {
+  delete context_handle;
+  delete resolver_handle;
 }
 
 // This the basic unit of the GDALAsyncable framework
@@ -468,7 +580,25 @@ template &lt;class GDALType&gt; class GDALAsyncableJob {
       if (!info.This().IsEmpty() &amp;&amp; info.This()-&gt;IsObject()) persist(&quot;this&quot;, info.This());
       Nan::Callback *callback;
       NODE_ARG_CB(cb_arg, &quot;callback&quot;, callback);
-      Nan::AsyncQueueWorker(new GDALAsyncWorker&lt;GDALType&gt;(callback, progress, main, rval, persistent, ds_uids));
+      Nan::AsyncQueueWorker(new GDALCallbackWorker&lt;GDALType&gt;(callback, progress, main, rval, persistent, ds_uids));
+      return;
+    }
+    try {
+      GDALExecutionProgress executionProgress(new GDALSyncExecutionProgress(progress));
+      AsyncGuard lock(ds_uids, eventLoopWarn);
+      GDALType obj = main(executionProgress);
+      // rval is the user function that will create the returned value
+      // we give it a lambda that can access the persistent storage created for this operation
+      info.GetReturnValue().Set(rval(obj, [this](const char *key) { return this-&gt;persistent[key]; }));
+    } catch (const char *err) { Nan::ThrowError(err); }
+  }
+
+  void run(const Nan::NAN_GETTER_ARGS_TYPE &amp;info, bool async) {
+    if (async) {
+      if (!info.This().IsEmpty() &amp;&amp; info.This()-&gt;IsObject()) persist(&quot;this&quot;, info.This());
+      auto worker = new GDALPromiseWorker&lt;GDALType&gt;(info, main, rval, persistent, ds_uids);
+      info.GetReturnValue().Set(worker-&gt;Promise());
+      Nan::AsyncQueueWorker(worker);
       return;
     }
     try {
