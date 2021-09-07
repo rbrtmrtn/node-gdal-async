@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.2</b>
+                    API Docs for Version: <b>3.3.3</b>
                 </p>
             </li>
         </div>
@@ -149,7 +149,9 @@ const path = require(&#x27;path&#x27;)
 const fs = require(&#x27;fs&#x27;)
 const binary = require(&#x27;@mapbox/node-pre-gyp&#x27;)
 
-const binding_path = binary.find(path.join(__dirname, &#x27;../package.json&#x27;))
+const binding_path = binary.find(path.resolve(path.join(__dirname, &#x27;../package.json&#x27;)))
+const gdal = require(binding_path)
+
 const data_path = path.resolve(__dirname, &#x27;../deps/libgdal/gdal/data&#x27;)
 const proj_path = path.resolve(__dirname, &#x27;../deps/libproj/proj/data&#x27;)
 
@@ -166,7 +168,7 @@ if (proj_lib_env_undefined &amp;&amp; !fs.existsSync(proj_path)) {
   )
 }
 
-const gdal = module.exports = require(binding_path)
+module.exports = gdal
 
 if (proj_lib_env_undefined &amp;&amp; gdal.bundled) {
   gdal.setPROJSearchPath(proj_path)
