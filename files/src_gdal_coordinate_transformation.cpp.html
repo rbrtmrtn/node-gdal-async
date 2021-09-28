@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.3</b>
+                    API Docs for Version: <b>3.3.4</b>
                 </p>
             </li>
         </div>
@@ -304,12 +304,23 @@ NAN_METHOD(CoordinateTransformation::toString) {
  * @example
  * &#x60;&#x60;&#x60;
  * pt = transform.transformPoint(0, 0, 0);
- * pt = transform.transformPoint({x: 0, y: 0, z: 0});&#x60;&#x60;&#x60;
  *
  * @method transformPoint
  * @param {number} x
  * @param {number} y
  * @param {number} [z]
+ * @return {xyz} A regular object containing &#x60;x&#x60;, &#x60;y&#x60;, &#x60;z&#x60; properties.
+ */
+
+/**
+ * Transform point from source to destination space.
+ *
+ * @example
+ * &#x60;&#x60;&#x60;
+ * pt = transform.transformPoint({x: 0, y: 0, z: 0});&#x60;&#x60;&#x60;
+ *
+ * @method transformPoint
+ * @param {xyz} point
  * @return {xyz} A regular object containing &#x60;x&#x60;, &#x60;y&#x60;, &#x60;z&#x60; properties.
  */
 NAN_METHOD(CoordinateTransformation::transformPoint) {

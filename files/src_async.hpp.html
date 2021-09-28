@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.3</b>
+                    API Docs for Version: <b>3.3.4</b>
                 </p>
             </li>
         </div>
@@ -423,14 +423,16 @@ void GDALAsyncWorker&lt;GDALType&gt;::HandleProgressCallback(const GDALProgressI
   // Back to the main thread with the JS world not running
   Nan::HandleScope scope;
   // A mutex-protected pop in the calling function (in Node.js NAN) can sometimes produce a spurious call
-  // with no data, handle gracefully this case -&gt; no need to call JS if there is not data to deliver
+  // with no data, handle gracefully this case -&gt; no need to call JS if there is no data to deliver
   if (data == nullptr || count == 0) return;
   // Receiving more than one callback invocation at the same time is also possible
   // Send only the last one to JS
   const GDALProgressInfo *to_send = data + (count - 1);
   if (data != nullptr &amp;&amp; count &gt; 0) {
     v8::Local&lt;v8::Value&gt; argv[] = {Nan::New&lt;Number&gt;(to_send-&gt;complete), SafeString::New(to_send-&gt;message)};
+    Nan::TryCatch try_catch;
     progressCallback-&gt;Call(2, argv, this-&gt;async_resource);
+    if (try_catch.HasCaught()) this-&gt;SetErrorMessage(&quot;async progress callback exception&quot;);
   }
 }
 

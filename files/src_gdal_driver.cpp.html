@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.3</b>
+                    API Docs for Version: <b>3.3.4</b>
                 </p>
             </li>
         </div>
@@ -381,9 +381,10 @@ GDAL_ASYNCABLE_DEFINE(Driver::create) {
  * @method createCopy
  * @param {string} filename
  * @param {gdal.Dataset} src
- * @param {boolean} [strict=false]
  * @param {string[]|object} [options=null] An array or object containing
  * driver-specific dataset creation options
+ * @param {boolean} [strict=false] strict mode
+ * @param {ProgressCb} [progress_cb=undefined] {{{progress_cb}}}
  * @return {gdal.Dataset}
  */
 
@@ -394,9 +395,10 @@ GDAL_ASYNCABLE_DEFINE(Driver::create) {
  * @method createCopyAsync
  * @param {string} filename
  * @param {gdal.Dataset} src
- * @param {boolean} [strict=false]
  * @param {string[]|object} [options=null] An array or object containing
  * driver-specific dataset creation options
+ * @param {boolean} [strict=false] strict mode
+ * @param {ProgressCb} [progress_cb=undefined] {{{progress_cb}}}
  * @param {callback&lt;gdal.Dataset&gt;} [callback=undefined] {{{cb}}}
  * @return {Promise&lt;gdal.Dataset&gt;}
  */
@@ -411,7 +413,6 @@ GDAL_ASYNCABLE_DEFINE(Driver::createCopy) {
 
   std::string filename;
   Dataset *src_dataset;
-  unsigned int strict = 0;
   StringList *options;
 
   NODE_ARG_STR(0, &quot;filename&quot;, filename);
@@ -433,19 +434,28 @@ GDAL_ASYNCABLE_DEFINE(Driver::createCopy) {
     return; // error parsing string list
   }
 
+  bool strict = false;
+  NODE_ARG_BOOL_OPT(3, &quot;strict&quot;, strict);
+
+  Nan::Callback *progress_cb = nullptr;
+  NODE_ARG_CB_OPT(4, &quot;progress_cb&quot;, progress_cb);
+
   GDALDriver *raw = driver-&gt;getGDALDriver();
   GDALDataset *raw_ds = src_dataset-&gt;get();
   GDALAsyncableJob&lt;GDALDataset *&gt; job(src_dataset-&gt;uid);
   job.rval = DatasetRval;
   job.persist(driver-&gt;handle());
-  job.main = [raw, filename, raw_ds, strict, options](const GDALExecutionProgress &amp;) {
+  job.progress = progress_cb;
+
+  job.main = [raw, filename, raw_ds, strict, options, progress_cb](const GDALExecutionProgress &amp;progress) {
     std::unique_ptr&lt;StringList&gt; options_ptr(options);
     CPLErrorReset();
-    GDALDataset *ds = raw-&gt;CreateCopy(filename.c_str(), raw_ds, strict, options-&gt;get(), NULL, NULL);
-    if (!ds) CPLGetLastErrorMsg();
+    GDALDataset *ds = raw-&gt;CreateCopy(
+      filename.c_str(), raw_ds, strict, options-&gt;get(), progress_cb ? ProgressTrampoline : nullptr, (void *)&amp;progress);
+    if (!ds) throw CPLGetLastErrorMsg();
     return ds;
   };
-  job.run(info, async, 3);
+  job.run(info, async, 5);
 }
 
 /**

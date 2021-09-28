@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.3</b>
+                    API Docs for Version: <b>3.3.4</b>
                 </p>
             </li>
         </div>
@@ -162,6 +162,7 @@ Operations on in-memory /vsimem/ files</a></li>
 			<strong>Methods</strong>
 			<ul>
 				<li><a href="#method-transformPoint"><span class="im">transformPoint</span>(<span class="ia">x</span><span class="ia">y</span><span class="ia">z</span>)</a></li>
+				<li><a href="#method-transformPoint"><span class="im">transformPoint</span>(<span class="ia">point</span>)</a></li>
 			</ul>
 		</li>
 
@@ -322,8 +323,74 @@ conversion will represent a conversion to pixel coordinates.</p>
 			<h4>Example:</h4>
 
 			<div class="example-content">
-				<pre class="code prettyprint"><code>pt = transform.transformPoint(0, 0, 0);
-pt = transform.transformPoint({x: 0, y: 0, z: 0});<code>&#x60;</code></code></pre>
+				<pre class="code prettyprint"><code>pt = transform.transformPoint(0, 0, 0);</code></pre>
+
+			</div>
+		</div>
+</div>
+<div id="method-transformPoint" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>transformPoint</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>point</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Xyz</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_coordinate_transformation.cpp.html#l168"><code>src&#x2F;gdal_coordinate_transformation.cpp:168</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Transform point from source to destination space.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">point</code>
+						<span class="type">Xyz</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Xyz</span>:
+					<p>A regular object containing <code>x</code>, <code>y</code>, <code>z</code> properties.</p>
+
+			</div>
+		</div>
+
+		<div class="example">
+			<h4>Example:</h4>
+
+			<div class="example-content">
+				<pre class="code prettyprint"><code>pt = transform.transformPoint({x: 0, y: 0, z: 0});<code>&#x60;</code></code></pre>
 
 			</div>
 		</div>
