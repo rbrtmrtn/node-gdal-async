@@ -4,7 +4,7 @@
         "description": "Node.js bindings for GDAL (Geospatial Data Abstraction Library) [Fork]",
         "url": "https://github.com/mmomtchev/node-gdal-async",
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/GDALLogoColor.svg/200px-GDALLogoColor.svg.png",
-        "version": "3.4.0-alpha.0"
+        "version": "3.4.0-alpha.1"
     },
     "files": {
         "lib/envelope.js": {
@@ -1070,7 +1070,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/gdal_dataset.cpp",
-            "line": 72,
+            "line": 74,
             "description": "A set of associated raster bands and/or vector layers, usually from one file.\n\n```\n// raster dataset:\ndataset = gdal.open('file.tif');\nbands = dataset.bands;\n\n// vector dataset:\ndataset = gdal.open('file.shp');\nlayers = dataset.layers;```"
         },
         "gdal.Dimension": {
@@ -1210,7 +1210,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/gdal_rasterband.cpp",
-            "line": 97,
+            "line": 99,
             "description": "A single raster band (or channel)."
         },
         "gdal.SpatialReference": {
@@ -3348,7 +3348,7 @@
                 {
                     "name": "options",
                     "description": "Creation options",
-                    "type": "Object",
+                    "type": "Object|string[]",
                     "optional": true
                 }
             ],
@@ -3376,7 +3376,7 @@
                 {
                     "name": "options",
                     "description": "Creation options",
-                    "type": "Object",
+                    "type": "Object|string[]",
                     "optional": true
                 },
                 {
@@ -8874,7 +8874,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 157,
+            "line": 159,
             "description": "Fetch metadata.",
             "itemtype": "method",
             "name": "getMetadata",
@@ -8894,7 +8894,91 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 180,
+            "line": 167,
+            "description": "Fetch metadata.\n{{{async}}}",
+            "itemtype": "method",
+            "name": "getMetadataAsync",
+            "params": [
+                {
+                    "name": "domain",
+                    "description": "",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "callback",
+                    "description": "{{{cb}}}",
+                    "type": "Callback<void>",
+                    "optional": true,
+                    "optdefault": "undefined"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Promise<any>"
+            },
+            "class": "gdal.Dataset"
+        },
+        {
+            "file": "src/gdal_dataset.cpp",
+            "line": 192,
+            "description": "Set metadata. Can return a warning (false) for formats not supporting persistent metadata.",
+            "itemtype": "method",
+            "name": "setMetadata",
+            "params": [
+                {
+                    "name": "metadata",
+                    "description": "",
+                    "type": "Object|string[]"
+                },
+                {
+                    "name": "domain",
+                    "description": "",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "gdal.Dataset"
+        },
+        {
+            "file": "src/gdal_dataset.cpp",
+            "line": 201,
+            "description": "Set metadata. Can return a warning (false) for formats not supporting persistent metadata.\n{{{async}}}",
+            "itemtype": "method",
+            "name": "setMetadataAsync",
+            "params": [
+                {
+                    "name": "metadata",
+                    "description": "",
+                    "type": "Object|string[]"
+                },
+                {
+                    "name": "domain",
+                    "description": "",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "callback",
+                    "description": "{{{cb}}}",
+                    "type": "Callback<void>",
+                    "optional": true,
+                    "optdefault": "undefined"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Promise<boolean>"
+            },
+            "class": "gdal.Dataset"
+        },
+        {
+            "file": "src/gdal_dataset.cpp",
+            "line": 235,
             "description": "Determines if the dataset supports the indicated operation.",
             "itemtype": "method",
             "name": "testCapability",
@@ -8913,7 +8997,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 206,
+            "line": 261,
             "description": "Get output projection for GCPs.",
             "itemtype": "method",
             "name": "getGCPProjection",
@@ -8925,7 +9009,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 226,
+            "line": 281,
             "description": "Closes the dataset to further operations. It releases all memory and ressources held\nby the dataset.\nThis is normally an instantenous atomic operation that won't block the event loop\nexcept if there is an operation running on this dataset in asynchronous context - in this case\nthis call will block until that operation finishes.\n\nIf this could potentially be the case and blocking the event loop is not possible (server code),\nthen the best option is to simply dereference it (ds = null) and leave\nthe garbage collector to expire it.\n\nImplementing an asynchronous delete is difficult since all V8 object creation/deletion\nmust take place on the main thread.\n\nflush[Async]() ensures that, when writing, all data has been written.",
             "itemtype": "method",
             "name": "close",
@@ -8933,7 +9017,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 257,
+            "line": 312,
             "description": "Flushes all changes to disk.",
             "throws": {
                 "description": "Error"
@@ -8944,7 +9028,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 264,
+            "line": 319,
             "description": "Flushes all changes to disk.\n{{{async}}}",
             "itemtype": "method",
             "name": "flushAsync",
@@ -8968,7 +9052,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 288,
+            "line": 343,
             "description": "Execute an SQL statement against the data store.",
             "throws": {
                 "description": "Error"
@@ -9004,7 +9088,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 304,
+            "line": 359,
             "description": "Execute an SQL statement against the data store.\n{{{async}}}",
             "throws": {
                 "description": "Error"
@@ -9047,7 +9131,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 353,
+            "line": 408,
             "description": "Fetch files forming dataset.\n\nReturns a list of files believed to be part of this dataset. If it returns an\nempty list of files it means there is believed to be no local file system\nfiles associated with the dataset (for instance a virtual dataset).\n\nReturns an empty array for vector datasets if GDAL version is below 2.0",
             "itemtype": "method",
             "name": "getFileList",
@@ -9059,7 +9143,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 400,
+            "line": 455,
             "description": "Fetches GCPs.",
             "itemtype": "method",
             "name": "getGCPs",
@@ -9071,7 +9155,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 448,
+            "line": 503,
             "description": "Sets GCPs.",
             "throws": {
                 "description": "Error"
@@ -9095,7 +9179,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 513,
+            "line": 568,
             "description": "Builds dataset overviews.",
             "throws": {
                 "description": "Error"
@@ -9138,7 +9222,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 526,
+            "line": 581,
             "description": "Builds dataset overviews.\n{{{async}}}",
             "throws": {
                 "description": "Error"
@@ -9192,7 +9276,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 615,
+            "line": 670,
             "readonly": "",
             "itemtype": "attribute",
             "name": "description",
@@ -9201,7 +9285,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 638,
+            "line": 693,
             "description": "Raster dimensions. An object containing `x` and `y` properties.",
             "readonly": "",
             "itemtype": "attribute",
@@ -9211,7 +9295,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 646,
+            "line": 701,
             "description": "Raster dimensions. An object containing `x` and `y` properties.\n{{async_getter}}",
             "readonly": "",
             "itemtype": "attribute",
@@ -9221,7 +9305,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 697,
+            "line": 752,
             "description": "Spatial reference associated with raster dataset",
             "throws": {
                 "description": "Error"
@@ -9233,7 +9317,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 705,
+            "line": 760,
             "description": "Spatial reference associated with raster dataset\n{{async_getter}}",
             "throws": {
                 "description": "Error"
@@ -9245,7 +9329,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 749,
+            "line": 804,
             "description": "An affine transform which maps pixel/line coordinates into georeferenced\nspace using the following relationship:",
             "example": [
                 "\n```\nvar GT = dataset.geoTransform;\nvar Xgeo = GT[0] + Xpixel*GT[1] + Yline*GT[2];\nvar Ygeo = GT[3] + Xpixel*GT[4] + Yline*GT[5];```"
@@ -9257,7 +9341,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 763,
+            "line": 818,
             "description": "An affine transform which maps pixel/line coordinates into georeferenced\nspace using the following relationship:",
             "example": [
                 "\n```\nvar GT = dataset.geoTransform;\nvar Xgeo = GT[0] + Xpixel*GT[1] + Yline*GT[2];\nvar Ygeo = GT[3] + Xpixel*GT[4] + Yline*GT[5];```\n\n{{async_getter}}"
@@ -9269,7 +9353,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 814,
+            "line": 869,
             "readonly": "",
             "itemtype": "attribute",
             "name": "driver",
@@ -9278,7 +9362,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 905,
+            "line": 960,
             "readonly": "",
             "itemtype": "attribute",
             "name": "bands",
@@ -9287,7 +9371,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 915,
+            "line": 970,
             "readonly": "",
             "itemtype": "attribute",
             "name": "layers",
@@ -9296,7 +9380,7 @@
         },
         {
             "file": "src/gdal_dataset.cpp",
-            "line": 925,
+            "line": 980,
             "readonly": "",
             "itemtype": "attribute",
             "name": "root",
@@ -9370,7 +9454,7 @@
             "line": 147,
             "description": "Create a new dataset with this driver.",
             "throws": {
-                "description": "Error"
+                "description": ""
             },
             "itemtype": "method",
             "name": "create",
@@ -9423,10 +9507,10 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 166,
+            "line": 167,
             "description": "Asynchronously create a new dataset with this driver.",
             "throws": {
-                "description": "Error"
+                "description": ""
             },
             "itemtype": "method",
             "name": "createAsync",
@@ -9486,7 +9570,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 230,
+            "line": 233,
             "description": "Create a copy of a dataset.",
             "throws": {
                 "description": "Error"
@@ -9534,7 +9618,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 244,
+            "line": 247,
             "description": "Asynchronously create a copy of a dataset.",
             "throws": {
                 "description": "Error"
@@ -9589,7 +9673,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 314,
+            "line": 317,
             "description": "Copy the files of a dataset.",
             "throws": {
                 "description": "Error"
@@ -9612,7 +9696,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 340,
+            "line": 343,
             "description": "Renames the dataset.",
             "throws": {
                 "description": "Error"
@@ -9635,7 +9719,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 366,
+            "line": 369,
             "description": "Returns metadata about the driver.",
             "throws": {
                 "description": "Error"
@@ -9658,7 +9742,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 388,
+            "line": 392,
             "description": "Opens a dataset.",
             "throws": {
                 "description": "Error"
@@ -9687,7 +9771,7 @@
         },
         {
             "file": "src/gdal_driver.cpp",
-            "line": 399,
+            "line": 403,
             "description": "Opens a dataset.",
             "throws": {
                 "description": "Error"
@@ -10548,7 +10632,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 171,
+            "line": 173,
             "description": "Saves changes to disk.",
             "itemtype": "method",
             "name": "flush",
@@ -10556,7 +10640,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 176,
+            "line": 178,
             "description": "Saves changes to disk.\n{{{async}}}",
             "itemtype": "method",
             "name": "flushAsync",
@@ -10577,7 +10661,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 187,
+            "line": 189,
             "description": "Return the status flags of the mask band associated with the band.\n\nThe result will be a bitwise OR-ed set of status flags with the following\navailable definitions that may be extended in the future:\n\n  - `GMF_ALL_VALID` (`0x01`): There are no invalid pixels, all mask values\nwill be 255. When used this will normally be the only flag set.\n  - `GMF_PER_DATASET` (`0x02`): The mask band is shared between all bands on\nthe dataset.\n  - `GMF_ALPHA` (`0x04`): The mask band is actually an alpha band and may\nhave values other than 0 and 255.\n  - `GMF_NODATA` (`0x08`): Indicates the mask is actually being generated\nfrom nodata values. (mutually exclusive of `GMF_ALPHA`)",
             "itemtype": "method",
             "name": "getMaskFlags",
@@ -10589,7 +10673,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 209,
+            "line": 211,
             "description": "Adds a mask band to the current band.",
             "throws": {
                 "description": "Error"
@@ -10607,7 +10691,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 220,
+            "line": 222,
             "description": "Return the mask band associated with the band.",
             "itemtype": "method",
             "name": "getMaskBand",
@@ -10619,7 +10703,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 240,
+            "line": 242,
             "description": "Fill this band with a constant value.",
             "throws": {
                 "description": "Error"
@@ -10643,7 +10727,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 250,
+            "line": 252,
             "description": "Fill this band with a constant value.",
             "throws": {
                 "description": "Error"
@@ -10678,7 +10762,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 301,
+            "line": 303,
             "description": "Return a view of this raster band as a 2D multidimensional GDALMDArray.\n\nThe band must be linked to a GDALDataset.\n\nIf the dataset has a geotransform attached, the X and Y dimensions of the returned array will have an associated indexing variable.\n\nRequires GDAL>=3.3 with MDArray support, won't be defined otherwise",
             "throws": {
                 "description": "Error"
@@ -10693,7 +10777,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 331,
+            "line": 333,
             "description": "Fetch image statistics.\n\nReturns the minimum, maximum, mean and standard deviation of all pixel values\nin this band. If approximate statistics are sufficient, the\n`allow_approximation` argument can be set to `true` in which case overviews,\nor a subset of image tiles may be used in computing the statistics.",
             "throws": {
                 "description": "Error"
@@ -10720,13 +10804,13 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 379,
+            "line": 381,
             "typedef": "stats { min: number, max: number, mean: number, std_dev: number }",
             "class": "gdal.RasterBand"
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 383,
+            "line": 385,
             "description": "Computes image statistics.\n\nReturns the minimum, maximum, mean and standard deviation of all pixel values\nin this band. If approximate statistics are sufficient, the\n`allow_approximation` argument can be set to `true` in which case overviews,\nor a subset of image tiles may be used in computing the statistics.",
             "throws": {
                 "description": "Error"
@@ -10748,7 +10832,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 399,
+            "line": 401,
             "description": "Computes image statistics.\n{{async}}\n\nReturns the minimum, maximum, mean and standard deviation of all pixel values\nin this band. If approximate statistics are sufficient, the\n`allow_approximation` argument can be set to `true` in which case overviews,\nor a subset of image tiles may be used in computing the statistics.",
             "throws": {
                 "description": "Error"
@@ -10777,7 +10861,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 459,
+            "line": 461,
             "description": "Set statistics on the band. This method can be used to store\nmin/max/mean/standard deviation statistics.",
             "throws": {
                 "description": "Error"
@@ -10810,7 +10894,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 489,
+            "line": 491,
             "description": "Returns band metadata",
             "itemtype": "method",
             "name": "getMetadata",
@@ -10830,7 +10914,91 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 508,
+            "line": 499,
+            "description": "Returns band metadata",
+            "itemtype": "method",
+            "name": "getMetadataAsync",
+            "params": [
+                {
+                    "name": "domain",
+                    "description": "",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "callback",
+                    "description": "{{{cb}}}",
+                    "type": "Callback<void>",
+                    "optional": true,
+                    "optdefault": "undefined"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Promise<any>"
+            },
+            "class": "gdal.RasterBand"
+        },
+        {
+            "file": "src/gdal_rasterband.cpp",
+            "line": 523,
+            "description": "Set metadata. Can return a warning (false) for formats not supporting persistent metadata.",
+            "itemtype": "method",
+            "name": "setMetadata",
+            "params": [
+                {
+                    "name": "metadata",
+                    "description": "",
+                    "type": "Object|string[]"
+                },
+                {
+                    "name": "domain",
+                    "description": "",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "gdal.RasterBand"
+        },
+        {
+            "file": "src/gdal_rasterband.cpp",
+            "line": 532,
+            "description": "Set metadata. Can return a warning (false) for formats not supporting persistent metadata.\n{{{async}}}",
+            "itemtype": "method",
+            "name": "setMetadataAsync",
+            "params": [
+                {
+                    "name": "metadata",
+                    "description": "",
+                    "type": "Object|string[]"
+                },
+                {
+                    "name": "domain",
+                    "description": "",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "callback",
+                    "description": "{{{cb}}}",
+                    "type": "Callback<void>",
+                    "optional": true,
+                    "optdefault": "undefined"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Promise<boolean>"
+            },
+            "class": "gdal.RasterBand"
+        },
+        {
+            "file": "src/gdal_rasterband.cpp",
+            "line": 566,
             "readonly": "",
             "itemtype": "attribute",
             "name": "ds",
@@ -10839,7 +11007,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 518,
+            "line": 576,
             "readonly": "",
             "itemtype": "attribute",
             "name": "overviews",
@@ -10848,7 +11016,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 528,
+            "line": 586,
             "readonly": "",
             "itemtype": "attribute",
             "name": "pixels",
@@ -10857,7 +11025,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 538,
+            "line": 596,
             "readonly": "",
             "itemtype": "attribute",
             "name": "id",
@@ -10866,7 +11034,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 558,
+            "line": 616,
             "description": "Name of of band.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10876,7 +11044,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 574,
+            "line": 632,
             "description": "Size object containing `\"x\"` and `\"y\"` properties.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10886,7 +11054,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 593,
+            "line": 651,
             "description": "Size object containing `\"x\"` and `\"y\"` properties.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10896,7 +11064,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 613,
+            "line": 671,
             "description": "Minimum value for this band.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10906,7 +11074,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 629,
+            "line": 687,
             "description": "Maximum value for this band.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10916,7 +11084,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 645,
+            "line": 703,
             "description": "Raster value offset.",
             "itemtype": "attribute",
             "name": "offset",
@@ -10925,7 +11093,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 660,
+            "line": 718,
             "description": "Raster value scale.",
             "itemtype": "attribute",
             "name": "scale",
@@ -10934,7 +11102,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 675,
+            "line": 733,
             "description": "No data value for this band.",
             "itemtype": "attribute",
             "name": "noDataValue",
@@ -10943,7 +11111,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 697,
+            "line": 755,
             "description": "Raster unit type (name for the units of this raster's values).\nFor instance, it might be `\"m\"` for an elevation model in meters,\nor `\"ft\"` for feet. If no units are available, a value of `\"\"`\nwill be returned.",
             "itemtype": "attribute",
             "name": "unitType",
@@ -10952,7 +11120,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 714,
+            "line": 772,
             "description": "Pixel data type ({{#crossLink \"Constants (GDT)\"}}see GDT\n constants{{/crossLink}}) used for this band.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10962,7 +11130,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 733,
+            "line": 791,
             "description": "Indicates if the band is read-only.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10972,7 +11140,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 748,
+            "line": 806,
             "description": "An indicator if the underlying datastore can compute arbitrary overviews\nefficiently, such as is the case with OGDI over a network. Datastores with\narbitrary overviews don't generally have any fixed overviews, but GDAL's\n`RasterIO()` method can be used in downsampling mode to get overview\ndata efficiently.",
             "readonly": "",
             "itemtype": "attribute",
@@ -10982,7 +11150,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 767,
+            "line": 825,
             "description": "List of list of category names for this raster.",
             "itemtype": "attribute",
             "name": "categoryNames",
@@ -10991,7 +11159,7 @@
         },
         {
             "file": "src/gdal_rasterband.cpp",
-            "line": 792,
+            "line": 850,
             "description": "Color interpretation mode ({{#crossLink \"Constants (GCI)\"}}see GCI\nconstants{{/crossLink}}).",
             "itemtype": "attribute",
             "name": "colorInterpretation",
@@ -11634,7 +11802,7 @@
                 {
                     "name": "input",
                     "description": "",
-                    "type": "String[]"
+                    "type": "Object|string[]"
                 }
             ],
             "return": {
@@ -13532,7 +13700,7 @@
         },
         {
             "message": "unknown tag: typedef",
-            "line": " src/gdal_rasterband.cpp:379"
+            "line": " src/gdal_rasterband.cpp:381"
         },
         {
             "message": "unknown tag: typedef",
@@ -13604,7 +13772,7 @@
         },
         {
             "message": "Missing item type",
-            "line": " src/gdal_rasterband.cpp:379"
+            "line": " src/gdal_rasterband.cpp:381"
         },
         {
             "message": "Missing item type",

@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.4.0-alpha.0</b>
+                    API Docs for Version: <b>3.4.0-alpha.1</b>
                 </p>
             </li>
         </div>
@@ -156,6 +156,7 @@ Operations on in-memory /vsimem/ files</a></li>
 #include &quot;gdal_majorobject.hpp&quot;
 #include &quot;gdal_rasterband.hpp&quot;
 #include &quot;gdal_spatial_reference.hpp&quot;
+#include &quot;utils/string_list.hpp&quot;
 
 namespace node_gdal {
 
@@ -175,7 +176,8 @@ void Dataset::Initialize(Local&lt;Object&gt; target) {
   Nan::SetPrototypeMethod(lcons, &quot;getFileList&quot;, getFileList);
   Nan__SetPrototypeAsyncableMethod(lcons, &quot;flush&quot;, flush);
   Nan::SetPrototypeMethod(lcons, &quot;close&quot;, close);
-  Nan::SetPrototypeMethod(lcons, &quot;getMetadata&quot;, getMetadata);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;getMetadata&quot;, getMetadata);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;setMetadata&quot;, setMetadata);
   Nan::SetPrototypeMethod(lcons, &quot;testCapability&quot;, testCapability);
   Nan__SetPrototypeAsyncableMethod(lcons, &quot;executeSQL&quot;, executeSQL);
   Nan__SetPrototypeAsyncableMethod(lcons, &quot;buildOverviews&quot;, buildOverviews);
@@ -201,14 +203,14 @@ Dataset::Dataset(GDALDataset *ds) : Nan::ObjectWrap(), uid(0), parent_uid(0), th
 
 Dataset::~Dataset() {
   // Destroy at garbage collection time if not already explicitly destroyed
-  dispose();
+  dispose(false);
 }
 
-void Dataset::dispose() {
+void Dataset::dispose(bool manual) {
   if (this_dataset) {
     LOG(&quot;Disposing Dataset [%p]&quot;, this_dataset);
 
-    object_store.dispose(uid);
+    object_store.dispose(uid, manual);
 
     LOG(&quot;Disposed Dataset [%p]&quot;, this_dataset);
 
@@ -308,20 +310,73 @@ NAN_METHOD(Dataset::toString) {
  * @param {string} [domain]
  * @return {any}
  */
-NAN_METHOD(Dataset::getMetadata) {
-  Nan::HandleScope scope;
-  Dataset *ds = Nan::ObjectWrap::Unwrap&lt;Dataset&gt;(info.This());
 
-  if (!ds-&gt;isAlive()) {
-    Nan::ThrowError(&quot;Dataset object has already been destroyed&quot;);
+/**
+ * Fetch metadata.
+ * {{{async}}}
+ *
+ * @method getMetadataAsync
+ * @param {string} [domain]
+ * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;any&gt;}
+ */
+GDAL_ASYNCABLE_DEFINE(Dataset::getMetadata) {
+  Nan::HandleScope scope;
+  NODE_UNWRAP_CHECK(Dataset, info.This(), ds);
+  GDAL_RAW_CHECK(GDALDataset *, ds, raw);
+
+  std::string domain(&quot;&quot;);
+  NODE_ARG_OPT_STR(0, &quot;domain&quot;, domain);
+
+  GDALAsyncableJob&lt;char **&gt; job(ds-&gt;uid);
+  job.main = [raw, domain](const GDALExecutionProgress &amp;) {
+    return raw-&gt;GetMetadata(domain.empty() ? nullptr : domain.c_str());
+  };
+  job.rval = [](char **md, GetFromPersistentFunc) { return MajorObject::getMetadata(md); };
+  job.run(info, async, 1);
+}
+
+/**
+ * Set metadata. Can return a warning (false) for formats not supporting persistent metadata.
+ *
+ * @method setMetadata
+ * @param {object|string[]} metadata
+ * @param {string} [domain]
+ * @return {boolean}
+ */
+
+/**
+ * Set metadata. Can return a warning (false) for formats not supporting persistent metadata.
+ * {{{async}}}
+ *
+ * @method setMetadataAsync
+ * @param {object|string[]} metadata
+ * @param {string} [domain]
+ * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;boolean&gt;}
+ */
+GDAL_ASYNCABLE_DEFINE(Dataset::setMetadata) {
+  Nan::HandleScope scope;
+  NODE_UNWRAP_CHECK(Dataset, info.This(), ds);
+  GDAL_RAW_CHECK(GDALDataset *, ds, raw);
+
+  auto options = make_shared&lt;StringList&gt;();
+  if (info.Length() == 0 || options-&gt;parse(info[0])) {
+    Nan::ThrowError(&quot;Failed parsing metadata&quot;);
     return;
   }
 
-  GDALDataset *raw = ds-&gt;get();
   std::string domain(&quot;&quot;);
-  NODE_ARG_OPT_STR(0, &quot;domain&quot;, domain);
-  AsyncGuard lock({ds-&gt;uid}, eventLoopWarn);
-  info.GetReturnValue().Set(MajorObject::getMetadata(raw, domain.empty() ? NULL : domain.c_str()));
+  NODE_ARG_OPT_STR(1, &quot;domain&quot;, domain);
+
+  GDALAsyncableJob&lt;CPLErr&gt; job(ds-&gt;uid);
+  job.main = [raw, options, domain](const GDALExecutionProgress &amp;) {
+    CPLErr r = raw-&gt;SetMetadata(options-&gt;get(), domain.empty() ? nullptr : domain.c_str());
+    if (r == CE_Failure) throw CPLGetLastErrorMsg();
+    return r;
+  };
+  job.rval = [](CPLErr r, GetFromPersistentFunc) { return Nan::New&lt;Boolean&gt;(r == CE_None); };
+  job.run(info, async, 2);
 }
 
 /**
@@ -380,10 +435,10 @@ NAN_METHOD(Dataset::getGCPProjection) {
  * If this could potentially be the case and blocking the event loop is not possible (server code),
  * then the best option is to simply dereference it (ds = null) and leave
  * the garbage collector to expire it.
- * 
+ *
  * Implementing an asynchronous delete is difficult since all V8 object creation/deletion
  * must take place on the main thread.
- * 
+ *
  * flush[Async]() ensures that, when writing, all data has been written.
  *
  * @method close
@@ -396,7 +451,7 @@ NAN_METHOD(Dataset::close) {
     return;
   }
 
-  ds-&gt;dispose();
+  ds-&gt;dispose(true);
 
   return;
 }
