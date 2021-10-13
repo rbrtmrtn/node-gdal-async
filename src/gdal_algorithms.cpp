@@ -379,6 +379,7 @@ GDAL_ASYNCABLE_DEFINE(Algorithms::checksumImage) {
   long src_uid = src->parent_uid;
 
   GDALAsyncableJob<int> job(src_uid);
+  job.persist(src->handle());
   job.main = [gdal_src, x, y, w, h](const GDALExecutionProgress &) {
     int r = GDALChecksumImage(gdal_src, x, y, w, h);
     return r;

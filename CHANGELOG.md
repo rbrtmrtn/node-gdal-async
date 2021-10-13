@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
  - Fix a memory leak in `gdal.Dataset.srsAsync`
  - Fix a memory leak in the exception-handling path of the progress callbacks
+ - GC safety of `gdal.checksumImage`
 
 ## [3.3.4] 2021-09-28
 
