@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.5</b>
+                    API Docs for Version: <b>3.4.0-alpha.3</b>
                 </p>
             </li>
         </div>
@@ -207,6 +207,7 @@ Operations on in-memory /vsimem/ files</a></li>
 #include &quot;gdal_dimension.hpp&quot;
 #include &quot;gdal_attribute.hpp&quot;
 #include &quot;gdal_warper.hpp&quot;
+#include &quot;gdal_utils.hpp&quot;
 
 #include &quot;gdal_coordinate_transformation.hpp&quot;
 #include &quot;gdal_feature.hpp&quot;
@@ -593,6 +594,7 @@ static void Init(Local&lt;Object&gt; target, Local&lt;v8::Value&gt;, void *) {
   RasterBandOverviews::Initialize(target);
   RasterBandPixels::Initialize(target);
   Memfile::Initialize(target);
+  Utils::Initialize(target);
 
   /**
    * The collection of all drivers registered with GDAL
@@ -1042,7 +1044,7 @@ static void Init(Local&lt;Object&gt; target, Local&lt;v8::Value&gt;, void *) {
   /**
    * String extended type for MDArrays (GDAL &gt;= 3.1)
    * @final
-   * @property gdal.GEDTC_String 
+   * @property gdal.GEDTC_String
    * @type {string}
    */
   Nan::Set(target, Nan::New(&quot;GEDTC_String&quot;).ToLocalChecked(), Nan::New(&quot;String&quot;).ToLocalChecked());

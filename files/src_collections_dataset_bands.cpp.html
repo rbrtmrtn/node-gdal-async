@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.5</b>
+                    API Docs for Version: <b>3.4.0-alpha.3</b>
                 </p>
             </li>
         </div>
@@ -282,7 +282,7 @@ GDAL_ASYNCABLE_DEFINE(DatasetBands::get) {
  * @method create
  * @throws Error
  * @param {string} dataType Type of band ({{#crossLink &quot;Constants (GDT)&quot;}}see GDT constants{{/crossLink}}).
- * @param {object} [options] Creation options
+ * @param {object|string[]} [options] Creation options
  * @return {gdal.RasterBand}
  */
 
@@ -293,7 +293,7 @@ GDAL_ASYNCABLE_DEFINE(DatasetBands::get) {
  * @method createAsync
  * @throws Error
  * @param {string} dataType Type of band ({{#crossLink &quot;Constants (GDT)&quot;}}see GDT constants{{/crossLink}}).
- * @param {object} [options] Creation options
+ * @param {object|string[]} [options] Creation options
  * @param {callback&lt;gdal.RasterBand&gt;} [callback=undefined] {{{cb}}}
  * @return {Promise&lt;gdal.RasterBand&gt;}
  */
@@ -353,7 +353,7 @@ GDAL_ASYNCABLE_DEFINE(DatasetBands::create) {
  */
 
 /**
- * 
+ *
  * Returns the number of bands.
  * {{{async}}}
  *

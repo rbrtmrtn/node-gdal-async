@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.5</b>
+                    API Docs for Version: <b>3.4.0-alpha.3</b>
                 </p>
             </li>
         </div>
@@ -154,6 +154,7 @@ Operations on in-memory /vsimem/ files</a></li>
 #include &quot;gdal_mdarray.hpp&quot;
 #include &quot;gdal_majorobject.hpp&quot;
 #include &quot;gdal_rasterband.hpp&quot;
+#include &quot;utils/string_list.hpp&quot;
 
 #include &lt;cpl_port.h&gt;
 #include &lt;limits&gt;
@@ -182,7 +183,8 @@ void RasterBand::Initialize(Local&lt;Object&gt; target) {
   Nan::SetPrototypeMethod(lcons, &quot;getMaskBand&quot;, getMaskBand);
   Nan::SetPrototypeMethod(lcons, &quot;getMaskFlags&quot;, getMaskFlags);
   Nan::SetPrototypeMethod(lcons, &quot;createMaskBand&quot;, createMaskBand);
-  Nan::SetPrototypeMethod(lcons, &quot;getMetadata&quot;, getMetadata);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;getMetadata&quot;, getMetadata);
+  Nan__SetPrototypeAsyncableMethod(lcons, &quot;setMetadata&quot;, setMetadata);
 
   // unimplemented methods
   // Nan::SetPrototypeMethod(lcons, &quot;buildOverviews&quot;, buildOverviews);
@@ -327,7 +329,7 @@ NAN_METHOD(RasterBand::toString) {
  * @method flushAsync
  * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
  * @return {Promise&lt;void&gt;}
- * 
+ *
  */
 NODE_WRAPPED_ASYNC_METHOD_WITH_OGRERR_RESULT_LOCKED(RasterBand, flush, FlushCache);
 
@@ -449,9 +451,9 @@ void popStatsErrorHandler() {
  * Return a view of this raster band as a 2D multidimensional GDALMDArray.
  *
  * The band must be linked to a GDALDataset.
- * 
+ *
  * If the dataset has a geotransform attached, the X and Y dimensions of the returned array will have an associated indexing variable.
- * 
+ *
  * Requires GDAL&gt;=3.3 with MDArray support, won&#x27;t be defined otherwise
  *
  * @throws Error
@@ -524,7 +526,11 @@ NAN_METHOD(RasterBand::getStatistics) {
 }
 
 /**
- * @typedef stats { min: number, max: number, mean: number, std_dev: number }
+ * @typedef stats
+ * @property {number} min
+ * @property {number} max
+ * @property {number} mean
+ * @property {number} std_dev
  */
 
 /**
@@ -640,16 +646,72 @@ NAN_METHOD(RasterBand::setStatistics) {
  * @param {string} [domain]
  * @return {any}
  */
-NAN_METHOD(RasterBand::getMetadata) {
+
+/**
+ * Returns band metadata
+ *
+ * @method getMetadataAsync
+ * @param {string} [domain]
+ * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;any&gt;}
+ */
+GDAL_ASYNCABLE_DEFINE(RasterBand::getMetadata) {
   Nan::HandleScope scope;
 
   std::string domain(&quot;&quot;);
   NODE_ARG_OPT_STR(0, &quot;domain&quot;, domain);
   NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
-  GDAL_LOCK_PARENT(band);
-  const Nan::ADDON_REGISTER_FUNCTION_ARGS_TYPE &amp;meta =
-    MajorObject::getMetadata(band-&gt;this_, domain.empty() ? NULL : domain.c_str());
-  info.GetReturnValue().Set(meta);
+  GDAL_RAW_CHECK(GDALRasterBand *, band, raw);
+
+  GDALAsyncableJob&lt;char **&gt; job(band-&gt;parent_uid);
+  job.main = [raw, domain](const GDALExecutionProgress &amp;) {
+    return raw-&gt;GetMetadata(domain.empty() ? nullptr : domain.c_str());
+  };
+  job.rval = [](char **md, GetFromPersistentFunc) { return MajorObject::getMetadata(md); };
+  job.run(info, async, 1);
+}
+
+/**
+ * Set metadata. Can return a warning (false) for formats not supporting persistent metadata.
+ *
+ * @method setMetadata
+ * @param {object|string[]} metadata
+ * @param {string} [domain]
+ * @return {boolean}
+ */
+
+/**
+ * Set metadata. Can return a warning (false) for formats not supporting persistent metadata.
+ * {{{async}}}
+ *
+ * @method setMetadataAsync
+ * @param {object|string[]} metadata
+ * @param {string} [domain]
+ * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;boolean&gt;}
+ */
+GDAL_ASYNCABLE_DEFINE(RasterBand::setMetadata) {
+  Nan::HandleScope scope;
+  NODE_UNWRAP_CHECK(RasterBand, info.This(), band);
+  GDAL_RAW_CHECK(GDALRasterBand *, band, raw);
+
+  auto options = make_shared&lt;StringList&gt;();
+  if (info.Length() == 0 || options-&gt;parse(info[0])) {
+    Nan::ThrowError(&quot;Failed parsing metadata&quot;);
+    return;
+  }
+
+  std::string domain(&quot;&quot;);
+  NODE_ARG_OPT_STR(1, &quot;domain&quot;, domain);
+
+  GDALAsyncableJob&lt;CPLErr&gt; job(band-&gt;parent_uid);
+  job.main = [raw, options, domain](const GDALExecutionProgress &amp;) {
+    CPLErr r = raw-&gt;SetMetadata(options-&gt;get(), domain.empty() ? nullptr : domain.c_str());
+    if (r == CE_Failure) throw CPLGetLastErrorMsg();
+    return r;
+  };
+  job.rval = [](CPLErr r, GetFromPersistentFunc) { return Nan::New&lt;Boolean&gt;(r == CE_None); };
+  job.run(info, async, 2);
 }
 
 /**
@@ -859,7 +921,7 @@ NAN_GETTER(RasterBand::unitTypeGetter) {
 }
 
 /**
- * 
+ *
  * Pixel data type ({{#crossLink &quot;Constants (GDT)&quot;}}see GDT
  * constants{{/crossLink}}) used for this band.
  *

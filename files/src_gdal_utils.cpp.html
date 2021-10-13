@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>gdal.GeometryCollectionChildren - node-gdal-async</title>
+    <title>src/gdal_utils.cpp - node-gdal-async</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -140,429 +140,260 @@ Operations on in-memory /vsimem/ files</a></li>
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>gdal.GeometryCollectionChildren</h1>
+    <h1>src/gdal_utils.cpp <small>File</small></h1>
 </div>
 
+<div class="file">
+    <pre class="prettyprint linenums">
+#include &quot;gdal_utils.hpp&quot;
+#include &quot;gdal_common.hpp&quot;
+#include &quot;gdal_dataset.hpp&quot;
+#include &quot;gdal_spatial_reference.hpp&quot;
 
+#if GDAL_VERSION_MAJOR &gt; 2 || (GDAL_VERSION_MAJOR == 2 &amp;&amp; GDAL_VERSION_MINOR &gt;= 3)
+#define GDALDatasetToHandle(x) GDALDataset::ToHandle(x)
+#define GDALDatasetFromHandle(x) GDALDataset::FromHandle(x)
+#else
+#define GDALDatasetToHandle(x) static_cast&lt;GDALDatasetH&gt;(x)
+#define GDALDatasetFromHandle(x) static_cast&lt;GDALDataset *&gt;(x)
+#endif
 
+namespace node_gdal {
 
+void Utils::Initialize(Local&lt;Object&gt; target) {
+  Nan__SetAsyncableMethod(target, &quot;info&quot;, info);
+  Nan__SetAsyncableMethod(target, &quot;translate&quot;, translate);
+  Nan__SetAsyncableMethod(target, &quot;vectorTranslate&quot;, vectorTranslate);
+}
 
+/**
+ * Library version of gdal_translate.
+ *
+ * @example
+ * const ds = gdal.open(&#x27;input.tif&#x27;)
+ * const out = gdal.translate(&#x27;/vsimem/temp.tif&#x27;, ds, [ &#x27;-b&#x27;, &#x27;1&#x27; ])
+ *
+ * @throws Error
+ * @method translate
+ * @for gdal
+ * @static
+ * @param {string} destination destination filename
+ * @param {gdal.Dataset} source source dataset
+ * @param {string[]} array of CLI options for gdal_translate
+ * @return {gdal.Dataset}
+ */
 
-<div class="yuidoc-class-description">
-<p>A collection of Geometries, used by <a href="../classes/gdal.GeometryCollection.html" class="crosslink">gdal.GeometryCollection</a>.</p>
+/**
+ * Library version of gdal_translate.
+ * {{{async}}}
+ *
+ * @example
+ * const ds = gdal.open(&#x27;input.tif&#x27;)
+ * const out = gdal.translate(&#x27;/vsimem/temp.tif&#x27;, ds, [ &#x27;-b&#x27;, &#x27;1&#x27; ])
+ * @throws Error
+ *
+ * @method translateAsync
+ * @for gdal
+ * @static
+ * @param {string} destination destination filename
+ * @param {gdal.Dataset} source source dataset
+ * @param {string[]} array of CLI options for gdal_translate
+ * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;gdal.Dataset&gt;}
+ */
+GDAL_ASYNCABLE_DEFINE(Utils::translate) {
+  auto aosOptions = std::make_shared&lt;CPLStringList&gt;();
 
+  std::string dst;
+  NODE_ARG_STR(0, &quot;dst&quot;, dst);
+
+  Local&lt;Object&gt; src;
+  NODE_ARG_OBJECT(1, &quot;src&quot;, src);
+  NODE_UNWRAP_CHECK(Dataset, src, ds);
+  GDAL_RAW_CHECK(GDALDataset *, ds, raw);
+
+  Local&lt;Array&gt; options;
+  NODE_ARG_ARRAY(2, &quot;options&quot;, options);
+
+  for (unsigned i = 0; i &lt; options-&gt;Length(); ++i) {
+    aosOptions-&gt;AddString(*Nan::Utf8String(Nan::Get(options, i).ToLocalChecked()));
+  }
+
+  GDALAsyncableJob&lt;GDALDataset *&gt; job(ds-&gt;uid);
+  job.main = [raw, dst, aosOptions](const GDALExecutionProgress &amp;) {
+    CPLErrorReset();
+    auto b = aosOptions;
+    auto psOptions = GDALTranslateOptionsNew(aosOptions-&gt;List(), nullptr);
+    GDALDataset *r = GDALDatasetFromHandle(GDALTranslate(dst.c_str(), GDALDatasetToHandle(raw), psOptions, nullptr));
+    GDALTranslateOptionsFree(psOptions);
+    if (r == nullptr) throw CPLGetLastErrorMsg();
+    return r;
+  };
+  job.rval = [](GDALDataset *ds, GetFromPersistentFunc) { return Dataset::New(ds); };
+
+  job.run(info, async, 3);
+}
+
+/**
+ * Library version of ogr2ogr.
+ *
+ * @example
+ * const ds = gdal.open(&#x27;input.geojson&#x27;)
+ * const out = gdal.vectorTranslate(&#x27;/vsimem/temp.gpkg&#x27;, [ &#x27;-of&#x27;, &#x27;GPKG&#x27; ], ds)
+ *
+ * @throws Error
+ * @method vectorTranslate
+ * @for gdal
+ * @static
+ * @param {string|gdal.Dataset} destination destination
+ * @param {gdal.Dataset} source source dataset
+ * @param {string[]} array of CLI options for ogr2ogr
+ * @return {gdal.Dataset}
+ */
+
+/**
+ * Library version of ogr2ogr.
+ * {{{async}}}
+ *
+ * @example
+ * const ds = gdal.open(&#x27;input.geojson&#x27;)
+ * const out = gdal.vectorTranslate(&#x27;/vsimem/temp.gpkg&#x27;, [ &#x27;-of&#x27;, &#x27;GPKG&#x27; ], ds)
+ * @throws Error
+ *
+ * @method vectorTranslateAsync
+ * @for gdal
+ * @static
+ * @param {string|gdal.Dataset} destination destination
+ * @param {gdal.Dataset} source source dataset
+ * @param {string[]} array of CLI options for ogr2ogr
+ * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;gdal.Dataset&gt;}
+ */
+GDAL_ASYNCABLE_DEFINE(Utils::vectorTranslate) {
+  auto aosOptions = std::make_shared&lt;CPLStringList&gt;();
+
+  std::string dst_filename(&quot;&quot;);
+  Dataset *dst_ds = nullptr;
+  if (info.Length() &lt; 1) {
+    Nan::ThrowError(&quot;\&quot;dst\&quot; must be given&quot;);
+    return;
+  }
+
+  GDALDataset *dst_raw = nullptr;
+  if (info[0]-&gt;IsString()) {
+    NODE_ARG_STR(0, &quot;dst&quot;, dst_filename);
+  } else if (info[0]-&gt;IsObject()) {
+    NODE_ARG_WRAPPED(0, &quot;dst&quot;, Dataset, dst_ds);
+    GDAL_RAW_CHECK(GDALDataset *, dst_ds, _dst_raw);
+    dst_raw = _dst_raw;
+  } else {
+    Nan::ThrowError(&quot;\&quot;dst\&quot; must be an object or a gdal.Dataset&quot;);
+    return;
+  }
+
+  Local&lt;Object&gt; src;
+  NODE_ARG_OBJECT(1, &quot;src&quot;, src);
+  NODE_UNWRAP_CHECK(Dataset, src, ds);
+  GDAL_RAW_CHECK(GDALDataset *, ds, src_raw);
+
+  Local&lt;Array&gt; options;
+  NODE_ARG_ARRAY(2, &quot;options&quot;, options);
+
+  for (unsigned i = 0; i &lt; options-&gt;Length(); ++i) {
+    aosOptions-&gt;AddString(*Nan::Utf8String(Nan::Get(options, i).ToLocalChecked()));
+  }
+
+  std::vector&lt;long&gt; uids = {ds-&gt;uid};
+  if (dst_ds != nullptr) uids.push_back(dst_ds-&gt;uid);
+  GDALAsyncableJob&lt;GDALDataset *&gt; job(uids);
+
+  job.main = [src_raw, dst_filename, dst_raw, aosOptions](const GDALExecutionProgress &amp;) {
+    CPLErrorReset();
+    auto b = aosOptions;
+    auto psOptions = GDALVectorTranslateOptionsNew(aosOptions-&gt;List(), nullptr);
+
+    auto srcH = GDALDatasetToHandle(src_raw);
+    GDALDataset *r = GDALDatasetFromHandle(
+      GDALVectorTranslate(dst_filename.c_str(), GDALDatasetToHandle(dst_raw), 1, &amp;srcH, psOptions, nullptr));
+
+    GDALVectorTranslateOptionsFree(psOptions);
+    if (r == nullptr) throw CPLGetLastErrorMsg();
+    return r;
+  };
+  job.rval = [](GDALDataset *ds, GetFromPersistentFunc) { return Dataset::New(ds); };
+
+  job.run(info, async, 3);
+}
+
+/**
+ * Library version of gdalinfo.
+ *
+ * @example
+ * const ds = gdal.open(&#x27;input.tif&#x27;)
+ * const output = gdal.info(&#x27;/vsimem/temp.tif&#x27;)
+ *
+ * @throws Error
+ * @method info
+ * @for gdal
+ * @static
+ * @param {gdal.Dataset} dataset
+ * @param {string[]} array of CLI options for gdalinfo
+ * @return {string}
+ */
+
+/**
+ * Library version of gdalinfo.
+ * {{{async}}}
+ *
+ * @example
+ * const ds = gdal.open(&#x27;input.tif&#x27;)
+ * const output = gdal.info(&#x27;/vsimem/temp.tif&#x27;)
+ * @throws Error
+ *
+ * @method infoAsync
+ * @for gdal
+ * @static
+ * @param {gdal.Dataset} dataset
+ * @param {string[]} array of CLI options for gdalinfo
+ * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;string&gt;}
+ */
+GDAL_ASYNCABLE_DEFINE(Utils::info) {
+  auto aosOptions = std::make_shared&lt;CPLStringList&gt;();
+
+  Local&lt;Object&gt; src;
+  NODE_ARG_OBJECT(0, &quot;src&quot;, src);
+  NODE_UNWRAP_CHECK(Dataset, src, ds);
+  GDAL_RAW_CHECK(GDALDataset *, ds, raw);
+
+  Local&lt;Array&gt; options;
+  NODE_ARG_ARRAY(1, &quot;options&quot;, options);
+
+  for (unsigned i = 0; i &lt; options-&gt;Length(); ++i) {
+    aosOptions-&gt;AddString(*Nan::Utf8String(Nan::Get(options, i).ToLocalChecked()));
+  }
+
+  GDALAsyncableJob&lt;std::string&gt; job(ds-&gt;uid);
+  job.main = [raw, aosOptions](const GDALExecutionProgress &amp;) {
+    CPLErrorReset();
+    auto b = aosOptions;
+    auto psOptions = GDALInfoOptionsNew(aosOptions-&gt;List(), nullptr);
+    char *r = GDALInfo(GDALDatasetToHandle(raw), psOptions);
+    GDALInfoOptionsFree(psOptions);
+    if (r == nullptr) throw CPLGetLastErrorMsg();
+    std::string s(r);
+    CPLFree(r);
+    return s;
+  };
+  job.rval = [](std::string s, GetFromPersistentFunc) { return SafeString::New(s.c_str()); };
+
+  job.run(info, async, 2);
+}
+
+} // namespace node_gdal
+
+    </pre>
 </div>
-
-<!-- table of contents -->
-
-<div id="class-toc" class="page-section">
-	<h2>Table of Contents</h2>
-    <ul>
-		<li>
-			<strong>Methods</strong>
-			<ul>
-				<li><a href="#method-add"><span class="im">add</span>(<span class="ia">geometry</span>)</a></li>
-				<li><a href="#method-count"><span class="im">count</span>()</a></li>
-				<li><a href="#method-forEach"><span class="im">forEach</span>(<span class="ia">callback</span>)</a></li>
-				<li><a href="#method-get"><span class="im">get</span>(<span class="ia">index</span>)</a></li>
-				<li><a href="#method-map&lt;U&gt;"><span class="im">map&lt;U&gt;</span>(<span class="ia">callback</span>)</a></li>
-				<li><a href="#method-remove"><span class="im">remove</span>(<span class="ia">index</span>)</a></li>
-				<li><a href="#method-toArray"><span class="im">toArray</span>()</a></li>
-			</ul>
-		</li>
-
-
-
-	</ul>
-</div>
-
-<!-- details -->
-
-
-    <div id="methods" class="page-section">
-        <h2 class="off-left">Methods</h2>
-        <div class="item-list">
-<div id="method-add" class="method item">
-	<div class="method-signature">
-	<span class="name"><code>add</code></span>
-
-		<div class="args">
-			<span class="paren">(</span><ul class="args-list inline commas">
-				<li class="arg">
-						<code>geometry</code>
-				</li>
-			</ul><span class="paren">)</span>
-		</div>
-	</div>
-
-
-
-
-
-
-	<div class="meta">
-				<p>
-				Defined in
-		<a href="../files/src_collections_geometry_collection_children.cpp.html#l146"><code>src&#x2F;collections&#x2F;geometry_collection_children.cpp:146</code></a>
-		</p>
-
-
-
-	</div>
-
-	<div class="description"><p>Adds geometry(s) to the collection.</p>
-</div>
-
-		<div class="params">
-			<h4>Parameters:</h4>
-
-			<ul class="params-list">
-				<li class="param">
-						<code class="param-name">geometry</code>
-						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a>  |  <a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry[][]</a></span>
-
-
-
-				</li>
-			</ul>
-		</div>
-
-
-		<div class="example">
-			<h4>Example:</h4>
-
-			<div class="example-content">
-				<pre class="code prettyprint"><code>// one at a time:
-geometryCollection.children.add(new Point(0,0,0));
-
-// add many at once:
-geometryCollection.children.add([
-    new Point(1,0,0),
-    new Point(1,0,0)
-]);<code>&#x60;</code></code></pre>
-
-			</div>
-		</div>
-</div>
-<div id="method-count" class="method item">
-	<div class="method-signature">
-	<span class="name"><code>count</code></span>
-
-		<span class="paren">()</span>
-		<span class="returns-inline">
-			<span class="type">Number</span>
-		</span>
-	</div>
-
-
-
-
-
-
-	<div class="meta">
-				<p>
-				Defined in
-		<a href="../files/src_collections_geometry_collection_children.cpp.html#l79"><code>src&#x2F;collections&#x2F;geometry_collection_children.cpp:79</code></a>
-		</p>
-
-
-
-	</div>
-
-	<div class="description"><p>Returns the number of items.</p>
-</div>
-
-
-		<div class="returns">
-			<h4>Returns:</h4>
-
-			<div class="returns-description">
-						<span class="type">Number</span>
-			</div>
-		</div>
-
-</div>
-<div id="method-forEach" class="method item">
-	<div class="method-signature">
-	<span class="name"><code>forEach</code></span>
-
-		<div class="args">
-			<span class="paren">(</span><ul class="args-list inline commas">
-				<li class="arg">
-						<code>callback</code>
-				</li>
-			</ul><span class="paren">)</span>
-		</div>
-	</div>
-
-
-
-
-
-
-	<div class="meta">
-				<p>
-				Defined in
-		<a href="../files/lib_gdal.js.html#l667"><code>lib&#x2F;gdal.js:667</code></a>
-		</p>
-
-
-
-	</div>
-
-	<div class="description"><p>Iterates through all child geometries using a callback function.</p>
-</div>
-
-		<div class="params">
-			<h4>Parameters:</h4>
-
-			<ul class="params-list">
-				<li class="param">
-						<code class="param-name">callback</code>
-						<span class="type">forEachCb<gdal.Geometry></span>
-
-
-					<div class="param-description"><p>The callback to be called with each Geometry</p>
-</div>
-
-				</li>
-			</ul>
-		</div>
-
-
-		<div class="example">
-			<h4>Example:</h4>
-
-			<div class="example-content">
-				<pre class="code prettyprint"><code>geometryCollection.children.forEach(function(geometry, i) { ... });<code>&#x60;</code></code></pre>
-
-			</div>
-		</div>
-</div>
-<div id="method-get" class="method item">
-	<div class="method-signature">
-	<span class="name"><code>get</code></span>
-
-		<div class="args">
-			<span class="paren">(</span><ul class="args-list inline commas">
-				<li class="arg">
-						<code>index</code>
-				</li>
-			</ul><span class="paren">)</span>
-		</div>
-		<span class="returns-inline">
-			<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
-		</span>
-	</div>
-
-
-
-
-
-
-	<div class="meta">
-				<p>
-				Defined in
-		<a href="../files/src_collections_geometry_collection_children.cpp.html#l95"><code>src&#x2F;collections&#x2F;geometry_collection_children.cpp:95</code></a>
-		</p>
-
-
-
-	</div>
-
-	<div class="description"><p>Returns the geometry at the specified index.</p>
-</div>
-
-		<div class="params">
-			<h4>Parameters:</h4>
-
-			<ul class="params-list">
-				<li class="param">
-						<code class="param-name">index</code>
-						<span class="type">Number</span>
-
-
-					<div class="param-description"><p>0-based index</p>
-</div>
-
-				</li>
-			</ul>
-		</div>
-
-		<div class="returns">
-			<h4>Returns:</h4>
-
-			<div class="returns-description">
-						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry</a></span>
-			</div>
-		</div>
-
-</div>
-<div id="method-map&lt;U&gt;" class="method item">
-	<div class="method-signature">
-	<span class="name"><code>map&lt;U&gt;</code></span>
-
-		<div class="args">
-			<span class="paren">(</span><ul class="args-list inline commas">
-				<li class="arg">
-						<code>callback</code>
-				</li>
-			</ul><span class="paren">)</span>
-		</div>
-		<span class="returns-inline">
-			<span class="type">U[]</span>
-		</span>
-	</div>
-
-
-
-
-
-
-	<div class="meta">
-				<p>
-				Defined in
-		<a href="../files/lib_gdal.js.html#l680"><code>lib&#x2F;gdal.js:680</code></a>
-		</p>
-
-
-
-	</div>
-
-	<div class="description"><p>Iterates through all child geometries using a callback function and builds
-an array of the returned values.</p>
-</div>
-
-		<div class="params">
-			<h4>Parameters:</h4>
-
-			<ul class="params-list">
-				<li class="param">
-						<code class="param-name">callback</code>
-						<span class="type">mapCb<gdal.Geometry,U></span>
-
-
-					<div class="param-description"><p>The callback to be called with each Geometry</p>
-</div>
-
-				</li>
-			</ul>
-		</div>
-
-		<div class="returns">
-			<h4>Returns:</h4>
-
-			<div class="returns-description">
-						<span class="type">U[]</span>
-			</div>
-		</div>
-
-		<div class="example">
-			<h4>Example:</h4>
-
-			<div class="example-content">
-				<pre class="code prettyprint"><code>var result = geometryCollection.children.map(function(geometry, i) {
-    return value;
-});<code>&#x60;</code></code></pre>
-
-			</div>
-		</div>
-</div>
-<div id="method-remove" class="method item">
-	<div class="method-signature">
-	<span class="name"><code>remove</code></span>
-
-		<div class="args">
-			<span class="paren">(</span><ul class="args-list inline commas">
-				<li class="arg">
-						<code>index</code>
-				</li>
-			</ul><span class="paren">)</span>
-		</div>
-	</div>
-
-
-
-
-
-
-	<div class="meta">
-				<p>
-				Defined in
-		<a href="../files/src_collections_geometry_collection_children.cpp.html#l121"><code>src&#x2F;collections&#x2F;geometry_collection_children.cpp:121</code></a>
-		</p>
-
-
-
-	</div>
-
-	<div class="description"><p>Removes the geometry at the specified index.</p>
-</div>
-
-		<div class="params">
-			<h4>Parameters:</h4>
-
-			<ul class="params-list">
-				<li class="param">
-						<code class="param-name">index</code>
-						<span class="type">Number</span>
-
-
-					<div class="param-description"><p>0-based index</p>
-</div>
-
-				</li>
-			</ul>
-		</div>
-
-
-</div>
-<div id="method-toArray" class="method item">
-	<div class="method-signature">
-	<span class="name"><code>toArray</code></span>
-
-		<span class="paren">()</span>
-		<span class="returns-inline">
-			<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry[][]</a></span>
-		</span>
-	</div>
-
-
-
-
-
-
-	<div class="meta">
-				<p>
-				Defined in
-		<a href="../files/lib_gdal.js.html#l785"><code>lib&#x2F;gdal.js:785</code></a>
-		</p>
-
-
-
-	</div>
-
-	<div class="description"><p>Outputs all geometries as a regular javascript array.</p>
-</div>
-
-
-		<div class="returns">
-			<h4>Returns:</h4>
-
-			<div class="returns-description">
-						<span class="type"><a href="../classes/gdal.Geometry.html" class="crosslink">gdal.Geometry[][]</a></span>:
-					<p>List of Geometry instances.</p>
-
-			</div>
-		</div>
-
-</div>
-        </div>
-    </div>
-
-
-
-
                     </div>
                 </div>
             </div>

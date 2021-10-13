@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.5</b>
+                    API Docs for Version: <b>3.4.0-alpha.3</b>
                 </p>
             </li>
         </div>
@@ -303,7 +303,10 @@ gdal.DatasetBands.prototype.getEnvelope = function () {
 }
 
 /**
- * @interface xyz { x: number, y: number, z?: number }
+ * @interface xyz
+ * @property {number} x
+ * @property {number} y
+ * @property {number} [z]
  */
 
 // --- add additional functionality to collections ---
@@ -1673,7 +1676,9 @@ const promisifiables = {
   Dataset: {
     flushAsync: 0,
     buildOverviewsAsync: 4,
-    executeSQLAsync: 3
+    executeSQLAsync: 3,
+    getMetadataAsync: 1,
+    setMetadataAsync: 2
   },
   Layer: {
     flushAsync: 0
@@ -1681,7 +1686,9 @@ const promisifiables = {
   RasterBand: {
     flushAsync: 0,
     fillAsync: 2,
-    computeStatisticsAsync: 1
+    computeStatisticsAsync: 1,
+    getMetadataAsync: 1,
+    setMetadataAsync: 2
   },
   RasterBandPixels: {
     readAsync: 13,
@@ -1772,6 +1779,9 @@ const promisifiables = {
     $polygonizeAsync: 1,
     $reprojectImageAsync: 1,
     $suggestedWarpOutputAsync: 1,
+    $translateAsync: 3,
+    $vectorTranslateAsync: 3,
+    $infoAsync: 2,
     $_acquireLocksAsync: 3
   }
 }

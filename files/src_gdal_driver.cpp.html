@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.5</b>
+                    API Docs for Version: <b>3.4.0-alpha.3</b>
                 </p>
             </li>
         </div>
@@ -307,6 +307,7 @@ auto DatasetRval = [](GDALDataset *ds, GetFromPersistentFunc) { return Dataset::
  * types{{/crossLink}})
  * @param {string[]|object} [creation_options] An array or object containing
  * driver-specific dataset creation options
+ * @throws
  * @return {gdal.Dataset}
  */
 
@@ -327,6 +328,7 @@ auto DatasetRval = [](GDALDataset *ds, GetFromPersistentFunc) { return Dataset::
  * @param {string[]|object} [creation_options] An array or object containing
  * driver-specific dataset creation options
  * @param {callback&lt;gdal.Dataset&gt;} [callback=undefined] {{{cb}}}
+ * @throws
  * @return {Promise&lt;gdal.Dataset&gt;}
  */
 GDAL_ASYNCABLE_DEFINE(Driver::create) {
@@ -351,6 +353,7 @@ GDAL_ASYNCABLE_DEFINE(Driver::create) {
     NODE_ARG_INT_OPT(3, &quot;number of bands&quot;, n_bands);
     NODE_ARG_OPT_STR(4, &quot;data type&quot;, type_name);
     if (info.Length() &gt; 5 &amp;&amp; options-&gt;parse(info[5])) {
+      Nan::ThrowError(&quot;Failed parsing options&quot;);
       return; // error parsing string list
     }
     if (!type_name.empty()) { type = GDALGetDataTypeByName(type_name.c_str()); }
@@ -381,10 +384,9 @@ GDAL_ASYNCABLE_DEFINE(Driver::create) {
  * @method createCopy
  * @param {string} filename
  * @param {gdal.Dataset} src
- * @param {string[]|object} [options=null] An array or object containing
- * driver-specific dataset creation options
- * @param {boolean} [strict=false] strict mode
+ * @param {string[]|object} [options=null] An array or object containing driver-specific dataset creation options
  * @param {ProgressCb} [progress_cb=undefined] {{{progress_cb}}}
+ * @param {boolean} [strict=false] strict mode
  * @return {gdal.Dataset}
  */
 
@@ -395,10 +397,9 @@ GDAL_ASYNCABLE_DEFINE(Driver::create) {
  * @method createCopyAsync
  * @param {string} filename
  * @param {gdal.Dataset} src
- * @param {string[]|object} [options=null] An array or object containing
- * driver-specific dataset creation options
+ * @param {string[]|object} [options=null] An array or object containing driver-specific dataset creation options
+ * @param {ProgressCb} [progress_cb=undefined] {{{progress_cb}}}. When specified in Promise mode, strict must also be present or progress_cb will be interpreted as a result callback.
  * @param {boolean} [strict=false] strict mode
- * @param {ProgressCb} [progress_cb=undefined] {{{progress_cb}}}
  * @param {callback&lt;gdal.Dataset&gt;} [callback=undefined] {{{cb}}}
  * @return {Promise&lt;gdal.Dataset&gt;}
  */
@@ -435,10 +436,10 @@ GDAL_ASYNCABLE_DEFINE(Driver::createCopy) {
   }
 
   bool strict = false;
-  NODE_ARG_BOOL_OPT(3, &quot;strict&quot;, strict);
+  NODE_ARG_BOOL_OPT(4, &quot;strict&quot;, strict);
 
   Nan::Callback *progress_cb = nullptr;
-  NODE_ARG_CB_OPT(4, &quot;progress_cb&quot;, progress_cb);
+  NODE_ARG_CB_OPT(3, &quot;progress_cb&quot;, progress_cb);
 
   GDALDriver *raw = driver-&gt;getGDALDriver();
   GDALDataset *raw_ds = src_dataset-&gt;get();
@@ -528,7 +529,8 @@ NAN_METHOD(Driver::getMetadata) {
   NODE_ARG_OPT_STR(0, &quot;domain&quot;, domain);
 
   GDALDriver *raw = driver-&gt;getGDALDriver();
-  result = MajorObject::getMetadata(raw, domain.empty() ? NULL : domain.c_str());
+  char **md = raw-&gt;GetMetadata(domain.empty() ? NULL : domain.c_str());
+  result = MajorObject::getMetadata(md);
   info.GetReturnValue().Set(result);
 }
 

@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.5</b>
+                    API Docs for Version: <b>3.4.0-alpha.3</b>
                 </p>
             </li>
         </div>
@@ -196,7 +196,14 @@ height="20"></iframe></p>
 				<li><a href="#prop-gdal.eventLoopWarning"><span class="ip">gdal.eventLoopWarning</span></a></li>
 				<li><a href="#prop-gdal.lastError"><span class="ip">gdal.lastError</span></a></li>
 				<li><a href="#prop-gdal.version"><span class="ip">gdal.version</span></a></li>
-				<li><a href="#prop-vsimem"><span class="ip">vsimem</span></a></li>
+				<li><a href="#prop-progress_cb"><span class="ip">progress_cb</span></a></li>
+				<li><a href="#prop-{number[]} geoTransform"><span class="ip">{number[]} geoTransform</span></a></li>
+				<li><a href="#prop-{number} [maxError]"><span class="ip">{number} [maxError]</span></a></li>
+				<li><a href="#prop-{number} [smoothingIterations]"><span class="ip">{number} [smoothingIterations]</span></a></li>
+				<li><a href="#prop-{ProgressCb} [progress_cb]"><span class="ip">{ProgressCb} [progress_cb]</span></a></li>
+				<li><a href="#prop-{ProgressCb} [progress_cb]"><span class="ip">{ProgressCb} [progress_cb]</span></a></li>
+				<li><a href="#prop-{ProgressCb} [progress_cb]"><span class="ip">{ProgressCb} [progress_cb]</span></a></li>
+				<li><a href="#prop-{ProgressCb} [progress_cb]"><span class="ip">{ProgressCb} [progress_cb]</span></a></li>
 			</ul>
 		</li>
 
@@ -217,6 +224,8 @@ height="20"></iframe></p>
 				<li><a href="#method-decToDMS"><span class="im">gdal.decToDMS</span>(<span class="ia">angle</span><span class="ia">axis</span><span class="ia">precision</span>)</a></li>
 				<li><a href="#method-fillNodata"><span class="im">gdal.fillNodata</span>(<span class="ia">options</span>)</a></li>
 				<li><a href="#method-fillNodataAsync"><span class="im">gdal.fillNodataAsync</span>(<span class="ia">options</span><span class="ia">callback</span>)</a></li>
+				<li><a href="#method-info"><span class="im">gdal.info</span>(<span class="ia">dataset</span><span class="ia">array</span>)</a></li>
+				<li><a href="#method-infoAsync"><span class="im">gdal.infoAsync</span>(<span class="ia">dataset</span><span class="ia">array</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-open"><span class="im">gdal.open</span>(<span class="ia">path</span><span class="ia">mode</span><span class="ia">drivers</span><span class="ia">x_size</span><span class="ia">y_size</span><span class="ia">band_count</span><span class="ia">data_type</span><span class="ia">creation_options</span>)</a></li>
 				<li><a href="#method-openAsync"><span class="im">gdal.openAsync</span>(<span class="ia">path</span><span class="ia">mode</span><span class="ia">drivers</span><span class="ia">x_size</span><span class="ia">y_size</span><span class="ia">band_count</span><span class="ia">data_type</span><span class="ia">creation_options</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-openAsync"><span class="im">gdal.openAsync</span>(<span class="ia">path</span><span class="ia">callback</span>)</a></li>
@@ -230,6 +239,10 @@ height="20"></iframe></p>
 				<li><a href="#method-sieveFilterAsync"><span class="im">gdal.sieveFilterAsync</span>(<span class="ia">options</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-suggestedWarpOutput"><span class="im">gdal.suggestedWarpOutput</span>(<span class="ia">options</span>)</a></li>
 				<li><a href="#method-suggestedWarpOutputAsync"><span class="im">gdal.suggestedWarpOutputAsync</span>(<span class="ia">options</span><span class="ia">callback</span>)</a></li>
+				<li><a href="#method-translate"><span class="im">gdal.translate</span>(<span class="ia">destination</span><span class="ia">source</span><span class="ia">array</span>)</a></li>
+				<li><a href="#method-translateAsync"><span class="im">gdal.translateAsync</span>(<span class="ia">destination</span><span class="ia">source</span><span class="ia">array</span><span class="ia">callback</span>)</a></li>
+				<li><a href="#method-vectorTranslate"><span class="im">gdal.vectorTranslate</span>(<span class="ia">destination</span><span class="ia">source</span><span class="ia">array</span>)</a></li>
+				<li><a href="#method-vectorTranslateAsync"><span class="im">gdal.vectorTranslateAsync</span>(<span class="ia">destination</span><span class="ia">source</span><span class="ia">array</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-verbose"><span class="im">gdal.verbose</span>()</a></li>
 			</ul>
 		</li>
@@ -256,7 +269,7 @@ height="20"></iframe></p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1558"><code>src&#x2F;node_gdal.cpp:1558</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l1560"><code>src&#x2F;node_gdal.cpp:1560</code></a>
         </p>
 
 
@@ -282,7 +295,7 @@ height="20"></iframe></p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l450"><code>src&#x2F;node_gdal.cpp:450</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l452"><code>src&#x2F;node_gdal.cpp:452</code></a>
         </p>
 
 
@@ -307,7 +320,7 @@ height="20"></iframe></p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1584"><code>src&#x2F;node_gdal.cpp:1584</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l1586"><code>src&#x2F;node_gdal.cpp:1586</code></a>
         </p>
 
 
@@ -336,7 +349,7 @@ Use <code>(gdal as any).eventLoopWarning = false</code> to set the value from Ty
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1572"><code>src&#x2F;node_gdal.cpp:1572</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l1574"><code>src&#x2F;node_gdal.cpp:1574</code></a>
         </p>
 
 
@@ -364,7 +377,7 @@ will be null or an object containing three properties: "number",
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l1548"><code>src&#x2F;node_gdal.cpp:1548</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l1550"><code>src&#x2F;node_gdal.cpp:1550</code></a>
         </p>
 
 
@@ -378,9 +391,9 @@ will be null or an object containing three properties: "number",
 
 
 </div>
-<div id="prop-vsimem" class="property item">
-    <h3 class="name"><code>vsimem</code></h3>
-    <span class="type">Vsimem</span>
+<div id="prop-progress_cb" class="property item">
+    <h3 class="name"><code>progress_cb</code></h3>
+    <span class="type">ProgressCb</span>
 
 
 
@@ -389,7 +402,175 @@ will be null or an object containing three properties: "number",
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_memfile.cpp.html#l5"><code>src&#x2F;gdal_memfile.cpp:5</code></a>
+        <a href="../files/src_async.hpp.html#l180"><code>src&#x2F;async.hpp:180</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-{number[]} geoTransform" class="property item">
+    <h3 class="name"><code>{number[]} geoTransform</code></h3>
+    <span class="type">Xyz</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_warper.cpp.html#l344"><code>src&#x2F;gdal_warper.cpp:344</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-{number} [maxError]" class="property item">
+    <h3 class="name"><code>{number} [maxError]</code></h3>
+    <span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_warper.cpp.html#l336"><code>src&#x2F;gdal_warper.cpp:336</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-{number} [smoothingIterations]" class="property item">
+    <h3 class="name"><code>{number} [smoothingIterations]</code></h3>
+    <span class="type"><a href="../classes/gdal.RasterBand.html" class="crosslink">gdal.RasterBand</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_algorithms.cpp.html#l19"><code>src&#x2F;gdal_algorithms.cpp:19</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-{ProgressCb} [progress_cb]" class="property item">
+    <h3 class="name"><code>{ProgressCb} [progress_cb]</code></h3>
+    <span class="type"><a href="../classes/gdal.RasterBand.html" class="crosslink">gdal.RasterBand</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_algorithms.cpp.html#l93"><code>src&#x2F;gdal_algorithms.cpp:93</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-{ProgressCb} [progress_cb]" class="property item">
+    <h3 class="name"><code>{ProgressCb} [progress_cb]</code></h3>
+    <span class="type"><a href="../classes/gdal.RasterBand.html" class="crosslink">gdal.RasterBand</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_algorithms.cpp.html#l239"><code>src&#x2F;gdal_algorithms.cpp:239</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-{ProgressCb} [progress_cb]" class="property item">
+    <h3 class="name"><code>{ProgressCb} [progress_cb]</code></h3>
+    <span class="type"><a href="../classes/gdal.RasterBand.html" class="crosslink">gdal.RasterBand</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_algorithms.cpp.html#l412"><code>src&#x2F;gdal_algorithms.cpp:412</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+
+
+</div>
+<div id="prop-{ProgressCb} [progress_cb]" class="property item">
+    <h3 class="name"><code>{ProgressCb} [progress_cb]</code></h3>
+    <span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_gdal_warper.cpp.html#l165"><code>src&#x2F;gdal_warper.cpp:165</code></a>
         </p>
 
 
@@ -423,7 +604,7 @@ will be null or an object containing three properties: "number",
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l122"><code>src&#x2F;node_gdal.cpp:122</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l123"><code>src&#x2F;node_gdal.cpp:123</code></a>
         </p>
 
 
@@ -478,7 +659,7 @@ will be null or an object containing three properties: "number",
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l317"><code>src&#x2F;gdal_algorithms.cpp:317</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l336"><code>src&#x2F;gdal_algorithms.cpp:336</code></a>
 		</p>
 
 
@@ -582,7 +763,7 @@ will be null or an object containing three properties: "number",
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l332"><code>src&#x2F;gdal_algorithms.cpp:332</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l351"><code>src&#x2F;gdal_algorithms.cpp:351</code></a>
 		</p>
 
 
@@ -684,7 +865,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l93"><code>src&#x2F;gdal_algorithms.cpp:93</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l106"><code>src&#x2F;gdal_algorithms.cpp:106</code></a>
 		</p>
 
 
@@ -828,7 +1009,7 @@ The callback takes two arguments, the first one, <code>complete</code>, is a num
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l117"><code>src&#x2F;gdal_algorithms.cpp:117</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l130"><code>src&#x2F;gdal_algorithms.cpp:130</code></a>
 		</p>
 
 
@@ -1004,7 +1185,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_node_gdal.cpp.html#l319"><code>src&#x2F;node_gdal.cpp:319</code></a>
+		<a href="../files/src_node_gdal.cpp.html#l320"><code>src&#x2F;node_gdal.cpp:320</code></a>
 		</p>
 
 
@@ -1078,7 +1259,7 @@ N or E</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l23"><code>src&#x2F;gdal_algorithms.cpp:23</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l27"><code>src&#x2F;gdal_algorithms.cpp:27</code></a>
 		</p>
 
 
@@ -1167,7 +1348,7 @@ N or E</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l37"><code>src&#x2F;gdal_algorithms.cpp:37</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l41"><code>src&#x2F;gdal_algorithms.cpp:41</code></a>
 		</p>
 
 
@@ -1258,6 +1439,187 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 		</div>
 
 </div>
+<div id="method-info" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>gdal.info</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>dataset</code>
+				</li>
+				<li class="arg">
+						<code>array</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">String</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_utils.cpp.html#l181"><code>src&#x2F;gdal_utils.cpp:181</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Library version of gdalinfo.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">dataset</code>
+						<span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">array</code>
+						<span class="type">String[]</span>
+
+
+					<div class="param-description"><p>of CLI options for gdalinfo</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">String</span>
+			</div>
+		</div>
+
+		<div class="example">
+			<h4>Example:</h4>
+
+			<div class="example-content">
+				<p>const ds = gdal.open('input.tif')
+const output = <a href="http://gdal.info">gdal.info</a>('/vsimem/temp.tif')</p>
+
+			</div>
+		</div>
+</div>
+<div id="method-infoAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>gdal.infoAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>dataset</code>
+				</li>
+				<li class="arg">
+						<code>array</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback=undefined</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Promise<string></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_utils.cpp.html#l197"><code>src&#x2F;gdal_utils.cpp:197</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Library version of gdalinfo.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">dataset</code>
+						<span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">array</code>
+						<span class="type">String[]</span>
+
+
+					<div class="param-description"><p>of CLI options for gdalinfo</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback<void></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+
+standard Node.js <code>(error, result)</code> callback. It is always the last parameter and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Promise<string></span>
+			</div>
+		</div>
+
+		<div class="example">
+			<h4>Example:</h4>
+
+			<div class="example-content">
+				<p>const ds = gdal.open('input.tif')
+const output = <a href="http://gdal.info">gdal.info</a>('/vsimem/temp.tif')</p>
+
+			</div>
+		</div>
+</div>
 <div id="method-open" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>gdal.open</code></span>
@@ -1303,7 +1665,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/lib_gdal.js.html#l1079"><code>lib&#x2F;gdal.js:1079</code></a>
+		<a href="../files/lib_gdal.js.html#l1082"><code>lib&#x2F;gdal.js:1082</code></a>
 		</p>
 
 
@@ -1465,7 +1827,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/lib_gdal.js.html#l1176"><code>lib&#x2F;gdal.js:1176</code></a>
+		<a href="../files/lib_gdal.js.html#l1179"><code>lib&#x2F;gdal.js:1179</code></a>
 		</p>
 
 
@@ -1624,7 +1986,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/lib_gdal.js.html#l1209"><code>lib&#x2F;gdal.js:1209</code></a>
+		<a href="../files/lib_gdal.js.html#l1212"><code>lib&#x2F;gdal.js:1212</code></a>
 		</p>
 
 
@@ -1695,7 +2057,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l395"><code>src&#x2F;gdal_algorithms.cpp:395</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l423"><code>src&#x2F;gdal_algorithms.cpp:423</code></a>
 		</p>
 
 
@@ -1818,7 +2180,7 @@ The callback takes two arguments, the first one, <code>complete</code>, is a num
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l415"><code>src&#x2F;gdal_algorithms.cpp:415</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l443"><code>src&#x2F;gdal_algorithms.cpp:443</code></a>
 		</p>
 
 
@@ -1952,7 +2314,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_node_gdal.cpp.html#l1603"><code>src&#x2F;node_gdal.cpp:1603</code></a>
+		<a href="../files/src_node_gdal.cpp.html#l1605"><code>src&#x2F;node_gdal.cpp:1605</code></a>
 		</p>
 
 
@@ -1986,7 +2348,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_warper.cpp.html#l169"><code>src&#x2F;gdal_warper.cpp:169</code></a>
+		<a href="../files/src_gdal_warper.cpp.html#l187"><code>src&#x2F;gdal_warper.cpp:187</code></a>
 		</p>
 
 
@@ -2185,7 +2547,7 @@ The callback takes two arguments, the first one, <code>complete</code>, is a num
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_warper.cpp.html#l196"><code>src&#x2F;gdal_warper.cpp:196</code></a>
+		<a href="../files/src_gdal_warper.cpp.html#l214"><code>src&#x2F;gdal_warper.cpp:214</code></a>
 		</p>
 
 
@@ -2407,7 +2769,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_node_gdal.cpp.html#l350"><code>src&#x2F;node_gdal.cpp:350</code></a>
+		<a href="../files/src_node_gdal.cpp.html#l351"><code>src&#x2F;node_gdal.cpp:351</code></a>
 		</p>
 
 
@@ -2456,7 +2818,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l230"><code>src&#x2F;gdal_algorithms.cpp:230</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l249"><code>src&#x2F;gdal_algorithms.cpp:249</code></a>
 		</p>
 
 
@@ -2569,7 +2931,7 @@ The callback takes two arguments, the first one, <code>complete</code>, is a num
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_algorithms.cpp.html#l246"><code>src&#x2F;gdal_algorithms.cpp:246</code></a>
+		<a href="../files/src_gdal_algorithms.cpp.html#l265"><code>src&#x2F;gdal_algorithms.cpp:265</code></a>
 		</p>
 
 
@@ -2708,7 +3070,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_warper.cpp.html#l326"><code>src&#x2F;gdal_warper.cpp:326</code></a>
+		<a href="../files/src_gdal_warper.cpp.html#l350"><code>src&#x2F;gdal_warper.cpp:350</code></a>
 		</p>
 
 
@@ -2805,7 +3167,7 @@ properties.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_warper.cpp.html#l343"><code>src&#x2F;gdal_warper.cpp:343</code></a>
+		<a href="../files/src_gdal_warper.cpp.html#l367"><code>src&#x2F;gdal_warper.cpp:367</code></a>
 		</p>
 
 
@@ -2894,6 +3256,424 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 		</div>
 
 </div>
+<div id="method-translate" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>gdal.translate</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>destination</code>
+				</li>
+				<li class="arg">
+						<code>source</code>
+				</li>
+				<li class="arg">
+						<code>array</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_utils.cpp.html#l22"><code>src&#x2F;gdal_utils.cpp:22</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Library version of gdal_translate.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">destination</code>
+						<span class="type">String</span>
+
+
+					<div class="param-description"><p>destination filename</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">source</code>
+						<span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+
+
+					<div class="param-description"><p>source dataset</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">array</code>
+						<span class="type">String[]</span>
+
+
+					<div class="param-description"><p>of CLI options for gdal_translate</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+			</div>
+		</div>
+
+		<div class="example">
+			<h4>Example:</h4>
+
+			<div class="example-content">
+				<p>const ds = gdal.open('input.tif')
+const out = gdal.translate('/vsimem/temp.tif', ds, [ '-b', '1' ])</p>
+
+			</div>
+		</div>
+</div>
+<div id="method-translateAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>gdal.translateAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>destination</code>
+				</li>
+				<li class="arg">
+						<code>source</code>
+				</li>
+				<li class="arg">
+						<code>array</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback=undefined</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Promise<gdal.Dataset></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_utils.cpp.html#l39"><code>src&#x2F;gdal_utils.cpp:39</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Library version of gdal_translate.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">destination</code>
+						<span class="type">String</span>
+
+
+					<div class="param-description"><p>destination filename</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">source</code>
+						<span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+
+
+					<div class="param-description"><p>source dataset</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">array</code>
+						<span class="type">String[]</span>
+
+
+					<div class="param-description"><p>of CLI options for gdal_translate</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback<void></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+
+standard Node.js <code>(error, result)</code> callback. It is always the last parameter and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Promise<gdal.Dataset></span>
+			</div>
+		</div>
+
+		<div class="example">
+			<h4>Example:</h4>
+
+			<div class="example-content">
+				<p>const ds = gdal.open('input.tif')
+const out = gdal.translate('/vsimem/temp.tif', ds, [ '-b', '1' ])</p>
+
+			</div>
+		</div>
+</div>
+<div id="method-vectorTranslate" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>gdal.vectorTranslate</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>destination</code>
+				</li>
+				<li class="arg">
+						<code>source</code>
+				</li>
+				<li class="arg">
+						<code>array</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_utils.cpp.html#l90"><code>src&#x2F;gdal_utils.cpp:90</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Library version of ogr2ogr.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">destination</code>
+						<span class="type">String  |  <a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+
+
+					<div class="param-description"><p>destination</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">source</code>
+						<span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+
+
+					<div class="param-description"><p>source dataset</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">array</code>
+						<span class="type">String[]</span>
+
+
+					<div class="param-description"><p>of CLI options for ogr2ogr</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+			</div>
+		</div>
+
+		<div class="example">
+			<h4>Example:</h4>
+
+			<div class="example-content">
+				<p>const ds = gdal.open('input.geojson')
+const out = gdal.vectorTranslate('/vsimem/temp.gpkg', [ '-of', 'GPKG' ], ds)</p>
+
+			</div>
+		</div>
+</div>
+<div id="method-vectorTranslateAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>gdal.vectorTranslateAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>destination</code>
+				</li>
+				<li class="arg">
+						<code>source</code>
+				</li>
+				<li class="arg">
+						<code>array</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback=undefined</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Promise<gdal.Dataset></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_utils.cpp.html#l107"><code>src&#x2F;gdal_utils.cpp:107</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Library version of ogr2ogr.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">destination</code>
+						<span class="type">String  |  <a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+
+
+					<div class="param-description"><p>destination</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">source</code>
+						<span class="type"><a href="../classes/gdal.Dataset.html" class="crosslink">gdal.Dataset</a></span>
+
+
+					<div class="param-description"><p>source dataset</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">array</code>
+						<span class="type">String[]</span>
+
+
+					<div class="param-description"><p>of CLI options for ogr2ogr</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback<void></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+
+standard Node.js <code>(error, result)</code> callback. It is always the last parameter and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Promise<gdal.Dataset></span>
+			</div>
+		</div>
+
+		<div class="example">
+			<h4>Example:</h4>
+
+			<div class="example-content">
+				<p>const ds = gdal.open('input.geojson')
+const out = gdal.vectorTranslate('/vsimem/temp.gpkg', [ '-of', 'GPKG' ], ds)</p>
+
+			</div>
+		</div>
+</div>
 <div id="method-verbose" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>gdal.verbose</code></span>
@@ -2909,7 +3689,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_node_gdal.cpp.html#l1612"><code>src&#x2F;node_gdal.cpp:1612</code></a>
+		<a href="../files/src_node_gdal.cpp.html#l1614"><code>src&#x2F;node_gdal.cpp:1614</code></a>
 		</p>
 
 

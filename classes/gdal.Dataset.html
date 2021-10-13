@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.5</b>
+                    API Docs for Version: <b>3.4.0-alpha.3</b>
                 </p>
             </li>
         </div>
@@ -179,7 +179,10 @@ layers = dataset.layers;<code>&#x60;</code></code></pre>
 				<li><a href="#method-getGCPProjection"><span class="im">getGCPProjection</span>()</a></li>
 				<li><a href="#method-getGCPs"><span class="im">getGCPs</span>()</a></li>
 				<li><a href="#method-getMetadata"><span class="im">getMetadata</span>(<span class="ia">domain</span>)</a></li>
+				<li><a href="#method-getMetadataAsync"><span class="im">getMetadataAsync</span>(<span class="ia">domain</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-setGCPs"><span class="im">setGCPs</span>(<span class="ia">gcps</span><span class="ia">projection</span>)</a></li>
+				<li><a href="#method-setMetadata"><span class="im">setMetadata</span>(<span class="ia">metadata</span><span class="ia">domain</span>)</a></li>
+				<li><a href="#method-setMetadataAsync"><span class="im">setMetadataAsync</span>(<span class="ia">metadata</span><span class="ia">domain</span><span class="ia">callback</span>)</a></li>
 				<li><a href="#method-testCapability"><span class="im">testCapability</span>(<span class="ia">capability</span>)</a></li>
 			</ul>
 		</li>
@@ -241,7 +244,7 @@ layers = dataset.layers;<code>&#x60;</code></code></pre>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_dataset.cpp.html#l513"><code>src&#x2F;gdal_dataset.cpp:513</code></a>
+		<a href="../files/src_gdal_dataset.cpp.html#l568"><code>src&#x2F;gdal_dataset.cpp:568</code></a>
 		</p>
 
 
@@ -352,7 +355,7 @@ The callback takes two arguments, the first one, <code>complete</code>, is a num
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_dataset.cpp.html#l526"><code>src&#x2F;gdal_dataset.cpp:526</code></a>
+		<a href="../files/src_gdal_dataset.cpp.html#l581"><code>src&#x2F;gdal_dataset.cpp:581</code></a>
 		</p>
 
 
@@ -471,7 +474,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_dataset.cpp.html#l226"><code>src&#x2F;gdal_dataset.cpp:226</code></a>
+		<a href="../files/src_gdal_dataset.cpp.html#l281"><code>src&#x2F;gdal_dataset.cpp:281</code></a>
 		</p>
 
 
@@ -524,7 +527,7 @@ must take place on the main thread.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_dataset.cpp.html#l288"><code>src&#x2F;gdal_dataset.cpp:288</code></a>
+		<a href="../files/src_gdal_dataset.cpp.html#l343"><code>src&#x2F;gdal_dataset.cpp:343</code></a>
 		</p>
 
 
@@ -617,7 +620,7 @@ used.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_dataset.cpp.html#l304"><code>src&#x2F;gdal_dataset.cpp:304</code></a>
+		<a href="../files/src_gdal_dataset.cpp.html#l359"><code>src&#x2F;gdal_dataset.cpp:359</code></a>
 		</p>
 
 
@@ -714,7 +717,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_dataset.cpp.html#l257"><code>src&#x2F;gdal_dataset.cpp:257</code></a>
+		<a href="../files/src_gdal_dataset.cpp.html#l312"><code>src&#x2F;gdal_dataset.cpp:312</code></a>
 		</p>
 
 
@@ -751,7 +754,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_dataset.cpp.html#l264"><code>src&#x2F;gdal_dataset.cpp:264</code></a>
+		<a href="../files/src_gdal_dataset.cpp.html#l319"><code>src&#x2F;gdal_dataset.cpp:319</code></a>
 		</p>
 
 
@@ -817,7 +820,7 @@ Argument type errors are thrown synchronously even when a callback is provided. 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_dataset.cpp.html#l353"><code>src&#x2F;gdal_dataset.cpp:353</code></a>
+		<a href="../files/src_gdal_dataset.cpp.html#l408"><code>src&#x2F;gdal_dataset.cpp:408</code></a>
 		</p>
 
 
@@ -859,7 +862,7 @@ files associated with the dataset (for instance a virtual dataset).</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_dataset.cpp.html#l206"><code>src&#x2F;gdal_dataset.cpp:206</code></a>
+		<a href="../files/src_gdal_dataset.cpp.html#l261"><code>src&#x2F;gdal_dataset.cpp:261</code></a>
 		</p>
 
 
@@ -897,7 +900,7 @@ files associated with the dataset (for instance a virtual dataset).</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_dataset.cpp.html#l400"><code>src&#x2F;gdal_dataset.cpp:400</code></a>
+		<a href="../files/src_gdal_dataset.cpp.html#l455"><code>src&#x2F;gdal_dataset.cpp:455</code></a>
 		</p>
 
 
@@ -941,7 +944,7 @@ files associated with the dataset (for instance a virtual dataset).</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_dataset.cpp.html#l157"><code>src&#x2F;gdal_dataset.cpp:157</code></a>
+		<a href="../files/src_gdal_dataset.cpp.html#l159"><code>src&#x2F;gdal_dataset.cpp:159</code></a>
 		</p>
 
 
@@ -975,6 +978,89 @@ files associated with the dataset (for instance a virtual dataset).</p>
 		</div>
 
 </div>
+<div id="method-getMetadataAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>getMetadataAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code class="optional">domain</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback=undefined</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Promise<any></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_dataset.cpp.html#l167"><code>src&#x2F;gdal_dataset.cpp:167</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Fetch metadata.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name optional">[domain]</code>
+						<span class="type">String</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback<void></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+
+standard Node.js <code>(error, result)</code> callback. It is always the last parameter and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Promise<any></span>
+			</div>
+		</div>
+
+</div>
 <div id="method-setGCPs" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>setGCPs</code></span>
@@ -999,7 +1085,7 @@ files associated with the dataset (for instance a virtual dataset).</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_dataset.cpp.html#l448"><code>src&#x2F;gdal_dataset.cpp:448</code></a>
+		<a href="../files/src_gdal_dataset.cpp.html#l503"><code>src&#x2F;gdal_dataset.cpp:503</code></a>
 		</p>
 
 
@@ -1033,6 +1119,167 @@ files associated with the dataset (for instance a virtual dataset).</p>
 
 
 </div>
+<div id="method-setMetadata" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>setMetadata</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>metadata</code>
+				</li>
+				<li class="arg">
+						<code class="optional">domain</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Boolean</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_dataset.cpp.html#l192"><code>src&#x2F;gdal_dataset.cpp:192</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Set metadata. Can return a warning (false) for formats not supporting persistent metadata.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">metadata</code>
+						<span class="type">Object  | String[]</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[domain]</code>
+						<span class="type">String</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Boolean</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-setMetadataAsync" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>setMetadataAsync</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>metadata</code>
+				</li>
+				<li class="arg">
+						<code class="optional">domain</code>
+				</li>
+				<li class="arg">
+						<code class="optional">callback=undefined</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Promise<boolean></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_dataset.cpp.html#l201"><code>src&#x2F;gdal_dataset.cpp:201</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Set metadata. Can return a warning (false) for formats not supporting persistent metadata.
+
+Asynchronous version.
+If the last parameter is a callback, then this callback is called on completion and undefined is returned.
+All optional parameters before the callback can be omitted so the callback parameter can be at any position as long
+as it is the last parameter. Otherwise the function returns a Promise resolved with the result.
+</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">metadata</code>
+						<span class="type">Object  | String[]</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[domain]</code>
+						<span class="type">String</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[callback=undefined]</code>
+						<span class="type">Callback<void></span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>
+
+standard Node.js <code>(error, result)</code> callback. It is always the last parameter and can be specified even if certain optional parameters are omitted.
+On error <code>error</code> is an <code>Error</code> object and <code>result</code> is <code>undefined</code>. On success <code>error</code> is <code>null</code> and <code>result</code> contains the result.
+The function returns a Promise when the callback is <code>undefined</code>. The return value is undefined when a callback is provided.
+Argument type errors are thrown synchronously even when a callback is provided. In Promise mode all errors result in a rejected Promise.
+</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Promise<boolean></span>
+			</div>
+		</div>
+
+</div>
 <div id="method-testCapability" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>testCapability</code></span>
@@ -1057,7 +1304,7 @@ files associated with the dataset (for instance a virtual dataset).</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_dataset.cpp.html#l180"><code>src&#x2F;gdal_dataset.cpp:180</code></a>
+		<a href="../files/src_gdal_dataset.cpp.html#l235"><code>src&#x2F;gdal_dataset.cpp:235</code></a>
 		</p>
 
 
@@ -1116,7 +1363,7 @@ list</a>)</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l905"><code>src&#x2F;gdal_dataset.cpp:905</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l960"><code>src&#x2F;gdal_dataset.cpp:960</code></a>
         </p>
 
 
@@ -1145,7 +1392,7 @@ list</a>)</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l615"><code>src&#x2F;gdal_dataset.cpp:615</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l670"><code>src&#x2F;gdal_dataset.cpp:670</code></a>
         </p>
 
 
@@ -1174,7 +1421,7 @@ list</a>)</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l814"><code>src&#x2F;gdal_dataset.cpp:814</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l869"><code>src&#x2F;gdal_dataset.cpp:869</code></a>
         </p>
 
 
@@ -1202,7 +1449,7 @@ list</a>)</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l749"><code>src&#x2F;gdal_dataset.cpp:749</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l804"><code>src&#x2F;gdal_dataset.cpp:804</code></a>
         </p>
 
 
@@ -1242,7 +1489,7 @@ var Ygeo = GT[3] + Xpixel*GT[4] + Yline*GT[5];<code>&#x60;</code></code></pre>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l763"><code>src&#x2F;gdal_dataset.cpp:763</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l818"><code>src&#x2F;gdal_dataset.cpp:818</code></a>
         </p>
 
 
@@ -1287,7 +1534,7 @@ Asynchronous read-only getter. Returns a Promise that resolves with the result.
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l915"><code>src&#x2F;gdal_dataset.cpp:915</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l970"><code>src&#x2F;gdal_dataset.cpp:970</code></a>
         </p>
 
 
@@ -1316,7 +1563,7 @@ Asynchronous read-only getter. Returns a Promise that resolves with the result.
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l638"><code>src&#x2F;gdal_dataset.cpp:638</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l693"><code>src&#x2F;gdal_dataset.cpp:693</code></a>
         </p>
 
 
@@ -1346,7 +1593,7 @@ Asynchronous read-only getter. Returns a Promise that resolves with the result.
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l646"><code>src&#x2F;gdal_dataset.cpp:646</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l701"><code>src&#x2F;gdal_dataset.cpp:701</code></a>
         </p>
 
 
@@ -1379,7 +1626,7 @@ Asynchronous read-only getter. Returns a Promise that resolves with the result.
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l925"><code>src&#x2F;gdal_dataset.cpp:925</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l980"><code>src&#x2F;gdal_dataset.cpp:980</code></a>
         </p>
 
 
@@ -1407,7 +1654,7 @@ Asynchronous read-only getter. Returns a Promise that resolves with the result.
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l697"><code>src&#x2F;gdal_dataset.cpp:697</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l752"><code>src&#x2F;gdal_dataset.cpp:752</code></a>
         </p>
 
 
@@ -1436,7 +1683,7 @@ Asynchronous read-only getter. Returns a Promise that resolves with the result.
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_gdal_dataset.cpp.html#l705"><code>src&#x2F;gdal_dataset.cpp:705</code></a>
+        <a href="../files/src_gdal_dataset.cpp.html#l760"><code>src&#x2F;gdal_dataset.cpp:760</code></a>
         </p>
 
 

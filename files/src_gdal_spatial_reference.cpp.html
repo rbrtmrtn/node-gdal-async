@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.3.5</b>
+                    API Docs for Version: <b>3.4.0-alpha.3</b>
                 </p>
             </li>
         </div>
@@ -986,7 +986,7 @@ NAN_METHOD(SpatialReference::fromEPSGA) {
  * @static
  * @throws Error
  * @method fromESRI
- * @param {string[]} input
+ * @param {object|string[]} input
  * @return {gdal.SpatialReference}
  */
 NAN_METHOD(SpatialReference::fromESRI) {
@@ -1015,7 +1015,9 @@ NAN_METHOD(SpatialReference::fromESRI) {
 }
 
 /**
- * @typedef units { units: string, value: number }
+ * @typedef units
+ * @property {string} units
+ * @property {number} value
  */
 
 /**
