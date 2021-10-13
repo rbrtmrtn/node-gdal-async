@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.4.0-alpha.2</b>
+                    API Docs for Version: <b>3.3.5</b>
                 </p>
             </li>
         </div>
@@ -518,6 +518,8 @@ template &lt;class GDALType&gt; void GDALPromiseWorker&lt;GDALType&gt;::HandleEr
 }
 
 template &lt;class GDALType&gt; GDALPromiseWorker&lt;GDALType&gt;::~GDALPromiseWorker() {
+  context_handle-&gt;Reset();
+  resolver_handle-&gt;Reset();
   delete context_handle;
   delete resolver_handle;
 }
@@ -619,7 +621,6 @@ template &lt;class GDALType&gt; class GDALAsyncableJob {
 };
 } // namespace node_gdal
 #endif
-
     </pre>
 </div>
                     </div>

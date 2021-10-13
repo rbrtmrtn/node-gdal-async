@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.4.0-alpha.2</b>
+                    API Docs for Version: <b>3.3.5</b>
                 </p>
             </li>
         </div>
@@ -307,7 +307,6 @@ auto DatasetRval = [](GDALDataset *ds, GetFromPersistentFunc) { return Dataset::
  * types{{/crossLink}})
  * @param {string[]|object} [creation_options] An array or object containing
  * driver-specific dataset creation options
- * @throws
  * @return {gdal.Dataset}
  */
 
@@ -328,7 +327,6 @@ auto DatasetRval = [](GDALDataset *ds, GetFromPersistentFunc) { return Dataset::
  * @param {string[]|object} [creation_options] An array or object containing
  * driver-specific dataset creation options
  * @param {callback&lt;gdal.Dataset&gt;} [callback=undefined] {{{cb}}}
- * @throws
  * @return {Promise&lt;gdal.Dataset&gt;}
  */
 GDAL_ASYNCABLE_DEFINE(Driver::create) {
@@ -353,7 +351,6 @@ GDAL_ASYNCABLE_DEFINE(Driver::create) {
     NODE_ARG_INT_OPT(3, &quot;number of bands&quot;, n_bands);
     NODE_ARG_OPT_STR(4, &quot;data type&quot;, type_name);
     if (info.Length() &gt; 5 &amp;&amp; options-&gt;parse(info[5])) {
-      Nan::ThrowError(&quot;Failed parsing options&quot;);
       return; // error parsing string list
     }
     if (!type_name.empty()) { type = GDALGetDataTypeByName(type_name.c_str()); }
@@ -531,8 +528,7 @@ NAN_METHOD(Driver::getMetadata) {
   NODE_ARG_OPT_STR(0, &quot;domain&quot;, domain);
 
   GDALDriver *raw = driver-&gt;getGDALDriver();
-  char **md = raw-&gt;GetMetadata(domain.empty() ? NULL : domain.c_str());
-  result = MajorObject::getMetadata(md);
+  result = MajorObject::getMetadata(raw, domain.empty() ? NULL : domain.c_str());
   info.GetReturnValue().Set(result);
 }
 

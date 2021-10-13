@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.4.0-alpha.2</b>
+                    API Docs for Version: <b>3.3.5</b>
                 </p>
             </li>
         </div>
@@ -526,6 +526,7 @@ GDAL_ASYNCABLE_DEFINE(Algorithms::checksumImage) {
   long src_uid = src-&gt;parent_uid;
 
   GDALAsyncableJob&lt;int&gt; job(src_uid);
+  job.persist(src-&gt;handle());
   job.main = [gdal_src, x, y, w, h](const GDALExecutionProgress &amp;) {
     int r = GDALChecksumImage(gdal_src, x, y, w, h);
     return r;
