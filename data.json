@@ -10239,7 +10239,7 @@
         {
             "file": "src/gdal_layer.cpp",
             "line": 305,
-            "description": "Sets the attribute query string to be used when fetching features via the\n`layer.features.next()` method. Only features for which the query evaluates\nas `true` will be returned.\n\nThe query string should be in the format of an SQL WHERE clause. For instance\n\"population > 1000000 and population < 5000000\" where `population` is an\nattribute in the layer. The query format is normally a restricted form of\nSQL WHERE clause as described in the \"WHERE\" section of the [OGR SQL\ntutorial](http://www.gdal.org/ogr_sql.html). In some cases (RDBMS backed\ndrivers) the native capabilities of the database may be used to interprete\nthe WHERE clause in which case the capabilities will be broader than those\nof OGR SQL.",
+            "description": "Sets the attribute query string to be used when fetching features via the\n`layer.features.next()` method. Only features for which the query evaluates\nas `true` will be returned.\n\nThe query string should be in the format of an SQL WHERE clause. For instance\n\"population > 1000000 and population < 5000000\" where `population` is an\nattribute in the layer. The query format is normally a restricted form of\nSQL WHERE clause as described in the \"WHERE\" section of the [OGR SQL\ntutorial](https://gdal.org/user/ogr_sql_dialect.html). In some cases (RDBMS backed\ndrivers) the native capabilities of the database may be used to interprete\nthe WHERE clause in which case the capabilities will be broader than those\nof OGR SQL.",
             "example": [
                 "\n```\nlayer.setAttributeFilter('population > 1000000 and population < 5000000');```"
             ],
@@ -12232,7 +12232,7 @@
                         },
                         {
                             "name": "options] Warp options (see: [reference",
-                            "description": "(http://www.gdal.org/structGDALWarpOptions.html#a0ed77f9917bb96c7a9aabd73d4d06e08))",
+                            "description": "(https://gdal.org/doxygen/structGDALWarpOptions.html))",
                             "type": "String[]|object",
                             "optional": true
                         },
@@ -12351,7 +12351,7 @@
                         },
                         {
                             "name": "options] Warp options (see:[reference",
-                            "description": "(http://www.gdal.org/structGDALWarpOptions.html#a0ed77f9917bb96c7a9aabd73d4d06e08))",
+                            "description": "(https://gdal.org/doxygen/structGDALWarpOptions.html)",
                             "type": "String[]|object",
                             "optional": true
                         },
