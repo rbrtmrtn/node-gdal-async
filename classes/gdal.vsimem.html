@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/geometry/gdal_point.cpp - node-gdal-async</title>
+    <title>gdal.vsimem - node-gdal-async</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -137,167 +137,183 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>src/geometry/gdal_point.cpp <small>File</small></h1>
+    <h1>gdal.vsimem</h1>
 </div>
 
-<div class="file">
-    <pre class="prettyprint linenums">
-#include &quot;gdal_point.hpp&quot;
-#include &quot;../gdal_common.hpp&quot;
-#include &quot;gdal_geometry.hpp&quot;
 
-#include &lt;stdlib.h&gt;
 
-namespace node_gdal {
 
-Nan::Persistent&lt;FunctionTemplate&gt; Point::constructor;
 
-void Point::Initialize(Local&lt;Object&gt; target) {
-  Nan::HandleScope scope;
 
-  Local&lt;FunctionTemplate&gt; lcons = Nan::New&lt;FunctionTemplate&gt;(Point::New);
-  lcons-&gt;Inherit(Nan::New(Geometry::constructor));
-  lcons-&gt;InstanceTemplate()-&gt;SetInternalFieldCount(1);
-  lcons-&gt;SetClassName(Nan::New(&quot;Point&quot;).ToLocalChecked());
+<div class="yuidoc-class-description">
+<p>Operations on in-memory /vsimem/ files</p>
 
-  Nan::SetPrototypeMethod(lcons, &quot;toString&quot;, toString);
-
-  // properties
-  ATTR(lcons, &quot;x&quot;, xGetter, xSetter);
-  ATTR(lcons, &quot;y&quot;, yGetter, ySetter);
-  ATTR(lcons, &quot;z&quot;, zGetter, zSetter);
-
-  Nan::Set(target, Nan::New(&quot;Point&quot;).ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
-
-  constructor.Reset(lcons);
-}
-
-/**
- * Point class.
- *
- * @constructor
- * @class gdal.Point
- * @extends gdal.Geometry
- * @param {number} x
- * @param {number} y
- * @param {number} [z]
- */
-NAN_METHOD(Point::New) {
-  Nan::HandleScope scope;
-  Point *f;
-  OGRPoint *geom;
-  double x = 0, y = 0, z = 0;
-
-  if (!info.IsConstructCall()) {
-    Nan::ThrowError(&quot;Cannot call constructor as function, you need to use &#x27;new&#x27; keyword&quot;);
-    return;
-  }
-
-  if (info[0]-&gt;IsExternal()) {
-    Local&lt;External&gt; ext = info[0].As&lt;External&gt;();
-    void *ptr = ext-&gt;Value();
-    f = static_cast&lt;Point *&gt;(ptr);
-
-  } else {
-    NODE_ARG_DOUBLE_OPT(0, &quot;x&quot;, x);
-    NODE_ARG_DOUBLE_OPT(1, &quot;y&quot;, y);
-    NODE_ARG_DOUBLE_OPT(2, &quot;z&quot;, z);
-
-    if (info.Length() == 1) {
-      Nan::ThrowError(&quot;Point constructor must be given 0, 2, or 3 arguments&quot;);
-      return;
-    }
-
-    if (info.Length() == 3) {
-      geom = new OGRPoint(x, y, z);
-    } else {
-      geom = new OGRPoint(x, y);
-    }
-
-    f = new Point(geom);
-  }
-
-  f-&gt;Wrap(info.This());
-  info.GetReturnValue().Set(info.This());
-}
-
-NAN_METHOD(Point::toString) {
-  Nan::HandleScope scope;
-  info.GetReturnValue().Set(Nan::New(&quot;Point&quot;).ToLocalChecked());
-}
-
-/**
- * @attribute x
- * @type {number}
- */
-NAN_GETTER(Point::xGetter) {
-  Nan::HandleScope scope;
-  Point *geom = Nan::ObjectWrap::Unwrap&lt;Point&gt;(info.This());
-  info.GetReturnValue().Set(Nan::New&lt;Number&gt;((geom-&gt;this_)-&gt;getX()));
-}
-
-NAN_SETTER(Point::xSetter) {
-  Nan::HandleScope scope;
-  Point *geom = Nan::ObjectWrap::Unwrap&lt;Point&gt;(info.This());
-
-  if (!value-&gt;IsNumber()) {
-    Nan::ThrowError(&quot;y must be a number&quot;);
-    return;
-  }
-  double x = Nan::To&lt;double&gt;(value).ToChecked();
-
-  ((OGRPoint *)geom-&gt;this_)-&gt;setX(x);
-}
-
-/**
- * @attribute y
- * @type {number}
- */
-NAN_GETTER(Point::yGetter) {
-  Nan::HandleScope scope;
-  Point *geom = Nan::ObjectWrap::Unwrap&lt;Point&gt;(info.This());
-  info.GetReturnValue().Set(Nan::New&lt;Number&gt;((geom-&gt;this_)-&gt;getY()));
-}
-
-NAN_SETTER(Point::ySetter) {
-  Nan::HandleScope scope;
-  Point *geom = Nan::ObjectWrap::Unwrap&lt;Point&gt;(info.This());
-
-  if (!value-&gt;IsNumber()) {
-    Nan::ThrowError(&quot;y must be a number&quot;);
-    return;
-  }
-  double y = Nan::To&lt;double&gt;(value).ToChecked();
-
-  ((OGRPoint *)geom-&gt;this_)-&gt;setY(y);
-}
-
-/**
- * @attribute z
- * @type {number}
- */
-NAN_GETTER(Point::zGetter) {
-  Nan::HandleScope scope;
-  Point *geom = Nan::ObjectWrap::Unwrap&lt;Point&gt;(info.This());
-  info.GetReturnValue().Set(Nan::New&lt;Number&gt;((geom-&gt;this_)-&gt;getZ()));
-}
-
-NAN_SETTER(Point::zSetter) {
-  Point *geom = Nan::ObjectWrap::Unwrap&lt;Point&gt;(info.This());
-
-  if (!value-&gt;IsNumber()) {
-    Nan::ThrowError(&quot;z must be a number&quot;);
-    return;
-  }
-  double z = Nan::To&lt;double&gt;(value).ToChecked();
-
-  ((OGRPoint *)geom-&gt;this_)-&gt;setZ(z);
-}
-
-} // namespace node_gdal
-
-    </pre>
 </div>
+
+<!-- table of contents -->
+
+<div id="class-toc" class="page-section">
+	<h2>Table of Contents</h2>
+    <ul>
+
+
+
+		<li>
+			<strong>Static Methods</strong>
+			<ul>
+				<li><a href="#method-release"><span class="im">gdal.vsimem.release</span>(<span class="ia">filename</span>)</a></li>
+				<li><a href="#method-set"><span class="im">gdal.vsimem.set</span>(<span class="ia">data</span><span class="ia">filename</span>)</a></li>
+			</ul>
+		</li>
+	</ul>
+</div>
+
+<!-- details -->
+
+
+
+
+
+
+    <div id="static-methods" class="page-section">
+        <h2 class="off-left">Static Methods</h2>
+        <div class="item-list">
+<div id="method-release" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>gdal.vsimem.release</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>filename</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Buffer</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_memfile.cpp.html#l124"><code>src&#x2F;gdal_memfile.cpp:124</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Delete and retrieve the contents of an in-memory /vsimem/ file.
+This is a very fast zero-copy operation.
+It does not block the event loop.
+If the file was created by <code>vsimem.set</code>, it will return a reference
+to the same Buffer that was used to create it.
+Otherwise it will construct a new <code>Buffer</code> object with the GDAL
+allocated buffer as its backing store.</p>
+<p><strong><em>WARNING</em></strong>!</p>
+<p>The file must not be open or random memory corruption is possible with GDAL &lt;= 3.3.1.
+GDAL &gt;= 3.3.2 will gracefully fail further operations and this function is safe.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">filename</code>
+						<span class="type">String</span>
+
+
+					<div class="param-description"><p>A file name beginning with /vsimem/</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Buffer</span>:
+					<p>A binary buffer containing all the data</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-set" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>gdal.vsimem.set</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>data</code>
+				</li>
+				<li class="arg">
+						<code>filename</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_gdal_memfile.cpp.html#l83"><code>src&#x2F;gdal_memfile.cpp:83</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Create an in-memory <code>/vsimem/</code> file from a <code>Buffer</code>.
+This is a zero-copy operation - GDAL will read from the Buffer which will be
+protected by the GC even if it goes out of scope.
+The file will stay in memory until it is deleted with <code>gdal.vsimem.release</code>.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">data</code>
+						<span class="type">Buffer</span>
+
+
+					<div class="param-description"><p>A binary buffer containing the file data</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">filename</code>
+						<span class="type">String</span>
+
+
+					<div class="param-description"><p>A file name beginning with /vsimem/</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+        </div>
+    </div>
                     </div>
                 </div>
             </div>

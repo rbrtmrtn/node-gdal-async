@@ -462,7 +462,7 @@
             "name": "src/gdal_memfile.cpp",
             "modules": {},
             "classes": {
-                "vsimem\nOperations on in-memory /vsimem/ files": 1
+                "gdal.vsimem": 1
             },
             "fors": {},
             "namespaces": {}
@@ -1197,16 +1197,17 @@
             "line": 68,
             "description": "A representation of an array with access methods."
         },
-        "vsimem\nOperations on in-memory /vsimem/ files": {
-            "name": "vsimem\nOperations on in-memory /vsimem/ files",
-            "shortname": "vsimem\nOperations on in-memory /vsimem/ files",
+        "gdal.vsimem": {
+            "name": "gdal.vsimem",
+            "shortname": "gdal.vsimem",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
             "file": "src/gdal_memfile.cpp",
-            "line": 5
+            "line": 5,
+            "description": "Operations on in-memory /vsimem/ files"
         },
         "gdal.RasterBand": {
             "name": "gdal.RasterBand",
@@ -10614,8 +10615,8 @@
         },
         {
             "file": "src/gdal_memfile.cpp",
-            "line": 82,
-            "description": "Create an in-memory /vsimem/ file from a Buffer.\nThis is a zero-copy operation - GDAL will read from the Buffer which will be\nprotected by the GC even if it goes out of scope.\nThe file will stay in memory until it is deleted with gdal.vsimem.release.",
+            "line": 83,
+            "description": "Create an in-memory `/vsimem/` file from a `Buffer`.\nThis is a zero-copy operation - GDAL will read from the Buffer which will be\nprotected by the GC even if it goes out of scope.\nThe file will stay in memory until it is deleted with `gdal.vsimem.release`.",
             "static": 1,
             "itemtype": "method",
             "name": "set",
@@ -10631,12 +10632,12 @@
                     "type": "String"
                 }
             ],
-            "class": "vsimem\nOperations on in-memory /vsimem/ files"
+            "class": "gdal.vsimem"
         },
         {
             "file": "src/gdal_memfile.cpp",
-            "line": 123,
-            "description": "Delete and retrieve the contents of an in-memory /vsimem/ file.\nThis is a very fast zero-copy operation.\nIt does not block the event loop.\nWARNING!\nThe file must not be open or random memory corruption is possible with GDAL <= 3.3.1.\nGDAL >= 3.3.2 will fail gracefully further operations and this function is safe.\nIf the file was created by vsimem.set, it will return a reference\nto the same Buffer that was used to create it.\nOtherwise it will construct a new Buffer object with the GDAL\nallocated buffer as its backing store.",
+            "line": 124,
+            "description": "Delete and retrieve the contents of an in-memory /vsimem/ file.\nThis is a very fast zero-copy operation.\nIt does not block the event loop.\nIf the file was created by `vsimem.set`, it will return a reference\nto the same Buffer that was used to create it.\nOtherwise it will construct a new `Buffer` object with the GDAL\nallocated buffer as its backing store.\n\n***WARNING***!\n\nThe file must not be open or random memory corruption is possible with GDAL <= 3.3.1.\nGDAL >= 3.3.2 will gracefully fail further operations and this function is safe.",
             "static": 1,
             "itemtype": "method",
             "name": "release",
@@ -10654,7 +10655,7 @@
                 "description": "A binary buffer containing all the data",
                 "type": "Buffer"
             },
-            "class": "vsimem\nOperations on in-memory /vsimem/ files"
+            "class": "gdal.vsimem"
         },
         {
             "file": "src/gdal_rasterband.cpp",
