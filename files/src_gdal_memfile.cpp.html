@@ -147,7 +147,7 @@
 namespace node_gdal {
 
 /**
- * Operations on in-memory /vsimem/ files
+ * Operations on in-memory &#x60;/vsimem/&#x60; files
  *
  * @class gdal.vsimem
  */
@@ -266,11 +266,11 @@ NAN_METHOD(Memfile::vsimemAnonymous) {
 }
 
 /**
- * Delete and retrieve the contents of an in-memory /vsimem/ file.
+ * Delete and retrieve the contents of an in-memory &#x60;/vsimem/&#x60; file.
  * This is a very fast zero-copy operation.
  * It does not block the event loop.
  * If the file was created by &#x60;vsimem.set&#x60;, it will return a reference
- * to the same Buffer that was used to create it.
+ * to the same &#x60;Buffer&#x60; that was used to create it.
  * Otherwise it will construct a new &#x60;Buffer&#x60; object with the GDAL
  * allocated buffer as its backing store.
  *
@@ -281,7 +281,7 @@ NAN_METHOD(Memfile::vsimemAnonymous) {
  *
  * @static
  * @method release
- * @param {string} filename A file name beginning with /vsimem/
+ * @param {string} filename A file name beginning with &#x60;/vsimem/&#x60;
  * @throws
  * @return {Buffer} A binary buffer containing all the data
  */
