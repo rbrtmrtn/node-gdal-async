@@ -10628,7 +10628,7 @@
                 },
                 {
                     "name": "filename",
-                    "description": "A file name beginning with /vsimem/",
+                    "description": "A file name beginning with `/vsimem/`",
                     "type": "String"
                 }
             ],
