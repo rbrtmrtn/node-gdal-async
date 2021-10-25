@@ -67,7 +67,7 @@
 #include "ogrlayerdecorator.h"
 #include "ogrsf_frmts.h"
 
-CPL_CVSID("$Id: ogr2ogr_lib.cpp 4548fc91ad259c4d2f3ff0ea47dbd74f0f13ed08 2021-04-02 22:24:34 +0200 Even Rouault $")
+CPL_CVSID("$Id: ogr2ogr_lib.cpp 28cd152257db832c88c249800e1a8f546404918c 2021-10-13 15:43:32 +0200 Even Rouault $")
 
 typedef enum
 {
@@ -2324,7 +2324,7 @@ GDALDatasetH GDALVectorTranslate( const char *pszDest, GDALDatasetH hDstDS, int 
         // have write capabilities. But do the substitution to get a sensible
         // error message
         if( EQUAL(osOGRCompatFormat, "GMT") ||
-            EQUAL(osOGRCompatFormat, "VRT") |
+            EQUAL(osOGRCompatFormat, "VRT") ||
             EQUAL(osOGRCompatFormat, "SDTS") ||
             EQUAL(osOGRCompatFormat, "PDS") )
         {

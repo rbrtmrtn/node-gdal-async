@@ -58,7 +58,7 @@
 #include "ogr_spatialref.h"
 #include "ogr_geos.h"
 
-CPL_CVSID("$Id: gdal_misc.cpp fa752ad6eabafaf630a704e1892a9d837d683cb3 2021-03-06 17:04:38 +0100 Even Rouault $")
+CPL_CVSID("$Id: gdal_misc.cpp eb2f5b33947e577fc14b62e62f930728dc573f17 2021-09-14 00:16:31 +0200 Even Rouault $")
 
 static int GetMinBitsForPair(
     const bool pabSigned[], const bool pabFloating[], const int panBits[])
@@ -175,6 +175,9 @@ GDALDataTypeUnion( GDALDataType eType1, GDALDataType eType2 )
 GDALDataType CPL_STDCALL GDALDataTypeUnionWithValue(
     GDALDataType eDT, double dValue, int bComplex )
 {
+    if( eDT == GDT_Float32 && !bComplex && static_cast<float>(dValue) == dValue )
+        return eDT;
+
     const GDALDataType eDT2 = GDALFindDataTypeForValue(dValue, bComplex);
     return GDALDataTypeUnion(eDT, eDT2);
 }

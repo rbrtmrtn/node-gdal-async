@@ -62,7 +62,7 @@
 
 #include "proj.h"
 
-CPL_CVSID("$Id: gt_wkt_srs.cpp b63caf261137ef2cb015cad525a6050f924347f0 2021-08-12 21:28:41 +0800 C41eb $")
+CPL_CVSID("$Id: gt_wkt_srs.cpp 9557bc9e24a3dcfd18d450425e044812ac1643f9 2021-09-04 23:29:49 +0200 Even Rouault $")
 
 static const geokey_t ProjLinearUnitsInterpCorrectGeoKey =
     static_cast<geokey_t>(3059);
@@ -1279,7 +1279,7 @@ OGRSpatialReferenceH GTIFGetOGISDefnAsOSR( GTIF *hGTIF, GTIFDefn * psDefn )
         }
 
         OGRSpatialReference oVertSRS;
-        bool bCanBuildCompoundCRS = true;
+        bool bCanBuildCompoundCRS = oSRS.GetRoot() != nullptr;
         if( verticalCSType != KvUserDefined && verticalCSType > 0 )
         {
             if( !(oVertSRS.importFromEPSG( verticalCSType ) == OGRERR_NONE &&
@@ -1291,7 +1291,8 @@ OGRSpatialReferenceH GTIFGetOGISDefnAsOSR( GTIF *hGTIF, GTIFDefn * psDefn )
 
         if( bCanBuildCompoundCRS )
         {
-            const std::string osHorizontalName = oSRS.GetName();
+            const char* pszHorizontalName = oSRS.GetName();
+            const std::string osHorizontalName( pszHorizontalName ? pszHorizontalName : "unnamed" );
 /* -------------------------------------------------------------------- */
 /*      Promote to being a compound coordinate system.                  */
 /* -------------------------------------------------------------------- */

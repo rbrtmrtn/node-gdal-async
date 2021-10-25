@@ -104,7 +104,7 @@
 #include "xtiffio.h"
 #include "quant_table_md5sum.h"
 
-CPL_CVSID("$Id: geotiff.cpp 3e61c10dec395d035fcfc97b423f3151d1e9e8cf 2021-07-07 11:39:48 +0200 Even Rouault $")
+CPL_CVSID("$Id: geotiff.cpp 84f601f86b6668ceafef0009a262f24b9d8afb6e 2021-10-20 23:53:37 +0200 Even Rouault $")
 
 static bool bGlobalInExternalOvr = false;
 
@@ -463,7 +463,7 @@ private:
 
     void        WriteGeoTIFFInfo();
     bool        SetDirectory();
-    void        ReloadDirectory();
+    void        ReloadDirectory(bool bReopenHandle = false);
 
     int         GetJPEGOverviewCount();
 
@@ -9945,6 +9945,39 @@ void GTiffDataset::FlushCacheInternal( bool bFlushDirectory )
 void GTiffDataset::FlushDirectory()
 
 {
+    const auto ReloadAllOtherDirectories = [this]()
+    {
+        const auto poBaseDS = m_poBaseDS ? m_poBaseDS : this;
+        if( poBaseDS->m_papoOverviewDS )
+        {
+            for( int i = 0; i < poBaseDS->m_nOverviewCount; ++i )
+            {
+                if( poBaseDS->m_papoOverviewDS[i]->m_bCrystalized &&
+                    poBaseDS->m_papoOverviewDS[i] != this )
+                {
+                    poBaseDS->m_papoOverviewDS[i]->ReloadDirectory(true);
+                }
+
+                if( poBaseDS->m_papoOverviewDS[i]->m_poMaskDS &&
+                    poBaseDS->m_papoOverviewDS[i]->m_poMaskDS != this &&
+                    poBaseDS->m_papoOverviewDS[i]->m_poMaskDS->m_bCrystalized )
+                {
+                    poBaseDS->m_papoOverviewDS[i]->m_poMaskDS->ReloadDirectory(true);
+                }
+            }
+        }
+        if( poBaseDS->m_poMaskDS &&
+            poBaseDS->m_poMaskDS != this &&
+            poBaseDS->m_poMaskDS->m_bCrystalized )
+        {
+            poBaseDS->m_poMaskDS->ReloadDirectory(true);
+        }
+        if( poBaseDS->m_bCrystalized && poBaseDS != this )
+        {
+            poBaseDS->ReloadDirectory(true);
+        }
+    };
+
     if( GetAccess() == GA_Update )
     {
         if( m_bMetadataChanged )
@@ -10009,6 +10042,8 @@ void GTiffDataset::FlushDirectory()
 
                 TIFFSetSubDirectory( m_hTIFF, m_nDirOffset );
 
+                ReloadAllOtherDirectories();
+
                 if( m_bLayoutIFDSBeforeData &&
                     m_bBlockOrderRowMajor &&
                     m_bLeaderSizeAsUInt4 &&
@@ -10023,6 +10058,7 @@ void GTiffDataset::FlushDirectory()
                     m_bWriteKnownIncompatibleEdition = true;
                 }
             }
+
             m_bNeedsRewrite = false;
         }
     }
@@ -10043,6 +10079,7 @@ void GTiffDataset::FlushDirectory()
         if( m_nDirOffset != TIFFCurrentDirOffset( m_hTIFF ) )
         {
             m_nDirOffset = nNewDirOffset;
+            ReloadAllOtherDirectories();
             CPLDebug( "GTiff",
                       "directory moved during flush in FlushDirectory()" );
         }
@@ -10427,9 +10464,33 @@ CPLErr GTiffDataset::CreateOverviewsFromSrcOverviews(GDALDataset* poSrcDS,
 /*                           ReloadDirectory()                          */
 /************************************************************************/
 
-void GTiffDataset::ReloadDirectory()
+void GTiffDataset::ReloadDirectory(bool bReopenHandle)
 {
-    TIFFSetSubDirectory( m_hTIFF, 0 );
+    bool bNeedSetInvalidDir = true;
+    if( bReopenHandle )
+    {
+        // When issuing a TIFFRewriteDirectory() or when a TIFFFlush() has
+        // caused a move of the directory, we would need to invalidate the
+        // tif_lastdiroff member, but it is not possible to do so without
+        // re-opening the TIFF handle.
+        auto hTIFFNew = VSI_TIFFReOpen(m_hTIFF);
+        if( hTIFFNew != nullptr )
+        {
+            m_hTIFF = hTIFFNew;
+            bNeedSetInvalidDir = false; // we could do it, but not needed
+        }
+        else
+        {
+            CPLError(CE_Failure, CPLE_AppDefined,
+                     "Cannot re-open TIFF handle for file %s. "
+                     "Directory chaining may be corrupted !",
+                     m_pszFilename);
+        }
+    }
+    if( bNeedSetInvalidDir )
+    {
+        TIFFSetSubDirectory( m_hTIFF, 0 );
+    }
     CPL_IGNORE_RET_VAL( SetDirectory() );
 }
 
@@ -11259,12 +11320,16 @@ void GTiffDataset::WriteGeoTIFFInfo()
         if( bHasProjection )
         {
             char* pszProjection = nullptr;
+            OGRErr eErr;
             {
                 CPLErrorStateBackuper oErrorStateBackuper;
                 CPLErrorHandlerPusher oErrorHandler(CPLQuietErrorHandler);
-                m_oSRS.exportToWkt(&pszProjection);
+                if( m_oSRS.IsDerivedGeographic() )
+                    eErr = OGRERR_FAILURE;
+                else
+                    eErr = m_oSRS.exportToWkt(&pszProjection);
             }
-            if( pszProjection && pszProjection[0] &&
+            if( eErr == OGRERR_NONE && pszProjection && pszProjection[0] &&
                 strstr(pszProjection, "custom_proj4") == nullptr )
             {
                 GTIFSetFromOGISDefnEx( psGTIF, pszProjection,
@@ -17966,9 +18031,13 @@ GTiffDataset::CreateCopy( const char * pszFilename, GDALDataset *poSrcDS,
             {
                 CPLErrorStateBackuper oErrorStateBackuper;
                 CPLErrorHandlerPusher oErrorHandler(CPLQuietErrorHandler);
-                eErr = l_poSRS->exportToWkt(&pszWKT);
+                if( l_poSRS->IsDerivedGeographic() )
+                    eErr = OGRERR_FAILURE;
+                else
+                    eErr = l_poSRS->exportToWkt(&pszWKT);
             }
-            if( eErr == OGRERR_NONE && strstr(pszWKT, "custom_proj4") == nullptr )
+            if( eErr == OGRERR_NONE && pszWKT != nullptr &&
+                strstr(pszWKT, "custom_proj4") == nullptr )
             {
                 GTIFSetFromOGISDefnEx( psGTIF, pszWKT,
                                     GetGTIFFKeysFlavor(papszOptions),

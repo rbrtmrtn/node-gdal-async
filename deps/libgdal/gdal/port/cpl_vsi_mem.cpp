@@ -55,7 +55,7 @@
 
 //! @cond Doxygen_Suppress
 
-CPL_CVSID("$Id: cpl_vsi_mem.cpp abffe1af06efa258264c005f246286a65478b0b0 2021-08-08 17:30:54 +0200 Momtchil Momtchev $")
+CPL_CVSID("$Id: cpl_vsi_mem.cpp 9e8033100f3863417b1971be928a96e33c43ab4a 2021-09-12 19:18:38 +0200 Even Rouault $")
 
 /*
 ** Notes on Multithreading:
@@ -378,6 +378,9 @@ size_t VSIMemHandle::Read( void * pBuffer, size_t nSize, size_t nCount )
 
 {
     size_t nBytesToRead = nSize * nCount;
+    if( nBytesToRead == 0 )
+        return 0;
+
     if( nCount > 0 && nBytesToRead / nCount != nSize )
     {
         bEOF = true;

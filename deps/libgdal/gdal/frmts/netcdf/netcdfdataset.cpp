@@ -70,7 +70,7 @@
 #include "ogr_srs_api.h"
 
 
-CPL_CVSID("$Id: netcdfdataset.cpp ce8bc209fdb6ae4a53fec39ec4f6081727877153 2021-08-16 17:27:36 +0200 Even Rouault $")
+CPL_CVSID("$Id: netcdfdataset.cpp 4d79352afa601af9a6e16db995f1931dccb3ae96 2021-09-09 22:26:31 +0200 Even Rouault $")
 
 // Internal function declarations.
 
@@ -439,35 +439,41 @@ netCDFRasterBand::netCDFRasterBand( netCDFDataset *poNCDFDS,
     // Look for valid_range or valid_min/valid_max.
 
     // First look for valid_range.
-    status = nc_inq_att(cdfid, nZId, "valid_range", &atttype, &attlen);
-    if( (status == NC_NOERR) && (attlen == 2) &&
-        CPLFetchBool(poNCDFDS->GetOpenOptions(), "HONOUR_VALID_RANGE", true) )
+    if( CPLFetchBool(poNCDFDS->GetOpenOptions(), "HONOUR_VALID_RANGE", true) )
     {
-        int vrange[2] = { 0, 0 };
-        status = nc_get_att_int(cdfid, nZId, "valid_range", vrange);
-        if( status == NC_NOERR )
+        char *pszValidRange = nullptr;
+        if( NCDFGetAttr(cdfid, nZId, "valid_range", &pszValidRange) == CE_None &&
+            pszValidRange[0] == '{' && pszValidRange[strlen(pszValidRange)-1] == '}' )
         {
-            bValidRangeValid = true;
-            adfValidRange[0] = vrange[0];
-            adfValidRange[1] = vrange[1];
-        }
-        // If not found look for valid_min and valid_max.
-        else
-        {
-            int vmin = 0;
-            status = nc_get_att_int(cdfid, nZId, "valid_min", &vmin);
-            if( status == NC_NOERR )
+            const std::string osValidRange = std::string(
+                pszValidRange).substr(1, strlen(pszValidRange)-2);
+            const CPLStringList aosValidRange(
+                CSLTokenizeString2(osValidRange.c_str(), ",", 0));
+            if( aosValidRange.size() == 2 &&
+                CPLGetValueType(aosValidRange[0]) != CPL_VALUE_STRING &&
+                CPLGetValueType(aosValidRange[1]) != CPL_VALUE_STRING )
             {
-                adfValidRange[0] = vmin;
-                int vmax = 0;
-                status = nc_get_att_int(cdfid, nZId, "valid_max", &vmax);
-                if( status == NC_NOERR )
-                {
-                    adfValidRange[1] = vmax;
-                    bValidRangeValid = true;
-                }
+                bValidRangeValid = true;
+                adfValidRange[0] = CPLAtof(aosValidRange[0]);
+                adfValidRange[1] = CPLAtof(aosValidRange[1]);
             }
         }
+        CPLFree(pszValidRange);
+
+        // If not found look for valid_min and valid_max.
+        if( !bValidRangeValid )
+        {
+            double dfMin = 0;
+            double dfMax = 0;
+            if( NCDFGetAttr(cdfid, nZId, "valid_min", &dfMin) == CE_None &&
+                NCDFGetAttr(cdfid, nZId, "valid_max", &dfMax) == CE_None )
+            {
+                adfValidRange[0] = dfMin;
+                adfValidRange[1] = dfMax;
+                bValidRangeValid = true;
+            }
+        }
+
         if (bValidRangeValid && adfValidRange[0] > adfValidRange[1])
         {
             CPLError(

@@ -56,7 +56,7 @@
 
 /* g++ -fPIC -g -Wall frmts/pdf/pdfdataset.cpp -shared -o gdal_PDF.so -Iport -Igcore -Iogr -L. -lgdal -lpoppler -I/usr/include/poppler */
 
-CPL_CVSID("$Id: pdfdataset.cpp d8b966b80dfe7ae9edd66c4dbb0b18aab04df048 2021-08-20 19:55:24 +0200 Even Rouault $")
+CPL_CVSID("$Id: pdfdataset.cpp d3b3cb857043d155f544cd6d2e2a2ed778005341 2021-10-05 22:45:43 +0200 Even Rouault $")
 
 #ifdef HAVE_PDF_READ_SUPPORT
 
@@ -4982,7 +4982,7 @@ PDFDataset *PDFDataset::Open( GDALOpenInfo * poOpenInfo )
 #ifdef HAVE_POPPLER
   if (bUseLib.test(PDFLIB_POPPLER))
   {
-    GooString* poMetadata = poCatalogPoppler->readMetadata();
+    auto poMetadata = poCatalogPoppler->readMetadata();
     if (poMetadata)
     {
 #if (POPPLER_MAJOR_VERSION >= 1 || POPPLER_MINOR_VERSION >= 72)
@@ -4996,7 +4996,9 @@ PDFDataset *PDFDataset::Open( GDALOpenInfo * poOpenInfo )
             const char * const apszMDList[2] = { pszContent, nullptr };
             poDS->SetMetadata(const_cast<char**>(apszMDList), "xml:XMP");
         }
+#if (POPPLER_MAJOR_VERSION < 21 || (POPPLER_MAJOR_VERSION == 21 && POPPLER_MINOR_VERSION < 10))
         delete poMetadata;
+#endif
     }
 
     /* Read Info object */

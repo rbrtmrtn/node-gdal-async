@@ -67,7 +67,7 @@
     (PROJ_VERSION_NUMBER >= PROJ_COMPUTE_VERSION(maj,min,patch))
 #endif
 
-CPL_CVSID("$Id: ogrspatialreference.cpp 009de4e7f144e2099bc00898db8b174466aa51ad 2021-08-16 17:34:26 +0200 Even Rouault $")
+CPL_CVSID("$Id: ogrspatialreference.cpp b0f0c489a4bc6b39aec821160e75af336a1e5505 2021-09-29 12:09:34 +0200 Even Rouault $")
 
 #define STRINGIFY(s) #s
 #define XSTRINGIFY(s) STRINGIFY(s)
@@ -1565,7 +1565,8 @@ OGRErr OGRSpatialReference::exportToWkt( char ** ppszResult,
     for( const auto& oError: aoErrors )
     {
         if( pszFormat[0] == '\0' &&
-            oError.msg.find("Unsupported conversion method") != std::string::npos )
+            (oError.msg.find("Unsupported conversion method") != std::string::npos ||
+             oError.msg.find("can only be exported to WKT2") != std::string::npos) )
         {
             CPLErrorReset();
             // If we cannot export in the default mode (WKT1), retry with WKT2
@@ -5203,6 +5204,9 @@ double OGRSpatialReference::GetProjParm( const char * pszName,
                                          OGRErr *pnErr ) const
 
 {
+    d->refreshProjObj();
+    GetRoot(); // force update of d->m_bNodesWKT2
+
     if( pnErr != nullptr )
         *pnErr = OGRERR_NONE;
 
@@ -5220,6 +5224,17 @@ double OGRSpatialReference::GetProjParm( const char * pszName,
     const int iChild = FindProjParm( pszName, poPROJCS );
     if( iChild == -1 )
     {
+#if PROJ_VERSION_MAJOR > 6 || PROJ_VERSION_MINOR >= 3
+        if( IsProjected() && GetAxesCount() == 3 )
+        {
+            OGRSpatialReference* poSRSTmp = Clone();
+            poSRSTmp->DemoteTo2D(nullptr);
+            const double dfRet = poSRSTmp->GetProjParm(pszName, dfDefaultValue, pnErr);
+            delete poSRSTmp;
+            return dfRet;
+        }
+#endif
+
         if( pnErr != nullptr )
             *pnErr = OGRERR_FAILURE;
         return dfDefaultValue;
@@ -9621,17 +9636,27 @@ int OGRSpatialReference::GetAxesCount() const
         return 0;
     }
     d->demoteFromBoundCRS();
+    auto ctxt = d->getPROJContext();
     if( d->m_pjType == PJ_TYPE_COMPOUND_CRS )
     {
         for( int i = 0; ; i++ )
         {
-            auto subCRS = proj_crs_get_sub_crs(d->getPROJContext(), d->m_pj_crs, i);
+            auto subCRS = proj_crs_get_sub_crs(ctxt, d->m_pj_crs, i);
             if( !subCRS )
                 break;
-            auto cs = proj_crs_get_coordinate_system(d->getPROJContext(), subCRS);
+            if( proj_get_type(subCRS) == PJ_TYPE_BOUND_CRS )
+            {
+                auto baseCRS = proj_get_source_crs(ctxt, subCRS);
+                if( baseCRS )
+                {
+                    proj_destroy(subCRS);
+                    subCRS = baseCRS;
+                }
+            }
+            auto cs = proj_crs_get_coordinate_system(ctxt, subCRS);
             if( cs )
             {
-                axisCount += proj_cs_get_axis_count(d->getPROJContext(), cs);
+                axisCount += proj_cs_get_axis_count(ctxt, cs);
                 proj_destroy(cs);
             }
             proj_destroy(subCRS);
@@ -9639,10 +9664,10 @@ int OGRSpatialReference::GetAxesCount() const
     }
     else
     {
-        auto cs = proj_crs_get_coordinate_system(d->getPROJContext(), d->m_pj_crs);
+        auto cs = proj_crs_get_coordinate_system(ctxt, d->m_pj_crs);
         if( cs )
         {
-            axisCount = proj_cs_get_axis_count(d->getPROJContext(), cs);
+            axisCount = proj_cs_get_axis_count(ctxt, cs);
             proj_destroy(cs);
         }
     }
@@ -10896,25 +10921,54 @@ int OGRSpatialReference::EPSGTreatsAsLatLong() const
     }
 
     bool ret = false;
-    auto cs = proj_crs_get_coordinate_system(d->getPROJContext(),
-                                                d->m_pj_crs);
-    d->undoDemoteFromBoundCRS();
-
-    if( cs )
+    if ( d->m_pjType == PJ_TYPE_COMPOUND_CRS )
     {
-        const char* pszDirection = nullptr;
-        if( proj_cs_get_axis_info(
-            d->getPROJContext(), cs, 0, nullptr, nullptr, &pszDirection,
-            nullptr, nullptr, nullptr, nullptr) )
+        auto horizCRS = proj_crs_get_sub_crs(d->getPROJContext(),
+                                                d->m_pj_crs, 0);
+        if ( horizCRS )
         {
-            if( EQUAL(pszDirection, "north") )
+            auto cs = proj_crs_get_coordinate_system(d->getPROJContext(),
+                                                        horizCRS);
+            if ( cs )
             {
-                ret = true;
-            }
-        }
+                const char* pszDirection = nullptr;
+                if( proj_cs_get_axis_info(
+                    d->getPROJContext(), cs, 0, nullptr, nullptr,
+                    &pszDirection, nullptr, nullptr, nullptr, nullptr) )
+                {
+                    if( EQUAL(pszDirection, "north") )
+                    {
+                        ret = true;
+                    }
+                }
 
-        proj_destroy(cs);
+                proj_destroy(cs);
+            }
+
+            proj_destroy(horizCRS);
+        }
     }
+    else
+    {
+        auto cs = proj_crs_get_coordinate_system(d->getPROJContext(),
+                                                    d->m_pj_crs);
+        if ( cs )
+        {
+            const char* pszDirection = nullptr;
+            if( proj_cs_get_axis_info(
+                d->getPROJContext(), cs, 0, nullptr, nullptr, &pszDirection,
+                nullptr, nullptr, nullptr, nullptr) )
+            {
+                if( EQUAL(pszDirection, "north") )
+                {
+                    ret = true;
+                }
+            }
+
+            proj_destroy(cs);
+        }
+    }
+    d->undoDemoteFromBoundCRS();
 
     return ret;
 }

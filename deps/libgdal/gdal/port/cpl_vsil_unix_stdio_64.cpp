@@ -78,6 +78,7 @@
 #include <unistd.h>
 #endif
 
+#include <limits>
 #include <new>
 
 #include "cpl_config.h"
@@ -87,7 +88,7 @@
 #include "cpl_string.h"
 #include "cpl_vsi_error.h"
 
-CPL_CVSID("$Id: cpl_vsil_unix_stdio_64.cpp a044c83f8091becdd11e27be6e9c08d0d3478126 2021-02-24 11:38:17 +0100 Even Rouault $")
+CPL_CVSID("$Id: cpl_vsil_unix_stdio_64.cpp e7e12cb098f856435ea3dc6f43839809682ca37a 2021-09-19 19:43:21 +0200 Even Rouault $")
 
 #if defined(UNIX_STDIO_64)
 
@@ -286,6 +287,15 @@ int VSIUnixStdioHandle::Seek( vsi_l_offset nOffsetIn, int nWhence )
             }
         }
     }
+
+#if !defined(UNIX_STDIO_64) && SIZEOF_UNSIGNED_LONG == 4
+    if( nOffsetIn > static_cast<vsi_l_offset>(std::numeric_limits<long>::max()) )
+    {
+        CPLError(CE_Failure, CPLE_AppDefined,
+                 "Attempt at seeking beyond long extent. Lack of 64-bit file I/O");
+        return -1;
+    }
+#endif
 
     const int nResult = VSI_FSEEK64( fp, nOffsetIn, nWhence );
     const int nError = errno;

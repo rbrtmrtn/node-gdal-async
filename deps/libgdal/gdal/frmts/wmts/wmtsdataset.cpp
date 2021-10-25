@@ -50,7 +50,7 @@ extern "C" void GDALRegister_WMTS();
 
 #define WMTS_WGS84_DEG_PER_METER    (180 / M_PI / SRS_WGS84_SEMIMAJOR)
 
-CPL_CVSID("$Id: wmtsdataset.cpp f9fc46ab2373575bf4b3aa739c3f561a9ac22845 2020-07-25 00:11:16 +1000 Sam Gillingham $")
+CPL_CVSID("$Id: wmtsdataset.cpp a79e13c11d7f18e5f76b2b4a89f8c4f0f1d539f2 2021-09-09 14:39:10 +0200 Even Rouault $")
 
 typedef enum
 {
@@ -1191,6 +1191,17 @@ GDALDataset* WMTSDataset::Open(GDALOpenInfo* poOpenInfo)
     std::map<CPLString, WMTSTileMatrixLimits> aoMapTileMatrixLimits;
     std::map<CPLString, CPLString> aoMapDimensions;
 
+    // Collect TileMatrixSet identifiers
+    std::set<std::string> oSetTMSIdentifiers;
+    for(CPLXMLNode* psIter = psContents->psChild; psIter != nullptr; psIter = psIter->psNext )
+    {
+        if( psIter->eType != CXT_Element || strcmp(psIter->pszValue, "TileMatrixSet") != 0 )
+            continue;
+        const char* pszIdentifier = CPLGetXMLValue(psIter, "Identifier", nullptr);
+        if( pszIdentifier )
+            oSetTMSIdentifiers.insert(pszIdentifier);
+    }
+
     for(CPLXMLNode* psIter = psContents->psChild; psIter != nullptr; psIter = psIter->psNext )
     {
         if( psIter->eType != CXT_Element || strcmp(psIter->pszValue, "Layer") != 0 )
@@ -1269,6 +1280,14 @@ GDALDataset* WMTSDataset::Open(GDALOpenInfo* poOpenInfo)
             {
                 const char* pszTMS = CPLGetXMLValue(
                                             psSubIter, "TileMatrixSet", "");
+                if( oSetTMSIdentifiers.find(pszTMS) == oSetTMSIdentifiers.end() )
+                {
+                    CPLDebug("WMTS",
+                             "Layer %s has a TileMatrixSetLink to %s, "
+                             "but it is not defined as a TileMatrixSet",
+                             pszIdentifier, pszTMS);
+                    continue;
+                }
                 if( !osTMS.empty() && strcmp(osTMS, pszTMS) != 0 )
                     continue;
                 if( strcmp(osSelectLayer, pszIdentifier) == 0 &&

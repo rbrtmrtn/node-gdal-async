@@ -45,7 +45,7 @@
 #include "gmlutils.h"
 #include "ogr_geometry.h"
 
-CPL_CVSID("$Id: gmlreader.cpp 2b939583852d95f8724a939c927361cf40e81500 2020-10-22 11:42:59 +0200 Even Rouault $")
+CPL_CVSID("$Id: gmlreader.cpp 30bf833f6919d4cbbe95440c667bf6ff1e066f70 2021-09-18 20:24:28 +0900 mugwort_rc $")
 
 /************************************************************************/
 /*                            ~IGMLReader()                             */
@@ -1517,6 +1517,7 @@ void GMLReader::SetGlobalSRSName( const char* pszGlobalSRSName )
         {
             m_pszGlobalSRSName = CPLStrdup(pszGlobalSRSName);
         }
+        m_bCanUseGlobalSRSName = m_pszGlobalSRSName != nullptr;
     }
 }
 
