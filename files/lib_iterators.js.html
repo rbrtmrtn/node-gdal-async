@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Constants (CPL Error Codes) - node-gdal-async</title>
+    <title>lib/iterators.js - node-gdal-async</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -139,330 +139,211 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>Constants (CPL Error Codes)</h1>
+    <h1>lib/iterators.js <small>File</small></h1>
 </div>
 
+<div class="file">
+    <pre class="prettyprint linenums">
+module.exports = function (gdal) {
 
+  /**
+ * forEach() callback type
+ * @element forEachCb
+ * @typedef forEachCb&lt;T&gt; (obj: T, idx: number) =&gt; boolean|void
+ */
 
+  /**
+ * Iterates through all bands using a callback function.
+ * Note: GDAL band indexes start at 1, not 0.
+ *
+ * @example
+ * &#x60;&#x60;&#x60;
+ * dataset.bands.forEach(function(band, i) { ... });&#x60;&#x60;&#x60;
+ *
+ * @for gdal.DatasetBands
+ * @method forEach
+ * @param {forEachCb&lt;gdal.RasterBand&gt;} callback The callback to be called with each {{#crossLink &quot;RasterBand&quot;}}RasterBand{{/crossLink}}
+ */
+  gdal.DatasetBands.prototype.forEach = function (callback) {
+    const n = this.count()
+    for (let i = 1; i &lt;= n; i++) {
+      if (callback(this.get(i), i) === false) return
+    }
+  }
 
+  /**
+ * Iterates through all bands using an iterator
+ *
+ * @example
+ * &#x60;&#x60;&#x60;
+ * for (const band of dataset.bands) {
+ * }&#x60;&#x60;&#x60;
+ *
+ * @for gdal.DatasetBands
+ * @type {gdal.RasterBand}
+ * @method Symbol.iterator
+ */
+  gdal.DatasetBands.prototype[Symbol.iterator] = function () {
+    let i = 1
 
+    return {
+      next: () =&gt; {
+        const done = !(i &lt;= this.count())
+        return {
+          done,
+          value: done ? null : this.get(i++)
+        }
+      }
+    }
+  }
 
+  /**
+ * Iterates through all bands using an async iterator
+ *
+ * @example
+ * &#x60;&#x60;&#x60;
+ * for await (const band of dataset.bands) {
+ * }&#x60;&#x60;&#x60;
+ *
+ * @for gdal.DatasetBands
+ * @type {gdal.RasterBand}
+ * @method Symbol.asyncIterator
+ */
+  if (Symbol.asyncIterator) {
+    gdal.DatasetBands.prototype[Symbol.asyncIterator] = function () {
+      let i = 1
 
-<!-- table of contents -->
+      return {
+        next: () =&gt; this.countAsync()
+          .then((count) =&gt; {
+            if (i &lt;= count) {
+              return this.getAsync(i++).then((value) =&gt; ({ done: false, value }))
+            }
+            return { done: true, value: null }
+          })
+      }
+    }
+  }
 
-<div id="class-toc" class="page-section">
-	<h2>Table of Contents</h2>
-    <ul>
+  /**
+ * Iterates through all features using a callback function.
+ *
+ * @example
+ * &#x60;&#x60;&#x60;
+ * layer.features.forEach(function(feature, i) { ... });&#x60;&#x60;&#x60;
+ *
+ * @for gdal.LayerFeatures
+ * @method forEach
+ * @param {forEachCb&lt;gdal.Feature&gt;} callback The callback to be called with each {{#crossLink &quot;Feature&quot;}}Feature{{/crossLink}}
+ */
+  gdal.LayerFeatures.prototype.forEach = function (callback) {
+    let i = 0
+    let feature = this.first()
+    while (feature) {
+      if (callback(feature, i++) === false) return
+      feature = this.next()
+    }
+  }
 
-		<li>
-			<strong>Properties</strong>
-			<ul>
-				<li><a href="#prop-gdal.CPLE_AppDefined"><span class="ip">gdal.CPLE_AppDefined</span></a></li>
-				<li><a href="#prop-gdal.CPLE_AssertionFailed"><span class="ip">gdal.CPLE_AssertionFailed</span></a></li>
-				<li><a href="#prop-gdal.CPLE_FileIO"><span class="ip">gdal.CPLE_FileIO</span></a></li>
-				<li><a href="#prop-gdal.CPLE_IllegalArg"><span class="ip">gdal.CPLE_IllegalArg</span></a></li>
-				<li><a href="#prop-gdal.CPLE_None"><span class="ip">gdal.CPLE_None</span></a></li>
-				<li><a href="#prop-gdal.CPLE_NotSupported"><span class="ip">gdal.CPLE_NotSupported</span></a></li>
-				<li><a href="#prop-gdal.CPLE_NoWriteAccess"><span class="ip">gdal.CPLE_NoWriteAccess</span></a></li>
-				<li><a href="#prop-gdal.CPLE_objectNull"><span class="ip">gdal.CPLE_objectNull</span></a></li>
-				<li><a href="#prop-gdal.CPLE_OpenFailed"><span class="ip">gdal.CPLE_OpenFailed</span></a></li>
-				<li><a href="#prop-gdal.CPLE_OutOfMemory"><span class="ip">gdal.CPLE_OutOfMemory</span></a></li>
-				<li><a href="#prop-gdal.CPLE_UserInterrupt"><span class="ip">gdal.CPLE_UserInterrupt</span></a></li>
-			</ul>
-		</li>
+  /**
+ * Iterates through all features using an iterator
+ *
+ * @example
+ * &#x60;&#x60;&#x60;
+ * for (const feature of layer.features) {
+ * }&#x60;&#x60;&#x60;
+ *
+ * @for gdal.LayerFeatures
+ * @type {gdal.Feature}
+ * @method Symbol.iterator
+ */
+  gdal.LayerFeatures.prototype[Symbol.iterator] = function () {
+    let feature
 
+    return {
+      next: () =&gt; {
+        feature = feature ? this.next() : this.first()
+        return {
+          done: !feature,
+          value: feature
+        }
+      }
+    }
+  }
 
-	</ul>
+  /**
+ * Iterates through all features using an async iterator
+ *
+ * @example
+ * &#x60;&#x60;&#x60;
+ * for await (const feature of layer.features) {
+ * }&#x60;&#x60;&#x60;
+ *
+ * @for gdal.LayerFeatures
+ * @type {gdal.Feature}
+ * @method Symbol.asyncIterator
+ */
+  if (Symbol.asyncIterator) {
+    gdal.LayerFeatures.prototype[Symbol.asyncIterator] = function () {
+      let feature
+
+      return {
+        next: () =&gt; {
+          feature = feature ? this.nextAsync() : this.firstAsync()
+          return feature.then((value) =&gt; ({
+            done: !value,
+            value
+          }))
+        }
+      }
+    }
+  }
+
+  /**
+ * Iterates through all fields using a callback function.
+ *
+ * @example
+ * &#x60;&#x60;&#x60;
+ * layer.features.get(0).fields.forEach(function(value, key) { ... });&#x60;&#x60;&#x60;
+ *
+ * @for gdal.FeatureFields
+ * @method forEach
+ * @param {forEachCb&lt;fieldValue&gt;} callback The callback to be called with each feature &#x60;value&#x60; and &#x60;key&#x60;.
+ */
+  gdal.FeatureFields.prototype.forEach = function (callback) {
+    const obj = this.toObject()
+    Object.entries(obj).every(([ k, v ]) =&gt;
+      callback(v, k) !== false
+    )
+  }
+
+  /**
+ * Outputs the fields as a serialized JSON string.
+ *
+ * @for gdal.FeatureFields
+ * @method toJSON
+ * @return {string} Serialized JSON
+ */
+  gdal.FeatureFields.prototype.toJSON = function () {
+    return JSON.stringify(this.toObject())
+  }
+
+  /**
+ * Converts the geometry to a GeoJSON object representation.
+ *
+ * @for gdal.Geometry
+ * @method toObject
+ * @return {object} GeoJSON
+ */
+  gdal.Geometry.prototype.toObject = function () {
+    return JSON.parse(this.toJSON())
+  }
+
+  require(&#x27;./default_iterators.js&#x27;)(gdal)
+}
+
+    </pre>
 </div>
-
-<!-- details -->
-
-
-
-    <div id="properties" class="page-section">
-        <h2 class="off-left">Properties</h2>
-
-        <div class="item-list">
-<div id="prop-gdal.CPLE_AppDefined" class="property item">
-    <h3 class="name"><code>gdal.CPLE_AppDefined</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l569"><code>src&#x2F;node_gdal.cpp:569</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_AssertionFailed" class="property item">
-    <h3 class="name"><code>gdal.CPLE_AssertionFailed</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l605"><code>src&#x2F;node_gdal.cpp:605</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_FileIO" class="property item">
-    <h3 class="name"><code>gdal.CPLE_FileIO</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l581"><code>src&#x2F;node_gdal.cpp:581</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_IllegalArg" class="property item">
-    <h3 class="name"><code>gdal.CPLE_IllegalArg</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l593"><code>src&#x2F;node_gdal.cpp:593</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_None" class="property item">
-    <h3 class="name"><code>gdal.CPLE_None</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l563"><code>src&#x2F;node_gdal.cpp:563</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_NotSupported" class="property item">
-    <h3 class="name"><code>gdal.CPLE_NotSupported</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l599"><code>src&#x2F;node_gdal.cpp:599</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_NoWriteAccess" class="property item">
-    <h3 class="name"><code>gdal.CPLE_NoWriteAccess</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l611"><code>src&#x2F;node_gdal.cpp:611</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_objectNull" class="property item">
-    <h3 class="name"><code>gdal.CPLE_objectNull</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l623"><code>src&#x2F;node_gdal.cpp:623</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_OpenFailed" class="property item">
-    <h3 class="name"><code>gdal.CPLE_OpenFailed</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l587"><code>src&#x2F;node_gdal.cpp:587</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_OutOfMemory" class="property item">
-    <h3 class="name"><code>gdal.CPLE_OutOfMemory</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l575"><code>src&#x2F;node_gdal.cpp:575</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_UserInterrupt" class="property item">
-    <h3 class="name"><code>gdal.CPLE_UserInterrupt</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l617"><code>src&#x2F;node_gdal.cpp:617</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-        </div>
-    </div>
-
-
-
                     </div>
                 </div>
             </div>

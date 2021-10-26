@@ -27,7 +27,7 @@
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DIM)", "classes/Constants (DIR)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.ArrayAttributes", "classes/gdal.ArrayDimensions", "classes/gdal.Attribute", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Dimension", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Group", "classes/gdal.GroupArrays", "classes/gdal.GroupAttributes", "classes/gdal.GroupDimensions", "classes/gdal.GroupGroups", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MDArray", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference", "classes/gdal.vsimem"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DIM)", "classes/Constants (DIR)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GPI)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.ArrayAttributes", "classes/gdal.ArrayDimensions", "classes/gdal.Attribute", "classes/gdal.CircularString", "classes/gdal.ColorTable", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Dimension", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Group", "classes/gdal.GroupArrays", "classes/gdal.GroupAttributes", "classes/gdal.GroupDimensions", "classes/gdal.GroupGroups", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MDArray", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference", "classes/gdal.vsimem"]'>
         </form>
     </div>
 </div>
@@ -46,6 +46,7 @@
                 <li><a href="../classes/Constants (DMD).html">Constants (DMD)</a></li>
                 <li><a href="../classes/Constants (GCI).html">Constants (GCI)</a></li>
                 <li><a href="../classes/Constants (GDT).html">Constants (GDT)</a></li>
+                <li><a href="../classes/Constants (GPI).html">Constants (GPI)</a></li>
                 <li><a href="../classes/Constants (GRA).html">Constants (GRA)</a></li>
                 <li><a href="../classes/Constants (ODsC).html">Constants (ODsC)</a></li>
                 <li><a href="../classes/Constants (OFT).html">Constants (OFT)</a></li>
@@ -59,6 +60,7 @@
                 <li><a href="../classes/gdal.ArrayDimensions.html">gdal.ArrayDimensions</a></li>
                 <li><a href="../classes/gdal.Attribute.html">gdal.Attribute</a></li>
                 <li><a href="../classes/gdal.CircularString.html">gdal.CircularString</a></li>
+                <li><a href="../classes/gdal.ColorTable.html">gdal.ColorTable</a></li>
                 <li><a href="../classes/gdal.CompoundCurve.html">gdal.CompoundCurve</a></li>
                 <li><a href="../classes/gdal.CompoundCurveCurves.html">gdal.CompoundCurveCurves</a></li>
                 <li><a href="../classes/gdal.config.html">gdal.config</a></li>
@@ -146,6 +148,7 @@
 #include &quot;gdal_spatial_reference.hpp&quot;
 #include &quot;gdal_common.hpp&quot;
 #include &quot;utils/string_list.hpp&quot;
+#include &quot;async.hpp&quot;
 
 namespace node_gdal {
 
@@ -158,7 +161,7 @@ void SpatialReference::Initialize(Local&lt;Object&gt; target) {
   lcons-&gt;InstanceTemplate()-&gt;SetInternalFieldCount(1);
   lcons-&gt;SetClassName(Nan::New(&quot;SpatialReference&quot;).ToLocalChecked());
 
-  Nan::SetMethod(lcons, &quot;fromUserInput&quot;, fromUserInput);
+  Nan__SetAsyncableMethod(lcons, &quot;fromUserInput&quot;, fromUserInput);
   Nan::SetMethod(lcons, &quot;fromWKT&quot;, fromWKT);
   Nan::SetMethod(lcons, &quot;fromProj4&quot;, fromProj4);
   Nan::SetMethod(lcons, &quot;fromEPSG&quot;, fromEPSG);
@@ -167,8 +170,8 @@ void SpatialReference::Initialize(Local&lt;Object&gt; target) {
   Nan::SetMethod(lcons, &quot;fromWMSAUTO&quot;, fromWMSAUTO);
   Nan::SetMethod(lcons, &quot;fromXML&quot;, fromXML);
   Nan::SetMethod(lcons, &quot;fromURN&quot;, fromURN);
-  Nan::SetMethod(lcons, &quot;fromCRSURL&quot;, fromCRSURL);
-  Nan::SetMethod(lcons, &quot;fromURL&quot;, fromURL);
+  Nan__SetAsyncableMethod(lcons, &quot;fromCRSURL&quot;, fromCRSURL);
+  Nan__SetAsyncableMethod(lcons, &quot;fromURL&quot;, fromURL);
   Nan::SetMethod(lcons, &quot;fromMICoordSys&quot;, fromMICoordSys);
 
   Nan::SetPrototypeMethod(lcons, &quot;toString&quot;, toString);
@@ -799,21 +802,41 @@ NAN_METHOD(SpatialReference::fromURN) {
  * @param {string} input
  * @return {gdal.SpatialReference}
  */
-NAN_METHOD(SpatialReference::fromCRSURL) {
+
+/**
+ * Initialize from OGC URL.
+ * {{{async}}}
+ *
+ * The OGC URL should be prefixed with &quot;http://opengis.net/def/crs&quot; per best
+ * practice paper 11-135. Currently EPSG and OGC authority values are supported,
+ * including OGC auto codes, but not including CRS1 or CRS88 (NAVD88).
+ *
+ * @static
+ * @throws Error
+ * @method fromCRSURLAsync
+ * @param {string} input
+ * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;gdal.SpatialReference&gt;}
+ */
+GDAL_ASYNCABLE_DEFINE(SpatialReference::fromCRSURL) {
   Nan::HandleScope scope;
 
   std::string input(&quot;&quot;);
   NODE_ARG_STR(0, &quot;url&quot;, input);
 
-  OGRSpatialReference *srs = new OGRSpatialReference();
-  int err = srs-&gt;importFromCRSURL(input.c_str());
-  if (err) {
-    delete srs;
-    NODE_THROW_OGRERR(err);
-    return;
-  }
+  GDALAsyncableJob&lt;OGRSpatialReference *&gt; job(0);
 
-  info.GetReturnValue().Set(SpatialReference::New(srs, true));
+  job.main = [input](const GDALExecutionProgress &amp;progress) {
+    OGRSpatialReference *srs = new OGRSpatialReference();
+    int err = srs-&gt;importFromCRSURL(input.c_str());
+    if (err) {
+      delete srs;
+      throw getOGRErrMsg(err);
+    }
+    return srs;
+  };
+  job.rval = [](OGRSpatialReference *srs, GetFromPersistentFunc) { return SpatialReference::New(srs, true); };
+  job.run(info, async, 1);
 }
 
 /**
@@ -827,21 +850,40 @@ NAN_METHOD(SpatialReference::fromCRSURL) {
  * @param {string} url
  * @return {gdal.SpatialReference}
  */
-NAN_METHOD(SpatialReference::fromURL) {
+
+/**
+ * Initialize spatial reference from a URL.
+ * {{async}}
+ *
+ * This method will download the spatial reference from the given URL.
+ *
+ * @static
+ * @throws Error
+ * @method fromURLAsync
+ * @param {string} url
+ * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;gdal.SpatialReference&gt;}
+ */
+
+GDAL_ASYNCABLE_DEFINE(SpatialReference::fromURL) {
   Nan::HandleScope scope;
 
   std::string input(&quot;&quot;);
   NODE_ARG_STR(0, &quot;url&quot;, input);
 
-  OGRSpatialReference *srs = new OGRSpatialReference();
-  int err = srs-&gt;importFromUrl(input.c_str());
-  if (err) {
-    delete srs;
-    NODE_THROW_OGRERR(err);
-    return;
-  }
+  GDALAsyncableJob&lt;OGRSpatialReference *&gt; job(0);
 
-  info.GetReturnValue().Set(SpatialReference::New(srs, true));
+  job.main = [input](const GDALExecutionProgress &amp;progress) {
+    OGRSpatialReference *srs = new OGRSpatialReference();
+    OGRErr err = srs-&gt;importFromUrl(input.c_str());
+    if (err) {
+      delete srs;
+      throw getOGRErrMsg(err);
+    }
+    return srs;
+  };
+  job.rval = [](OGRSpatialReference *srs, GetFromPersistentFunc) { return SpatialReference::New(srs, true); };
+  job.run(info, async, 1);
 }
 
 /**
@@ -882,21 +924,40 @@ NAN_METHOD(SpatialReference::fromMICoordSys) {
  * @param {string} input
  * @return {gdal.SpatialReference}
  */
-NAN_METHOD(SpatialReference::fromUserInput) {
+
+/**
+ * Initialize from an arbitrary spatial reference string.
+ *
+ * This method will examine the provided input, and try to deduce the format,
+ * and then use it to initialize the spatial reference system.
+ * {{{async}}}
+ *
+ * @static
+ * @throws Error
+ * @method fromUserInputAsync
+ * @param {string} input
+ * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;gdal.SpatialReference&gt;}
+ */
+GDAL_ASYNCABLE_DEFINE(SpatialReference::fromUserInput) {
   Nan::HandleScope scope;
 
   std::string input(&quot;&quot;);
-  NODE_ARG_STR(0, &quot;input&quot;, input);
+  NODE_ARG_STR(0, &quot;url&quot;, input);
 
-  OGRSpatialReference *srs = new OGRSpatialReference();
-  int err = srs-&gt;SetFromUserInput(input.c_str());
-  if (err) {
-    delete srs;
-    NODE_THROW_OGRERR(err);
-    return;
-  }
+  GDALAsyncableJob&lt;OGRSpatialReference *&gt; job(0);
 
-  info.GetReturnValue().Set(SpatialReference::New(srs, true));
+  job.main = [input](const GDALExecutionProgress &amp;progress) {
+    OGRSpatialReference *srs = new OGRSpatialReference();
+    int err = srs-&gt;SetFromUserInput(input.c_str());
+    if (err) {
+      delete srs;
+      throw getOGRErrMsg(err);
+    }
+    return srs;
+  };
+  job.rval = [](OGRSpatialReference *srs, GetFromPersistentFunc) { return SpatialReference::New(srs, true); };
+  job.run(info, async, 1);
 }
 
 /**
@@ -1010,12 +1071,6 @@ NAN_METHOD(SpatialReference::fromESRI) {
 
   info.GetReturnValue().Set(SpatialReference::New(srs, true));
 }
-
-/**
- * @typedef units
- * @property {string} units
- * @property {number} value
- */
 
 /**
  * Fetch linear geographic coordinate system units.

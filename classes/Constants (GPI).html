@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Constants (CPL Error Codes) - node-gdal-async</title>
+    <title>Constants (GPI) - node-gdal-async</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -139,7 +139,7 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>Constants (CPL Error Codes)</h1>
+    <h1>Constants (GPI)</h1>
 </div>
 
 
@@ -147,6 +147,10 @@
 
 
 
+<div class="yuidoc-class-description">
+<p>Palette types.</p>
+
+</div>
 
 <!-- table of contents -->
 
@@ -157,17 +161,10 @@
 		<li>
 			<strong>Properties</strong>
 			<ul>
-				<li><a href="#prop-gdal.CPLE_AppDefined"><span class="ip">gdal.CPLE_AppDefined</span></a></li>
-				<li><a href="#prop-gdal.CPLE_AssertionFailed"><span class="ip">gdal.CPLE_AssertionFailed</span></a></li>
-				<li><a href="#prop-gdal.CPLE_FileIO"><span class="ip">gdal.CPLE_FileIO</span></a></li>
-				<li><a href="#prop-gdal.CPLE_IllegalArg"><span class="ip">gdal.CPLE_IllegalArg</span></a></li>
-				<li><a href="#prop-gdal.CPLE_None"><span class="ip">gdal.CPLE_None</span></a></li>
-				<li><a href="#prop-gdal.CPLE_NotSupported"><span class="ip">gdal.CPLE_NotSupported</span></a></li>
-				<li><a href="#prop-gdal.CPLE_NoWriteAccess"><span class="ip">gdal.CPLE_NoWriteAccess</span></a></li>
-				<li><a href="#prop-gdal.CPLE_objectNull"><span class="ip">gdal.CPLE_objectNull</span></a></li>
-				<li><a href="#prop-gdal.CPLE_OpenFailed"><span class="ip">gdal.CPLE_OpenFailed</span></a></li>
-				<li><a href="#prop-gdal.CPLE_OutOfMemory"><span class="ip">gdal.CPLE_OutOfMemory</span></a></li>
-				<li><a href="#prop-gdal.CPLE_UserInterrupt"><span class="ip">gdal.CPLE_UserInterrupt</span></a></li>
+				<li><a href="#prop-gdal.GPI_CMYK"><span class="ip">gdal.GPI_CMYK</span></a></li>
+				<li><a href="#prop-gdal.GPI_Gray"><span class="ip">gdal.GPI_Gray</span></a></li>
+				<li><a href="#prop-gdal.GPI_HLS"><span class="ip">gdal.GPI_HLS</span></a></li>
+				<li><a href="#prop-gdal.GPI_RGB"><span class="ip">gdal.GPI_RGB</span></a></li>
 			</ul>
 		</li>
 
@@ -183,9 +180,9 @@
         <h2 class="off-left">Properties</h2>
 
         <div class="item-list">
-<div id="prop-gdal.CPLE_AppDefined" class="property item">
-    <h3 class="name"><code>gdal.CPLE_AppDefined</code></h3>
-    <span class="type">Number</span>
+<div id="prop-gdal.GPI_CMYK" class="property item">
+    <h3 class="name"><code>gdal.GPI_CMYK</code></h3>
+    <span class="type">String</span>
 
 
 
@@ -195,22 +192,23 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l569"><code>src&#x2F;node_gdal.cpp:569</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l1116"><code>src&#x2F;node_gdal.cpp:1116</code></a>
         </p>
 
 
     </div>
 
     <div class="description">
-        
+        <p>CMYK</p>
+
     </div>
 
 
 
 </div>
-<div id="prop-gdal.CPLE_AssertionFailed" class="property item">
-    <h3 class="name"><code>gdal.CPLE_AssertionFailed</code></h3>
-    <span class="type">Number</span>
+<div id="prop-gdal.GPI_Gray" class="property item">
+    <h3 class="name"><code>gdal.GPI_Gray</code></h3>
+    <span class="type">String</span>
 
 
 
@@ -220,22 +218,23 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l605"><code>src&#x2F;node_gdal.cpp:605</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l1100"><code>src&#x2F;node_gdal.cpp:1100</code></a>
         </p>
 
 
     </div>
 
     <div class="description">
-        
+        <p>Grayscale, only c1 defined</p>
+
     </div>
 
 
 
 </div>
-<div id="prop-gdal.CPLE_FileIO" class="property item">
-    <h3 class="name"><code>gdal.CPLE_FileIO</code></h3>
-    <span class="type">Number</span>
+<div id="prop-gdal.GPI_HLS" class="property item">
+    <h3 class="name"><code>gdal.GPI_HLS</code></h3>
+    <span class="type">String</span>
 
 
 
@@ -245,22 +244,23 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l581"><code>src&#x2F;node_gdal.cpp:581</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l1124"><code>src&#x2F;node_gdal.cpp:1124</code></a>
         </p>
 
 
     </div>
 
     <div class="description">
-        
+        <p>HLS, c4 is not defined</p>
+
     </div>
 
 
 
 </div>
-<div id="prop-gdal.CPLE_IllegalArg" class="property item">
-    <h3 class="name"><code>gdal.CPLE_IllegalArg</code></h3>
-    <span class="type">Number</span>
+<div id="prop-gdal.GPI_RGB" class="property item">
+    <h3 class="name"><code>gdal.GPI_RGB</code></h3>
+    <span class="type">String</span>
 
 
 
@@ -270,189 +270,15 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/src_node_gdal.cpp.html#l593"><code>src&#x2F;node_gdal.cpp:593</code></a>
+        <a href="../files/src_node_gdal.cpp.html#l1108"><code>src&#x2F;node_gdal.cpp:1108</code></a>
         </p>
 
 
     </div>
 
     <div class="description">
-        
-    </div>
+        <p>RGBA, alpha in c4</p>
 
-
-
-</div>
-<div id="prop-gdal.CPLE_None" class="property item">
-    <h3 class="name"><code>gdal.CPLE_None</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l563"><code>src&#x2F;node_gdal.cpp:563</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_NotSupported" class="property item">
-    <h3 class="name"><code>gdal.CPLE_NotSupported</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l599"><code>src&#x2F;node_gdal.cpp:599</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_NoWriteAccess" class="property item">
-    <h3 class="name"><code>gdal.CPLE_NoWriteAccess</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l611"><code>src&#x2F;node_gdal.cpp:611</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_objectNull" class="property item">
-    <h3 class="name"><code>gdal.CPLE_objectNull</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l623"><code>src&#x2F;node_gdal.cpp:623</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_OpenFailed" class="property item">
-    <h3 class="name"><code>gdal.CPLE_OpenFailed</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l587"><code>src&#x2F;node_gdal.cpp:587</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_OutOfMemory" class="property item">
-    <h3 class="name"><code>gdal.CPLE_OutOfMemory</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l575"><code>src&#x2F;node_gdal.cpp:575</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-
-
-</div>
-<div id="prop-gdal.CPLE_UserInterrupt" class="property item">
-    <h3 class="name"><code>gdal.CPLE_UserInterrupt</code></h3>
-    <span class="type">Number</span>
-
-
-
-        <span class="flag final">const</span>
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/src_node_gdal.cpp.html#l617"><code>src&#x2F;node_gdal.cpp:617</code></a>
-        </p>
-
-
-    </div>
-
-    <div class="description">
-        
     </div>
 
 

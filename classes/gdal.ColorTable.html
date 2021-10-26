@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>gdal.CompoundCurveCurves - node-gdal-async</title>
+    <title>gdal.ColorTable - node-gdal-async</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -139,7 +139,7 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>gdal.CompoundCurveCurves</h1>
+    <h1>gdal.ColorTable</h1>
 </div>
 
 
@@ -148,7 +148,12 @@
 
 
 <div class="yuidoc-class-description">
-<p>A collection of connected curves, used by <a href="../classes/gdal.CompoundCurve.html" class="crosslink">gdal.CompoundCurve</a>.</p>
+<p>An encapsulation of a <a href="../classes/gdal.RasterBand.html" class="crosslink">RasterBand</a>'s
+color table.</p>
+<pre class="code prettyprint"><code>var colorTable = band.colorTable;
+
+band.colorTable = new gdal.ColorTable(gdal.GPI_RGB);
+</code></pre>
 
 </div>
 
@@ -160,18 +165,26 @@
 		<li>
 			<strong>Methods</strong>
 			<ul>
-				<li><a href="#method-add"><span class="im">add</span>(<span class="ia">curves</span>)</a></li>
+				<li><a href="#method-clone"><span class="im">clone</span>()</a></li>
 				<li><a href="#method-count"><span class="im">count</span>()</a></li>
 				<li><a href="#method-forEach"><span class="im">forEach</span>(<span class="ia">callback</span>)</a></li>
 				<li><a href="#method-get"><span class="im">get</span>(<span class="ia">index</span>)</a></li>
+				<li><a href="#method-isSame"><span class="im">isSame</span>(<span class="ia">other</span>)</a></li>
 				<li><a href="#method-map&lt;U&gt;"><span class="im">map&lt;U&gt;</span>(<span class="ia">callback</span>)</a></li>
-				<li><a href="#method-Symbol.asyncIterator"><span class="im">Symbol.asyncIterator</span>()</a></li>
+				<li><a href="#method-ramp"><span class="im">ramp</span>(<span class="ia">start_index</span><span class="ia">start_color</span><span class="ia">end_index</span><span class="ia">end_color</span>)</a></li>
+				<li><a href="#method-set"><span class="im">set</span>(<span class="ia">index</span><span class="ia">color</span>)</a></li>
 				<li><a href="#method-Symbol.iterator"><span class="im">Symbol.iterator</span>()</a></li>
-				<li><a href="#method-toArray"><span class="im">toArray</span>()</a></li>
 			</ul>
 		</li>
 
 
+		<li>
+			<strong>Attributes</strong>
+			<ul>
+				<li><a href="#attr-band"><span class="iattr">band</span></a></li>
+				<li><a href="#attr-interpretation"><span class="iattr">interpretation</span></a></li>
+			</ul>
+		</li>
 
 	</ul>
 </div>
@@ -182,17 +195,14 @@
     <div id="methods" class="page-section">
         <h2 class="off-left">Methods</h2>
         <div class="item-list">
-<div id="method-add" class="method item">
+<div id="method-clone" class="method item">
 	<div class="method-signature">
-	<span class="name"><code>add</code></span>
+	<span class="name"><code>clone</code></span>
 
-		<div class="args">
-			<span class="paren">(</span><ul class="args-list inline commas">
-				<li class="arg">
-						<code>curves</code>
-				</li>
-			</ul><span class="paren">)</span>
-		</div>
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/gdal.ColorTable.html" class="crosslink">gdal.ColorTable</a></span>
+		</span>
 	</div>
 
 
@@ -203,50 +213,26 @@
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_compound_curves.cpp.html#l125"><code>src&#x2F;collections&#x2F;compound_curves.cpp:125</code></a>
+		<a href="../files/src_collections_colortable.cpp.html#l146"><code>src&#x2F;collections&#x2F;colortable.cpp:146</code></a>
 		</p>
 
 
 
 	</div>
 
-	<div class="description"><p>Adds a curve to the collection.</p>
+	<div class="description"><p>Clones the instance.
+The newly created ColorTable is not owned by any RasterBand.</p>
 </div>
 
-		<div class="params">
-			<h4>Parameters:</h4>
 
-			<ul class="params-list">
-				<li class="param">
-						<code class="param-name">curves</code>
-						<span class="type"><a href="../classes/gdal.SimpleCurve.html" class="crosslink">gdal.SimpleCurve</a>  |  <a href="../classes/gdal.SimpleCurve.html" class="crosslink">gdal.SimpleCurve[][]</a></span>
+		<div class="returns">
+			<h4>Returns:</h4>
 
-
-
-				</li>
-			</ul>
-		</div>
-
-
-		<div class="example">
-			<h4>Example:</h4>
-
-			<div class="example-content">
-				<pre class="code prettyprint"><code>var ring1 = new gdal.CircularString();
-ring1.points.add(0,0);
-ring1.points.add(1,0);
-ring1.points.add(1,1);
-ring1.points.add(0,1);
-ring1.points.add(0,0);
-
-// one at a time:
-compound.curves.add(ring1);
-
-// many at once:
-compound.curves.add([ring1, ...]);<code>&#x60;</code></code></pre>
-
+			<div class="returns-description">
+						<span class="type"><a href="../classes/gdal.ColorTable.html" class="crosslink">gdal.ColorTable</a></span>
 			</div>
 		</div>
+
 </div>
 <div id="method-count" class="method item">
 	<div class="method-signature">
@@ -266,14 +252,14 @@ compound.curves.add([ring1, ...]);<code>&#x60;</code></code></pre>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_compound_curves.cpp.html#l80"><code>src&#x2F;collections&#x2F;compound_curves.cpp:80</code></a>
+		<a href="../files/src_collections_colortable.cpp.html#l309"><code>src&#x2F;collections&#x2F;colortable.cpp:309</code></a>
 		</p>
 
 
 
 	</div>
 
-	<div class="description"><p>Returns the number of curves that exist in the collection.</p>
+	<div class="description"><p>Returns the number of color entries.</p>
 </div>
 
 
@@ -307,14 +293,14 @@ compound.curves.add([ring1, ...]);<code>&#x60;</code></code></pre>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/lib_default_iterators.js.html#l535"><code>lib&#x2F;default_iterators.js:535</code></a>
+		<a href="../files/lib_default_iterators.js.html#l658"><code>lib&#x2F;default_iterators.js:658</code></a>
 		</p>
 
 
 
 	</div>
 
-	<div class="description"><p>Iterates through all curves using a callback function.</p>
+	<div class="description"><p>Iterates through all color entries using a callback function.</p>
 </div>
 
 		<div class="params">
@@ -323,10 +309,10 @@ compound.curves.add([ring1, ...]);<code>&#x60;</code></code></pre>
 			<ul class="params-list">
 				<li class="param">
 						<code class="param-name">callback</code>
-						<span class="type">forEachCb<gdal.SimpleCurve></span>
+						<span class="type">forEachCb<gdal.Color></span>
 
 
-					<div class="param-description"><p>The callback to be called with each SimpleCurve</p>
+					<div class="param-description"><p>The callback to be called with each Color</p>
 </div>
 
 				</li>
@@ -338,7 +324,7 @@ compound.curves.add([ring1, ...]);<code>&#x60;</code></code></pre>
 			<h4>Example:</h4>
 
 			<div class="example-content">
-				<pre class="code prettyprint"><code>compoundCurves.curves.forEach(function(array, i) { ... });<code>&#x60;</code></code></pre>
+				<pre class="code prettyprint"><code>band.colorTable.forEach(function(array, i) { ... });<code>&#x60;</code></code></pre>
 
 			</div>
 		</div>
@@ -355,7 +341,7 @@ compound.curves.add([ring1, ...]);<code>&#x60;</code></code></pre>
 			</ul><span class="paren">)</span>
 		</div>
 		<span class="returns-inline">
-			<span class="type"><a href="../classes/gdal.CompoundCurve.html" class="crosslink">gdal.CompoundCurve</a>  |  <a href="../classes/gdal.SimpleCurve.html" class="crosslink">gdal.SimpleCurve</a></span>
+			<span class="type">Color</span>
 		</span>
 	</div>
 
@@ -367,14 +353,14 @@ compound.curves.add([ring1, ...]);<code>&#x60;</code></code></pre>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_collections_compound_curves.cpp.html#l96"><code>src&#x2F;collections&#x2F;compound_curves.cpp:96</code></a>
+		<a href="../files/src_collections_colortable.cpp.html#l181"><code>src&#x2F;collections&#x2F;colortable.cpp:181</code></a>
 		</p>
 
 
 
 	</div>
 
-	<div class="description"><p>Returns the curve at the specified index.</p>
+	<div class="description"><p>Returns the color with the given ID.</p>
 </div>
 
 		<div class="params">
@@ -395,19 +381,67 @@ compound.curves.add([ring1, ...]);<code>&#x60;</code></code></pre>
 			<h4>Returns:</h4>
 
 			<div class="returns-description">
-						<span class="type"><a href="../classes/gdal.CompoundCurve.html" class="crosslink">gdal.CompoundCurve</a>  |  <a href="../classes/gdal.SimpleCurve.html" class="crosslink">gdal.SimpleCurve</a></span>
+						<span class="type">Color</span>
 			</div>
 		</div>
 
-		<div class="example">
-			<h4>Example:</h4>
+</div>
+<div id="method-isSame" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>isSame</code></span>
 
-			<div class="example-content">
-				<pre class="code prettyprint"><code>var curve0 = compound.curves.get(0);
-var curve1 = compound.curves.get(1);<code>&#x60;</code></code></pre>
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>other</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Boolean</span>
+		</span>
+	</div>
 
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_collections_colortable.cpp.html#l159"><code>src&#x2F;collections&#x2F;colortable.cpp:159</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Compares two ColorTable objects for equality</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">other</code>
+						<span class="type"><a href="../classes/gdal.ColorTable.html" class="crosslink">gdal.ColorTable</a></span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Boolean</span>
 			</div>
 		</div>
+
 </div>
 <div id="method-map&lt;U&gt;" class="method item">
 	<div class="method-signature">
@@ -433,14 +467,14 @@ var curve1 = compound.curves.get(1);<code>&#x60;</code></code></pre>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/lib_default_iterators.js.html#l549"><code>lib&#x2F;default_iterators.js:549</code></a>
+		<a href="../files/lib_default_iterators.js.html#l672"><code>lib&#x2F;default_iterators.js:672</code></a>
 		</p>
 
 
 
 	</div>
 
-	<div class="description"><p>Iterates through curves using a callback function and builds
+	<div class="description"><p>Iterates through color entries using a callback function and builds
 an array of the returned values.</p>
 </div>
 
@@ -450,10 +484,10 @@ an array of the returned values.</p>
 			<ul class="params-list">
 				<li class="param">
 						<code class="param-name">callback</code>
-						<span class="type">mapCb<gdal.SimpleCurve,U></span>
+						<span class="type">mapCb<gdal.Color,U></span>
 
 
-					<div class="param-description"><p>The callback to be called with each SimpleCurve</p>
+					<div class="param-description"><p>The callback to be called with each Color</p>
 </div>
 
 				</li>
@@ -472,18 +506,36 @@ an array of the returned values.</p>
 			<h4>Example:</h4>
 
 			<div class="example-content">
-				<pre class="code prettyprint"><code>var result = compoundCurves.curves.map(function(array, i) {
+				<pre class="code prettyprint"><code>var result = band.colorTable.map(function(array, i) {
     return value;
 });<code>&#x60;</code></code></pre>
 
 			</div>
 		</div>
 </div>
-<div id="method-Symbol.asyncIterator" class="method item">
+<div id="method-ramp" class="method item">
 	<div class="method-signature">
-	<span class="name"><code>Symbol.asyncIterator</code></span>
+	<span class="name"><code>ramp</code></span>
 
-		<span class="paren">()</span>
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>start_index</code>
+				</li>
+				<li class="arg">
+						<code>start_color</code>
+				</li>
+				<li class="arg">
+						<code>end_index</code>
+				</li>
+				<li class="arg">
+						<code>end_color</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Number</span>
+		</span>
 	</div>
 
 
@@ -494,27 +546,128 @@ an array of the returned values.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/lib_default_iterators.js.html#l582"><code>lib&#x2F;default_iterators.js:582</code></a>
+		<a href="../files/src_collections_colortable.cpp.html#l260"><code>src&#x2F;collections&#x2F;colortable.cpp:260</code></a>
 		</p>
 
 
 
 	</div>
 
-	<div class="description"><p>Iterates through all curves using an async iterator</p>
+	<div class="description"><p>Creates a color ramp from one color entry to another.</p>
 </div>
 
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">start_index</code>
+						<span class="type">Number</span>
 
 
-		<div class="example">
-			<h4>Example:</h4>
 
-			<div class="example-content">
-				<pre class="code prettyprint"><code>for await (const array of compoundCurves.curves) {
-}</code></pre>
+				</li>
+				<li class="param">
+						<code class="param-name">start_color</code>
+						<span class="type">Color</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">end_index</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">end_color</code>
+						<span class="type">Color</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Number</span>:
+					<p>total number of color entries</p>
 
 			</div>
 		</div>
+
+</div>
+<div id="method-set" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>set</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>index</code>
+				</li>
+				<li class="arg">
+						<code>color</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Void</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_collections_colortable.cpp.html#l225"><code>src&#x2F;collections&#x2F;colortable.cpp:225</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Sets the color entry with the given ID.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">index</code>
+						<span class="type">Number</span>
+
+
+
+				</li>
+				<li class="param">
+						<code class="param-name">color</code>
+						<span class="type">Color</span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Void</span>
+			</div>
+		</div>
+
 </div>
 <div id="method-Symbol.iterator" class="method item">
 	<div class="method-signature">
@@ -531,14 +684,14 @@ an array of the returned values.</p>
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/lib_default_iterators.js.html#l567"><code>lib&#x2F;default_iterators.js:567</code></a>
+		<a href="../files/lib_default_iterators.js.html#l690"><code>lib&#x2F;default_iterators.js:690</code></a>
 		</p>
 
 
 
 	</div>
 
-	<div class="description"><p>Iterates through all curves using an iterator</p>
+	<div class="description"><p>Iterates through all color entries using an iterator</p>
 </div>
 
 
@@ -547,56 +700,80 @@ an array of the returned values.</p>
 			<h4>Example:</h4>
 
 			<div class="example-content">
-				<pre class="code prettyprint"><code>for (const array of compoundCurves.curves) {
+				<pre class="code prettyprint"><code>for (const array of band.colorTable) {
 }</code></pre>
 
 			</div>
 		</div>
 </div>
-<div id="method-toArray" class="method item">
-	<div class="method-signature">
-	<span class="name"><code>toArray</code></span>
-
-		<span class="paren">()</span>
-		<span class="returns-inline">
-			<span class="type"><a href="../classes/gdal.SimpleCurve.html" class="crosslink">gdal.SimpleCurve[][]</a></span>
-		</span>
-	</div>
-
-
-
-
-
-
-	<div class="meta">
-				<p>
-				Defined in
-		<a href="../files/lib_default_iterators.js.html#l599"><code>lib&#x2F;default_iterators.js:599</code></a>
-		</p>
-
-
-
-	</div>
-
-	<div class="description"><p>Outputs all curves as a regular javascript array.</p>
-</div>
-
-
-		<div class="returns">
-			<h4>Returns:</h4>
-
-			<div class="returns-description">
-						<span class="type"><a href="../classes/gdal.SimpleCurve.html" class="crosslink">gdal.SimpleCurve[][]</a></span>:
-					<p>List of SimpleCurve instances.</p>
-
-			</div>
-		</div>
-
-</div>
         </div>
     </div>
 
 
+    <div id="attrs" class="page-section">
+        <h2 class="off-left">Attributes</h2>
+
+<div id="attr-band" class="attr item">
+    <a name="config_band"></a> 
+    <h3 class="name"><code>band</code></h3>
+    <span class="type"><a href="../classes/gdal.RasterBand.html" class="crosslink">gdal.RasterBand</a> | Undefined</span>
+
+
+
+
+
+
+
+        <span class="flag readonly">readonly</span>
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_collections_colortable.cpp.html#l363"><code>src&#x2F;collections&#x2F;colortable.cpp:363</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Parent band</p>
+
+    </div>
+
+
+
+</div>
+<div id="attr-interpretation" class="attr item">
+    <a name="config_interpretation"></a> 
+    <h3 class="name"><code>interpretation</code></h3>
+    <span class="type">String</span>
+
+
+
+
+
+
+
+        <span class="flag readonly">readonly</span>
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/src_collections_colortable.cpp.html#l331"><code>src&#x2F;collections&#x2F;colortable.cpp:331</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Color interpretation of the palette</p>
+
+    </div>
+
+
+
+</div>
+    </div>
 
 
                     </div>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/collections/compound_curves.cpp - node-gdal-async</title>
+    <title>src/collections/colortable.cpp - node-gdal-async</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -139,53 +139,76 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>src/collections/compound_curves.cpp <small>File</small></h1>
+    <h1>src/collections/colortable.cpp <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
-#include &quot;compound_curves.hpp&quot;
+#include &lt;memory&gt;
+#include &quot;colortable.hpp&quot;
 #include &quot;../gdal_common.hpp&quot;
-#include &quot;../geometry/gdal_geometry.hpp&quot;
-#include &quot;../geometry/gdal_linearring.hpp&quot;
-#include &quot;../geometry/gdal_simplecurve.hpp&quot;
-#include &quot;../geometry/gdal_compoundcurve.hpp&quot;
+#include &quot;../gdal_dataset.hpp&quot;
+#include &quot;../gdal_rasterband.hpp&quot;
+#include &quot;../utils/string_list.hpp&quot;
 
 namespace node_gdal {
 
-Nan::Persistent&lt;FunctionTemplate&gt; CompoundCurveCurves::constructor;
+Nan::Persistent&lt;FunctionTemplate&gt; ColorTable::constructor;
 
-void CompoundCurveCurves::Initialize(Local&lt;Object&gt; target) {
+void ColorTable::Initialize(Local&lt;Object&gt; target) {
   Nan::HandleScope scope;
 
-  Local&lt;FunctionTemplate&gt; lcons = Nan::New&lt;FunctionTemplate&gt;(CompoundCurveCurves::New);
+  Local&lt;FunctionTemplate&gt; lcons = Nan::New&lt;FunctionTemplate&gt;(ColorTable::New);
   lcons-&gt;InstanceTemplate()-&gt;SetInternalFieldCount(1);
-  lcons-&gt;SetClassName(Nan::New(&quot;CompoundCurveCurves&quot;).ToLocalChecked());
+  lcons-&gt;SetClassName(Nan::New(&quot;ColorTable&quot;).ToLocalChecked());
 
   Nan::SetPrototypeMethod(lcons, &quot;toString&quot;, toString);
+  Nan::SetPrototypeMethod(lcons, &quot;isSame&quot;, isSame);
+  Nan::SetPrototypeMethod(lcons, &quot;clone&quot;, clone);
   Nan::SetPrototypeMethod(lcons, &quot;count&quot;, count);
   Nan::SetPrototypeMethod(lcons, &quot;get&quot;, get);
-  Nan::SetPrototypeMethod(lcons, &quot;add&quot;, add);
+  Nan::SetPrototypeMethod(lcons, &quot;set&quot;, set);
+  Nan::SetPrototypeMethod(lcons, &quot;ramp&quot;, ramp);
+  ATTR(lcons, &quot;interpretation&quot;, interpretationGetter, READ_ONLY_SETTER);
 
-  Nan::Set(target, Nan::New(&quot;CompoundCurveCurves&quot;).ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  ATTR_DONT_ENUM(lcons, &quot;band&quot;, bandGetter, READ_ONLY_SETTER);
+
+  Nan::Set(target, Nan::New(&quot;ColorTable&quot;).ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
 
   constructor.Reset(lcons);
 }
 
-CompoundCurveCurves::CompoundCurveCurves() : Nan::ObjectWrap() {
+ColorTable::ColorTable(GDALColorTable *raw, long parent_uid) : Nan::ObjectWrap(), parent_uid(parent_uid), this_(raw) {
 }
 
-CompoundCurveCurves::~CompoundCurveCurves() {
+ColorTable::~ColorTable() {
+  dispose();
 }
 
+void ColorTable::dispose() {
+  if (this_) {
+    LOG(&quot;Disposing ColorTable [%p]&quot;, this_);
+    object_store.dispose(uid, false);
+    if (parent_uid == 0 &amp;&amp; this_ != nullptr) delete this_;
+    this_ = nullptr;
+  }
+}
 /**
- * A collection of connected curves, used by {{#crossLink
- * &quot;gdal.CompoundCurve&quot;}}gdal.CompoundCurve{{/crossLink}}.
+ * An encapsulation of a {{#crossLink &quot;gdal.RasterBand&quot;}}RasterBand{{/crossLink}}&#x27;s
+ * color table.
  *
- * @class gdal.CompoundCurveCurves
+ * &#x60;&#x60;&#x60;
+ * var colorTable = band.colorTable;
+ *
+ * band.colorTable = new gdal.ColorTable(gdal.GPI_RGB);
+ * &#x60;&#x60;&#x60;
+ *
+ * @class gdal.ColorTable
+ * @param {string} interpretation palette interpretation
  */
-NAN_METHOD(CompoundCurveCurves::New) {
+NAN_METHOD(ColorTable::New) {
   Nan::HandleScope scope;
+  ColorTable *f;
 
   if (!info.IsConstructCall()) {
     Nan::ThrowError(&quot;Cannot call constructor as function, you need to use &#x27;new&#x27; keyword&quot;);
@@ -194,145 +217,308 @@ NAN_METHOD(CompoundCurveCurves::New) {
   if (info[0]-&gt;IsExternal()) {
     Local&lt;External&gt; ext = info[0].As&lt;External&gt;();
     void *ptr = ext-&gt;Value();
-    CompoundCurveCurves *geom = static_cast&lt;CompoundCurveCurves *&gt;(ptr);
-    geom-&gt;Wrap(info.This());
-    info.GetReturnValue().Set(info.This());
-    return;
+    f = static_cast&lt;ColorTable *&gt;(ptr);
   } else {
-    Nan::ThrowError(&quot;Cannot create CompoundCurveCurves directly&quot;);
-    return;
+    std::string pi;
+    NODE_ARG_STR(0, &quot;palette interpretation&quot;, pi);
+    GDALPaletteInterp gpi;
+    if (pi == &quot;Gray&quot;)
+      gpi = GPI_Gray;
+    else if (pi == &quot;RGB&quot;)
+      gpi = GPI_RGB;
+    else if (pi == &quot;CMYK&quot;)
+      gpi = GPI_CMYK;
+    else if (pi == &quot;HLS&quot;)
+      gpi = GPI_HLS;
+    else {
+      Nan::ThrowRangeError(&quot;Invalid palette interpretation&quot;);
+      return;
+    }
+    f = new ColorTable(new GDALColorTable(gpi), 0);
   }
+
+  f-&gt;Wrap(info.This());
+  f-&gt;uid = object_store.add(f-&gt;get(), f-&gt;persistent(), f-&gt;parent_uid);
+  info.GetReturnValue().Set(info.This());
+  return;
 }
 
-Local&lt;Value&gt; CompoundCurveCurves::New(Local&lt;Value&gt; geom) {
+/*
+ * Create a color table owned by a gdal.RasterBand
+ */
+Local&lt;Value&gt; ColorTable::New(GDALColorTable *raw, Local&lt;Value&gt; parent) {
   Nan::EscapableHandleScope scope;
 
-  CompoundCurveCurves *wrapped = new CompoundCurveCurves();
+  if (!raw) { return scope.Escape(Nan::Null()); }
+  if (object_store.has(raw)) { return scope.Escape(object_store.get(raw)); }
+
+  RasterBand *band = Nan::ObjectWrap::Unwrap&lt;RasterBand&gt;(parent.As&lt;Object&gt;());
+
+  ColorTable *wrapped = new ColorTable(raw, band-&gt;parent_uid);
+  wrapped-&gt;parent_uid = band-&gt;parent_uid;
 
   v8::Local&lt;v8::Value&gt; ext = Nan::New&lt;External&gt;(wrapped);
   v8::Local&lt;v8::Object&gt; obj =
-    Nan::NewInstance(Nan::GetFunction(Nan::New(CompoundCurveCurves::constructor)).ToLocalChecked(), 1, &amp;ext)
-      .ToLocalChecked();
-  Nan::SetPrivate(obj, Nan::New(&quot;parent_&quot;).ToLocalChecked(), geom);
+    Nan::NewInstance(Nan::GetFunction(Nan::New(ColorTable::constructor)).ToLocalChecked(), 1, &amp;ext).ToLocalChecked();
+
+  Nan::SetPrivate(obj, Nan::New(&quot;parent_&quot;).ToLocalChecked(), parent);
 
   return scope.Escape(obj);
 }
 
-NAN_METHOD(CompoundCurveCurves::toString) {
-  Nan::HandleScope scope;
-  info.GetReturnValue().Set(Nan::New(&quot;CompoundCurveCurves&quot;).ToLocalChecked());
-}
-
-/**
- * Returns the number of curves that exist in the collection.
- *
- * @method count
- * @return {number}
+/*
+ * Create a standalone color table
  */
-NAN_METHOD(CompoundCurveCurves::count) {
+Local&lt;Value&gt; ColorTable::New(GDALColorTable *raw) {
+  Nan::EscapableHandleScope scope;
+
+  if (!raw) { return scope.Escape(Nan::Null()); }
+  if (object_store.has(raw)) { return scope.Escape(object_store.get(raw)); }
+
+  ColorTable *wrapped = new ColorTable(raw, 0);
+
+  v8::Local&lt;v8::Value&gt; ext = Nan::New&lt;External&gt;(wrapped);
+  v8::Local&lt;v8::Object&gt; obj =
+    Nan::NewInstance(Nan::GetFunction(Nan::New(ColorTable::constructor)).ToLocalChecked(), 1, &amp;ext).ToLocalChecked();
+
+  return scope.Escape(obj);
+}
+
+NAN_METHOD(ColorTable::toString) {
   Nan::HandleScope scope;
-
-  Local&lt;Object&gt; parent =
-    Nan::GetPrivate(info.This(), Nan::New(&quot;parent_&quot;).ToLocalChecked()).ToLocalChecked().As&lt;Object&gt;();
-  CompoundCurve *geom = Nan::ObjectWrap::Unwrap&lt;CompoundCurve&gt;(parent);
-
-  info.GetReturnValue().Set(Nan::New&lt;Integer&gt;(geom-&gt;get()-&gt;getNumCurves()));
+  info.GetReturnValue().Set(Nan::New(&quot;ColorTable&quot;).ToLocalChecked());
 }
 
 /**
- * Returns the curve at the specified index.
+ * Clones the instance.
+ * The newly created ColorTable is not owned by any RasterBand.
  *
- * @example
- * &#x60;&#x60;&#x60;
- * var curve0 = compound.curves.get(0);
- * var curve1 = compound.curves.get(1);&#x60;&#x60;&#x60;
+ * @method clone
+ * @return {gdal.ColorTable}
+ */
+NAN_METHOD(ColorTable::clone) {
+  Nan::HandleScope scope;
+  ColorTable *ct = Nan::ObjectWrap::Unwrap&lt;ColorTable&gt;(info.This());
+  info.GetReturnValue().Set(ColorTable::New(ct-&gt;this_-&gt;Clone()));
+}
+
+/**
+ * Compares two ColorTable objects for equality
+ *
+ * @method isSame
+ * @param {gdal.ColorTable} other
+ * @throws Error
+ * @return {boolean}
+ */
+NAN_METHOD(ColorTable::isSame) {
+  Nan::HandleScope scope;
+
+  NODE_UNWRAP_CHECK(ColorTable, info.This(), self);
+  GDAL_RAW_CHECK(GDALColorTable *, self, raw);
+
+  ColorTable *other;
+  NODE_ARG_WRAPPED(0, &quot;other&quot;, ColorTable, other);
+  GDAL_RAW_CHECK(GDALColorTable *, other, raw_other);
+
+  CPLErrorReset();
+  info.GetReturnValue().Set(Nan::New&lt;Boolean&gt;(raw-&gt;IsSame(raw_other)));
+}
+
+/**
+ * Returns the color with the given ID.
  *
  * @method get
  * @param {number} index
  * @throws Error
- * @return {gdal.CompoundCurve|gdal.SimpleCurve}
+ * @return {Color}
  */
-NAN_METHOD(CompoundCurveCurves::get) {
+NAN_METHOD(ColorTable::get) {
   Nan::HandleScope scope;
 
-  Local&lt;Object&gt; parent =
-    Nan::GetPrivate(info.This(), Nan::New(&quot;parent_&quot;).ToLocalChecked()).ToLocalChecked().As&lt;Object&gt;();
-  CompoundCurve *geom = Nan::ObjectWrap::Unwrap&lt;CompoundCurve&gt;(parent);
+  int index;
+  NODE_ARG_INT(0, &quot;index&quot;, index);
 
-  int i;
-  NODE_ARG_INT(0, &quot;index&quot;, i);
+  NODE_UNWRAP_CHECK(ColorTable, info.This(), self);
+  GDAL_RAW_CHECK(GDALColorTable *, self, raw);
 
-  if (i &gt;= 0 &amp;&amp; i &lt; geom-&gt;get()-&gt;getNumCurves())
-    info.GetReturnValue().Set(Geometry::New(geom-&gt;get()-&gt;getCurve(i), false));
-  else
-    Nan::ThrowRangeError(&quot;Invalid curve requested&quot;);
+  MaybeLocal&lt;Value&gt; parentMaybe = Nan::GetPrivate(info.This(), Nan::New(&quot;parent_&quot;).ToLocalChecked());
+  if (!parentMaybe.IsEmpty() &amp;&amp; !parentMaybe.ToLocalChecked()-&gt;IsNullOrUndefined()) {
+    Local&lt;Object&gt; parent = parentMaybe.ToLocalChecked().As&lt;Object&gt;();
+    NODE_UNWRAP_CHECK(RasterBand, parent, band);
+  }
+
+  CPLErrorReset();
+  const GDALColorEntry *color = raw-&gt;GetColorEntry(index);
+  if (color == nullptr) {
+    NODE_THROW_LAST_CPLERR;
+    return;
+  }
+
+  Local&lt;Object&gt; result = Nan::New&lt;Object&gt;();
+  Nan::Set(result, Nan::New(&quot;c1&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(color-&gt;c1));
+  Nan::Set(result, Nan::New(&quot;c2&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(color-&gt;c2));
+  Nan::Set(result, Nan::New(&quot;c3&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(color-&gt;c3));
+  Nan::Set(result, Nan::New(&quot;c4&quot;).ToLocalChecked(), Nan::New&lt;Number&gt;(color-&gt;c4));
+  info.GetReturnValue().Set(result);
+}
+
+#define NODE_COLOR_FROM_OBJ(obj, color)                                                                                \
+  NODE_INT_FROM_OBJ(obj, &quot;c1&quot;, color.c1);                                                                              \
+  NODE_INT_FROM_OBJ(obj, &quot;c2&quot;, color.c2);                                                                              \
+  NODE_INT_FROM_OBJ(obj, &quot;c3&quot;, color.c3);                                                                              \
+  NODE_INT_FROM_OBJ(obj, &quot;c4&quot;, color.c4);
+
+/**
+ * Sets the color entry with the given ID.
+ *
+ * @method set
+ * @throws Error
+ * @param {number} index
+ * @param {Color} color
+ * @return {void}
+ */
+
+NAN_METHOD(ColorTable::set) {
+  Nan::HandleScope scope;
+
+  int index;
+  NODE_ARG_INT(0, &quot;index&quot;, index);
+
+  Local&lt;Object&gt; color_obj;
+  NODE_ARG_OBJECT(1, &quot;color&quot;, color_obj);
+
+  NODE_UNWRAP_CHECK(ColorTable, info.This(), self);
+  GDAL_RAW_CHECK(GDALColorTable *, self, raw);
+
+  MaybeLocal&lt;Value&gt; parentMaybe = Nan::GetPrivate(info.This(), Nan::New(&quot;parent_&quot;).ToLocalChecked());
+  if (!parentMaybe.IsEmpty() &amp;&amp; !parentMaybe.ToLocalChecked()-&gt;IsNullOrUndefined()) {
+    Nan::ThrowError(&quot;RasterBand color tables are read-only, create a new one to modify it&quot;);
+    return;
+  }
+
+  GDALColorEntry color;
+  NODE_COLOR_FROM_OBJ(color_obj, color);
+
+  CPLErrorReset();
+  raw-&gt;SetColorEntry(index, &amp;color);
 }
 
 /**
- * Adds a curve to the collection.
+ * Creates a color ramp from one color entry to another.
  *
- * @example
- * &#x60;&#x60;&#x60;
- * var ring1 = new gdal.CircularString();
- * ring1.points.add(0,0);
- * ring1.points.add(1,0);
- * ring1.points.add(1,1);
- * ring1.points.add(0,1);
- * ring1.points.add(0,0);
- *
- * // one at a time:
- * compound.curves.add(ring1);
- *
- * // many at once:
- * compound.curves.add([ring1, ...]);&#x60;&#x60;&#x60;
- *
- * @method add
- * @param {gdal.SimpleCurve|gdal.SimpleCurve[]} curves
+ * @method ramp
+ * @throws Error
+ * @param {number} start_index
+ * @param {Color} start_color
+ * @param {number} end_index
+ * @param {Color} end_color
+ * @return {number} total number of color entries
  */
-NAN_METHOD(CompoundCurveCurves::add) {
+
+NAN_METHOD(ColorTable::ramp) {
   Nan::HandleScope scope;
 
-  Local&lt;Object&gt; parent =
-    Nan::GetPrivate(info.This(), Nan::New(&quot;parent_&quot;).ToLocalChecked()).ToLocalChecked().As&lt;Object&gt;();
-  CompoundCurve *geom = Nan::ObjectWrap::Unwrap&lt;CompoundCurve&gt;(parent);
-
-  SimpleCurve *ring;
-
-  if (info.Length() &lt; 1) {
-    Nan::ThrowError(&quot;curve(s) must be given&quot;);
-    return;
-  }
-  if (info[0]-&gt;IsArray()) {
-    // set from array of geometry objects
-    Local&lt;Array&gt; array = info[0].As&lt;Array&gt;();
-    int length = array-&gt;Length();
-    for (int i = 0; i &lt; length; i++) {
-      Local&lt;Value&gt; element = Nan::Get(array, i).ToLocalChecked();
-      if (IS_WRAPPED(element, SimpleCurve)) {
-        ring = Nan::ObjectWrap::Unwrap&lt;SimpleCurve&gt;(element.As&lt;Object&gt;());
-        OGRErr err = geom-&gt;get()-&gt;addCurve(ring-&gt;get());
-        if (err) {
-          NODE_THROW_OGRERR(err);
-          return;
-        }
-      } else {
-        Nan::ThrowError(&quot;All array elements must be SimpleCurves&quot;);
-        return;
-      }
-    }
-  } else if (IS_WRAPPED(info[0], SimpleCurve)) {
-    ring = Nan::ObjectWrap::Unwrap&lt;SimpleCurve&gt;(info[0].As&lt;Object&gt;());
-    OGRErr err = geom-&gt;get()-&gt;addCurve(ring-&gt;get());
-    if (err) {
-      NODE_THROW_OGRERR(err);
-      return;
-    }
-  } else {
-    Nan::ThrowError(&quot;curve(s) must be a SimpleCurve or array of SimpleCurves&quot;);
+  int start_index, end_index;
+  NODE_ARG_INT(0, &quot;start_index&quot;, start_index);
+  NODE_ARG_INT(2, &quot;end_index&quot;, end_index);
+  if (start_index &lt; 0 || end_index &lt; 0 || end_index &lt; start_index) {
+    Nan::ThrowRangeError(&quot;Invalid color interval&quot;);
     return;
   }
 
-  return;
+  Local&lt;Object&gt; start_color_obj, end_color_obj;
+  NODE_ARG_OBJECT(1, &quot;start_color&quot;, start_color_obj);
+  NODE_ARG_OBJECT(3, &quot;start_color&quot;, end_color_obj);
+
+  NODE_UNWRAP_CHECK(ColorTable, info.This(), self);
+  GDAL_RAW_CHECK(GDALColorTable *, self, raw);
+
+  GDALColorEntry start_color, end_color;
+  NODE_COLOR_FROM_OBJ(start_color_obj, start_color);
+  NODE_COLOR_FROM_OBJ(end_color_obj, end_color);
+
+  MaybeLocal&lt;Value&gt; parentMaybe = Nan::GetPrivate(info.This(), Nan::New(&quot;parent_&quot;).ToLocalChecked());
+  if (!parentMaybe.IsEmpty() &amp;&amp; !parentMaybe.ToLocalChecked()-&gt;IsNullOrUndefined()) {
+    Nan::ThrowError(&quot;RasterBand color tables are read-only, create a new one to modify it&quot;);
+    return;
+  }
+
+  int r = raw-&gt;CreateColorRamp(start_index, &amp;start_color, end_index, &amp;end_color);
+  if (r == -1) {
+    NODE_THROW_LAST_CPLERR;
+    return;
+  }
+
+  info.GetReturnValue().Set(Nan::New&lt;Number&gt;(r));
+}
+
+/**
+ * Returns the number of color entries.
+ *
+ * @method count
+ * @return {number}
+ */
+NAN_METHOD(ColorTable::count) {
+  Nan::HandleScope scope;
+
+  NODE_UNWRAP_CHECK(ColorTable, info.This(), self);
+  GDAL_RAW_CHECK(GDALColorTable *, self, raw);
+
+  MaybeLocal&lt;Value&gt; parentMaybe = Nan::GetPrivate(info.This(), Nan::New(&quot;parent_&quot;).ToLocalChecked());
+  if (!parentMaybe.IsEmpty() &amp;&amp; !parentMaybe.ToLocalChecked()-&gt;IsNullOrUndefined()) {
+    Local&lt;Object&gt; parent = parentMaybe.ToLocalChecked().As&lt;Object&gt;();
+    NODE_UNWRAP_CHECK(RasterBand, parent, band);
+  }
+
+  CPLErrorReset();
+  info.GetReturnValue().Set(raw-&gt;GetColorEntryCount());
+}
+
+/**
+ * Color interpretation of the palette
+ *
+ * @readOnly
+ * @attribute interpretation
+ * @type {string}
+ */
+NAN_GETTER(ColorTable::interpretationGetter) {
+  Nan::HandleScope scope;
+
+  NODE_UNWRAP_CHECK(ColorTable, info.This(), self);
+  GDAL_RAW_CHECK(GDALColorTable *, self, raw);
+
+  MaybeLocal&lt;Value&gt; parentMaybe = Nan::GetPrivate(info.This(), Nan::New(&quot;parent_&quot;).ToLocalChecked());
+  if (!parentMaybe.IsEmpty() &amp;&amp; !parentMaybe.ToLocalChecked()-&gt;IsNullOrUndefined()) {
+    Local&lt;Object&gt; parent = parentMaybe.ToLocalChecked().As&lt;Object&gt;();
+    NODE_UNWRAP_CHECK(RasterBand, parent, band);
+  }
+
+  CPLErrorReset();
+  GDALPaletteInterp interp = raw-&gt;GetPaletteInterpretation();
+  std::string r;
+  switch (interp) {
+    case GPI_Gray: r = &quot;Gray&quot;; break;
+    case GPI_RGB: r = &quot;RGB&quot;; break;
+    case GPI_CMYK: r = &quot;CMYK&quot;; break;
+    case GPI_HLS: r = &quot;HLS&quot;; break;
+    default: r = &quot;invalid&quot;; break;
+  }
+  info.GetReturnValue().Set(SafeString::New(r.c_str()));
+}
+
+/**
+ * Parent band
+ *
+ * @readOnly
+ * @attribute band
+ * @type {gdal.RasterBand|undefined}
+ */
+NAN_GETTER(ColorTable::bandGetter) {
+  Nan::HandleScope scope;
+  MaybeLocal&lt;Value&gt; parentMaybe = Nan::GetPrivate(info.This(), Nan::New(&quot;parent_&quot;).ToLocalChecked());
+  if (!parentMaybe.IsEmpty() &amp;&amp; !parentMaybe.ToLocalChecked()-&gt;IsNullOrUndefined()) {
+    info.GetReturnValue().Set(parentMaybe.ToLocalChecked());
+  }
 }
 
 } // namespace node_gdal

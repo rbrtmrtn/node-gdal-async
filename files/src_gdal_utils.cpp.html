@@ -27,7 +27,7 @@
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DIM)", "classes/Constants (DIR)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.ArrayAttributes", "classes/gdal.ArrayDimensions", "classes/gdal.Attribute", "classes/gdal.CircularString", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Dimension", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Group", "classes/gdal.GroupArrays", "classes/gdal.GroupAttributes", "classes/gdal.GroupDimensions", "classes/gdal.GroupGroups", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MDArray", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference", "classes/gdal.vsimem"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DIM)", "classes/Constants (DIR)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GPI)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.ArrayAttributes", "classes/gdal.ArrayDimensions", "classes/gdal.Attribute", "classes/gdal.CircularString", "classes/gdal.ColorTable", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Dimension", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Group", "classes/gdal.GroupArrays", "classes/gdal.GroupAttributes", "classes/gdal.GroupDimensions", "classes/gdal.GroupGroups", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MDArray", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference", "classes/gdal.vsimem"]'>
         </form>
     </div>
 </div>
@@ -46,6 +46,7 @@
                 <li><a href="../classes/Constants (DMD).html">Constants (DMD)</a></li>
                 <li><a href="../classes/Constants (GCI).html">Constants (GCI)</a></li>
                 <li><a href="../classes/Constants (GDT).html">Constants (GDT)</a></li>
+                <li><a href="../classes/Constants (GPI).html">Constants (GPI)</a></li>
                 <li><a href="../classes/Constants (GRA).html">Constants (GRA)</a></li>
                 <li><a href="../classes/Constants (ODsC).html">Constants (ODsC)</a></li>
                 <li><a href="../classes/Constants (OFT).html">Constants (OFT)</a></li>
@@ -59,6 +60,7 @@
                 <li><a href="../classes/gdal.ArrayDimensions.html">gdal.ArrayDimensions</a></li>
                 <li><a href="../classes/gdal.Attribute.html">gdal.Attribute</a></li>
                 <li><a href="../classes/gdal.CircularString.html">gdal.CircularString</a></li>
+                <li><a href="../classes/gdal.ColorTable.html">gdal.ColorTable</a></li>
                 <li><a href="../classes/gdal.CompoundCurve.html">gdal.CompoundCurve</a></li>
                 <li><a href="../classes/gdal.CompoundCurveCurves.html">gdal.CompoundCurveCurves</a></li>
                 <li><a href="../classes/gdal.config.html">gdal.config</a></li>
@@ -161,6 +163,7 @@ void Utils::Initialize(Local&lt;Object&gt; target) {
   Nan__SetAsyncableMethod(target, &quot;info&quot;, info);
   Nan__SetAsyncableMethod(target, &quot;translate&quot;, translate);
   Nan__SetAsyncableMethod(target, &quot;vectorTranslate&quot;, vectorTranslate);
+  Nan__SetAsyncableMethod(target, &quot;warp&quot;, warp);
 }
 
 /**
@@ -176,7 +179,9 @@ void Utils::Initialize(Local&lt;Object&gt; target) {
  * @static
  * @param {string} destination destination filename
  * @param {gdal.Dataset} source source dataset
- * @param {string[]} array of CLI options for gdal_translate
+ * @param {string[]} [args] array of CLI options for gdal_translate
+ * @param {UtilOptions} [options] additional options
+ * @param {ProgressCb} [options.progress_cb] {{{progress_cb}}}
  * @return {gdal.Dataset}
  */
 
@@ -194,7 +199,9 @@ void Utils::Initialize(Local&lt;Object&gt; target) {
  * @static
  * @param {string} destination destination filename
  * @param {gdal.Dataset} source source dataset
- * @param {string[]} array of CLI options for gdal_translate
+ * @param {string[]} [args] array of CLI options for gdal_translate
+ * @param {UtilOptions} [options] additional options
+ * @param {ProgressCb} [options.progress_cb] {{{progress_cb}}}
  * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
  * @return {Promise&lt;gdal.Dataset&gt;}
  */
@@ -209,18 +216,26 @@ GDAL_ASYNCABLE_DEFINE(Utils::translate) {
   NODE_UNWRAP_CHECK(Dataset, src, ds);
   GDAL_RAW_CHECK(GDALDataset *, ds, raw);
 
-  Local&lt;Array&gt; options;
-  NODE_ARG_ARRAY(2, &quot;options&quot;, options);
+  Local&lt;Array&gt; args;
+  NODE_ARG_ARRAY_OPT(2, &quot;args&quot;, args);
+  if (!args.IsEmpty())
+    for (unsigned i = 0; i &lt; args-&gt;Length(); ++i) {
+      aosOptions-&gt;AddString(*Nan::Utf8String(Nan::Get(args, i).ToLocalChecked()));
+    }
 
-  for (unsigned i = 0; i &lt; options-&gt;Length(); ++i) {
-    aosOptions-&gt;AddString(*Nan::Utf8String(Nan::Get(options, i).ToLocalChecked()));
-  }
+  Local&lt;Object&gt; options;
+  Nan::Callback *progress_cb = nullptr;
+  NODE_ARG_OBJECT_OPT(3, &quot;options&quot;, options);
+  if (!options.IsEmpty()) NODE_CB_FROM_OBJ_OPT(options, &quot;progress_cb&quot;, progress_cb);
 
   GDALAsyncableJob&lt;GDALDataset *&gt; job(ds-&gt;uid);
-  job.main = [raw, dst, aosOptions](const GDALExecutionProgress &amp;) {
+  job.progress = progress_cb;
+  job.main = [raw, dst, aosOptions, progress_cb](const GDALExecutionProgress &amp;progress) {
     CPLErrorReset();
     auto b = aosOptions;
     auto psOptions = GDALTranslateOptionsNew(aosOptions-&gt;List(), nullptr);
+    if (psOptions == nullptr) throw CPLGetLastErrorMsg();
+    if (progress_cb) GDALTranslateOptionsSetProgress(psOptions, ProgressTrampoline, (void *)&amp;progress);
     GDALDataset *r = GDALDatasetFromHandle(GDALTranslate(dst.c_str(), GDALDatasetToHandle(raw), psOptions, nullptr));
     GDALTranslateOptionsFree(psOptions);
     if (r == nullptr) throw CPLGetLastErrorMsg();
@@ -228,7 +243,7 @@ GDAL_ASYNCABLE_DEFINE(Utils::translate) {
   };
   job.rval = [](GDALDataset *ds, GetFromPersistentFunc) { return Dataset::New(ds); };
 
-  job.run(info, async, 3);
+  job.run(info, async, 4);
 }
 
 /**
@@ -244,7 +259,9 @@ GDAL_ASYNCABLE_DEFINE(Utils::translate) {
  * @static
  * @param {string|gdal.Dataset} destination destination
  * @param {gdal.Dataset} source source dataset
- * @param {string[]} array of CLI options for ogr2ogr
+ * @param {string[]} [args] array of CLI options for ogr2ogr
+ * @param {UtilOptions} [options] additional options
+ * @param {ProgressCb} [options.progress_cb] {{{progress_cb}}}
  * @return {gdal.Dataset}
  */
 
@@ -262,7 +279,9 @@ GDAL_ASYNCABLE_DEFINE(Utils::translate) {
  * @static
  * @param {string|gdal.Dataset} destination destination
  * @param {gdal.Dataset} source source dataset
- * @param {string[]} array of CLI options for ogr2ogr
+ * @param {string[]} [args] array of CLI options for ogr2ogr
+ * @param {UtilOptions} [options] additional options
+ * @param {ProgressCb} [options.progress_cb] {{{progress_cb}}}
  * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
  * @return {Promise&lt;gdal.Dataset&gt;}
  */
@@ -293,21 +312,30 @@ GDAL_ASYNCABLE_DEFINE(Utils::vectorTranslate) {
   NODE_UNWRAP_CHECK(Dataset, src, ds);
   GDAL_RAW_CHECK(GDALDataset *, ds, src_raw);
 
-  Local&lt;Array&gt; options;
-  NODE_ARG_ARRAY(2, &quot;options&quot;, options);
+  Local&lt;Array&gt; args;
+  NODE_ARG_ARRAY_OPT(2, &quot;args&quot;, args);
+  if (!args.IsEmpty())
+    for (unsigned i = 0; i &lt; args-&gt;Length(); ++i) {
+      aosOptions-&gt;AddString(*Nan::Utf8String(Nan::Get(args, i).ToLocalChecked()));
+    }
 
-  for (unsigned i = 0; i &lt; options-&gt;Length(); ++i) {
-    aosOptions-&gt;AddString(*Nan::Utf8String(Nan::Get(options, i).ToLocalChecked()));
-  }
+  Local&lt;Object&gt; options;
+  Nan::Callback *progress_cb = nullptr;
+  NODE_ARG_OBJECT_OPT(3, &quot;options&quot;, options);
+  if (!options.IsEmpty()) NODE_CB_FROM_OBJ_OPT(options, &quot;progress_cb&quot;, progress_cb);
 
   std::vector&lt;long&gt; uids = {ds-&gt;uid};
   if (dst_ds != nullptr) uids.push_back(dst_ds-&gt;uid);
   GDALAsyncableJob&lt;GDALDataset *&gt; job(uids);
+  job.progress = progress_cb;
 
-  job.main = [src_raw, dst_filename, dst_raw, aosOptions](const GDALExecutionProgress &amp;) {
+  job.main = [src_raw, dst_filename, dst_raw, aosOptions, progress_cb](const GDALExecutionProgress &amp;progress) {
     CPLErrorReset();
-    auto b = aosOptions;
+    if (progress_cb) aosOptions-&gt;AddString(&quot;-progress&quot;);
     auto psOptions = GDALVectorTranslateOptionsNew(aosOptions-&gt;List(), nullptr);
+    if (psOptions == nullptr) throw CPLGetLastErrorMsg();
+
+    if (progress_cb) GDALVectorTranslateOptionsSetProgress(psOptions, ProgressTrampoline, (void *)&amp;progress);
 
     auto srcH = GDALDatasetToHandle(src_raw);
     GDALDataset *r = GDALDatasetFromHandle(
@@ -319,7 +347,7 @@ GDAL_ASYNCABLE_DEFINE(Utils::vectorTranslate) {
   };
   job.rval = [](GDALDataset *ds, GetFromPersistentFunc) { return Dataset::New(ds); };
 
-  job.run(info, async, 3);
+  job.run(info, async, 4);
 }
 
 /**
@@ -334,7 +362,7 @@ GDAL_ASYNCABLE_DEFINE(Utils::vectorTranslate) {
  * @for gdal
  * @static
  * @param {gdal.Dataset} dataset
- * @param {string[]} array of CLI options for gdalinfo
+ * @param {string[]} [args] array of CLI options for gdalinfo
  * @return {string}
  */
 
@@ -351,7 +379,7 @@ GDAL_ASYNCABLE_DEFINE(Utils::vectorTranslate) {
  * @for gdal
  * @static
  * @param {gdal.Dataset} dataset
- * @param {string[]} array of CLI options for gdalinfo
+ * @param {string[]} [args] array of CLI options for gdalinfo
  * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
  * @return {Promise&lt;string&gt;}
  */
@@ -363,18 +391,18 @@ GDAL_ASYNCABLE_DEFINE(Utils::info) {
   NODE_UNWRAP_CHECK(Dataset, src, ds);
   GDAL_RAW_CHECK(GDALDataset *, ds, raw);
 
-  Local&lt;Array&gt; options;
-  NODE_ARG_ARRAY(1, &quot;options&quot;, options);
-
-  for (unsigned i = 0; i &lt; options-&gt;Length(); ++i) {
-    aosOptions-&gt;AddString(*Nan::Utf8String(Nan::Get(options, i).ToLocalChecked()));
-  }
+  Local&lt;Array&gt; args;
+  NODE_ARG_ARRAY_OPT(1, &quot;args&quot;, args);
+  if (!args.IsEmpty())
+    for (unsigned i = 0; i &lt; args-&gt;Length(); ++i) {
+      aosOptions-&gt;AddString(*Nan::Utf8String(Nan::Get(args, i).ToLocalChecked()));
+    }
 
   GDALAsyncableJob&lt;std::string&gt; job(ds-&gt;uid);
   job.main = [raw, aosOptions](const GDALExecutionProgress &amp;) {
     CPLErrorReset();
-    auto b = aosOptions;
     auto psOptions = GDALInfoOptionsNew(aosOptions-&gt;List(), nullptr);
+    if (psOptions == nullptr) throw CPLGetLastErrorMsg();
     char *r = GDALInfo(GDALDatasetToHandle(raw), psOptions);
     GDALInfoOptionsFree(psOptions);
     if (r == nullptr) throw CPLGetLastErrorMsg();
@@ -385,6 +413,121 @@ GDAL_ASYNCABLE_DEFINE(Utils::info) {
   job.rval = [](std::string s, GetFromPersistentFunc) { return SafeString::New(s.c_str()); };
 
   job.run(info, async, 2);
+}
+
+/**
+ * Library version of gdalwarp.
+ *
+ * @example
+ * const ds = gdal.open(&#x27;input.tif&#x27;)
+ * const output = gdal.warp(&#x27;/vsimem/temp.tif&#x27;)
+ *
+ * @throws Error
+ * @method warp
+ * @for gdal
+ * @static
+ * @param {string} [dst_path] destination path, null for an in-memory operation
+ * @param {gdal.Dataset} [dst_ds] destination dataset, null for a new dataset
+ * @param {gdal.Dataset[]} src_ds array of source datasets
+ * @param {string[]} [args] array of CLI options for gdalwarp
+ * @param {UtilOptions} [options] additional options
+ * @param {ProgressCb} [options.progress_cb] {{{progress_cb}}}
+ * @return {gdal.Dataset}
+ */
+
+/**
+ * Library version of gdalinfo.
+ * {{{async}}}
+ *
+ * @example
+ * const ds = gdal.open(&#x27;input.tif&#x27;)
+ * const output = gdal.warp(&#x27;/vsimem/temp.tif&#x27;)
+ * @throws Error
+ *
+ * @method warpAsync
+ * @for gdal
+ * @static
+ * @param {string} [dst_path] destination path, null for an in-memory operation
+ * @param {gdal.Dataset} [dst_ds] destination dataset, null for a new dataset
+ * @param {gdal.Dataset[]} src_ds array of source datasets
+ * @param {string[]} [args] array of CLI options for gdalwarp
+ * @param {UtilOptions} [options] additional options
+ * @param {ProgressCb} [options.progress_cb] {{{progress_cb}}}
+ * @param {callback&lt;void&gt;} [callback=undefined] {{{cb}}}
+ * @return {Promise&lt;gdal.Dataset&gt;}
+ */
+GDAL_ASYNCABLE_DEFINE(Utils::warp) {
+  auto aosOptions = std::make_shared&lt;CPLStringList&gt;();
+  std::vector&lt;long&gt; uids;
+
+  std::string dst_path(&quot;&quot;);
+  Local&lt;Object&gt; dst_ds;
+
+  NODE_ARG_OPT_STR(0, &quot;dst_path&quot;, dst_path);
+
+  NODE_ARG_OBJECT_OPT(1, &quot;dst_ds&quot;, dst_ds);
+  GDALDatasetH gdal_dst_ds = nullptr;
+  if (!dst_ds.IsEmpty()) {
+    NODE_UNWRAP_CHECK(Dataset, dst_ds, ds);
+    GDAL_RAW_CHECK(GDALDataset *, ds, raw);
+    gdal_dst_ds = GDALDatasetToHandle(raw);
+    uids.push_back(ds-&gt;uid);
+  }
+
+  if (dst_path.length() == 0 &amp;&amp; gdal_dst_ds == nullptr) {
+    Nan::ThrowError(&quot;Either \&quot;dst_path\&quot; or \&quot;dst_ds\&quot; must be given&quot;);
+    return;
+  }
+
+  Local&lt;Array&gt; src_ds;
+  NODE_ARG_ARRAY(2, &quot;src_ds&quot;, src_ds);
+  if (src_ds-&gt;Length() &lt; 1) {
+    Nan::ThrowError(&quot;\&quot;src_ds\&quot; must contain at least one element&quot;);
+    return;
+  }
+  auto gdal_src_ds = std::shared_ptr&lt;GDALDatasetH&gt;(new GDALDatasetH[src_ds-&gt;Length()], array_deleter&lt;GDALDatasetH&gt;());
+  for (unsigned i = 0; i &lt; src_ds-&gt;Length(); ++i) {
+    NODE_UNWRAP_CHECK(Dataset, Nan::Get(src_ds, i).ToLocalChecked().As&lt;Object&gt;(), ds);
+    GDAL_RAW_CHECK(GDALDataset *, ds, raw);
+    gdal_src_ds.get()[i] = GDALDatasetToHandle(raw);
+    uids.push_back(ds-&gt;uid);
+  }
+
+  Local&lt;Array&gt; args;
+  NODE_ARG_ARRAY_OPT(3, &quot;args&quot;, args);
+  if (!args.IsEmpty())
+    for (unsigned i = 0; i &lt; args-&gt;Length(); ++i) {
+      aosOptions-&gt;AddString(*Nan::Utf8String(Nan::Get(args, i).ToLocalChecked()));
+    }
+
+  Local&lt;Object&gt; options;
+  Nan::Callback *progress_cb = nullptr;
+  NODE_ARG_OBJECT_OPT(4, &quot;options&quot;, options);
+  if (!options.IsEmpty()) NODE_CB_FROM_OBJ_OPT(options, &quot;progress_cb&quot;, progress_cb);
+
+  GDALAsyncableJob&lt;GDALDataset *&gt; job(uids);
+  int src_count = src_ds-&gt;Length();
+  job.progress = progress_cb;
+  job.main =
+    [dst_path, gdal_dst_ds, src_count, gdal_src_ds, aosOptions, progress_cb](const GDALExecutionProgress &amp;progress) {
+      CPLErrorReset();
+      auto psOptions = GDALWarpAppOptionsNew(aosOptions-&gt;List(), nullptr);
+      if (psOptions == nullptr) throw CPLGetLastErrorMsg();
+      if (progress_cb) GDALWarpAppOptionsSetProgress(psOptions, ProgressTrampoline, (void *)&amp;progress);
+      GDALDatasetH r = GDALWarp(
+        dst_path.length() &gt; 0 ? dst_path.c_str() : nullptr,
+        gdal_dst_ds,
+        src_count,
+        gdal_src_ds.get(),
+        psOptions,
+        nullptr);
+      GDALWarpAppOptionsFree(psOptions);
+      if (r == nullptr) throw CPLGetLastErrorMsg();
+      return GDALDatasetFromHandle(r);
+    };
+  job.rval = [](GDALDataset *ds, GetFromPersistentFunc) { return Dataset::New(ds); };
+
+  job.run(info, async, 5);
 }
 
 } // namespace node_gdal
