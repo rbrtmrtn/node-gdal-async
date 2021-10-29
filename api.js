@@ -9,7 +9,6 @@ YUI.add("yuidoc-meta", function(Y) {
         "Constants (DMD)",
         "Constants (GCI)",
         "Constants (GDT)",
-        "Constants (GPI)",
         "Constants (GRA)",
         "Constants (ODsC)",
         "Constants (OFT)",
@@ -23,7 +22,6 @@ YUI.add("yuidoc-meta", function(Y) {
         "gdal.ArrayDimensions",
         "gdal.Attribute",
         "gdal.CircularString",
-        "gdal.ColorTable",
         "gdal.CompoundCurve",
         "gdal.CompoundCurveCurves",
         "gdal.CoordinateTransformation",
@@ -68,7 +66,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "gdal.SimpleCurve",
         "gdal.SpatialReference",
         "gdal.config",
-        "gdal.vsimem"
+        "vsimem\nOperations on in-memory /vsimem/ files"
     ],
     "modules": [],
     "allModules": [],
