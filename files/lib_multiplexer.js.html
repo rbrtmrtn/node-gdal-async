@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>lib/multiplexer.js - node-gdal-async</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+	    <img alt="node-gdal-async" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/GDALLogoColor.svg/200px-GDALLogoColor.svg.png" style="max-height: 65%;" title="node-gdal-async">
+            node-gdal-async
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>3.4.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Constants (CPL Error Codes)", "classes/Constants (CPL Error Levels)", "classes/Constants (DCAP)", "classes/Constants (DIM)", "classes/Constants (DIR)", "classes/Constants (DMD)", "classes/Constants (GCI)", "classes/Constants (GDT)", "classes/Constants (GPI)", "classes/Constants (GRA)", "classes/Constants (ODsC)", "classes/Constants (OFT)", "classes/Constants (OJ)", "classes/Constants (OLC)", "classes/Constants (wkbByteOrder)", "classes/Constants (wkbGeometryType)", "classes/Constants (wkbVariant)", "classes/gdal", "classes/gdal.ArrayAttributes", "classes/gdal.ArrayDimensions", "classes/gdal.Attribute", "classes/gdal.CircularString", "classes/gdal.ColorTable", "classes/gdal.CompoundCurve", "classes/gdal.CompoundCurveCurves", "classes/gdal.config", "classes/gdal.CoordinateTransformation", "classes/gdal.Dataset", "classes/gdal.DatasetBands", "classes/gdal.DatasetLayers", "classes/gdal.Dimension", "classes/gdal.Driver", "classes/gdal.Envelope", "classes/gdal.Envelope3D", "classes/gdal.Feature", "classes/gdal.FeatureDefn", "classes/gdal.FeatureDefnFields", "classes/gdal.FeatureFields", "classes/gdal.FieldDefn", "classes/gdal.fs", "classes/gdal.GDALDrivers", "classes/gdal.Geometry", "classes/gdal.GeometryCollection", "classes/gdal.GeometryCollectionChildren", "classes/gdal.Group", "classes/gdal.GroupArrays", "classes/gdal.GroupAttributes", "classes/gdal.GroupDimensions", "classes/gdal.GroupGroups", "classes/gdal.Layer", "classes/gdal.LayerFeatures", "classes/gdal.LayerFields", "classes/gdal.LinearRing", "classes/gdal.LineString", "classes/gdal.LineStringPoints", "classes/gdal.MDArray", "classes/gdal.MultiCurve", "classes/gdal.MultiLineString", "classes/gdal.MultiPoint", "classes/gdal.MultiPolygon", "classes/gdal.Point", "classes/gdal.Polygon", "classes/gdal.PolygonRings", "classes/gdal.RasterBand", "classes/gdal.RasterBandOverviews", "classes/gdal.RasterBandPixels", "classes/gdal.RasterMuxStream", "classes/gdal.RasterReadStream", "classes/gdal.RasterTransform", "classes/gdal.RasterWriteStream", "classes/gdal.SimpleCurve", "classes/gdal.SpatialReference", "classes/gdal.vsimem"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/Constants (CPL Error Codes).html">Constants (CPL Error Codes)</a></li>
+                <li><a href="../classes/Constants (CPL Error Levels).html">Constants (CPL Error Levels)</a></li>
+                <li><a href="../classes/Constants (DCAP).html">Constants (DCAP)</a></li>
+                <li><a href="../classes/Constants (DIM).html">Constants (DIM)</a></li>
+                <li><a href="../classes/Constants (DIR).html">Constants (DIR)</a></li>
+                <li><a href="../classes/Constants (DMD).html">Constants (DMD)</a></li>
+                <li><a href="../classes/Constants (GCI).html">Constants (GCI)</a></li>
+                <li><a href="../classes/Constants (GDT).html">Constants (GDT)</a></li>
+                <li><a href="../classes/Constants (GPI).html">Constants (GPI)</a></li>
+                <li><a href="../classes/Constants (GRA).html">Constants (GRA)</a></li>
+                <li><a href="../classes/Constants (ODsC).html">Constants (ODsC)</a></li>
+                <li><a href="../classes/Constants (OFT).html">Constants (OFT)</a></li>
+                <li><a href="../classes/Constants (OJ).html">Constants (OJ)</a></li>
+                <li><a href="../classes/Constants (OLC).html">Constants (OLC)</a></li>
+                <li><a href="../classes/Constants (wkbByteOrder).html">Constants (wkbByteOrder)</a></li>
+                <li><a href="../classes/Constants (wkbGeometryType).html">Constants (wkbGeometryType)</a></li>
+                <li><a href="../classes/Constants (wkbVariant).html">Constants (wkbVariant)</a></li>
+                <li><a href="../classes/gdal.html">gdal</a></li>
+                <li><a href="../classes/gdal.ArrayAttributes.html">gdal.ArrayAttributes</a></li>
+                <li><a href="../classes/gdal.ArrayDimensions.html">gdal.ArrayDimensions</a></li>
+                <li><a href="../classes/gdal.Attribute.html">gdal.Attribute</a></li>
+                <li><a href="../classes/gdal.CircularString.html">gdal.CircularString</a></li>
+                <li><a href="../classes/gdal.ColorTable.html">gdal.ColorTable</a></li>
+                <li><a href="../classes/gdal.CompoundCurve.html">gdal.CompoundCurve</a></li>
+                <li><a href="../classes/gdal.CompoundCurveCurves.html">gdal.CompoundCurveCurves</a></li>
+                <li><a href="../classes/gdal.config.html">gdal.config</a></li>
+                <li><a href="../classes/gdal.CoordinateTransformation.html">gdal.CoordinateTransformation</a></li>
+                <li><a href="../classes/gdal.Dataset.html">gdal.Dataset</a></li>
+                <li><a href="../classes/gdal.DatasetBands.html">gdal.DatasetBands</a></li>
+                <li><a href="../classes/gdal.DatasetLayers.html">gdal.DatasetLayers</a></li>
+                <li><a href="../classes/gdal.Dimension.html">gdal.Dimension</a></li>
+                <li><a href="../classes/gdal.Driver.html">gdal.Driver</a></li>
+                <li><a href="../classes/gdal.Envelope.html">gdal.Envelope</a></li>
+                <li><a href="../classes/gdal.Envelope3D.html">gdal.Envelope3D</a></li>
+                <li><a href="../classes/gdal.Feature.html">gdal.Feature</a></li>
+                <li><a href="../classes/gdal.FeatureDefn.html">gdal.FeatureDefn</a></li>
+                <li><a href="../classes/gdal.FeatureDefnFields.html">gdal.FeatureDefnFields</a></li>
+                <li><a href="../classes/gdal.FeatureFields.html">gdal.FeatureFields</a></li>
+                <li><a href="../classes/gdal.FieldDefn.html">gdal.FieldDefn</a></li>
+                <li><a href="../classes/gdal.fs.html">gdal.fs</a></li>
+                <li><a href="../classes/gdal.GDALDrivers.html">gdal.GDALDrivers</a></li>
+                <li><a href="../classes/gdal.Geometry.html">gdal.Geometry</a></li>
+                <li><a href="../classes/gdal.GeometryCollection.html">gdal.GeometryCollection</a></li>
+                <li><a href="../classes/gdal.GeometryCollectionChildren.html">gdal.GeometryCollectionChildren</a></li>
+                <li><a href="../classes/gdal.Group.html">gdal.Group</a></li>
+                <li><a href="../classes/gdal.GroupArrays.html">gdal.GroupArrays</a></li>
+                <li><a href="../classes/gdal.GroupAttributes.html">gdal.GroupAttributes</a></li>
+                <li><a href="../classes/gdal.GroupDimensions.html">gdal.GroupDimensions</a></li>
+                <li><a href="../classes/gdal.GroupGroups.html">gdal.GroupGroups</a></li>
+                <li><a href="../classes/gdal.Layer.html">gdal.Layer</a></li>
+                <li><a href="../classes/gdal.LayerFeatures.html">gdal.LayerFeatures</a></li>
+                <li><a href="../classes/gdal.LayerFields.html">gdal.LayerFields</a></li>
+                <li><a href="../classes/gdal.LinearRing.html">gdal.LinearRing</a></li>
+                <li><a href="../classes/gdal.LineString.html">gdal.LineString</a></li>
+                <li><a href="../classes/gdal.LineStringPoints.html">gdal.LineStringPoints</a></li>
+                <li><a href="../classes/gdal.MDArray.html">gdal.MDArray</a></li>
+                <li><a href="../classes/gdal.MultiCurve.html">gdal.MultiCurve</a></li>
+                <li><a href="../classes/gdal.MultiLineString.html">gdal.MultiLineString</a></li>
+                <li><a href="../classes/gdal.MultiPoint.html">gdal.MultiPoint</a></li>
+                <li><a href="../classes/gdal.MultiPolygon.html">gdal.MultiPolygon</a></li>
+                <li><a href="../classes/gdal.Point.html">gdal.Point</a></li>
+                <li><a href="../classes/gdal.Polygon.html">gdal.Polygon</a></li>
+                <li><a href="../classes/gdal.PolygonRings.html">gdal.PolygonRings</a></li>
+                <li><a href="../classes/gdal.RasterBand.html">gdal.RasterBand</a></li>
+                <li><a href="../classes/gdal.RasterBandOverviews.html">gdal.RasterBandOverviews</a></li>
+                <li><a href="../classes/gdal.RasterBandPixels.html">gdal.RasterBandPixels</a></li>
+                <li><a href="../classes/gdal.RasterMuxStream.html">gdal.RasterMuxStream</a></li>
+                <li><a href="../classes/gdal.RasterReadStream.html">gdal.RasterReadStream</a></li>
+                <li><a href="../classes/gdal.RasterTransform.html">gdal.RasterTransform</a></li>
+                <li><a href="../classes/gdal.RasterWriteStream.html">gdal.RasterWriteStream</a></li>
+                <li><a href="../classes/gdal.SimpleCurve.html">gdal.SimpleCurve</a></li>
+                <li><a href="../classes/gdal.SpatialReference.html">gdal.SpatialReference</a></li>
+                <li><a href="../classes/gdal.vsimem.html">gdal.vsimem</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>lib/multiplexer.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+const { Readable, Transform } = require(&#x27;stream&#x27;)
+
+const debug = process.env.NODE_DEBUG &amp;&amp; process.env.NODE_DEBUG.match(/gdal_mux|gdal^_/) ?
+  console.debug.bind(console, &#x27;RasterMuxStream:&#x27;) :
+  () =&gt; undefined
+
+
+/**
+ * Multiplexer stream
+ *
+ * Reads multiple input {{#crossLink &quot;gdal.RasterReadStream&quot;}}RasterReadStream{{/crossLink}} streams and outputs a single
+ * synchronized stream with multiple data elements
+ *
+ * All the input streams must have the same length
+ *
+ * Can be used with {{#crossLink &quot;gdal.RasterTransform&quot;}}RasterTransform{{/crossLink}}
+ * which will automatically apply a function over the whole chunk
+ *
+ * @example
+ * &#x60;&#x60;&#x60;
+ *  const dsT2m = gdal.open(&#x27;AROME_T2m_10.tiff&#x27;));
+ *  const dsD2m = gdal.open(&#x27;AROME_D2m_10.tiff&#x27;));
+ *
+ *  const dsCloudBase = gdal.open(&#x27;CLOUDBASE.tiff&#x27;, &#x27;w&#x27;, &#x27;GTiff&#x27;,
+ *    dsT2m.rasterSize.x, dsT2m.rasterSize.y, 1, gdal.GDT_Float64);
+ *
+ *  const mux = new gdal.RasterMuxStream({
+ *    T2m: dsT2m.bands.get(1).pixels.createReadStream(),
+ *    D2m: dsD2m.bands.get(1).pixels.createReadStream()
+ *  });
+ *  const ws = dsCloudBase.bands.get(1).pixels.createWriteStream();
+ *
+ *  // Espy&#x27;s estimation for cloud base height (lifted condensation level)
+ *  // LCL = 125 * (T2m - Td2m)
+ *  // where T2m is the temperature at 2m and Td2m is the dew point at 2m
+ *  const espyEstimation = new Transform({
+ *    objectMode: true,
+ *    transform(chunk, _, cb) {
+ *      const lcl = new Float64Array(chunk.T2m.length)
+ *      for (let i = 0; i &lt; chunk.T2m.length; i++) {
+ *        lcl[i] = 125 * (chunk.T2m[i] - chunk.D2m[i])
+ *      }
+ *      cb(null, lcl)
+ *    }
+ *  })
+ *
+ *  mux.pipe(espyEstimation).pipe(ws);
+ * &#x60;&#x60;&#x60;
+ *
+ * @class gdal.RasterMuxStream
+ * @extends stream.Readable
+ * @constructor
+ * @param {Record&lt;string,RasterReadStream&gt;} inputs Input streams
+ * @param {RasterReadableOptions} [options]
+ * @param {boolean} [options.blockOptimize=true] Read by file blocks when possible (when rasterSize.x == blockSize.x)
+ */
+class RasterMuxStream extends Readable {
+  constructor(inputs, options) {
+    super({ ...options, objectMode: true })
+    this.inputs = {}
+    this.buffers = {}
+    this.buffersTotalData = {}
+    this.ids = Object.keys(inputs)
+    this.dataHandlers = {}
+    this.endHandlers = {}
+    this.blockOptimize = (options || {}).blockOptimize
+    this.rasterHighWaterMark = Infinity
+    for (const id of this.ids) {
+      const inp = inputs[id]
+      if (!(inp instanceof Readable)) throw new TypeError(&#x27;inputs must be a map of Readables&#x27;)
+      if (!inp.readableObjectMode) throw new TypeError(&#x27;All inputs must be in object mode&#x27;)
+
+      this.inputs[id] = inp
+      this.buffers[id] = []
+      this.buffersTotalData[id] = 0
+      this.dataHandlers[id] = this.handleIncoming.bind(this, id)
+
+      this.inputs[id].pause()
+      this.inputs[id].on(&#x27;data&#x27;, this.dataHandlers[id])
+
+      this.endHandlers[id] = this.inputEnded.bind(this, id)
+      this.inputs[id].on(&#x27;end&#x27;, this.endHandlers[id])
+    }
+  }
+
+  handleIncoming(recv, chunk) {
+    debug(&#x27;received on&#x27;, recv, &#x27;chunk&#x27;, &#x27;chunk.length&#x27;)
+    this.buffers[recv].push(chunk)
+    this.buffersTotalData[recv] += chunk.length
+
+    const maxReady = Math.min.apply(Math, this.ids.map((id) =&gt; this.buffersTotalData[id]))
+    if (maxReady == 0) {
+      return
+    }
+
+    debug(&#x27;sending&#x27;, maxReady)
+    const send = {}
+    for (const id of this.ids) {
+      if (this.buffers[id][0] === null) {
+        // one of the inputs ended before the others
+        debug(&#x27;destroy on premature end&#x27;, id)
+        this.destroy(&#x60;premature end on ${id}&#x60;)
+        return
+      } else if (this.buffers[id][0].length == maxReady &amp;&amp; this.blockOptimize !== false) {
+        // zero-copy mode, this input blocks are same size as the output
+        debug(&#x27;zero-copy from&#x27;, id)
+        send[id] = this.buffers[id][0]
+        this.buffers[id].shift()
+      } else {
+        // block consolidation mode
+        debug(&#x27;block consolidation from&#x27;, id, this.buffers[id].map((buf) =&gt; buf &amp;&amp; buf.length || &#x27;null&#x27;).join(&#x27;,&#x27;))
+        send[id] = new this.buffers[id][0].constructor(maxReady)
+        let len = 0
+        while (len + this.buffers[id][0].length &lt; maxReady) {
+          debug(&#x27;chunking&#x27;)
+          send[id].set(this.buffers[0], len)
+          len += this.buffers[id][0].length
+          this.buffers[id].shift()
+          if (this.buffers[id][0] === null) {
+            // one of the inputs ended before the others
+            debug(&#x27;destroy on premature end&#x27;, id)
+            this.destroy(&#x27;premature end on&#x27;, id)
+            return
+          }
+        }
+        debug(&#x27;final chunk&#x27;, maxReady - len, this.buffers[id][0].length)
+        send[id].set(this.buffers[id][0].subarray(0, maxReady - len), len)
+        if (maxReady - len &lt; this.buffers[id][0].length) {
+          this.buffers[id][0] = this.buffers[id][0].subarray(maxReady - len)
+        } else {
+          this.buffers[id].shift()
+        }
+      }
+      this.buffersTotalData[id] -= maxReady
+    }
+
+    // send the consolidated result and eventually start pausing
+    const flowing = this.push(send)
+
+    if (this.tryEnd()) return
+
+    this.rasterHighWaterMark = maxReady * this.readableHighWaterMark
+    this.throttle(flowing)
+  }
+
+  throttle(flowing) {
+    //debug(&#x27;trying to throttle&#x27;, flowing, this.rasterHighWaterMark, this.ids.map((id) =&gt; this.buffersTotalData[id]))
+    let id
+    for (id of this.ids) {
+      if (!flowing || this.buffersTotalData[id] &gt;= this.rasterHighWaterMark) this.inputs[id].pause()
+      else if (flowing) this.inputs[id].resume()
+    }
+    //debug(&#x27;after throttle&#x27;, this.ids.map((id) =&gt; this.isRunning[id]))
+  }
+
+  tryEnd() {
+    if (this.buffers[this.ids[0]][0] === null) {
+      const max = Math.max.apply(Math, this.ids.map((id) =&gt; this.buffersTotalData[id]))
+      if (max &gt; 0) {
+        debug(&#x27;destroy on premature end&#x27;, this.ids[0])
+        this.destroy(&#x60;premature end on ${this.ids[0]}&#x60;)
+        return true
+      }
+      // this is the normal end
+      debug(&#x27;ended&#x27;)
+      this.push(null)
+      for (const id of this.ids) {
+        this.inputs[id].off(&#x27;data&#x27;, this.dataHandlers[id])
+        this.inputs[id].off(&#x27;end&#x27;, this.endHandlers[id])
+      }
+      return true
+    }
+
+    return false
+  }
+
+  inputEnded(id) {
+    debug(&#x27;id&#x27;, &#x27;ended&#x27;, this.ids.map((id) =&gt; &#x60;${id}:${this.buffersTotalData[id]}&#x60;))
+    for (const other of this.ids) {
+      const eos = this.buffers[other].findIndex((buf) =&gt; buf === null)
+      let first
+      if (eos &gt;= 0 &amp;&amp; eos != this.buffers[id].length) {
+        if (eos &lt; this.buffers[other].length) {
+          first = other
+        } else {
+          first = id
+        }
+        debug(&#x27;destroy on premature end&#x27;, first)
+        this.destroy(&#x60;premature end on ${first}&#x60;)
+        return
+      }
+    }
+    this.buffers[id].push(null)
+    this.tryEnd()
+  }
+
+  _read() {
+    debug(&#x27;readStart&#x27;)
+    this.throttle(true)
+  }
+}
+
+
+/**
+ * A raster Transform stream
+ *
+ * Applies a function on all data elements
+ *
+ * Input must be a {{#crossLink &quot;gdal.RasterMuxStream&quot;}}RasterMuxStream{{/crossLink}}
+ *
+ * @example &#x60;&#x60;&#x60;
+ *  const dsT2m = gdal.open(&#x27;AROME_T2m_10.tiff&#x27;));
+ *  const dsD2m = gdal.open(&#x27;AROME_D2m_10.tiff&#x27;));
+ *
+ *  const dsCloudBase = gdal.open(&#x27;CLOUDBASE.tiff&#x27;, &#x27;w&#x27;, &#x27;GTiff&#x27;,
+ *    dsT2m.rasterSize.x, dsT2m.rasterSize.y, 1, gdal.GDT_Float64);
+ *
+ *  const mux = new gdal.RasterMuxStream({
+ *    T2m: dsT2m.bands.get(1).pixels.createReadStream(),
+ *    D2m: dsD2m.bands.get(1).pixels.createReadStream()
+ *  });
+ *  const ws = dsCloudBase.bands.get(1).pixels.createWriteStream();
+ *
+ *  // Espy&#x27;s estimation for cloud base height (lifted condensation level)
+ *  // LCL = 125 * (T2m - Td2m)
+ *  // where T2m is the temperature at 2m and Td2m is the dew point at 2m
+ *  const fn = (t,td) =&gt; 125 * (t - td);
+ *  const espyEstimation = new RasterTransform({ type: Float64Array, fn });
+ *
+ *  mux.pipe(espyEstimation).pipe(ws);
+ *  &#x60;&#x60;&#x60;
+ *
+ * @class gdal.RasterTransform
+ * @extends stream.Transform
+ * @constructor
+ * @param {RasterTransformOptions} [options]
+ * @param {Function} options.fn Function to be applied on all data
+ * @param {new (len: number) =&gt; TypedArray} options.type Typed array constructor
+ */
+class RasterTransform extends Transform {
+  constructor(opts) {
+    super({ ...opts, objectMode: true })
+    this.type = opts.type
+    this.fn = opts.fn
+  }
+
+  _transform(chunk, _, cb) {
+    if (!this.xform) {
+      const thunk = &#x60;
+        for (let i = 0; i &lt; len; i++)
+          out[i] = this.fn(${Object.keys(chunk).map((key) =&gt; &#x60;inp.${key}[i]&#x60;).join(&#x27;,&#x27;)})&#x60;
+      this.xform = new Function(&#x27;inp&#x27;, &#x27;out&#x27;, &#x27;len&#x27;, thunk)
+    }
+
+    const len = chunk[Object.keys(chunk)[0]].length
+    const out = new this.type(len)
+    this.xform(chunk, out, len)
+    cb(null, out)
+  }
+}
+
+module.exports = {
+  RasterMuxStream,
+  RasterTransform
+}
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>
