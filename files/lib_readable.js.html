@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.4.0</b>
+                    API Docs for Version: <b>3.4.1</b>
                 </p>
             </li>
         </div>
@@ -151,7 +151,7 @@
     <pre class="prettyprint linenums">
 const { Readable } = require(&#x27;stream&#x27;)
 
-const debug = process.env.NODE_DEBUG &amp;&amp; process.env.NODE_DEBUG.match(/gdal_read|gdal^_/) ?
+const debug = process.env.NODE_DEBUG &amp;&amp; process.env.NODE_DEBUG.match(/gdal_read|gdal([^_]|$)/) ?
   console.debug.bind(console, &#x27;RasterReadStream:&#x27;) :
   () =&gt; undefined
 

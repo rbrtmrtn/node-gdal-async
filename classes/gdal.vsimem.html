@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.4.0</b>
+                    API Docs for Version: <b>3.4.1</b>
                 </p>
             </li>
         </div>
@@ -170,7 +170,7 @@
 			<ul>
 				<li><a href="#method-copy"><span class="im">gdal.vsimem.copy</span>(<span class="ia">data</span><span class="ia">filename</span>)</a></li>
 				<li><a href="#method-release"><span class="im">gdal.vsimem.release</span>(<span class="ia">filename</span>)</a></li>
-				<li><a href="#method-set"><span class="im">gdal.vsimem.set</span>(<span class="ia">data</span><span class="ia">filename</span><span class="ia">copy</span>)</a></li>
+				<li><a href="#method-set"><span class="im">gdal.vsimem.set</span>(<span class="ia">data</span><span class="ia">filename</span>)</a></li>
 			</ul>
 		</li>
 	</ul>
@@ -210,7 +210,7 @@
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_memfile.cpp.html#l134"><code>src&#x2F;gdal_memfile.cpp:134</code></a>
+		<a href="../files/src_gdal_memfile.cpp.html#l136"><code>src&#x2F;gdal_memfile.cpp:136</code></a>
 		</p>
 
 
@@ -275,7 +275,7 @@ creating an in-memory file that can be freely extended by GDAL.
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_memfile.cpp.html#l175"><code>src&#x2F;gdal_memfile.cpp:175</code></a>
+		<a href="../files/src_gdal_memfile.cpp.html#l177"><code>src&#x2F;gdal_memfile.cpp:177</code></a>
 		</p>
 
 
@@ -333,9 +333,6 @@ GDAL &gt;= 3.3.2 will gracefully fail further operations and this function will 
 				<li class="arg">
 						<code>filename</code>
 				</li>
-				<li class="arg">
-						<code class="optional">copy=false</code>
-				</li>
 			</ul><span class="paren">)</span>
 		</div>
 	</div>
@@ -348,7 +345,7 @@ GDAL &gt;= 3.3.2 will gracefully fail further operations and this function will 
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_gdal_memfile.cpp.html#l105"><code>src&#x2F;gdal_memfile.cpp:105</code></a>
+		<a href="../files/src_gdal_memfile.cpp.html#l108"><code>src&#x2F;gdal_memfile.cpp:108</code></a>
 		</p>
 
 
@@ -383,16 +380,6 @@ Use <code>gdal.vsimem.copy</code> to create an extendable copy.</p>
 
 
 					<div class="param-description"><p>A file name beginning with <code>/vsimem/</code></p>
-</div>
-
-				</li>
-				<li class="param">
-						<code class="param-name optional">[copy=false]</code>
-						<span class="type">Boolean</span>
-						<span class="flag optional" title="This parameter is optional.">optional</span>
-
-
-					<div class="param-description"><p>Copy the memory buffer into GDAL's own heap allowing extending of the file</p>
 </div>
 
 				</li>

@@ -4,7 +4,7 @@
         "description": "Node.js bindings for GDAL (Geospatial Data Abstraction Library) [Fork]",
         "url": "https://github.com/mmomtchev/node-gdal-async",
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/GDALLogoColor.svg/200px-GDALLogoColor.svg.png",
-        "version": "3.4.0"
+        "version": "3.4.1"
     },
     "files": {
         "lib/calc.js": {
@@ -8298,7 +8298,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1074,
+            "line": 1094,
             "description": "Convert a geometry into KML format.",
             "itemtype": "method",
             "name": "toKML",
@@ -8313,7 +8313,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1082,
+            "line": 1102,
             "description": "Convert a geometry into KML format.\n{{{async}}}",
             "itemtype": "method",
             "name": "toKMLAsync",
@@ -8337,7 +8337,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1118,
+            "line": 1138,
             "description": "Convert a geometry into GML format.",
             "itemtype": "method",
             "name": "toGML",
@@ -8352,7 +8352,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1126,
+            "line": 1146,
             "description": "Convert a geometry into GML format.\n{{{async}}}",
             "itemtype": "method",
             "name": "toGMLAsync",
@@ -8376,7 +8376,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1162,
+            "line": 1182,
             "description": "Convert a geometry into JSON format.",
             "itemtype": "method",
             "name": "toJSON",
@@ -8391,7 +8391,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1170,
+            "line": 1190,
             "description": "Convert a geometry into JSON format.\n{{{async}}}",
             "itemtype": "method",
             "name": "toJSONAsync",
@@ -8415,7 +8415,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1206,
+            "line": 1226,
             "description": "Compute the centroid of the geometry.",
             "itemtype": "method",
             "name": "centroid",
@@ -8430,7 +8430,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1214,
+            "line": 1234,
             "description": "Compute the centroid of the geometry.\n{{{async}}}",
             "itemtype": "method",
             "name": "centroidAsync",
@@ -8454,7 +8454,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1250,
+            "line": 1270,
             "description": "Computes the bounding box (envelope).",
             "itemtype": "method",
             "name": "getEnvelope",
@@ -8466,7 +8466,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1257,
+            "line": 1277,
             "description": "Computes the bounding box (envelope).\n{{{async}}}",
             "itemtype": "method",
             "name": "getEnvelopeAsync",
@@ -8487,7 +8487,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1297,
+            "line": 1317,
             "description": "Computes the 3D bounding box (envelope).",
             "itemtype": "method",
             "name": "getEnvelope3D",
@@ -8499,7 +8499,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1304,
+            "line": 1324,
             "description": "Computes the 3D bounding box (envelope).\n{{{async}}}",
             "itemtype": "method",
             "name": "getEnvelope3DAsync",
@@ -8520,7 +8520,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1347,
+            "line": 1367,
             "description": "Convert geometry to strictly 2D",
             "itemtype": "method",
             "name": "flattenTo2D",
@@ -8532,7 +8532,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1354,
+            "line": 1374,
             "description": "Convert geometry to strictly 2D\n{{{async}}}",
             "itemtype": "method",
             "name": "flattenTo2DAsync",
@@ -8553,7 +8553,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1367,
+            "line": 1387,
             "description": "Creates a Geometry from a WKT string.",
             "static": 1,
             "itemtype": "method",
@@ -8582,7 +8582,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1378,
+            "line": 1398,
             "description": "Creates a Geometry from a WKT string.\n{{{async}}}",
             "static": 1,
             "itemtype": "method",
@@ -8618,7 +8618,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1415,
+            "line": 1435,
             "description": "Creates a Geometry from a WKB buffer.",
             "static": 1,
             "itemtype": "method",
@@ -8647,7 +8647,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1426,
+            "line": 1446,
             "description": "Creates a Geometry from a WKB buffer.\n{{{async}}}",
             "static": 1,
             "itemtype": "method",
@@ -8683,7 +8683,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1472,
+            "line": 1492,
             "description": "Creates a Geometry from a GeoJSON object fragment.\nThe async version depends on V8 for object serialization and this part is not parallelizable.\nV8 objects cannot be accessed outside of the main thread. This function should not be used\nfor importing objects of more than few tens of Kbytes when low latency is needed. If you need\nto import very large GeoJSON geometries in server code, use the much faster and completely\nparallel fromGeoJonBuffer(Async)",
             "static": 1,
             "itemtype": "method",
@@ -8706,7 +8706,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1487,
+            "line": 1507,
             "description": "Creates a Geometry from a GeoJSON object fragment.\nThe async version depends on V8 for object serialization and this part is not parallelizable.\nV8 objects cannot be accessed outside of the main thread. This function should not be used\nfor importing objects of more than few tens of Kbytes when low latency is needed. If you need\nto import very large GeoJSON geometries in server code, use the much faster and completely\nparallel fromGeoJonBuffer(Async)\n{{{async}}}",
             "static": 1,
             "itemtype": "method",
@@ -8736,7 +8736,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1536,
+            "line": 1556,
             "description": "Creates a Geometry from a buffer containing a GeoJSON fragment in UT8 format.",
             "static": 1,
             "itemtype": "method",
@@ -8759,7 +8759,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1546,
+            "line": 1566,
             "description": "Creates a Geometry from a buffer containing a GeoJSON fragment in UT8 format.\n{{{async}}}",
             "static": 1,
             "itemtype": "method",
@@ -8789,7 +8789,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1595,
+            "line": 1615,
             "description": "Creates an empty Geometry from a WKB type.",
             "static": 1,
             "itemtype": "method",
@@ -8809,7 +8809,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1612,
+            "line": 1632,
             "itemtype": "attribute",
             "name": "srs",
             "type": "{gdal.SpatialReference|null}",
@@ -8817,7 +8817,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1636,
+            "line": 1656,
             "readonly": "",
             "itemtype": "attribute",
             "name": "name",
@@ -8826,7 +8826,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1646,
+            "line": 1666,
             "description": "See {{#crossLink \"Constants\n(wkbGeometryType)\"}}wkbGeometryTypes{{/crossLink}}.",
             "readonly": "",
             "itemtype": "attribute",
@@ -8836,7 +8836,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1658,
+            "line": 1678,
             "readonly": "",
             "itemtype": "attribute",
             "name": "wkbSize",
@@ -8845,7 +8845,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1668,
+            "line": 1688,
             "readonly": "",
             "itemtype": "attribute",
             "name": "dimension",
@@ -8854,7 +8854,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1678,
+            "line": 1698,
             "itemtype": "attribute",
             "name": "coordinateDimension",
             "type": "{number}",
@@ -8862,7 +8862,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1726,
+            "line": 1746,
             "description": "Returns the Geometry subclass that matches the\ngiven WKB geometry type.",
             "static": 1,
             "itemtype": "method",
@@ -8882,7 +8882,7 @@
         },
         {
             "file": "src/geometry/gdal_geometry.cpp",
-            "line": 1742,
+            "line": 1762,
             "description": "Returns the Geometry subclass name that matches the\ngiven WKB geometry type.",
             "static": 1,
             "itemtype": "method",
@@ -11755,7 +11755,7 @@
         },
         {
             "file": "src/gdal_memfile.cpp",
-            "line": 105,
+            "line": 108,
             "description": "Create an in-memory `/vsimem/` file from a `Buffer`.\nThis is a zero-copy operation - GDAL will read from the Buffer which will be\nprotected by the GC even if it goes out of scope.\n\nThe file will stay in memory until it is deleted with `gdal.vsimem.release`.\n\nThe file will be in read-write mode, but GDAL won't\nbe able to extend it as the allocated memory will be tied to the `Buffer` object.\nUse `gdal.vsimem.copy` to create an extendable copy.",
             "static": 1,
             "itemtype": "method",
@@ -11773,20 +11773,13 @@
                     "name": "filename",
                     "description": "A file name beginning with `/vsimem/`",
                     "type": "String"
-                },
-                {
-                    "name": "copy",
-                    "description": "Copy the memory buffer into GDAL's own heap allowing extending of the file",
-                    "type": "Boolean",
-                    "optional": true,
-                    "optdefault": "false"
                 }
             ],
             "class": "gdal.vsimem"
         },
         {
             "file": "src/gdal_memfile.cpp",
-            "line": 134,
+            "line": 136,
             "description": "Create an in-memory `/vsimem/` file copying a `Buffer`.\nThis method copies the `Buffer` into GDAL's own memory heap\ncreating an in-memory file that can be freely extended by GDAL.\n`gdal.vsimem.set` is the better choice unless the file needs to be extended.\n\nThe file will stay in memory until it is deleted with `gdal.vsimem.release`.",
             "static": 1,
             "itemtype": "method",
@@ -11810,7 +11803,7 @@
         },
         {
             "file": "src/gdal_memfile.cpp",
-            "line": 175,
+            "line": 177,
             "description": "Delete and retrieve the contents of an in-memory `/vsimem/` file.\nThis is a very fast zero-copy operation.\nIt does not block the event loop.\nIf the file was created by `vsimem.set`, it will return a reference\nto the same `Buffer` that was used to create it.\nOtherwise it will construct a new `Buffer` object with the GDAL\nallocated buffer as its backing store.\n\n***WARNING***!\n\nThe file must not be open or random memory corruption is possible with GDAL <= 3.3.1.\nGDAL >= 3.3.2 will gracefully fail further operations and this function will always be safe.",
             "static": 1,
             "itemtype": "method",

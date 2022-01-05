@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.4.0</b>
+                    API Docs for Version: <b>3.4.1</b>
                 </p>
             </li>
         </div>
@@ -242,6 +242,9 @@ bool Memfile::copy(Local&lt;Object&gt; buffer, const std::string &amp;filename) 
 
   void *dataCopy = CPLMalloc(len);
   if (dataCopy == nullptr) return false;
+
+  // If you malloc, you adjust external memory too (https://github.com/nodejs/node/issues/40936)
+  Nan::AdjustExternalMemory(len);
   memcpy(dataCopy, data, len);
 
   VSILFILE *vsi = VSIFileFromMemBuffer(filename.c_str(), (GByte *)dataCopy, len, 1);
@@ -269,7 +272,6 @@ bool Memfile::copy(Local&lt;Object&gt; buffer, const std::string &amp;filename) 
  * @throws Error
  * @param {Buffer} data A binary buffer containing the file data
  * @param {string} filename A file name beginning with &#x60;/vsimem/&#x60;
- * @param {boolean} [copy=false] Copy the memory buffer into GDAL&#x27;s own heap allowing extending of the file
  */
 NAN_METHOD(Memfile::vsimemSet) {
   Local&lt;Object&gt; buffer;
@@ -367,8 +369,22 @@ NAN_METHOD(Memfile::vsimemRelease) {
   } else {
     // the file has been created by GDAL and the buffer is owned by GDAL
     // -&gt; a new Buffer is constructed and GDAL has to relinquish control
+    // The GC will call the lambda at some point to free the backing storage
     VSIGetMemFileBuffer(filename.c_str(), &amp;len, true);
-    info.GetReturnValue().Set(Nan::NewBuffer(static_cast&lt;char *&gt;(data), static_cast&lt;uint32_t&gt;(len)).ToLocalChecked());
+    // Alas we can&#x27;t take the address of a capturing lambda
+    // so we fall back to doing this like it was back in the day
+    int *hint = new int{static_cast&lt;int&gt;(len)};
+    info.GetReturnValue().Set(Nan::NewBuffer(
+                                static_cast&lt;char *&gt;(data),
+                                static_cast&lt;size_t&gt;(len),
+                                [](char *data, void *hint) {
+                                  int *len = reinterpret_cast&lt;int *&gt;(hint);
+                                  Nan::AdjustExternalMemory(-(*len));
+                                  delete len;
+                                  CPLFree(data);
+                                },
+                                hint)
+                                .ToLocalChecked());
   }
 }
 

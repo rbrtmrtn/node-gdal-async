@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.4.0</b>
+                    API Docs for Version: <b>3.4.1</b>
                 </p>
             </li>
         </div>
@@ -1173,8 +1173,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKB) {
 
   Geometry *geom = Nan::ObjectWrap::Unwrap&lt;Geometry&gt;(info.This());
 
-  int size = geom-&gt;this_-&gt;WkbSize();
-  unsigned char *data = (unsigned char *)malloc(size);
+  size_t size = geom-&gt;this_-&gt;WkbSize();
 
   // byte order
   OGRwkbByteOrder byte_order;
@@ -1201,6 +1200,13 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKB) {
     Nan::ThrowError(&quot;variant must be &#x27;OGC&#x27; or &#x27;ISO&#x27;&quot;);
     return;
   }
+
+  unsigned char *data = (unsigned char *)malloc(size);
+  if (data == nullptr) {
+    Nan::ThrowError(&quot;Failed allocating memory&quot;);
+    return;
+  }
+
   OGRGeometry *gdal_geom = geom-&gt;this_;
   uv_sem_t *async_lock = geom-&gt;async_lock;
   GDALAsyncableJob&lt;unsigned char *&gt; job(0);
@@ -1214,10 +1220,24 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKB) {
     }
     return data;
   };
-  //^^ export to wkb and fill buffer ^^
+
+  Nan::AdjustExternalMemory(size);
+
   job.rval = [size](unsigned char *data, const GetFromPersistentFunc &amp;) {
-    Local&lt;Value&gt; result = Nan::NewBuffer((char *)data, size).ToLocalChecked();
-    return result;
+    Nan::EscapableHandleScope scope;
+    int *hint = new int{static_cast&lt;int&gt;(size)};
+    Local&lt;Value&gt; result = Nan::NewBuffer(
+                            reinterpret_cast&lt;char *&gt;(data),
+                            size,
+                            [](char *data, void *hint) {
+                              int *size = reinterpret_cast&lt;int *&gt;(hint);
+                              Nan::AdjustExternalMemory(-(*size));
+                              delete size;
+                              free(data);
+                            },
+                            hint)
+                            .ToLocalChecked();
+    return scope.Escape(result);
   };
   job.run(info, async, 2);
 }

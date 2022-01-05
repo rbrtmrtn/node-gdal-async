@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.4.0</b>
+                    API Docs for Version: <b>3.4.1</b>
                 </p>
             </li>
         </div>
@@ -209,7 +209,7 @@ const calc = (gdal) =&gt; function calcAsync(inputs, output, fn, options) {
 
   const inSizesQ = Object.keys(inputs).map((inp) =&gt; inputs[inp].sizeAsync)
   const outSizeQ = output.sizeAsync
-  const outTypeQ = output.dataType
+  const outTypeQ = output.dataTypeAsync
 
   return Promise.all([ outTypeQ, outSizeQ,...inSizesQ ]).then((values) =&gt; {
     const outType = values[0]
