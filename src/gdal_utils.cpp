@@ -21,7 +21,7 @@ void Utils::Initialize(Local<Object> target) {
 }
 
 /**
- * Library version of gdal_translate.
+ * Library version of gdal_translate
  *
  * @example
  * const ds = gdal.open('input.tif')
@@ -40,7 +40,7 @@ void Utils::Initialize(Local<Object> target) {
  */
 
 /**
- * Library version of gdal_translate.
+ * Library version of gdal_translate
  * {{{async}}}
  *
  * @example
@@ -101,7 +101,7 @@ GDAL_ASYNCABLE_DEFINE(Utils::translate) {
 }
 
 /**
- * Library version of ogr2ogr.
+ * Library version of ogr2ogr
  *
  * @example
  * const ds = gdal.open('input.geojson')
@@ -120,7 +120,7 @@ GDAL_ASYNCABLE_DEFINE(Utils::translate) {
  */
 
 /**
- * Library version of ogr2ogr.
+ * Library version of ogr2ogr
  * {{{async}}}
  *
  * @example
@@ -205,7 +205,7 @@ GDAL_ASYNCABLE_DEFINE(Utils::vectorTranslate) {
 }
 
 /**
- * Library version of gdalinfo.
+ * Library version of gdalinfo
  *
  * @example
  * const ds = gdal.open('input.tif')
@@ -221,7 +221,7 @@ GDAL_ASYNCABLE_DEFINE(Utils::vectorTranslate) {
  */
 
 /**
- * Library version of gdalinfo.
+ * Library version of gdalinfo
  * {{{async}}}
  *
  * @example
@@ -270,11 +270,11 @@ GDAL_ASYNCABLE_DEFINE(Utils::info) {
 }
 
 /**
- * Library version of gdalwarp.
+ * Library version of gdalwarp
  *
  * @example
  * const ds = gdal.open('input.tif')
- * const output = gdal.warp('/vsimem/temp.tif')
+ * const output = gdal.warp('/vsimem/output.tiff', null, [ ds ], [ '-t_srs', 'epsg:3587' ])
  *
  * @throws Error
  * @method warp
@@ -290,12 +290,12 @@ GDAL_ASYNCABLE_DEFINE(Utils::info) {
  */
 
 /**
- * Library version of gdalwarp.
+ * Library version of gdalwarp
  * {{{async}}}
  *
  * @example
- * const ds = gdal.open('input.tif')
- * const output = gdal.warp('/vsimem/temp.tif')
+ * const ds = await gdal.openAsync('input.tif')
+ * const output = await gdal.warpAsync('/vsimem/output.tiff', null, [ ds ], [ '-t_srs', 'epsg:3587' ])
  * @throws Error
  *
  * @method warpAsync
