@@ -290,7 +290,7 @@ GDAL_ASYNCABLE_DEFINE(Utils::info) {
  */
 
 /**
- * Library version of gdalinfo.
+ * Library version of gdalwarp.
  * {{{async}}}
  *
  * @example
