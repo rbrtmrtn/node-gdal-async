@@ -70,7 +70,7 @@ CPL_C_END
 #include "ogr_spatialref.h"
 #include "memdataset.h"
 
-CPL_CVSID("$Id: gribdataset.cpp 9c1a477986c00dc3a779236e4622b38f2119a772 2021-12-08 16:04:20 +0100 Even Rouault $")
+CPL_CVSID("$Id: gribdataset.cpp e08f5761187c8535322f5fb4d9626cc9c58e7b38 2022-02-16 23:48:50 +0100 Even Rouault $")
 
 static CPLMutex *hGRIBMutex = nullptr;
 
@@ -981,7 +981,7 @@ CPLErr GRIBRasterBand::IReadBlock( int /* nBlockXOff */,
            (nCopyWords - nSplitAndSwapColumn) * sizeof(double));
 
     if (nSplitAndSwapColumn > 0)
-        memcpy(reinterpret_cast<void*>(reinterpret_cast<double*>(pImage) + nSplitAndSwapColumn),
+        memcpy(reinterpret_cast<void*>(reinterpret_cast<double*>(pImage) + nCopyWords - nSplitAndSwapColumn),
             m_Grib_Data + static_cast<size_t>(nGribDataXSize) * (nGribDataYSize - nBlockYOff - 1),
             nSplitAndSwapColumn * sizeof(double));
 

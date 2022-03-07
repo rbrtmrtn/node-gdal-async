@@ -60,7 +60,7 @@
 #define S_IXOTH     00001
 #endif
 
-CPL_CVSID("$Id: cpl_vsil_curl.cpp 227aaf7cb53732455a61f11348b73d870e0e39f3 2021-10-14 19:50:09 +0200 Even Rouault $")
+CPL_CVSID("$Id: cpl_vsil_curl.cpp 6d66a20d97aa93102a8af05970eeca8415270c9b 2022-02-16 18:23:13 +0100 Even Rouault $")
 
 #ifndef HAVE_CURL
 
@@ -2118,7 +2118,7 @@ int VSICurlHandle::ReadMultiRange( int const nRanges, void ** const ppData,
                     asWriteFuncHeaderData[iReq].nEndOffset);
 
             CPLError(CE_Failure, CPLE_AppDefined,
-                     "Request for %s failed", rangeStr);
+                     "Request for %s failed with response_code=%ld", rangeStr, response_code);
             nRet = -1;
         }
         else if( nRet == 0 )

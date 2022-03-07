@@ -66,7 +66,7 @@ PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 #define PQexec this_is_an_error
 
-CPL_CVSID("$Id: ogrpglayer.cpp 1e4510d0d88bbf73885b7f18b79f50d5a6696131 2021-08-21 19:26:01 +0200 Even Rouault $")
+CPL_CVSID("$Id: ogrpglayer.cpp 3818a76072c2258be2deb5cb52a758b03d46f4a0 2022-01-09 17:01:23 +0100 Even Rouault $")
 
 // These originally are defined in libpq-fs.h.
 
@@ -2044,7 +2044,12 @@ int OGRPGLayer::ReadResultDefinition(PGresult *hInitialResultIn)
             if (nTypeOID == poDS->GetGeographyOID())
             {
                 poGeomFieldDefn->ePostgisType = GEOM_TYPE_GEOGRAPHY;
-                poGeomFieldDefn->nSRSId = 4326;
+                if( !(poDS->sPostGISVersion.nMajor >= 3 ||
+                     (poDS->sPostGISVersion.nMajor == 2 && poDS->sPostGISVersion.nMinor >= 2)) )
+                {
+                    // EPSG:4326 was a requirement for geography before PostGIS 2.2
+                    poGeomFieldDefn->nSRSId = 4326;
+                }
             }
             else
                 poGeomFieldDefn->ePostgisType = GEOM_TYPE_GEOMETRY;

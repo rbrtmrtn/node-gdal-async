@@ -115,7 +115,7 @@
 #include "cpl_vsi_virtual.h"
 #include "cpl_worker_thread_pool.h"
 
-CPL_CVSID("$Id: cpl_vsil_gzip.cpp be255935dc8ed9cadd624afa55a84f43faf4b52e 2021-12-24 17:35:07 +0100 Even Rouault $")
+CPL_CVSID("$Id: cpl_vsil_gzip.cpp bea399e02903a2491a1beee2e171f47d4d986d38 2022-02-05 12:23:07 +0100 Even Rouault $")
 
 constexpr int Z_BUFSIZE = 65536;  // Original size is 16384
 constexpr int gz_magic[2] = {0x1f, 0x8b};  // gzip magic header
@@ -814,11 +814,6 @@ bool VSIGZipHandle::gzseek( vsi_l_offset offset, int whence )
 
         int read_size =
             static_cast<int>(Read(outbuf, 1, static_cast<uInt>(size)));
-        if( read_size == 0 )
-        {
-            // CPL_VSIL_GZ_RETURN(FALSE);
-            return false;
-        }
         if( original_nWhence == SEEK_END )
         {
             if( size != read_size )
@@ -826,6 +821,11 @@ bool VSIGZipHandle::gzseek( vsi_l_offset offset, int whence )
                 z_err = Z_STREAM_END;
                 break;
             }
+        }
+        else if( read_size == 0 )
+        {
+            // CPL_VSIL_GZ_RETURN(FALSE);
+            return false;
         }
         offset -= read_size;
     }

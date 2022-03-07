@@ -70,7 +70,7 @@
 
 #endif
 
-CPL_CVSID("$Id: overview.cpp a52e59ceeaf2526250d1aab947c5cf914104db22 2021-12-06 15:41:59 +0100 Even Rouault $")
+CPL_CVSID("$Id: overview.cpp 4d27c2f633a68d4449b15cddb1ddb62aeaf10c98 2022-02-17 00:01:10 +0100 Even Rouault $")
 
 /************************************************************************/
 /*                     GDALResampleChunk32R_Near()                      */
@@ -3512,7 +3512,10 @@ static CPLErr GDALResampleChunk32R_Convolution(
     if( EQUAL(pszResampling, "BILINEAR") )
         eResample = GRA_Bilinear;
     else if( EQUAL(pszResampling, "CUBIC") )
+    {
         eResample = GRA_Cubic;
+        bKernelWithNegativeWeights = true;
+    }
     else if( EQUAL(pszResampling, "CUBICSPLINE") )
         eResample = GRA_CubicSpline;
     else if( EQUAL(pszResampling, "LANCZOS") )

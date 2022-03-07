@@ -47,7 +47,7 @@
 
 #include "cpl_aws.h"
 
-CPL_CVSID("$Id: cpl_vsil_s3.cpp 2390c642672ff70834a7d39db523cf5976829644 2021-11-23 14:25:11 +0100 Even Rouault $")
+CPL_CVSID("$Id: cpl_vsil_s3.cpp 2a013c2badfd29f276bbbbc8690befbb35a30cc2 2022-02-09 12:28:18 +0100 Even Rouault $")
 
 #ifndef HAVE_CURL
 
@@ -771,6 +771,7 @@ CPLString IVSIS3LikeFSHandler::InitiateMultipartUpload(
                                                        osFilename.c_str());
         headers = VSICurlMergeHeaders(headers,
                         poS3HandleHelper->GetCurlHeaders("POST", headers));
+        headers = curl_slist_append(headers, "Content-Length: 0"); // Required by GCS in HTTP 1.1
 
         CurlRequestHelper requestHelper;
         const long response_code =

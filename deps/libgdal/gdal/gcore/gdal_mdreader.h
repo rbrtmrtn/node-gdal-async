@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: gdal_mdreader.h 07af6d281da30d52b00966db492e795d9e3ad1cd 2021-10-24 03:26:52 +0200 Even Rouault $
+ * $Id: gdal_mdreader.h 5826aa92872e593c21b23965f998fbab1232be52 2022-01-14 17:23:09 +0100 Lunyxis $
  *
  * Project:  GDAL Core
  * Purpose:  Read metadata (mainly the remote sensing imagery) from files of
@@ -73,6 +73,12 @@
 #define RPC_MIN_LAT         "MIN_LAT"
 #define RPC_MAX_LONG        "MAX_LONG"
 #define RPC_MAX_LAT         "MAX_LAT"
+
+/* Pleiades Neo nomenclature */
+#define RPC_LAT_NUM_COEFF  "LAT_NUM_COEFF"
+#define RPC_LAT_DEN_COEFF  "LAT_DEN_COEFF"
+#define RPC_LON_NUM_COEFF  "LON_NUM_COEFF"
+#define RPC_LON_DEN_COEFF  "LON_DEN_COEFF"
 
 /**
  * Enumerator of metadata readers

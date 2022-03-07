@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: ogr_core.h baf6754741beb24089c3895bdb6de8f9493000e8 2021-09-18 14:06:41 +0200 Even Rouault $
+ * $Id: ogr_core.h 55ca8f892338313a2760ae4d0c47f0bf4cdcf056 2022-01-18 18:02:50 +0100 Even Rouault $
  *
  * Project:  OpenGIS Simple Features Reference Implementation
  * Purpose:  Define some core portability services for cross-platform OGR code.
@@ -150,6 +150,21 @@ class CPL_DLL OGREnvelope
     {
         return MinX <= other.MinX && MinY <= other.MinY &&
                MaxX >= other.MaxX && MaxY >= other.MaxY;
+    }
+
+    /** Return whether the current rectangle is equal to the other rectangle */
+    bool operator== (const OGREnvelope& other) const
+    {
+        return MinX == other.MinX &&
+               MinY == other.MinY &&
+               MaxX == other.MaxX &&
+               MaxY == other.MaxY;
+    }
+
+    /** Return whether the current rectangle is not equal to the other rectangle */
+    bool operator!= (const OGREnvelope& other) const
+    {
+        return !(*this == other);
     }
 };
 

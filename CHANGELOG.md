@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [3.4.2] WIP
+ - Bundled GDAL 3.4.2
  - Fix #27, rebuilding by `npm --build-from-source` fails
  - Support the ArchLinux Node.js 17 ABI - see https://github.com/nodejs/node/issues/41410
  - Fix #25, always close open Datasets when the process exits

@@ -63,7 +63,7 @@
 // FIXME: Disabled following code as it crashed on OSX CI test.
 // #include <mutex>
 
-CPL_CVSID("$Id: gdaldrivermanager.cpp 9fd53989b94f9d2cdab20515361b1be5045acaf5 2021-08-20 14:14:20 +0800 Tim Lander $")
+CPL_CVSID("$Id: gdaldrivermanager.cpp 4aba1e09e5ccedeb26e5c625c38c0a18b7b3575f 2022-01-28 22:25:42 +0100 Even Rouault $")
 
 /************************************************************************/
 /* ==================================================================== */
@@ -608,7 +608,7 @@ GDALDriver * GDALDriverManager::GetDriverByName( const char * pszName )
     if( EQUAL(pszName, "CartoDB") )
         pszName = "Carto";
 
-    return oMapNameToDrivers[CPLString(pszName).toupper()];
+    return GetDriverByName_unlocked(pszName);
 }
 
 /************************************************************************/

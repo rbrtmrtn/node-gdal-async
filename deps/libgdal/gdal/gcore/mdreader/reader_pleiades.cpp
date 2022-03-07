@@ -42,7 +42,7 @@
 #include "cpl_minixml.h"
 #include "cpl_string.h"
 
-CPL_CVSID("$Id: reader_pleiades.cpp 959437fa8ed7e375b14ddcbea65399911276118a 2021-09-20 11:33:59 +0200 Even Rouault $")
+CPL_CVSID("$Id: reader_pleiades.cpp 07d66b9515a5aec0051ac1dc71f955ec76671179 2022-01-19 13:25:28 +0100 Lunyxis $")
 
 /**
  * GDALMDReaderPleiades()
@@ -327,6 +327,15 @@ char** GDALMDReaderPleiades::LoadRPCXmlFile()
     {
         papszRawRPCList = ReadXMLToList(pGRFMNode->psChild, papszRawRPCList);
     }
+    else
+    {
+        pGRFMNode = CPLSearchXMLNode(pNode, "=Rational_Function_Model");
+
+        if(pGRFMNode != nullptr)
+        {
+            papszRawRPCList = ReadXMLToList(pGRFMNode->psChild, papszRawRPCList);
+        }
+    }
 
     if( nullptr == papszRawRPCList )
     {
@@ -406,8 +415,16 @@ char** GDALMDReaderPleiades::LoadRPCXmlFile()
             // supplies geographic coordinates (lon, lat) and an altitude (alt)"""
             const char* pszValue = CSLFetchNameValue(papszRawRPCList,
                  CPLSPrintf("Inverse_Model.%s_%d", apszRPCTXT20ValItems[i], j));
-            if(nullptr != pszValue)
+            if(nullptr != pszValue){
                 value = value + " " + CPLString(pszValue);
+            }
+            else {
+                 pszValue = CSLFetchNameValue(papszRawRPCList,
+                 CPLSPrintf("GroundtoImage_Values.%s_%d", apszRPCTXT20ValItems[i], j));
+                 if(nullptr != pszValue){
+                    value = value + " " + CPLString(pszValue);
+                 }
+            }
         }
         papszRPB = CSLAddNameValue(papszRPB, apszRPCTXT20ValItems[i], value);
     }

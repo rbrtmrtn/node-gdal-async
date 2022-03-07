@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: ogr_pg.h 2d22aad19ebe25e398030436d2c91ca61b5145db 2021-12-09 21:29:40 +0100 Even Rouault $
+ * $Id: ogr_pg.h def7b2c66fd1745736407f65e2c9104c7758d0ac 2022-01-06 10:24:32 +0100 Even Rouault $
  *
  * Project:  OpenGIS Simple Features Reference Implementation
  * Purpose:  Private definitions for OGR/PostgreSQL driver.
@@ -530,6 +530,8 @@ class OGRPGDataSource final: public OGRDataSource
     OGRErr              DoTransactionCommand(const char* pszCommand);
 
     OGRErr              FlushSoftTransaction();
+
+    OGRErr              FlushCacheWithRet(bool bAtClosing);
 
   public:
     PGver               sPostgreSQLVersion = {0,0,0};

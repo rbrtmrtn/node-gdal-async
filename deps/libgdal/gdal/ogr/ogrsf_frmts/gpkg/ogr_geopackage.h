@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: ogr_geopackage.h 4b46f534fed80d31c3e15c1517169f40694a4a3e 2021-10-14 19:17:37 +0200 Even Rouault $
+ * $Id: ogr_geopackage.h 0d3219d0109880d6c5e49dc0230be9f97df02e8c 2022-01-31 00:21:26 +0100 Even Rouault $
  *
  * Project:  GeoPackage Translator
  * Purpose:  Definition of classes for OGR GeoPackage driver.
@@ -326,7 +326,6 @@ class GDALGeoPackageDataset final : public OGRSQLiteBaseDataSource, public GDALG
 
     private:
 
-        OGRErr              PragmaCheck(const char * pszPragma, const char * pszExpected, int nRowsExpected);
         OGRErr              SetApplicationAndUserVersionId();
         bool                ReOpenDB();
         bool                OpenOrCreateDB( int flags );

@@ -59,7 +59,7 @@
 
 #define DIGIT_ZERO '0'
 
-CPL_CVSID("$Id: ogrcsvlayer.cpp c01a4cf2f0e4eaecbb3c6686b0e0d10165a51e45 2021-10-24 14:25:58 +0200 Even Rouault $")
+CPL_CVSID("$Id: ogrcsvlayer.cpp 406e995e867aaeb55d0c6a40b3a2b9b116a2afbb 2022-02-21 12:05:03 +0100 Even Rouault $")
 
 /************************************************************************/
 /*                            CSVSplitLine()                            */
@@ -634,7 +634,11 @@ void OGRCSVLayer::BuildFeatureDefn( const char *pszNfdcGeomField,
 
                 eGeometryFormat = OGR_CSV_GEOM_AS_WKT;
                 panGeomFieldIndex[iField] = poFeatureDefn->GetGeomFieldCount();
-                OGRGeomFieldDefn oGeomFieldDefn(oField.GetNameRef(),
+                std::string osGeomColName;
+                if( bKeepGeomColumns )
+                    osGeomColName += "geom_";
+                osGeomColName += oField.GetNameRef();
+                OGRGeomFieldDefn oGeomFieldDefn(osGeomColName.c_str(),
                                                 wkbUnknown);
                 poFeatureDefn->AddGeomFieldDefn(&oGeomFieldDefn);
                 continue;

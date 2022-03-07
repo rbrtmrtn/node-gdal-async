@@ -30,7 +30,7 @@
 
 #include "tilematrixset.hpp"
 
-CPL_CVSID("$Id: ogrgeopackagedriver.cpp e3f0c514b88bdc600a3544c8374cafdb63a9668f 2021-11-04 22:31:49 +0100 Even Rouault $")
+CPL_CVSID("$Id: ogrgeopackagedriver.cpp 98076d43e3d4a8245e29c33299de5b6831e6f72b 2022-01-31 17:22:14 +0100 Even Rouault $")
 
 // g++ -g -Wall -fPIC -shared -o ogr_geopackage.so -Iport -Igcore -Iogr -Iogr/ogrsf_frmts -Iogr/ogrsf_frmts/gpkg ogr/ogrsf_frmts/gpkg/*.c* -L. -lgdal
 
@@ -450,6 +450,7 @@ void RegisterOGRGeoPackage()
 "  <Option name='WHERE' type='string' scope='raster' description='SQL WHERE clause to be appended to tile requests'/>"
 COMPRESSION_OPTIONS
 "  <Option name='PRELUDE_STATEMENTS' type='string' scope='raster,vector' description='SQL statement(s) to send on the SQLite connection before any other ones'/>"
+"  <Option name='NOLOCK' type='boolean' description='Whether the database should be opened in nolock mode'/>"
 "</OpenOptionList>");
 
     poDriver->SetMetadataItem( GDAL_DS_LAYER_CREATIONOPTIONLIST,

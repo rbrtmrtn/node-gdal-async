@@ -56,7 +56,7 @@
 
 /* g++ -fPIC -g -Wall frmts/pdf/pdfdataset.cpp -shared -o gdal_PDF.so -Iport -Igcore -Iogr -L. -lgdal -lpoppler -I/usr/include/poppler */
 
-CPL_CVSID("$Id: pdfdataset.cpp 53f969c9c287e4893ff8d9f97ddd1cb25c32dfb4 2021-10-05 22:45:43 +0200 Even Rouault $")
+CPL_CVSID("$Id: pdfdataset.cpp 2d5f96f233e6bda613e98e056bb9a39d12409e32 2022-02-18 22:47:01 +0100 Even Rouault $")
 
 #ifdef HAVE_PDF_READ_SUPPORT
 
@@ -4241,8 +4241,6 @@ PDFDataset *PDFDataset::Open( GDALOpenInfo * poOpenInfo )
 #ifdef HAVE_POPPLER
   if(bUseLib.test(PDFLIB_POPPLER))
   {
-    GooString* poUserPwd = nullptr;
-
     static bool globalParamsCreatedByGDAL = false;
     {
         CPLMutexHolderD(&hGlobalParamsMutex);
@@ -4310,9 +4308,6 @@ PDFDataset *PDFDataset::Open( GDALOpenInfo * poOpenInfo )
     while( true )
     {
         VSIFSeekL(fp, 0, SEEK_SET);
-        if (pszUserPwd)
-            poUserPwd = new GooString(pszUserPwd);
-
         g_nPopplerErrors = 0;
         if( globalParamsCreatedByGDAL )
             registerErrorCallback();
@@ -4322,10 +4317,20 @@ PDFDataset *PDFDataset::Open( GDALOpenInfo * poOpenInfo )
         oObj.getObj()->initNull();
         auto poStream = new VSIPDFFileStream(fp, pszFilename, oObj.getObj());
 #endif
+#if POPPLER_MAJOR_VERSION > 22 || (POPPLER_MAJOR_VERSION == 22 && POPPLER_MINOR_VERSION > 2)
+        std::optional<GooString> osUserPwd;
+        if (pszUserPwd)
+            osUserPwd = std::optional<GooString>(pszUserPwd);
+        poDocPoppler = new PDFDoc(poStream, std::optional<GooString>(), osUserPwd);
+#else
+        GooString* poUserPwd = nullptr;
+        if (pszUserPwd)
+            poUserPwd = new GooString(pszUserPwd);
         poDocPoppler = new PDFDoc(poStream, nullptr, poUserPwd);
+        delete poUserPwd;
+#endif
         if( globalParamsCreatedByGDAL )
             registerErrorCallback();
-        delete poUserPwd;
         if( g_nPopplerErrors >= MAX_POPPLER_ERRORS )
         {
             PDFFreeDoc(poDocPoppler);

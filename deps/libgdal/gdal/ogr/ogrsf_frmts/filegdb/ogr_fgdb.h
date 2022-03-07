@@ -1,5 +1,5 @@
 /******************************************************************************
-* $Id: ogr_fgdb.h 86c46158b8249d2d66814b03cd1785ce6d3a9d0f 2021-10-21 16:30:53 +1000 Nyall Dawson $
+* $Id: ogr_fgdb.h 5b3261184527657a6ffb2a6ec76055ae84001a09 2022-02-16 23:45:11 +0100 Even Rouault $
 *
 * Project:  OpenGIS Simple Features Reference Implementation
 * Purpose:  Standard includes and class definitions ArcObjects OGR driver.
@@ -107,6 +107,8 @@ class FGdbDataSource;
 class FGdbLayer final: public FGdbBaseLayer
 {
   friend class FGdbDataSource;
+
+  bool                m_bWorkaroundCrashOnCDFWithBinaryField = false;
 
   int                 m_bBulkLoadAllowed;
   int                 m_bBulkLoadInProgress;

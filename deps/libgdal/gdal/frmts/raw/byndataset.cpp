@@ -38,7 +38,7 @@
 
 #include <cstdlib>
 
-CPL_CVSID("$Id: byndataset.cpp 4b46f534fed80d31c3e15c1517169f40694a4a3e 2021-10-14 19:17:37 +0200 Even Rouault $")
+CPL_CVSID("$Id: byndataset.cpp 3e807d4e7b08d81a5e11be242abdb7b9bee9306f 2022-01-21 22:06:02 +0100 Even Rouault $")
 
 // Specification at
 // https://www.nrcan.gc.ca/sites/www.nrcan.gc.ca/files/earthsciences/pdf/gpshgrid_e.pdf
@@ -205,6 +205,10 @@ int BYNDataset::Identify( GDALOpenInfo *poOpenInfo )
         hHeader.nScale     < 0 || hHeader.nScale     > 1 )
         return FALSE;
 
+#if 0
+    // We have disabled those checks as invalid values are often found in some
+    // datasets, such as http://s3.microsurvey.com/os/fieldgenius/geoids/Lithuania.zip
+    // We don't use those fields, so we may just ignore them.
     if((hHeader.nTideSys   < 0 || hHeader.nTideSys   > 2 ||
         hHeader.nPtType    < 0 || hHeader.nPtType    > 1 ))
     {
@@ -216,6 +220,7 @@ int BYNDataset::Identify( GDALOpenInfo *poOpenInfo )
                 return FALSE;
         }
     }
+#endif
 
     if( hHeader.nScale == 0 )
     {

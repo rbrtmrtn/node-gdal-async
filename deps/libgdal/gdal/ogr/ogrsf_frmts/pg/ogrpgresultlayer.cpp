@@ -31,7 +31,7 @@
 #include "cpl_conv.h"
 #include "ogr_pg.h"
 
-CPL_CVSID("$Id: ogrpgresultlayer.cpp 379fc8667418dc54e864d828ea35be513e69abc9 2021-04-03 21:58:21 +0200 Even Rouault $")
+CPL_CVSID("$Id: ogrpgresultlayer.cpp 3818a76072c2258be2deb5cb52a758b03d46f4a0 2022-01-09 17:01:23 +0100 Even Rouault $")
 
 #define PQexec this_is_an_error
 
@@ -362,7 +362,20 @@ void OGRPGResultLayer::ResolveSRID(const OGRPGGeomFieldDefn* poGFldDefn)
     /* We have to get the SRID of the geometry column, so to be able */
     /* to do spatial filtering */
     int nSRSId = UNDETERMINED_SRID;
-    if( poGFldDefn->ePostgisType == GEOM_TYPE_GEOMETRY )
+
+    if( poGFldDefn->ePostgisType == GEOM_TYPE_GEOGRAPHY )
+    {
+        if( !(poDS->sPostGISVersion.nMajor >= 3 ||
+             (poDS->sPostGISVersion.nMajor == 2 && poDS->sPostGISVersion.nMinor >= 2)) )
+        {
+            // EPSG:4326 was a requirement for geography before PostGIS 2.2
+            nSRSId = 4326;
+        }
+    }
+
+    if( nSRSId == UNDETERMINED_SRID &&
+        (poGFldDefn->ePostgisType == GEOM_TYPE_GEOMETRY ||
+         poGFldDefn->ePostgisType == GEOM_TYPE_GEOGRAPHY) )
     {
         if (pszGeomTableName != nullptr)
         {
@@ -421,9 +434,6 @@ void OGRPGResultLayer::ResolveSRID(const OGRPGGeomFieldDefn* poGFldDefn)
             OGRPGClearResult(hSRSIdResult);
         }
     }
-    else if( poGFldDefn->ePostgisType == GEOM_TYPE_GEOGRAPHY )
-    {
-        nSRSId = 4326;
-    }
+
     poGFldDefn->nSRSId = nSRSId;
 }

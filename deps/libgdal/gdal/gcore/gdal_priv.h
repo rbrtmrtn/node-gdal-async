@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: gdal_priv.h a52e59ceeaf2526250d1aab947c5cf914104db22 2021-12-06 15:41:59 +0100 Even Rouault $
+ * $Id: gdal_priv.h 4aba1e09e5ccedeb26e5c625c38c0a18b7b3575f 2022-01-28 22:25:42 +0100 Even Rouault $
  *
  * Name:     gdal_priv.h
  * Project:  GDAL Core
@@ -1650,8 +1650,10 @@ class CPL_DLL GDALDriverManager : public GDALMajorObject
             { return (iDriver >= 0 && iDriver < nDrivers) ?
                   papoDrivers[iDriver] : nullptr; }
 
-    GDALDriver  *GetDriverByName_unlocked( const char * pszName )
-            { return oMapNameToDrivers[CPLString(pszName).toupper()]; }
+    GDALDriver  *GetDriverByName_unlocked( const char * pszName ) const
+            { auto oIter = oMapNameToDrivers.find(CPLString(pszName).toupper());
+              return oIter == oMapNameToDrivers.end() ? nullptr : oIter->second;
+            }
 
     static char** GetSearchPaths(const char* pszGDAL_DRIVER_PATH);
 

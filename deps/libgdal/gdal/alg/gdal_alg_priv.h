@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: gdal_alg_priv.h f0602c2d27b51faf8f846e4601b018865a902e83 2021-07-05 20:28:39 +0200 Even Rouault $
+ * $Id: gdal_alg_priv.h db9ea60631eda5ef881ae75dc3355f42734fb38c 2022-02-22 16:16:41 +0100 Even Rouault $
  *
  * Project:  GDAL Image Processing Algorithms
  * Purpose:  Prototypes and definitions for various GDAL based algorithms:
@@ -176,6 +176,9 @@ int GDALTransformLonLatToDestGenImgProjTransformer(void* hTransformArg,
 int GDALTransformLonLatToDestApproxTransformer(void* hTransformArg,
                                                     double* pdfX,
                                                     double* pdfY);
+
+bool GDALTransformIsTranslationOnPixelBoundaries(GDALTransformerFunc pfnTransformer,
+                                                 void                *pTransformerArg);
 
 typedef struct {
     GDALTransformerInfo sTI;

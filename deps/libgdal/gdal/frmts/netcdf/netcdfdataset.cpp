@@ -78,7 +78,7 @@
 #define NETCDF_USES_UTF8
 #endif
 
-CPL_CVSID("$Id: netcdfdataset.cpp beeda6da51ae7e7234dfbad32a69a37687706374 2021-10-31 17:47:01 +0100 Even Rouault $")
+CPL_CVSID("$Id: netcdfdataset.cpp d3f796c3825190dc3c07145ce22c4c23fe12ee88 2022-02-11 10:53:53 +0100 Even Rouault $")
 
 // Internal function declarations.
 
@@ -3386,10 +3386,13 @@ void netCDFDataset::SetProjectionFromVar( int nGroupId, int nVarId,
         // logic. This should handle for example NASA Ocean Color L2 products.
 
         const bool bIgnoreXYAxisNameChecks =
-            CPLTestBool(CPLGetConfigOption("GDAL_NETCDF_IGNORE_XY_AXIS_NAME_CHECKS", "NO")) ||
+            CPLTestBool(
+                CSLFetchNameValueDef(papszOpenOptions, "IGNORE_XY_AXIS_NAME_CHECKS",
+                    CPLGetConfigOption("GDAL_NETCDF_IGNORE_XY_AXIS_NAME_CHECKS", "NO"))) ||
             // Dataset from https://github.com/OSGeo/gdal/issues/4075 has a res and transform attributes
             (FetchAttr(nGroupId, nVarId, "res") != nullptr &&
-             FetchAttr(nGroupId, nVarId, "transform") != nullptr);
+             FetchAttr(nGroupId, nVarId, "transform") != nullptr) ||
+            FetchAttr(nGroupId, NC_GLOBAL, "GMT_version") != nullptr;
 
         // Check that they are 1D or 2D variables
         if( nVarDimXID >= 0 )
@@ -9619,6 +9622,14 @@ void GDALRegister_netCDF()
 "   <Option name='HONOUR_VALID_RANGE' type='boolean' scope='raster' "
     "description='Whether to set to nodata pixel values outside of the "
     "validity range' default='YES'/>"
+"   <Option name='IGNORE_XY_AXIS_NAME_CHECKS' type='boolean' scope='raster' "
+    "description='Whether X/Y dimensions should be always considered as "
+    "geospatial axis, even if the lack conventional attributes confirming it.'"
+    " default='NO'/>"
+"   <Option name='VARIABLES_AS_BANDS' type='boolean' scope='raster' "
+    "description='Whether 2D variables that share the same indexing dimensions "
+    "should be exposed as several bands of a same dataset instead of several "
+    "subdatasets.' default='NO'/>"
 "</OpenOptionList>" );
 
 
