@@ -15,6 +15,7 @@
 		},
 		"defines": [
 			"NOGDI=1",
+      "HAVE_LIBZ=1"
 		],
 		"xcode_settings": {
 			"GCC_ENABLE_CPP_RTTI": "YES",
@@ -48,7 +49,6 @@
 		"conditions": [
         ["runtime == 'node'", {
           "defines": [
-    				"HAVE_LIBZ"
           ]
         }],
 			["OS == 'win'", {

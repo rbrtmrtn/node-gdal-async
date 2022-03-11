@@ -210,6 +210,11 @@
 				'<@(gdal_format_defs)'
 			],
 			"conditions": [
+        ["runtime == 'electron'", {
+          "include_dirs": [
+    			  "./gdal/frmts/zlib"
+          ]
+        }],
 				["OS == 'win'", {
 					"sources": [
 						"./gdal/port/cpl_odbc.cpp"

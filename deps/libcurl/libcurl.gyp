@@ -170,11 +170,12 @@
 				"CURL_DISABLE_RTSP=1",
 				"CURL_DISABLE_SMB=1",
 				"ENABLE_IPV6=1",
+        "HAVE_ZLIB_H=1"
 			],
 			"conditions": [
-        ["runtime == 'node'", {
-          "defines": [
-    				"HAVE_ZLIB_H=1"
+        ["runtime == 'electron'", {
+          "include_dirs": [
+    			  "../libgdal/gdal/frmts/zlib"
           ]
         }],
         ["runtime == 'node' and OS == 'linux'", {
