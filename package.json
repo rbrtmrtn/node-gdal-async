@@ -80,7 +80,7 @@
     "test:clean": "npx rimraf test/data/*.tmp* test/data/temp/*",
     "test:stress": "node test/stress",
     "prune": "npx rimraf 'deps/@(libgdal|libproj)/*/!(data)' && npx rimraf 'deps/libcurl/!(cacert.pem)'  && npx rimraf 'deps/!(libgdal|libproj|libcurl)'",
-    "postpublish": "gh run list --workflow=test-npm.yml"
+    "postpublish": "gh workflow run test-npm.yml -F version=$npm_package_version"
   },
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.8",
@@ -109,7 +109,6 @@
     "eslint-plugin-prefer-arrow": "^1.1.3",
     "gh-pages": "^3.0.0",
     "mocha": "^9.1.2",
-    "node-gyp": "^8.3.0",
     "semver": "^7.3.5",
     "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.13.0",

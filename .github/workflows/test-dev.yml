@@ -155,8 +155,9 @@ jobs:
     - name: Use Node.js 14.x
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 14.x
     - run: npm install --ignore-scripts
+    - run: npm install node-gyp
     - run: npx @mapbox/node-pre-gyp configure --debug
     - name: Build from sources
       run: npx @mapbox/node-pre-gyp build -j max
