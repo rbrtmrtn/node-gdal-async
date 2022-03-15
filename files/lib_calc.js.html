@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.4.1</b>
+                    API Docs for Version: <b>3.4.2</b>
                 </p>
             </li>
         </div>
@@ -234,6 +234,7 @@ const calc = (gdal) =&gt; function calcAsync(inputs, output, fn, options) {
     return new Promise((resolve, reject) =&gt; {
       mux.on(&#x27;error&#x27;, reject)
       ws.on(&#x27;error&#x27;, reject)
+      xform.on(&#x27;error&#x27;, reject)
 
       mux.pipe(xform).pipe(ws)
 

@@ -4,7 +4,7 @@
         "description": "Node.js bindings for GDAL (Geospatial Data Abstraction Library) [Fork]",
         "url": "https://github.com/mmomtchev/node-gdal-async",
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/GDALLogoColor.svg/200px-GDALLogoColor.svg.png",
-        "version": "3.4.1"
+        "version": "3.4.2"
     },
     "files": {
         "lib/calc.js": {
@@ -618,7 +618,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 455,
+            "line": 465,
             "description": "This [node-gdal-async](https://github.com/mmomtchev/node-gdal-async) binding for\nNode.js provides a feature-complete way of reading, writing, and manipulating\ngeospatial data, raster and vector, synchronously and asynchronously using [GDAL](http://www.gdal.org/).\n```\n// sample: open a shapefile and display all features as geojson\nconst dataset = gdal.open(\"states.shp\");\n\ndataset.layers.get(0).features.forEach(function(feature) {\n    console.log(feature.getGeometry().toJSON());\n});\n```\n\n```\n// same thing, but asynchronously, allowing integration in server-side multi-user code\nconst dataset = await gdal.openAsync(\"states.shp\");\nconst features = (await dataset.layers.getAsync(0)).features;\nconst len = await features.countAsync();\n\nfor (let i = t; i < len; i++) {\n  features.getAsync(i, (error, feature) => {\n    console.log(feature.getGeometry().toJSON());\n  });\n}\n```\n\nsee ASYNCIO.md for some performance considerations when designing code\nthat will run multiple parallel operations on the same dataset\n\n<iframe\nsrc=\"http://ghbtns.com/github-btn.html?user=mmomtchev&repo=node-gdal-async&type=watch&count=true\"\nallowtransparency=\"true\" frameborder=\"0\" scrolling=\"0\" width=\"90\" height=\"20\"\nstyle=\"margin-top:20px\"></iframe> <iframe\nsrc=\"http://ghbtns.com/github-btn.html?user=mmomtchev&repo=node-gdal-async&type=fork&count=true\"\nallowtransparency=\"true\" frameborder=\"0\" scrolling=\"0\" width=\"200\"\nheight=\"20\"></iframe>"
         },
         "gdal.DatasetLayers": {
@@ -1527,7 +1527,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 459
+            "line": 469
         },
         "Constants (CPL Error Levels)": {
             "name": "Constants (CPL Error Levels)",
@@ -1538,7 +1538,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 504
+            "line": 514
         },
         "Constants (CPL Error Codes)": {
             "name": "Constants (CPL Error Codes)",
@@ -1549,7 +1549,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 549
+            "line": 559
         },
         "Constants (DCAP)": {
             "name": "Constants (DCAP)",
@@ -1560,7 +1560,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 620
+            "line": 630
         },
         "Constants (OLC)": {
             "name": "Constants (OLC)",
@@ -1571,7 +1571,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 643
+            "line": 653
         },
         "Constants (ODsC)": {
             "name": "Constants (ODsC)",
@@ -1582,7 +1582,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 749
+            "line": 759
         },
         "Constants (GDT)": {
             "name": "Constants (GDT)",
@@ -1593,7 +1593,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 793,
+            "line": 803,
             "description": "Pixel data types."
         },
         "Constants (OJ)": {
@@ -1605,7 +1605,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 906
+            "line": 916
         },
         "Constants (GCI)": {
             "name": "Constants (GCI)",
@@ -1616,7 +1616,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 929
+            "line": 939
         },
         "Constants (GPI)": {
             "name": "Constants (GPI)",
@@ -1627,7 +1627,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 1084,
+            "line": 1094,
             "description": "Palette types."
         },
         "Constants (wkbVariant)": {
@@ -1639,7 +1639,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 1122
+            "line": 1132
         },
         "Constants (wkbByteOrder)": {
             "name": "Constants (wkbByteOrder)",
@@ -1650,7 +1650,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 1155
+            "line": 1165
         },
         "Constants (wkbGeometryType)": {
             "name": "Constants (wkbGeometryType)",
@@ -1661,7 +1661,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 1172
+            "line": 1182
         },
         "Constants (OFT)": {
             "name": "Constants (OFT)",
@@ -1672,7 +1672,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 1324
+            "line": 1334
         },
         "Constants (GRA)": {
             "name": "Constants (GRA)",
@@ -1683,7 +1683,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 1424,
+            "line": 1434,
             "description": "Resampling options that can be used with the gdal.reprojectImage() and gdal.RasterBandPixels.read methods."
         },
         "Constants (DIM)": {
@@ -1695,7 +1695,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 1474,
+            "line": 1484,
             "description": "Dimension types for gdal.Dimension (GDAL >= 3.3)"
         },
         "Constants (DIR)": {
@@ -1707,7 +1707,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/node_gdal.cpp",
-            "line": 1518,
+            "line": 1528,
             "description": "Direction types for gdal.Dimension (GDAL >= 3.3)"
         }
     },
@@ -13296,7 +13296,7 @@
         {
             "file": "src/gdal_utils.cpp",
             "line": 23,
-            "description": "Library version of gdal_translate.",
+            "description": "Library version of gdal_translate",
             "example": [
                 "\nconst ds = gdal.open('input.tif')\nconst out = gdal.translate('/vsimem/temp.tif', ds, [ '-b', '1' ])"
             ],
@@ -13347,7 +13347,7 @@
         {
             "file": "src/gdal_utils.cpp",
             "line": 42,
-            "description": "Library version of gdal_translate.\n{{{async}}}",
+            "description": "Library version of gdal_translate\n{{{async}}}",
             "example": [
                 "\nconst ds = gdal.open('input.tif')\nconst out = gdal.translate('/vsimem/temp.tif', ds, [ '-b', '1' ])"
             ],
@@ -13405,7 +13405,7 @@
         {
             "file": "src/gdal_utils.cpp",
             "line": 103,
-            "description": "Library version of ogr2ogr.",
+            "description": "Library version of ogr2ogr",
             "example": [
                 "\nconst ds = gdal.open('input.geojson')\nconst out = gdal.vectorTranslate('/vsimem/temp.gpkg', [ '-of', 'GPKG' ], ds)"
             ],
@@ -13456,7 +13456,7 @@
         {
             "file": "src/gdal_utils.cpp",
             "line": 122,
-            "description": "Library version of ogr2ogr.\n{{{async}}}",
+            "description": "Library version of ogr2ogr\n{{{async}}}",
             "example": [
                 "\nconst ds = gdal.open('input.geojson')\nconst out = gdal.vectorTranslate('/vsimem/temp.gpkg', [ '-of', 'GPKG' ], ds)"
             ],
@@ -13514,7 +13514,7 @@
         {
             "file": "src/gdal_utils.cpp",
             "line": 207,
-            "description": "Library version of gdalinfo.",
+            "description": "Library version of gdalinfo",
             "example": [
                 "\nconst ds = gdal.open('input.tif')\nconst output = gdal.info('/vsimem/temp.tif')"
             ],
@@ -13546,7 +13546,7 @@
         {
             "file": "src/gdal_utils.cpp",
             "line": 223,
-            "description": "Library version of gdalinfo.\n{{{async}}}",
+            "description": "Library version of gdalinfo\n{{{async}}}",
             "example": [
                 "\nconst ds = gdal.open('input.tif')\nconst output = gdal.info('/vsimem/temp.tif')"
             ],
@@ -13585,9 +13585,9 @@
         {
             "file": "src/gdal_utils.cpp",
             "line": 272,
-            "description": "Library version of gdalwarp.",
+            "description": "Library version of gdalwarp",
             "example": [
-                "\nconst ds = gdal.open('input.tif')\nconst output = gdal.warp('/vsimem/temp.tif')"
+                "\nconst ds = gdal.open('input.tif')\nconst output = gdal.warp('/vsimem/output.tiff', null, [ ds ], [ '-t_srs', 'epsg:3587' ])"
             ],
             "throws": {
                 "description": "Error"
@@ -13641,9 +13641,9 @@
         {
             "file": "src/gdal_utils.cpp",
             "line": 292,
-            "description": "Library version of gdalinfo.\n{{{async}}}",
+            "description": "Library version of gdalwarp\n{{{async}}}",
             "example": [
-                "\nconst ds = gdal.open('input.tif')\nconst output = gdal.warp('/vsimem/temp.tif')"
+                "\nconst ds = await gdal.openAsync('input.tif')\nconst output = await gdal.warpAsync('/vsimem/output.tiff', null, [ ds ], [ '-t_srs', 'epsg:3587' ])"
             ],
             "throws": {
                 "description": "Error"
@@ -14109,7 +14109,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 444,
+            "line": 454,
             "description": "The collection of all drivers registered with GDAL",
             "final": 1,
             "itemtype": "property",
@@ -14119,7 +14119,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 463,
+            "line": 473,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DMD_LONGNAME",
@@ -14128,7 +14128,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 469,
+            "line": 479,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DMD_MIMETYPE",
@@ -14137,7 +14137,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 475,
+            "line": 485,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DMD_HELPTOPIC",
@@ -14146,7 +14146,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 481,
+            "line": 491,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DMD_EXTENSION",
@@ -14155,7 +14155,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 487,
+            "line": 497,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DMD_CREATIONOPTIONLIST",
@@ -14164,7 +14164,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 496,
+            "line": 506,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DMD_CREATIONDATATYPES",
@@ -14173,7 +14173,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 508,
+            "line": 518,
             "description": "Error level: (no error)",
             "final": 1,
             "itemtype": "property",
@@ -14183,7 +14183,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 516,
+            "line": 526,
             "description": "Error level: Debug",
             "final": 1,
             "itemtype": "property",
@@ -14193,7 +14193,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 524,
+            "line": 534,
             "description": "Error level: Warning",
             "final": 1,
             "itemtype": "property",
@@ -14203,7 +14203,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 532,
+            "line": 542,
             "description": "Error level: Failure",
             "final": 1,
             "itemtype": "property",
@@ -14213,7 +14213,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 540,
+            "line": 550,
             "description": "Error level: Fatal",
             "final": 1,
             "itemtype": "property",
@@ -14223,7 +14223,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 553,
+            "line": 563,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_None",
@@ -14232,7 +14232,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 559,
+            "line": 569,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_AppDefined",
@@ -14241,7 +14241,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 565,
+            "line": 575,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_OutOfMemory",
@@ -14250,7 +14250,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 571,
+            "line": 581,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_FileIO",
@@ -14259,7 +14259,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 577,
+            "line": 587,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_OpenFailed",
@@ -14268,7 +14268,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 583,
+            "line": 593,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_IllegalArg",
@@ -14277,7 +14277,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 589,
+            "line": 599,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_NotSupported",
@@ -14286,7 +14286,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 595,
+            "line": 605,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_AssertionFailed",
@@ -14295,7 +14295,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 601,
+            "line": 611,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_NoWriteAccess",
@@ -14304,7 +14304,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 607,
+            "line": 617,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_UserInterrupt",
@@ -14313,7 +14313,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 613,
+            "line": 623,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.CPLE_objectNull",
@@ -14322,7 +14322,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 624,
+            "line": 634,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DCAP_CREATE",
@@ -14331,7 +14331,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 630,
+            "line": 640,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DCAP_CREATECOPY",
@@ -14340,7 +14340,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 636,
+            "line": 646,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DCAP_VIRTUALIO",
@@ -14349,7 +14349,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 647,
+            "line": 657,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCRandomRead",
@@ -14358,7 +14358,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 653,
+            "line": 663,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCSequentialWrite",
@@ -14367,7 +14367,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 659,
+            "line": 669,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCRandomWrite",
@@ -14376,7 +14376,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 665,
+            "line": 675,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCFastSpatialFilter",
@@ -14385,7 +14385,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 671,
+            "line": 681,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCFastFeatureCount",
@@ -14394,7 +14394,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 677,
+            "line": 687,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCFastGetExtent",
@@ -14403,7 +14403,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 683,
+            "line": 693,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCCreateField",
@@ -14412,7 +14412,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 689,
+            "line": 699,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCDeleteField",
@@ -14421,7 +14421,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 695,
+            "line": 705,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCReorderFields",
@@ -14430,7 +14430,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 701,
+            "line": 711,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCAlterFieldDefn",
@@ -14439,7 +14439,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 707,
+            "line": 717,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCTransactions",
@@ -14448,7 +14448,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 713,
+            "line": 723,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCDeleteFeature",
@@ -14457,7 +14457,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 719,
+            "line": 729,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCFastSetNextByIndex",
@@ -14466,7 +14466,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 726,
+            "line": 736,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCStringsAsUTF8",
@@ -14475,7 +14475,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 732,
+            "line": 742,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCIgnoreFields",
@@ -14484,7 +14484,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 740,
+            "line": 750,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OLCCreateGeomField",
@@ -14493,7 +14493,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 753,
+            "line": 763,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.ODsCCreateLayer",
@@ -14502,7 +14502,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 759,
+            "line": 769,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.ODsCDeleteLayer",
@@ -14511,7 +14511,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 765,
+            "line": 775,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.ODsCCreateGeomFieldAfterCreateLayer",
@@ -14520,7 +14520,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 775,
+            "line": 785,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.ODrCCreateDataSource",
@@ -14529,7 +14529,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 781,
+            "line": 791,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.ODrCDeleteDataSource",
@@ -14538,7 +14538,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 799,
+            "line": 809,
             "description": "Unknown or unspecified type",
             "final": 1,
             "itemtype": "property",
@@ -14548,7 +14548,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 806,
+            "line": 816,
             "description": "Eight bit unsigned integer",
             "final": 1,
             "itemtype": "property",
@@ -14558,7 +14558,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 813,
+            "line": 823,
             "description": "Sixteen bit unsigned integer",
             "final": 1,
             "itemtype": "property",
@@ -14568,7 +14568,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 820,
+            "line": 830,
             "description": "Sixteen bit signed integer",
             "final": 1,
             "itemtype": "property",
@@ -14578,7 +14578,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 827,
+            "line": 837,
             "description": "Thirty two bit unsigned integer",
             "final": 1,
             "itemtype": "property",
@@ -14588,7 +14588,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 834,
+            "line": 844,
             "description": "Thirty two bit signed integer",
             "final": 1,
             "itemtype": "property",
@@ -14598,7 +14598,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 841,
+            "line": 851,
             "description": "Thirty two bit floating point",
             "final": 1,
             "itemtype": "property",
@@ -14608,7 +14608,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 849,
+            "line": 859,
             "description": "Sixty four bit floating point",
             "final": 1,
             "itemtype": "property",
@@ -14618,7 +14618,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 857,
+            "line": 867,
             "description": "Complex Int16",
             "final": 1,
             "itemtype": "property",
@@ -14628,7 +14628,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 864,
+            "line": 874,
             "description": "Complex Int32",
             "final": 1,
             "itemtype": "property",
@@ -14638,7 +14638,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 871,
+            "line": 881,
             "description": "Complex Float32",
             "final": 1,
             "itemtype": "property",
@@ -14648,7 +14648,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 879,
+            "line": 889,
             "description": "Complex Float64",
             "final": 1,
             "itemtype": "property",
@@ -14658,7 +14658,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 889,
+            "line": 899,
             "description": "String extended type for MDArrays (GDAL >= 3.1)",
             "final": 1,
             "itemtype": "property",
@@ -14668,7 +14668,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 897,
+            "line": 907,
             "description": "String extended type for MDArrays (GDAL >= 3.1)",
             "final": 1,
             "itemtype": "property",
@@ -14678,7 +14678,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 910,
+            "line": 920,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OJUndefined",
@@ -14687,7 +14687,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 916,
+            "line": 926,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OJLeft",
@@ -14696,7 +14696,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 922,
+            "line": 932,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OJRight",
@@ -14705,7 +14705,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 933,
+            "line": 943,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_Undefined",
@@ -14714,7 +14714,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 939,
+            "line": 949,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_GrayIndex",
@@ -14723,7 +14723,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 948,
+            "line": 958,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_PaletteIndex",
@@ -14732,7 +14732,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 957,
+            "line": 967,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_RedBand",
@@ -14741,7 +14741,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 966,
+            "line": 976,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_GreenBand",
@@ -14750,7 +14750,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 975,
+            "line": 985,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_BlueBand",
@@ -14759,7 +14759,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 984,
+            "line": 994,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_AlphaBand",
@@ -14768,7 +14768,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 993,
+            "line": 1003,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_HueBand",
@@ -14777,7 +14777,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1002,
+            "line": 1012,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_SaturationBand",
@@ -14786,7 +14786,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1011,
+            "line": 1021,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_LightnessBand",
@@ -14795,7 +14795,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1020,
+            "line": 1030,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_CyanBand",
@@ -14804,7 +14804,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1029,
+            "line": 1039,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_MagentaBand",
@@ -14813,7 +14813,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1038,
+            "line": 1048,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_YellowBand",
@@ -14822,7 +14822,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1047,
+            "line": 1057,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_BlackBand",
@@ -14831,7 +14831,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1056,
+            "line": 1066,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_YCbCr_YBand",
@@ -14840,7 +14840,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1065,
+            "line": 1075,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_YCbCr_CbBand",
@@ -14849,7 +14849,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1074,
+            "line": 1084,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GCI_YCbCr_CrBand",
@@ -14858,7 +14858,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1090,
+            "line": 1100,
             "description": "Grayscale, only c1 defined",
             "final": 1,
             "itemtype": "property",
@@ -14868,7 +14868,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1098,
+            "line": 1108,
             "description": "RGBA, alpha in c4",
             "final": 1,
             "itemtype": "property",
@@ -14878,7 +14878,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1106,
+            "line": 1116,
             "description": "CMYK",
             "final": 1,
             "itemtype": "property",
@@ -14888,7 +14888,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1114,
+            "line": 1124,
             "description": "HLS, c4 is not defined",
             "final": 1,
             "itemtype": "property",
@@ -14898,7 +14898,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1126,
+            "line": 1136,
             "description": "Old-style 99-402 extended dimension (Z) WKB types.\nSynonymous with 'wkbVariantOldOgc' (gdal >= 2.0)",
             "final": 1,
             "itemtype": "property",
@@ -14908,7 +14908,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1136,
+            "line": 1146,
             "description": "Old-style 99-402 extended dimension (Z) WKB types.\nSynonymous with 'wkbVariantOgc' (gdal < 2.0)",
             "final": 1,
             "itemtype": "property",
@@ -14918,7 +14918,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1146,
+            "line": 1156,
             "description": "SFSQL 1.2 and ISO SQL/MM Part 3 extended dimension (Z&M) WKB types.",
             "final": 1,
             "itemtype": "property",
@@ -14928,7 +14928,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1159,
+            "line": 1169,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbXDR",
@@ -14937,7 +14937,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1165,
+            "line": 1175,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbNDR",
@@ -14946,7 +14946,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1176,
+            "line": 1186,
             "final": "The `wkb25DBit` constant can be used to convert between 2D types to 2.5D\ntypes",
             "example": [
                 "\n```\n// 2 -> 2.5D\nwkbPoint25D = gdal.wkbPoint | gdal.wkb25DBit\n\n// 2.5D -> 2D (same as wkbFlatten())\nwkbPoint = gdal.wkbPoint25D & (~gdal.wkb25DBit)```"
@@ -14958,7 +14958,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1197,
+            "line": 1207,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbUnknown",
@@ -14967,7 +14967,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1203,
+            "line": 1213,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbPoint",
@@ -14976,7 +14976,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1209,
+            "line": 1219,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbLineString",
@@ -14985,7 +14985,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1215,
+            "line": 1225,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbCircularString",
@@ -14994,7 +14994,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1221,
+            "line": 1231,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbCompoundCurve",
@@ -15003,7 +15003,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1227,
+            "line": 1237,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbMultiCurve",
@@ -15012,7 +15012,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1233,
+            "line": 1243,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbPolygon",
@@ -15021,7 +15021,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1239,
+            "line": 1249,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbMultiPoint",
@@ -15030,7 +15030,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1245,
+            "line": 1255,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbMultiLineString",
@@ -15039,7 +15039,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1251,
+            "line": 1261,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbMultiPolygon",
@@ -15048,7 +15048,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1257,
+            "line": 1267,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbGeometryCollection",
@@ -15057,7 +15057,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1263,
+            "line": 1273,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbNone",
@@ -15066,7 +15066,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1269,
+            "line": 1279,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbLinearRing",
@@ -15075,7 +15075,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1275,
+            "line": 1285,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbPoint25D",
@@ -15084,7 +15084,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1281,
+            "line": 1291,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbLineString25D",
@@ -15093,7 +15093,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1287,
+            "line": 1297,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbPolygon25D",
@@ -15102,7 +15102,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1293,
+            "line": 1303,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbMultiPoint25D",
@@ -15111,7 +15111,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1299,
+            "line": 1309,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbMultiLineString25D",
@@ -15120,7 +15120,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1305,
+            "line": 1315,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbMultiPolygon25D",
@@ -15129,7 +15129,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1311,
+            "line": 1321,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbGeometryCollection25D",
@@ -15138,7 +15138,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1317,
+            "line": 1327,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.wkbLinearRing25D",
@@ -15147,7 +15147,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1328,
+            "line": 1338,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTInteger",
@@ -15156,7 +15156,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1334,
+            "line": 1344,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTIntegerList",
@@ -15165,7 +15165,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1342,
+            "line": 1352,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTInteger64",
@@ -15174,7 +15174,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1349,
+            "line": 1359,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTInteger64List",
@@ -15183,7 +15183,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1358,
+            "line": 1368,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTReal",
@@ -15192,7 +15192,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1364,
+            "line": 1374,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTRealList",
@@ -15201,7 +15201,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1370,
+            "line": 1380,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTString",
@@ -15210,7 +15210,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1376,
+            "line": 1386,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTStringList",
@@ -15219,7 +15219,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1383,
+            "line": 1393,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTWideString",
@@ -15228,7 +15228,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1390,
+            "line": 1400,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTWideStringList",
@@ -15237,7 +15237,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1399,
+            "line": 1409,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTBinary",
@@ -15246,7 +15246,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1405,
+            "line": 1415,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTDate",
@@ -15255,7 +15255,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1411,
+            "line": 1421,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTTime",
@@ -15264,7 +15264,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1417,
+            "line": 1427,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.OFTDateTime",
@@ -15273,7 +15273,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1430,
+            "line": 1440,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GRA_NearestNeighbor",
@@ -15282,7 +15282,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1436,
+            "line": 1446,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GRA_Bilinear",
@@ -15291,7 +15291,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1442,
+            "line": 1452,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GRA_Cubic",
@@ -15300,7 +15300,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1448,
+            "line": 1458,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GRA_CubicSpline",
@@ -15309,7 +15309,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1454,
+            "line": 1464,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GRA_Lanczos",
@@ -15318,7 +15318,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1460,
+            "line": 1470,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GRA_Average",
@@ -15327,7 +15327,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1466,
+            "line": 1476,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.GRA_Mode",
@@ -15336,7 +15336,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1480,
+            "line": 1490,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DIM_HORIZONTAL_X",
@@ -15345,7 +15345,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1488,
+            "line": 1498,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DIM_HORIZONTAL_Y",
@@ -15354,7 +15354,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1496,
+            "line": 1506,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DIM_VERTICAL",
@@ -15363,7 +15363,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1503,
+            "line": 1513,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DIM_TEMPORAL",
@@ -15372,7 +15372,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1510,
+            "line": 1520,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DIM_PARAMETRIC",
@@ -15381,7 +15381,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1524,
+            "line": 1534,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DIR_EAST",
@@ -15390,7 +15390,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1531,
+            "line": 1541,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DIR_WEST",
@@ -15399,7 +15399,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1538,
+            "line": 1548,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DIR_SOUTH",
@@ -15408,7 +15408,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1545,
+            "line": 1555,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DIR_NORTH",
@@ -15417,7 +15417,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1552,
+            "line": 1562,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DIR_UP",
@@ -15426,7 +15426,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1559,
+            "line": 1569,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DIR_DOWN",
@@ -15435,7 +15435,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1566,
+            "line": 1576,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DIR_FUTURE",
@@ -15444,7 +15444,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1573,
+            "line": 1583,
             "final": 1,
             "itemtype": "property",
             "name": "gdal.DIR_PAST",
@@ -15453,7 +15453,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1580,
+            "line": 1590,
             "description": "GDAL version (not the binding version)",
             "final": 1,
             "itemtype": "property",
@@ -15463,7 +15463,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1590,
+            "line": 1600,
             "description": "GDAL library - system library (false) or bundled (true)",
             "final": 1,
             "itemtype": "property",
@@ -15473,7 +15473,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1604,
+            "line": 1614,
             "description": "Details about the last error that occurred. The property\nwill be null or an object containing three properties: \"number\",\n\"message\", and \"type\".",
             "final": 1,
             "itemtype": "property",
@@ -15483,7 +15483,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1616,
+            "line": 1626,
             "description": "Should a warning be emitted to stderr when a synchronous operation\nis blocking the event loop, can be safely disabled unless\nthe user application needs to remain responsive at all times\nUse `(gdal as any).eventLoopWarning = false` to set the value from TypeScript",
             "itemtype": "property",
             "name": "gdal.eventLoopWarning",
@@ -15492,7 +15492,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1635,
+            "line": 1645,
             "description": "Disables all output.",
             "static": 1,
             "itemtype": "method",
@@ -15501,7 +15501,7 @@
         },
         {
             "file": "src/node_gdal.cpp",
-            "line": 1644,
+            "line": 1654,
             "description": "Displays extra debugging information from GDAL.",
             "static": 1,
             "itemtype": "method",

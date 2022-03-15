@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.4.1</b>
+                    API Docs for Version: <b>3.4.2</b>
                 </p>
             </li>
         </div>
@@ -523,7 +523,17 @@ static NAN_METHOD(isAlive) {
   info.GetReturnValue().Set(Nan::New(object_store.isAlive(uid)));
 }
 
+void Cleanup(void *) {
+  object_store.cleanup();
+}
+
 static void Init(Local&lt;Object&gt; target, Local&lt;v8::Value&gt;, void *) {
+  static bool initialized = false;
+  if (initialized) {
+    Nan::ThrowError(&quot;gdal-async does not yet support multiple instances per V8 isolate&quot;);
+    return;
+  }
+  initialized = true;
 
   Nan__SetAsyncableMethod(target, &quot;open&quot;, gdal_open);
   Nan::SetMethod(target, &quot;setConfigOption&quot;, setConfigOption);
@@ -1814,6 +1824,9 @@ static void Init(Local&lt;Object&gt; target, Local&lt;v8::Value&gt;, void *) {
   NODE_DEFINE_CONSTANT(target, CPLE_AssertionFailed);
   NODE_DEFINE_CONSTANT(target, CPLE_NoWriteAccess);
   NODE_DEFINE_CONSTANT(target, CPLE_UserInterrupt);
+
+  auto *env = GetCurrentEnvironment(target-&gt;GetIsolate()-&gt;GetCurrentContext());
+  AtExit(env, Cleanup, nullptr);
 }
 }
 

@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.4.1</b>
+                    API Docs for Version: <b>3.4.2</b>
                 </p>
             </li>
         </div>
@@ -405,8 +405,12 @@ class RasterTransform extends Transform {
 
     const len = chunk[Object.keys(chunk)[0]].length
     const out = new this.type(len)
-    this.xform(chunk, out, len)
-    cb(null, out)
+    try {
+      this.xform(chunk, out, len)
+      cb(null, out)
+    } catch (err) {
+      cb(err)
+    }
   }
 }
 

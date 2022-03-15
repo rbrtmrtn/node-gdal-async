@@ -22,7 +22,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>3.4.1</b>
+                    API Docs for Version: <b>3.4.2</b>
                 </p>
             </li>
         </div>
@@ -172,7 +172,7 @@ void Utils::Initialize(Local&lt;Object&gt; target) {
 }
 
 /**
- * Library version of gdal_translate.
+ * Library version of gdal_translate
  *
  * @example
  * const ds = gdal.open(&#x27;input.tif&#x27;)
@@ -191,7 +191,7 @@ void Utils::Initialize(Local&lt;Object&gt; target) {
  */
 
 /**
- * Library version of gdal_translate.
+ * Library version of gdal_translate
  * {{{async}}}
  *
  * @example
@@ -252,7 +252,7 @@ GDAL_ASYNCABLE_DEFINE(Utils::translate) {
 }
 
 /**
- * Library version of ogr2ogr.
+ * Library version of ogr2ogr
  *
  * @example
  * const ds = gdal.open(&#x27;input.geojson&#x27;)
@@ -271,7 +271,7 @@ GDAL_ASYNCABLE_DEFINE(Utils::translate) {
  */
 
 /**
- * Library version of ogr2ogr.
+ * Library version of ogr2ogr
  * {{{async}}}
  *
  * @example
@@ -356,7 +356,7 @@ GDAL_ASYNCABLE_DEFINE(Utils::vectorTranslate) {
 }
 
 /**
- * Library version of gdalinfo.
+ * Library version of gdalinfo
  *
  * @example
  * const ds = gdal.open(&#x27;input.tif&#x27;)
@@ -372,7 +372,7 @@ GDAL_ASYNCABLE_DEFINE(Utils::vectorTranslate) {
  */
 
 /**
- * Library version of gdalinfo.
+ * Library version of gdalinfo
  * {{{async}}}
  *
  * @example
@@ -421,11 +421,11 @@ GDAL_ASYNCABLE_DEFINE(Utils::info) {
 }
 
 /**
- * Library version of gdalwarp.
+ * Library version of gdalwarp
  *
  * @example
  * const ds = gdal.open(&#x27;input.tif&#x27;)
- * const output = gdal.warp(&#x27;/vsimem/temp.tif&#x27;)
+ * const output = gdal.warp(&#x27;/vsimem/output.tiff&#x27;, null, [ ds ], [ &#x27;-t_srs&#x27;, &#x27;epsg:3587&#x27; ])
  *
  * @throws Error
  * @method warp
@@ -441,12 +441,12 @@ GDAL_ASYNCABLE_DEFINE(Utils::info) {
  */
 
 /**
- * Library version of gdalinfo.
+ * Library version of gdalwarp
  * {{{async}}}
  *
  * @example
- * const ds = gdal.open(&#x27;input.tif&#x27;)
- * const output = gdal.warp(&#x27;/vsimem/temp.tif&#x27;)
+ * const ds = await gdal.openAsync(&#x27;input.tif&#x27;)
+ * const output = await gdal.warpAsync(&#x27;/vsimem/output.tiff&#x27;, null, [ ds ], [ &#x27;-t_srs&#x27;, &#x27;epsg:3587&#x27; ])
  * @throws Error
  *
  * @method warpAsync
