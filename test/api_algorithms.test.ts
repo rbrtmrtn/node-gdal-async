@@ -52,10 +52,10 @@ describe('gdal', () => {
         elevField: 1
       })
 
-      assert(lyr.features.count() > 0, 'features were created')
+      assert.isTrue(lyr.features.count() > 0, 'features were created')
 
       lyr.features.forEach((feature) => {
-        assert(
+        assert.isTrue(
           (feature.fields.get('elev') - offset) % interval === 0,
           'contour used correct interval / base'
         )
@@ -74,7 +74,7 @@ describe('gdal', () => {
         elevField: 1
       })
 
-      assert(lyr.features.count() > 0, 'features were created')
+      assert.isTrue(lyr.features.count() > 0, 'features were created')
 
       const actual_levels = [] as number[]
 
