@@ -36,7 +36,7 @@
 
 //! @cond Doxygen_Suppress
 
-CPL_CVSID("$Id: cpl_azure.cpp 6888f976933c444a7a12d7d65bfbeeaaa696d7b5 2021-01-27 22:43:42 +0100 Even Rouault $")
+CPL_CVSID("$Id: cpl_azure.cpp 20bd8c7dd08fd96bf503556bc6de5ddeea850071 2022-04-08 21:59:19 +0200 Even Rouault $")
 
 #ifdef HAVE_CURL
 
@@ -479,6 +479,12 @@ VSIAzureBlobHandleHelper* VSIAzureBlobHandleHelper::BuildFromURI( const char* ps
         return nullptr;
     }
 
+    if( CPLTestBool(CPLGetConfigOption("AZURE_NO_SIGN_REQUEST", "NO")) )
+    {
+        osStorageKey.clear();
+        osSAS.clear();
+    }
+
     // pszURI == bucket/object
     const CPLString osBucketObject( pszURI );
     CPLString osBucket(osBucketObject);
@@ -633,7 +639,7 @@ CPLString VSIAzureBlobHandleHelper::GetSignedURL(CSLConstList papszOptions)
 
     CPLString osVerb(CSLFetchNameValueDef(papszOptions, "VERB", "GET"));
     CPLString osSignedPermissions(CSLFetchNameValueDef(papszOptions,
-        "SIGNEDPERMISSIONS", 
+        "SIGNEDPERMISSIONS",
         (EQUAL(osVerb, "GET") || EQUAL(osVerb, "HEAD")) ? "r" : "w"  ));
 
     CPLString osSignedIdentifier(CSLFetchNameValueDef(papszOptions,

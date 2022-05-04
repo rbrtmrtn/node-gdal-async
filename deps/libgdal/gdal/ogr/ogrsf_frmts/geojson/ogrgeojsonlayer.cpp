@@ -34,6 +34,7 @@
 #    pragma clang diagnostic push
 #    pragma clang diagnostic ignored "-Wunknown-pragmas"
 #    pragma clang diagnostic ignored "-Wdocumentation"
+#    pragma clang diagnostic ignored "-Wold-style-cast"
 #  endif
 #endif  // !DEBUG_VERBOSE
 
@@ -48,7 +49,7 @@
 #include "ogr_geojson.h"
 #include "ogrgeojsonreader.h"
 
-CPL_CVSID("$Id: ogrgeojsonlayer.cpp 4b46f534fed80d31c3e15c1517169f40694a4a3e 2021-10-14 19:17:37 +0200 Even Rouault $")
+CPL_CVSID("$Id: ogrgeojsonlayer.cpp abd9705eecbf1222ff3fe3a5ed19e3b5db6ed93c 2022-04-16 15:50:23 +0200 Even Rouault $")
 
 /************************************************************************/
 /*                       STATIC MEMBERS DEFINITION                      */

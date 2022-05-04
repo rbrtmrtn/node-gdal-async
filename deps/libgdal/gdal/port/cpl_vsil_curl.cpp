@@ -60,7 +60,7 @@
 #define S_IXOTH     00001
 #endif
 
-CPL_CVSID("$Id: cpl_vsil_curl.cpp 6d66a20d97aa93102a8af05970eeca8415270c9b 2022-02-16 18:23:13 +0100 Even Rouault $")
+CPL_CVSID("$Id: cpl_vsil_curl.cpp 086bc683d6f9a5c8054c9008ded6b3426c4c8305 2022-03-16 21:31:20 +0100 Even Rouault $")
 
 #ifndef HAVE_CURL
 
@@ -5060,7 +5060,7 @@ void VSICurlClearCache( void )
     // FIXME ? Currently we have different filesystem instances for
     // vsicurl/, /vsis3/, /vsigs/ . So each one has its own cache of regions,
     // file size, etc.
-    CSLConstList papszPrefix = VSIFileManager::GetPrefixes();
+    char** papszPrefix = VSIFileManager::GetPrefixes();
     for( size_t i = 0; papszPrefix && papszPrefix[i]; ++i )
     {
         auto poFSHandler =
@@ -5070,6 +5070,7 @@ void VSICurlClearCache( void )
         if( poFSHandler )
             poFSHandler->ClearCache();
     }
+    CSLDestroy(papszPrefix);
 
     VSICurlStreamingClearCache();
 }

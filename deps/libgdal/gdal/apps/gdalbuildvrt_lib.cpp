@@ -60,7 +60,7 @@
 #include "ogr_spatialref.h"
 #include "vrtdataset.h"
 
-CPL_CVSID("$Id: gdalbuildvrt_lib.cpp 5b41afb9691fdf9d1d490f8ed1734dc5a9b180fd 2022-01-19 23:03:59 +0100 Even Rouault $")
+CPL_CVSID("$Id: gdalbuildvrt_lib.cpp f6daca27a7b3cdca6601f6f7757755863dcb5a2f 2022-03-30 21:39:17 +0200 Even Rouault $")
 
 #define GEOTRSFRM_TOPLEFT_X            0
 #define GEOTRSFRM_WE_RES               1
@@ -789,7 +789,7 @@ std::string VRTBuilder::AnalyseRaster( GDALDatasetH hDS, DatasetProperty* psData
             for(int j=0;j<nSelectedBands;j++)
             {
                 const int nSelBand = panSelectedBandList[j];
-                CPLAssert(nSelBand >= 0 && nSelBand <= _nBands);
+                CPLAssert(nSelBand >= 1 && nSelBand <= _nBands);
                 GDALRasterBand* poBand = poDS->GetRasterBand(nSelBand);
                 if (asBandProperties[j].colorInterpretation !=
                             poBand->GetColorInterpretation())
@@ -1144,7 +1144,7 @@ void VRTBuilder::CreateVRTNonSeparate(VRTDatasetH hVRTDS)
             reinterpret_cast<GDALProxyPoolDataset*>(hProxyDS)->
                                             SetOpenOptions( papszOpenOptions );
 
-            for(int j=0;j<nSelectedBands;j++)
+            for(int j=0;j<nMaxSelectedBandNo;j++)
             {
                 GDALProxyPoolDatasetAddSrcBandDescription(hProxyDS,
                                                 asBandProperties[j].dataType,
@@ -1166,17 +1166,18 @@ void VRTBuilder::CreateVRTNonSeparate(VRTDatasetH hVRTDS)
         {
             VRTSourcedRasterBandH hVRTBand =
                     static_cast<VRTSourcedRasterBandH>(poVRTDS->GetRasterBand(j + 1));
+            const int nSelBand = panSelectedBandList[j];
 
             /* Place the raster band at the right position in the VRT */
             VRTSourcedRasterBand* poVRTBand = static_cast<VRTSourcedRasterBand*>(hVRTBand);
 
             VRTSimpleSource* poSimpleSource;
-            if (bAllowSrcNoData && psDatasetProperties->abHasNoData[j])
+            if (bAllowSrcNoData && psDatasetProperties->abHasNoData[nSelBand - 1])
             {
                 poSimpleSource = new VRTComplexSource();
-                poSimpleSource->SetNoDataValue( psDatasetProperties->adfNoDataValues[j] );
+                poSimpleSource->SetNoDataValue( psDatasetProperties->adfNoDataValues[nSelBand - 1] );
             }
-            else if( bUseSrcMaskBand && psDatasetProperties->abHasMaskBand[j] )
+            else if( bUseSrcMaskBand && psDatasetProperties->abHasMaskBand[nSelBand - 1] )
             {
                 auto poSource = new VRTComplexSource();
                 poSource->SetUseMaskBand(true);
@@ -1187,7 +1188,7 @@ void VRTBuilder::CreateVRTNonSeparate(VRTDatasetH hVRTDS)
             if( pszResampling )
                 poSimpleSource->SetResampling(pszResampling);
             auto poSrcBand = GDALRasterBand::FromHandle(
-                GDALGetRasterBand(hSourceDS, panSelectedBandList[j]));
+                GDALGetRasterBand(hSourceDS, nSelBand));
             poVRTBand->ConfigureSource( poSimpleSource,
                                         poSrcBand,
                                         FALSE,

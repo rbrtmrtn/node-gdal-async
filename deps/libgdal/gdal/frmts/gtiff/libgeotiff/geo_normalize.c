@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: geo_normalize.c 6240bef04d4ee087587e50fb0ff83a04e4f09c1e 2021-03-06 17:04:20 +0100 Even Rouault $
+ * $Id: geo_normalize.c a22aa06a279824047f079b85643b4499600551c2 2022-03-15 21:42:04 +0100 Even Rouault $
  *
  * Project:  libgeotiff
  * Purpose:  Code to normalize PCS and other composite codes in a GeoTIFF file.
@@ -845,6 +845,7 @@ int GTIFGetDatumInfoEx( void* ctxIn,
     {
         char szCode[12];
         PJ* datum;
+        PJ_TYPE pjType;
 
         sprintf(szCode, "%d", nDatumCode);
         datum = proj_create_from_database(
@@ -854,7 +855,9 @@ int GTIFGetDatumInfoEx( void* ctxIn,
             return FALSE;
         }
 
-        if( proj_get_type(datum) != PJ_TYPE_GEODETIC_REFERENCE_FRAME )
+        pjType = proj_get_type(datum);
+        if( pjType != PJ_TYPE_GEODETIC_REFERENCE_FRAME &&
+            pjType != PJ_TYPE_DYNAMIC_GEODETIC_REFERENCE_FRAME )
         {
             proj_destroy(datum);
             return FALSE;

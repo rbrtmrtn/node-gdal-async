@@ -70,7 +70,7 @@ CPL_C_END
 #include "ogr_spatialref.h"
 #include "memdataset.h"
 
-CPL_CVSID("$Id: gribdataset.cpp e08f5761187c8535322f5fb4d9626cc9c58e7b38 2022-02-16 23:48:50 +0100 Even Rouault $")
+CPL_CVSID("$Id: gribdataset.cpp 42170e91eac50c9ee037c9828708642983ed2b92 2022-04-04 17:08:10 +0200 Even Rouault $")
 
 static CPLMutex *hGRIBMutex = nullptr;
 
@@ -2181,7 +2181,8 @@ GDALDataset *GRIBDataset::OpenMultiDim( GDALOpenInfo *poOpenInfo )
     VSIFSeekL(poShared->m_fp, 0, SEEK_SET);
 
     // Contains an GRIB2 message inventory of the file.
-    auto pInventories = Inventory(poShared->m_fp, poOpenInfo);
+    // We can't use the potential .idx file
+    auto pInventories = cpl::make_unique<InventoryWrapperGrib>(poShared->m_fp);
 
     if( pInventories->result() <= 0 )
     {
@@ -2591,7 +2592,7 @@ void GRIBDataset::SetGribMetaData(grib_MetaData *meta)
         if ((rMinX + rPixelSizeX >= 180 || rMaxX - rPixelSizeX >= 180) &&
             CPLTestBool(CPLGetConfigOption("GRIB_ADJUST_LONGITUDE_RANGE", "YES")) )
         {
-            if (rPixelSizeX * nRasterXSize > 360)
+            if (rPixelSizeX * nRasterXSize > 360 + rPixelSizeX/4)
                 CPLDebug("GRIB",
                     "Cannot properly handle GRIB2 files with overlaps and 0-360 longitudes");
             else if (fabs(360 - rPixelSizeX * nRasterXSize) < rPixelSizeX/4 &&

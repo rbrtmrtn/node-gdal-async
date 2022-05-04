@@ -103,7 +103,7 @@
 #include "webp/encode.h"
 #endif
 
-CPL_CVSID("$Id: geotiff.cpp 28dc86dda6ebc02acac9ef16fa6e94a87184e8a3 2022-03-08 10:35:31 +0100 Even Rouault $")
+CPL_CVSID("$Id: geotiff.cpp f5ae81e1b61b43229cdfc92b7260b7fff939bfff 2022-04-07 17:09:53 +0200 Even Rouault $")
 
 static bool bGlobalInExternalOvr = false;
 
@@ -8004,12 +8004,16 @@ int GTiffDataset::Finalize()
 /* -------------------------------------------------------------------- */
     if( !m_poBaseDS )
     {
-        for( int i = 0; i < m_nOverviewCount; ++i )
+        // Nullify m_nOverviewCount before deleting overviews, otherwise
+        // GTiffDataset::FlushDirectory() might try to access an overview
+        // that is being deleted (#5580)
+        const int nOldOverviewCount = m_nOverviewCount;
+        m_nOverviewCount = 0;
+        for( int i = 0; i < nOldOverviewCount; ++i )
         {
             delete m_papoOverviewDS[i];
             bHasDroppedRef = true;
         }
-        m_nOverviewCount = 0;
 
         for( int i = 0; i < m_nJPEGOverviewCountOri; ++i )
         {
@@ -8032,8 +8036,12 @@ int GTiffDataset::Finalize()
     // we are not the base image.
     if( m_poMaskDS )
     {
-        delete m_poMaskDS;
+        // Nullify m_nOverviewCount before deleting overviews, otherwise
+        // GTiffDataset::FlushDirectory() might try to access it while being
+        // deleted. (#5580)
+        auto poMaskDS = m_poMaskDS;
         m_poMaskDS = nullptr;
+        delete poMaskDS;
         bHasDroppedRef = true;
     }
 
@@ -16364,8 +16372,12 @@ TIFF *GTiffDataset::CreateLL( const char * pszFilename,
 /* -------------------------------------------------------------------- */
 /*      Compute the uncompressed size.                                  */
 /* -------------------------------------------------------------------- */
+    const unsigned nTileXCount = bTiled ? DIV_ROUND_UP(nXSize, l_nBlockXSize) : 0;
+    const unsigned nTileYCount = bTiled ? DIV_ROUND_UP(nYSize, l_nBlockYSize) : 0;
     const double dfUncompressedImageSize =
-        nXSize * static_cast<double>(nYSize) * l_nBands *
+        (bTiled ? (static_cast<double>(nTileXCount) * nTileYCount * l_nBlockXSize * l_nBlockYSize) :
+                  (nXSize * static_cast<double>(nYSize))) *
+        l_nBands *
         GDALGetDataTypeSizeBytes(eType)
         + dfExtraSpaceForOverviews;
 
@@ -16410,8 +16422,6 @@ TIFF *GTiffDataset::CreateLL( const char * pszFilename,
 /* -------------------------------------------------------------------- */
     if( bTiled )
     {
-        unsigned nTileXCount = DIV_ROUND_UP(nXSize, l_nBlockXSize);
-        unsigned nTileYCount = DIV_ROUND_UP(nYSize, l_nBlockYSize);
         // libtiff implementation limitation
         if( nTileXCount > 0x80000000U / (bCreateBigTIFF ? 8 : 4) / nTileYCount )
         {

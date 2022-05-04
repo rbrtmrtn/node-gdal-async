@@ -65,7 +65,7 @@
 #define UNUSED_IF_NO_GEOS
 #endif
 
-CPL_CVSID("$Id: ogrgeometryfactory.cpp 9f57a8d3c5f327cb02bb78ef23479c4b74143220 2021-05-22 00:41:26 +0200 Momtchil Momtchev $")
+CPL_CVSID("$Id: ogrgeometryfactory.cpp 9d1ec382687acd12e7788751e6b37bce2850c516 2022-04-04 10:35:55 +0200 Even Rouault $")
 
 /************************************************************************/
 /*                           createFromWkb()                            */
@@ -3512,7 +3512,9 @@ static void CollectPointsOnAntimeridian(OGRGeometry* poGeom,
                 poCT->Transform(1, &dfX2Trans, &dfY2Trans);
                 // Are we crossing the antimeridian ? (detecting by inversion of
                 // sign of X)
-                if( (dfX2 - dfX) * (dfX2Trans - dfXTrans) < 0 )
+                if( (dfX2 - dfX) * (dfX2Trans - dfXTrans) < 0 ||
+                    (dfX == dfX2 && dfX2Trans * dfXTrans < 0 &&
+                     fabs(fabs(dfXTrans)-180) < 10 && fabs(fabs(dfX2Trans)-180) < 10) )
                 {
                     double dfXStart = dfX;
                     double dfYStart = dfY;
@@ -3536,7 +3538,8 @@ static void CollectPointsOnAntimeridian(OGRGeometry* poGeom,
                         double dfYMidTrans = dfYMid;
                         poCT->Transform(1, &dfXMidTrans, &dfYMidTrans);
                         if( (dfXMid - dfXStart) *
-                                        (dfXMidTrans - dfXStartTrans) < 0 )
+                                        (dfXMidTrans - dfXStartTrans) < 0 ||
+                            (dfXMid == dfXStart && dfXMidTrans * dfXStartTrans < 0) )
                         {
                             dfXEnd = dfXMid;
                             dfYEnd = dfYMid;

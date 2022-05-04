@@ -100,7 +100,7 @@ void GDALOpenInfoDeclareFileNotToOpen(const char* pszFilename,
 void GDALOpenInfoUnDeclareFileNotToOpen(const char* pszFilename);
 
 
-CPL_CVSID("$Id: ogrsqlitedatasource.cpp 98076d43e3d4a8245e29c33299de5b6831e6f72b 2022-01-31 17:22:14 +0100 Even Rouault $")
+CPL_CVSID("$Id: ogrsqlitedatasource.cpp 08039390e6f353565c9fb0b0c6d51b5c84214996 2022-04-04 10:36:16 +0200 Even Rouault $")
 
 /************************************************************************/
 /*                      OGRSQLiteInitOldSpatialite()                    */
@@ -841,7 +841,24 @@ int OGRSQLiteBaseDataSource::OpenOrCreateDB(int flagsIn, bool bRegisterOGR2SQLit
           CPLTestBool(CSLFetchNameValueDef(papszOpenOptions, "NOLOCK", "NO")) )
     {
         m_osFilenameForSQLiteOpen = "file:";
-        m_osFilenameForSQLiteOpen += m_pszFilename;
+
+        // Apply rules from "3.1. The URI Path" of https://www.sqlite.org/uri.html
+        CPLString osFilenameForURI(m_pszFilename);
+        osFilenameForURI.replaceAll('?', "%3f");
+        osFilenameForURI.replaceAll('#', "%23");
+#ifdef _WIN32
+        osFilenameForURI.replaceAll('\\', '/');
+#endif
+        osFilenameForURI.replaceAll("//", '/');
+#ifdef _WIN32
+        if( osFilenameForURI.size() > 3 && osFilenameForURI[1] == ':' &&
+            osFilenameForURI[2] == '/' )
+        {
+            osFilenameForURI = '/' + osFilenameForURI;
+        }
+#endif
+
+        m_osFilenameForSQLiteOpen += osFilenameForURI;
         m_osFilenameForSQLiteOpen += "?nolock=1";
     }
 #endif

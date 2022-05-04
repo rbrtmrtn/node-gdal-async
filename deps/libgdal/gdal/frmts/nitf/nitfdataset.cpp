@@ -61,7 +61,7 @@
 #include "ogr_core.h"
 #include "ogr_srs_api.h"
 
-CPL_CVSID("$Id: nitfdataset.cpp 5e2a80b58c701de57548788ed4067da8203a7773 2021-11-30 14:04:02 +0100 Even Rouault $")
+CPL_CVSID("$Id: nitfdataset.cpp d17d6850c528f678204665cde930563ff980568e 2022-04-04 10:37:16 +0200 Even Rouault $")
 
 static bool NITFPatchImageLength( const char *pszFilename,
                                   int nIMIndex,
@@ -904,12 +904,17 @@ NITFDataset *NITFDataset::OpenInternal( GDALOpenInfo * poOpenInfo,
     }
     else if( psImage->chICORDS == 'S' || psImage->chICORDS == 'N' )
     {
-        CPLFree( poDS->pszProjection );
-        poDS->pszProjection = nullptr;
+        // in open-for-create mode, we don't have a valid UTM zone, which
+        // would make PROJ unhappy
+        if( !bOpenForCreate )
+        {
+            CPLFree( poDS->pszProjection );
+            poDS->pszProjection = nullptr;
 
-        oSRSWork.SetUTM( psImage->nZone, psImage->chICORDS == 'N' );
-        oSRSWork.SetWellKnownGeogCS( "WGS84" );
-        oSRSWork.exportToWkt( &(poDS->pszProjection) );
+            oSRSWork.SetUTM( psImage->nZone, psImage->chICORDS == 'N' );
+            oSRSWork.SetWellKnownGeogCS( "WGS84" );
+            oSRSWork.exportToWkt( &(poDS->pszProjection) );
+        }
     }
     else if( psImage->chICORDS == 'U' && psImage->nZone != 0 )
     {

@@ -115,7 +115,7 @@
 #include "cpl_vsi_virtual.h"
 #include "cpl_worker_thread_pool.h"
 
-CPL_CVSID("$Id: cpl_vsil_gzip.cpp bea399e02903a2491a1beee2e171f47d4d986d38 2022-02-05 12:23:07 +0100 Even Rouault $")
+CPL_CVSID("$Id: cpl_vsil_gzip.cpp 263980f19c0e1ab8ca994711da92f15aaae9c87e 2022-03-18 17:34:00 +0100 Even Rouault $")
 
 constexpr int Z_BUFSIZE = 65536;  // Original size is 16384
 constexpr int gz_magic[2] = {0x1f, 0x8b};  // gzip magic header
@@ -947,7 +947,10 @@ size_t VSIGZipHandle::Read( void * const buf, size_t const nSize,
             in += nRead;
             out += nRead;
             if( nRead < len )
+            {
                 z_eof = 1;
+                in = 0;
+            }
 #ifdef ENABLE_DEBUG
             CPLDebug("GZIP", "Read return %d", static_cast<int>(nRead / nSize));
 #endif

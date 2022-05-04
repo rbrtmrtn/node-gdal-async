@@ -32,7 +32,7 @@
 #include "gdal_version.h"
 #include "gdal_utils_priv.h"
 
-CPL_CVSID("$Id: gdalbuildvrt_bin.cpp 5b41afb9691fdf9d1d490f8ed1734dc5a9b180fd 2022-01-19 23:03:59 +0100 Even Rouault $")
+CPL_CVSID("$Id: gdalbuildvrt_bin.cpp f1e1fbd760965451425cada8b47615d4e94d965d 2022-03-29 17:20:34 +0200 Even Rouault $")
 
 /************************************************************************/
 /*                               Usage()                                */
@@ -47,7 +47,7 @@ static void Usage(const char* pszErrorMsg)
             "Usage: gdalbuildvrt [-tileindex field_name]\n"
             "                    [-resolution {highest|lowest|average|user}]\n"
             "                    [-te xmin ymin xmax ymax] [-tr xres yres] [-tap]\n"
-            "                    [-separate] [-b band] [-sd subdataset]\n"
+            "                    [-separate] [-b band]* [-sd subdataset]\n"
             "                    [-allow_projection_difference] [-q]\n"
             "                    [-addalpha] [-hidenodata]\n"
             "                    [-srcnodata \"value [value...]\"] [-vrtnodata \"value [value...]\"] \n"

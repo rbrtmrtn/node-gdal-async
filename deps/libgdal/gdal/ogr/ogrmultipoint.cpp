@@ -41,7 +41,7 @@
 #include "ogr_core.h"
 #include "ogr_p.h"
 
-CPL_CVSID("$Id: ogrmultipoint.cpp 464e5bd63b59963407c8adc30fcbd5899731eddc 2021-03-16 15:06:30 +0100 Even Rouault $")
+CPL_CVSID("$Id: ogrmultipoint.cpp 1d3c4d07e75d8e420fe71cc01f8cff46623497b0 2022-04-09 15:43:27 +0200 Even Rouault $")
 
 /************************************************************************/
 /*                           OGRMultiPoint()                            */
@@ -243,13 +243,8 @@ OGRErr OGRMultiPoint::importFromWkt( const char ** ppszInput )
         return importFromWkt_Bracketed( ppszInput, bHasM, bHasZ );
     }
 
-    if( bHasZ || bHasM )
-    {
-        return OGRERR_CORRUPT_DATA;
-    }
-
 /* -------------------------------------------------------------------- */
-/*      Read the point list which should consist of exactly one point.  */
+/*      Read the point list.                                            */
 /* -------------------------------------------------------------------- */
     OGRRawPoint *paoPoints = nullptr;
     double *padfZ = nullptr;

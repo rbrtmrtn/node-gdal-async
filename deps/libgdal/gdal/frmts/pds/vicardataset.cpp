@@ -50,7 +50,7 @@ constexpr double NULL3 = -32768.0;
 #include <limits>
 #include <string>
 
-CPL_CVSID("$Id: vicardataset.cpp a9aeb422489c8d418bbddb73b9fab0ebeb53454e 2021-10-26 21:30:25 +0200 Even Rouault $")
+CPL_CVSID("$Id: vicardataset.cpp a816cecc3d8815197f607c659f76a3609a4adcc8 2022-04-12 20:55:35 +0200 Even Rouault $")
 
 /* GeoTIFF 1.0 geokeys */
 
@@ -2380,10 +2380,13 @@ void VICARDataset::ReadProjectionFromGeoTIFFGroup()
                 CPLString(pszValue).replaceAll('(',"").replaceAll(')', "").
                   replaceAll(',', ' ').c_str(),
                 " ", 0));
-            std::vector<double> adfValues;
-            for( int i = 0; i < aosTokens.size(); ++i )
-                adfValues.push_back(CPLAtof(aosTokens[i]));
-            TIFFSetField(hTIFF, kv.second, aosTokens.size(), &adfValues[0]);
+            if( !aosTokens.empty() )
+            {
+                std::vector<double> adfValues;
+                for( int i = 0; i < aosTokens.size(); ++i )
+                    adfValues.push_back(CPLAtof(aosTokens[i]));
+                TIFFSetField(hTIFF, kv.second, aosTokens.size(), &adfValues[0]);
+            }
         }
     }
 

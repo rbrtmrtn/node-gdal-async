@@ -59,7 +59,7 @@
 #include "ogr_srs_api.h"
 
 
-CPL_CVSID("$Id: gdaltransformer.cpp db9ea60631eda5ef881ae75dc3355f42734fb38c 2022-02-22 16:16:41 +0100 Even Rouault $")
+CPL_CVSID("$Id: gdaltransformer.cpp 81c4fac41d9aad4a96eacfdf63988360f8366d30 2022-03-18 13:29:59 +0100 Even Rouault $")
 
 CPL_C_START
 void *GDALDeserializeGCPTransformer( CPLXMLNode *psTree );
@@ -2149,6 +2149,12 @@ GDALCreateGenImgProjTransformer2( GDALDatasetH hSrcDS, GDALDatasetH hDstDS,
         if( bMayInsertCenterLong )
         {
             InsertCenterLong( hSrcDS, &oSrcSRS, aosOptions );
+        }
+
+        if( CPLFetchBool(papszOptions, "PROMOTE_TO_3D", false) )
+        {
+            oSrcSRS.PromoteTo3D(nullptr);
+            oDstSRS.PromoteTo3D(nullptr);
         }
 
         if( !(dfWestLongitudeDeg == 0.0 && dfSouthLatitudeDeg == 0.0 &&

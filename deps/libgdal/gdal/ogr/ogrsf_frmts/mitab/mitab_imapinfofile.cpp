@@ -53,7 +53,7 @@
 #  include <wctype.h>      /* iswspace() */
 #endif
 
-CPL_CVSID("$Id: mitab_imapinfofile.cpp eafaac6247973312c34e401b210ad0ed662ab400 2020-10-21 12:28:12 +0200 Krister Wicksell $")
+CPL_CVSID("$Id: mitab_imapinfofile.cpp 213b17ce28185da4835f838682ed5c5ec1d657a8 2022-04-22 09:41:34 +0200 Even Rouault $")
 
 /**********************************************************************
  *                   IMapInfoFile::IMapInfoFile()
@@ -563,6 +563,7 @@ static const char* const apszCharsets[][2] = {
     { "WindowsLatin2", "CP1250" },
     { "WindowsArabic", "CP1256" },
     { "WindowsCyrillic", "CP1251" },
+    { "WindowsBalticRim", "CP1257" },
     { "WindowsGreek", "CP1253" },
     { "WindowsHebrew", "CP1255" },
     { "WindowsTurkish", "CP1254" }, //Windows Eastern Europe

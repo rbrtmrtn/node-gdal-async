@@ -50,7 +50,7 @@
 #include "ogrgeojsonutils.h"
 // #include "symbol_renames.h"
 
-CPL_CVSID("$Id: ogresrijsonreader.cpp 38b0feed67f80ded32be6c508323d862e1a14474 2020-04-07 12:01:58 +0200 Even Rouault $")
+CPL_CVSID("$Id: ogresrijsonreader.cpp e92f8ad727264946bb819c23742c39fa05124ea0 2022-04-09 13:22:32 +0200 Even Rouault $")
 
 /************************************************************************/
 /*                          OGRESRIJSONReader()                         */
@@ -885,8 +885,7 @@ OGRGeometry* OGRESRIJSONReadPolygon( json_object* poObj)
         }
 
         OGRPolygon* poPoly = new OGRPolygon();
-        OGRLinearRing* poLine = new OGRLinearRing();
-        poPoly->addRingDirectly(poLine);
+        auto poLine = cpl::make_unique<OGRLinearRing>();
         papoGeoms[iRing] = poPoly;
 
         const auto nPoints = json_object_array_length( poObjRing );
@@ -925,6 +924,7 @@ OGRGeometry* OGRESRIJSONReadPolygon( json_object* poObj)
                 poLine->addPoint( dfX, dfY );
             }
         }
+        poPoly->addRingDirectly(poLine.release());
     }
 
     OGRGeometry* poRet = OGRGeometryFactory::organizePolygons( papoGeoms,

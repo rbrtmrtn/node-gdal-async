@@ -45,7 +45,7 @@
 #include "cpl_string.h"
 #include "cpl_time.h"
 
-CPL_CVSID("$Id: cpl_vsil_curl_streaming.cpp b0c2cc25f0802273e1c16958f04d0f59e1986a90 2021-08-30 14:36:08 +0200 Even Rouault $")
+CPL_CVSID("$Id: cpl_vsil_curl_streaming.cpp 086bc683d6f9a5c8054c9008ded6b3426c4c8305 2022-03-16 21:31:20 +0100 Even Rouault $")
 
 #if !defined(HAVE_CURL) || defined(CPL_MULTIPROC_STUB)
 
@@ -2154,7 +2154,7 @@ void VSICurlStreamingClearCache( void )
     // FIXME ? Currently we have different filesystem instances for
     // vsicurl/, /vsis3/, /vsigs/ . So each one has its own cache of regions,
     // file size, etc.
-    CSLConstList papszPrefix = VSIFileManager::GetPrefixes();
+    char** papszPrefix = VSIFileManager::GetPrefixes();
     for( size_t i = 0; papszPrefix && papszPrefix[i]; ++i )
     {
         auto poFSHandler =
@@ -2164,6 +2164,7 @@ void VSICurlStreamingClearCache( void )
         if( poFSHandler )
             poFSHandler->ClearCache();
     }
+    CSLDestroy(papszPrefix);
 }
 
 //! @endcond

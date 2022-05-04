@@ -49,6 +49,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
 #pragma clang diagnostic ignored "-Wdocumentation"
+#pragma clang diagnostic ignored "-Wold-style-cast"
 #endif
 #include "json.h"
 #ifdef __clang__
@@ -56,7 +57,7 @@
 #endif
 #include "ogrgeojsonwriter.h"
 
-CPL_CVSID("$Id: gdal_rat.cpp 63bfc5a68638c1bcb0efc729ca39e101ecf29691 2019-09-24 17:55:12 +0200 Even Rouault $")
+CPL_CVSID("$Id: gdal_rat.cpp abd9705eecbf1222ff3fe3a5ed19e3b5db6ed93c 2022-04-16 15:50:23 +0200 Even Rouault $")
 
 /**
  * \class GDALRasterAttributeTable
