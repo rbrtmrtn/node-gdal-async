@@ -14,7 +14,6 @@
 				"../gdal/frmts/zlib/compress.c",
 				"../gdal/frmts/zlib/infback.c",
 				"../gdal/frmts/zlib/uncompr.c",
-				"../gdal/frmts/zlib/gzio.c",
 				"../gdal/frmts/zlib/deflate.c",
 				"../gdal/frmts/zlib/trees.c",
 				"../gdal/frmts/zlib/inffast.c",
