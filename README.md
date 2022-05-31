@@ -235,7 +235,7 @@ Amazon Linux will be supported starting from `gdal-async@3.3.4`. There is no sha
 ## Bundled Drivers
 
 When using the bundled GDAL version, the following drivers will be available:
-`AAIGrid`, `ACE2`, `ADRG`, `AIG`, `AVCBin`, `AVCE00`, `AirSAR`, `BLX`, `BMP`, `BT`, `carto`, `CEOS`, `COASP`, `COSAR`, `CPG`, `CSV`, `CTG`, `CTable2`, `DGN`, `DIMAP`, `DIPEx`, `DOQ1`, `DOQ2`, `DTED`, `DXF`, `ECRGTOC`, `EDIGEO`, `EHdr`, `EIR`, `ELAS`, `ENVI`, `ERS`, `ESAT`, `ESRI Shapefile`, `MapInfo File`, `MBTiles`, `FAST`, `FIT`, `FlatGeobuf`, `FujiBAS`, `GFF`, `GML`, `GPSBabel`, `GPSTrackMaker`, `GPX`, `GRASSASCIIGrid`, `GRIB`, `GS7BG`, `GSAG`, `GSBG`, `GSC`, `GTX`, `GTiff`, `GenBin`, `GeoJSON`, `GeoRSS`, `Geoconcept`, `GPKG`, `HDF5`, `HF2`, `HFA`, `IDA`, `ILWIS`, `INGR`, `IRIS`, `ISIS2`, `ISIS3`, `Idrisi`, `JAXAPALSAR`, `JDEM`, `JPEG`, `KMLSUPEROVERLAY`, `KML`, `KRO`, `L1B`, `LAN`, `LCP`, `LOSLAS`, `Leveller`, `MAP`, `MEM`, `Memory`, `MFF2`, `MFF`, `MITAB`, `MVT`, `NDF`, `NetCDF`, `NGSGEOID`, `NITF`, `NTv2`, `NWT_GRC`, `NWT_GRD`, `OGR_GMT`, `OGR_PDS`, `OGR_SDTS`, `OGR_VRT`, `OpenJPEG`, `OSM`, `OpenFileGDB`, `PAux`, `PCIDSK`, `PDS`, `PGDUMP`, `PNG`, `PNM`, `REC`, `RMF`, `ROI_PAC`, `RPFTOC`, `RS2`, `RST`, `R`, `S57`, `SAGA`, `SAR_CEOS`, `SDTS`, `SGI`, `SNODAS`, `SQLite`, `SRP`, `SRTMHGT`, `SVG`, `SXF`, `TIL`, `TSX`, `Terragen`, `UK .NTF`, `USGSDEM`, `VICAR`, `VRT`, `vsiaz`, `vsicurl`, `vsigs`, `vsigzip`, `vsimem`, `vsioss`, `vsis3`, `WAsP`, `WCS`, `WMS`, `WMTS`, `XPM`, `XYZ`, `ZMap`
+`AAIGrid`, `ACE2`, `ADRG`, `AIG`, `AVCBin`, `AVCE00`, `AirSAR`, `BLX`, `BMP`, `BT`, `carto`, `CEOS`, `COASP`, `COSAR`, `CPG`, `CSV`, `CTG`, `CTable2`, `DGN`, `DIMAP`, `DIPEx`, `DOQ1`, `DOQ2`, `DTED`, `DXF`, `ECRGTOC`, `EDIGEO`, `EHdr`, `EIR`, `ELAS`, `ENVI`, `ERS`, `ESAT`, `ESRI Shapefile`, `MapInfo File`, `MBTiles`, `FAST`, `FIT`, `FlatGeobuf`, `GFF`, `GML`, `GPSBabel`, `GPSTrackMaker`, `GPX`, `GRASSASCIIGrid`, `GRIB`, `GS7BG`, `GSAG`, `GSBG`, `GSC`, `GTX`, `GTiff`, `GenBin`, `GeoJSON`, `GeoRSS`, `Geoconcept`, `GPKG`, `HDF5`, `HF2`, `HFA`, `ILWIS`, `IRIS`, `ISIS2`, `ISIS3`, `Idrisi`, `JAXAPALSAR`, `JDEM`, `JPEG`, `KMLSUPEROVERLAY`, `KML`, `KRO`, `L1B`, `LAN`, `LCP`, `LOSLAS`, `Leveller`, `MAP`, `MEM`, `Memory`, `MFF2`, `MFF`, `MITAB`, `MVT`, `NDF`, `NetCDF`, `NGSGEOID`, `NITF`, `NTv2`, `NWT_GRC`, `NWT_GRD`, `OGR_PDS`, `OGR_SDTS`, `OGR_VRT`, `OpenJPEG`, `OSM`, `OpenFileGDB`, `PAux`, `PCIDSK`, `PDS`, `PGDUMP`, `PNG`, `PNM`, `RMF`, `ROI_PAC`, `RPFTOC`, `RS2`, `RST`, `R`, `S57`, `SAGA`, `SAR_CEOS`, `SDTS`, `SGI`, `SNODAS`, `SQLite`, `SRP`, `SRTMHGT`, `SVG`, `SXF`, `TIL`, `TSX`, `Terragen`, `UK .NTF`, `USGSDEM`, `VICAR`, `VRT`, `vsiaz`, `vsicurl`, `vsigs`, `vsigzip`, `vsimem`, `vsioss`, `vsis3`, `WAsP`, `WCS`, `WMS`, `WMTS`, `XPM`, `XYZ`, `ZMap`
 
 When compiling against a system-installed shared GDAL, all drivers and projections supported by it, should also be supported by `gdal-async`.
 
@@ -270,45 +270,53 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 Release binaries with pre-built bundled GDAL are tested against the full matrix of:
 
-* Node.js versions: 12.x, 14.x, 16.x, 17.x
+* Node.js versions: 12.x, 14.x, 16.x, 17.x, 18.x
 * OS: Ubuntu 16.04, Ubuntu 18.04, Ubuntu 20.04, Ubuntu 21.10, CentOS 8 Stream, Fedora 33, Fedora 34, Debian 10 buster, Debian 11 bullseye, Arch Linux current, Amazon Linux, Windows Server 2019, macOS Catalina 10.15
 
 On Ubuntu 16.04, Amazon Linux, Windows and macOS only the bundled GDAL version is officially supported. On all other platforms both the bundled and the system-installed versions are supported.
+
+Node.js 17 on ArchLinux is not ABI compatible with the NodeSource binaries and requires rebuilding from source.
+
+On Linux, the binaries require glibc 2.23 (Ubuntu 16), except for Node.js 18 which requires glibc 2.28 (Ubuntu 20 / Debian 10).
 
 Development versions are unit tested for the following targets:
 
 ---
 | Node | OS | GDAL |
 | --- | --- | --- |
-| Node.js 14.x | CentOS 8 Stream | system-installed GDAL 3.0.4
-| Node.js 14.x | CentOS 8 Stream | bundled GDAL
-| Node.js 14.x | Debian 10 buster | system-installed GDAL 2.1.2 (*earliest unit-tested GDAL*)
-| Node.js 14.x | Debian 11 bullseye | system-installed GDAL 3.2.2
-| Node.js 14.x | Debian 11 bullseye | bundled GDAL
-| Node.js 14.x | Fedora 33 | system-installed GDAL 3.1.4
-| Node.js 14.x | Fedora 34 | system-installed GDAL 3.2.2
-| Node.js 14.x | Fedora 34 | bundled GDAL
-| Node.js 16.x | Arch Linux current | system installed GDAL 3.2.3
-| Node.js 16.x | Arch Linux current | bundled GDAL
-| Node.js 14.x | Ubuntu 16.04 | bundled GDAL (*glibc target platform*)
-| Node.js 14.x | Ubuntu 18.04 | system-installed GDAL 2.2.3
-| Node.js 14.x | Ubuntu 18.04 | bundled GDAL
+| Node.js 16.x | CentOS 8 Stream | system-installed GDAL 3.0.4
+| Node.js 16.x | CentOS 8 Stream | bundled GDAL
+| Node.js 16.x | Debian 10 buster | system-installed GDAL 2.1.2 (*earliest unit-tested GDAL*)
+| Node.js 16.x | Debian 11 bullseye | system-installed GDAL 3.2.2
+| Node.js 16.x | Debian 11 bullseye | bundled GDAL
+| Node.js 16.x | Fedora 33 | system-installed GDAL 3.1.4
+| Node.js 16.x | Fedora 34 | system-installed GDAL 3.2.2
+| Node.js 16.x | Fedora 34 | bundled GDAL
+| Node.js 18.x | Arch Linux current | system installed GDAL 3.2.3
+| Node.js 18.x | Arch Linux current | bundled GDAL (*requires rebuilding*)
+| Node.js 16.x | Ubuntu 16.04 | bundled GDAL (*glibc target platform*)
+| Node.js 16.x | Ubuntu 18.04 | system-installed GDAL 2.2.3
+| Node.js 16.x | Ubuntu 18.04 | bundled GDAL
 | Node.js 12.x | Ubuntu 20.04 | system-installed GDAL 3.0.4
 | Node.js 14.x | Ubuntu 20.04 | system-installed GDAL 3.0.4
 | Node.js 16.x | Ubuntu 20.04 | system-installed GDAL 3.0.4
 | Node.js 17.x | Ubuntu 20.04 | system-installed GDAL 3.0.4
+| Node.js 18.x | Ubuntu 20.04 | system-installed GDAL 3.0.4
+| Node.js 14.x | Ubuntu 22.04 | system-installed GDAL 3.4.1
 | Node.js 12.x | Ubuntu 20.04 | bundled GDAL
 | Node.js 14.x | Ubuntu 20.04 | bundled GDAL (*code coverage platform*)
 | Node.js 16.x | Ubuntu 20.04 | bundled GDAL
 | Node.js 17.x | Ubuntu 20.04 | bundled GDAL
+| Node.js 18.x | Ubuntu 20.04 | bundled GDAL
 | Node.js 14.x | Amazon Linux | bundled GDAL
 | Node.js 12.x | Windows Server 2019 | bundled GDAL
 | Node.js 14.x | Windows Server 2019 | bundled GDAL
 | Node.js 16.x | Windows Server 2019 | bundled GDAL
 | Node.js 17.x | Windows Server 2019 | bundled GDAL
+| Node.js 18.x | Windows Server 2019 | bundled GDAL
 | Node.js 12.x | macOS Catalina 10.15 | bundled GDAL
 | Node.js 14.x | macOS Catalina 10.15 | bundled GDAL
 | Node.js 16.x | macOS Catalina 10.15 | bundled GDAL
 | Node.js 17.x | macOS Catalina 10.15 | bundled GDAL
+| Node.js 18.x | macOS Catalina 10.15 | bundled GDAL
 ---
-

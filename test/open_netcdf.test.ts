@@ -3,7 +3,8 @@ import * as path from 'path'
 import { assert } from 'chai'
 
 describe('Open', () => {
-  afterEach(global.gc)
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  afterEach(global.gc!)
 
   describe('NetCDF', () => {
     let filename, ds: gdal.Dataset
@@ -33,10 +34,8 @@ describe('Open', () => {
       assert.closeTo(actual_geotransform[5], expected_geotransform[5], delta)
     })
 
-    if (gdal.bundled) {
-      it('on Linux, it should support should virtual IO', () => {
-        assert.equal(gdal.drivers.get('netcdf').getMetadata().DCAP_VIRTUALIO, 'YES')
-      })
-    }
+    it('on Linux, with bundled GDAL, it should support should virtual IO', () => {
+      assert.equal(gdal.drivers.get('netcdf').getMetadata().DCAP_VIRTUALIO, 'YES')
+    })
   })
 })

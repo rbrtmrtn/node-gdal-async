@@ -42,6 +42,7 @@
 #include <algorithm>
 #include <array>
 #include <limits>
+#include <set>
 #include <vector>
 
 // Suppress deprecation warning for GDALOpenVerticalShiftGrid and GDALApplyVerticalShiftGrid
@@ -71,7 +72,7 @@
 #define USE_PROJ_BASED_VERTICAL_SHIFT_METHOD
 #endif
 
-CPL_CVSID("$Id: gdalwarp_lib.cpp  $")
+CPL_CVSID("$Id$")
 
 /************************************************************************/
 /*                        GDALWarpAppOptions                            */
@@ -302,8 +303,7 @@ static double GetAverageSegmentLength(OGRGeometryH hGeom)
 /* option to determine the source SRS.                                  */
 /************************************************************************/
 
-static CPLString GetSrcDSProjection( GDALDatasetH hDS,
-                                       char** papszTO )
+static CPLString GetSrcDSProjection( GDALDatasetH hDS, char** papszTO )
 {
     const char *pszProjection = CSLFetchNameValue( papszTO, "SRC_SRS" );
     if( pszProjection != nullptr || hDS == nullptr )
@@ -559,27 +559,16 @@ GDALWarpAppOptions* GDALWarpAppOptionsClone(const GDALWarpAppOptions *psOptionsI
 
 #ifdef USE_PROJ_BASED_VERTICAL_SHIFT_METHOD
 
-/************************************************************************/
-/*                      ApplyVerticalShift()                            */
-/************************************************************************/
-
-static bool ApplyVerticalShift( GDALDatasetH hWrkSrcDS,
-                                const GDALWarpAppOptions* psOptions,
-                                GDALWarpOptions *psWO )
+static bool MustApplyVerticalShift( GDALDatasetH hWrkSrcDS,
+                                    const GDALWarpAppOptions* psOptions,
+                                    OGRSpatialReference& oSRSSrc,
+                                    OGRSpatialReference& oSRSDst,
+                                    bool& bSrcHasVertAxis,
+                                    bool& bDstHasVertAxis )
 {
-    bool bApplyVShift = false;
-
-    if( psOptions->bVShift )
-    {
-        bApplyVShift = true;
-        psWO->papszWarpOptions = CSLSetNameValue(psWO->papszWarpOptions,
-                                                 "APPLY_VERTICAL_SHIFT",
-                                                 "YES");
-    }
+    bool bApplyVShift = psOptions->bVShift;
 
     // Check if we must do vertical shift grid transform
-    OGRSpatialReference oSRSSrc;
-    OGRSpatialReference oSRSDst;
     const char* pszSrcWKT = CSLFetchNameValue(psOptions->papszTO, "SRC_SRS");
     if( pszSrcWKT )
         oSRSSrc.SetFromUserInput( pszSrcWKT );
@@ -594,13 +583,45 @@ static bool ApplyVerticalShift( GDALDatasetH hWrkSrcDS,
     if( pszDstWKT )
         oSRSDst.SetFromUserInput( pszDstWKT );
 
-    const bool bSrcHasVertAxis =
+    bSrcHasVertAxis =
         oSRSSrc.IsCompound() ||
         ((oSRSSrc.IsProjected() || oSRSSrc.IsGeographic()) && oSRSSrc.GetAxesCount() == 3);
 
-    const bool bDstHasVertAxis =
+    bDstHasVertAxis =
         oSRSDst.IsCompound() ||
         ((oSRSDst.IsProjected() || oSRSDst.IsGeographic()) && oSRSDst.GetAxesCount() == 3);
+
+    if( (GDALGetRasterCount(hWrkSrcDS) == 1 || psOptions->bVShift) &&
+        (bSrcHasVertAxis || bDstHasVertAxis) )
+    {
+        bApplyVShift = true;
+    }
+    return bApplyVShift;
+}
+
+/************************************************************************/
+/*                      ApplyVerticalShift()                            */
+/************************************************************************/
+
+static bool ApplyVerticalShift( GDALDatasetH hWrkSrcDS,
+                                const GDALWarpAppOptions* psOptions,
+                                GDALWarpOptions *psWO )
+{
+    if( psOptions->bVShift )
+    {
+        psWO->papszWarpOptions = CSLSetNameValue(psWO->papszWarpOptions,
+                                                 "APPLY_VERTICAL_SHIFT",
+                                                 "YES");
+    }
+
+    OGRSpatialReference oSRSSrc;
+    OGRSpatialReference oSRSDst;
+    bool bSrcHasVertAxis = false;
+    bool bDstHasVertAxis = false;
+    bool bApplyVShift = MustApplyVerticalShift( hWrkSrcDS, psOptions,
+                                                oSRSSrc, oSRSDst,
+                                                bSrcHasVertAxis,
+                                                bDstHasVertAxis );
 
     if( (GDALGetRasterCount(hWrkSrcDS) == 1 || psOptions->bVShift) &&
         (bSrcHasVertAxis || bDstHasVertAxis) )
@@ -645,10 +666,10 @@ static bool ApplyVerticalShift( GDALDatasetH hWrkSrcDS,
 
             if( dfToMeterSrc > 0 && dfToMeterDst > 0 )
             {
-                const double dfMultFactorVerticalShit = dfToMeterSrc / dfToMeterDst;
+                const double dfMultFactorVerticalShift = dfToMeterSrc / dfToMeterDst;
                 psWO->papszWarpOptions = CSLSetNameValue(
                     psWO->papszWarpOptions, "MULT_FACTOR_VERTICAL_SHIFT",
-                    CPLSPrintf("%.18g", dfMultFactorVerticalShit));
+                    CPLSPrintf("%.18g", dfMultFactorVerticalShift));
             }
         }
     }
@@ -1539,10 +1560,10 @@ static GDALDatasetH CreateOutput( const char* pszDest,
     }
 
     auto hDstDS = GDALWarpCreateOutput( nSrcCount, pahSrcDS, pszDest,psOptions->pszFormat,
-                                    psOptions->papszTO, psOptions->papszCreateOptions,
-                                    psOptions->eOutputType, &hUniqueTransformArg,
-                                    psOptions->bSetColorInterpretation,
-                                    psOptions);
+                                        psOptions->papszTO, psOptions->papszCreateOptions,
+                                        psOptions->eOutputType, &hUniqueTransformArg,
+                                        psOptions->bSetColorInterpretation,
+                                        psOptions);
     if(hDstDS == nullptr)
     {
         return nullptr;
@@ -2216,11 +2237,6 @@ GDALDatasetH GDALWarpDirect( const char *pszDest, GDALDatasetH hDstDS,
     const bool bDropDstDSRef = (hDstDS != nullptr);
     if( hDstDS != nullptr )
         GDALReferenceDataset(hDstDS);
-    GDALTransformerFunc pfnTransformer = nullptr;
-    void *hTransformArg = nullptr;
-    bool bHasGotErr = false;
-    bool bVRT = false;
-    OGRGeometryH hCutline = nullptr;
 
 #if defined(USE_PROJ_BASED_VERTICAL_SHIFT_METHOD)
     if( psOptions->bNoVShift )
@@ -2228,11 +2244,28 @@ GDALDatasetH GDALWarpDirect( const char *pszDest, GDALDatasetH hDstDS,
         psOptions->papszTO = CSLSetNameValue(psOptions->papszTO,
                                              "STRIP_VERT_CS", "YES");
     }
+    else if( nSrcCount )
+    {
+        bool bSrcHasVertAxis = false;
+        bool bDstHasVertAxis = false;
+        OGRSpatialReference oSRSSrc;
+        OGRSpatialReference oSRSDst;
+        
+        if( MustApplyVerticalShift( pahSrcDS[0], psOptions,
+                                    oSRSSrc, oSRSDst,
+                                    bSrcHasVertAxis,
+                                    bDstHasVertAxis ) )
+        {
+            psOptions->papszTO = CSLSetNameValue(psOptions->papszTO,
+                                                 "PROMOTE_TO_3D", "YES");
+        }
+    }
 #else
     psOptions->papszTO = CSLSetNameValue(psOptions->papszTO,
                                          "STRIP_VERT_CS", "YES");
 #endif
 
+    bool bVRT = false;
     if( !CheckOptions(pszDest, hDstDS, nSrcCount, pahSrcDS,
                       psOptions, bVRT, pbUsageError) )
     {
@@ -2243,6 +2276,7 @@ GDALDatasetH GDALWarpDirect( const char *pszDest, GDALDatasetH hDstDS,
 /*      If we have a cutline datasource read it and attach it in the    */
 /*      warp options.                                                   */
 /* -------------------------------------------------------------------- */
+    OGRGeometryH hCutline = nullptr;
     if( !ProcessCutlineOptions(nSrcCount, pahSrcDS, psOptions, hCutline) )
     {
         OGR_G_DestroyGeometry( hCutline );
@@ -2255,12 +2289,11 @@ GDALDatasetH GDALWarpDirect( const char *pszDest, GDALDatasetH hDstDS,
     void* hUniqueTransformArg = nullptr;
     const bool bInitDestSetByUser = ( CSLFetchNameValue( psOptions->papszWarpOptions, "INIT_DEST" ) != nullptr );
 
-    const bool bOutputBoundsAndResSetByUser =
-       ((psOptions->nForcePixels != 0 && psOptions->nForceLines != 0) ||
-        (psOptions->dfXRes != 0 && psOptions->dfYRes != 0)) &&
-        !(psOptions->dfMinX == 0.0 && psOptions->dfMinY == 0.0 &&
-            psOptions->dfMaxX == 0.0 && psOptions->dfMaxY == 0.0);
-    const bool bExistingOutputFile = (hDstDS != nullptr);
+    const bool bFigureoutCorrespondingWindow = (hDstDS != nullptr) ||
+        (((psOptions->nForcePixels != 0 && psOptions->nForceLines != 0) ||
+          (psOptions->dfXRes != 0 && psOptions->dfYRes != 0)) &&
+         !(psOptions->dfMinX == 0.0 && psOptions->dfMinY == 0.0 &&
+           psOptions->dfMaxX == 0.0 && psOptions->dfMaxY == 0.0));
 
     if( hDstDS == nullptr )
     {
@@ -2344,6 +2377,9 @@ GDALDatasetH GDALWarpDirect( const char *pszDest, GDALDatasetH hDstDS,
 /* -------------------------------------------------------------------- */
 /*      Loop over all source files, processing each in turn.            */
 /* -------------------------------------------------------------------- */
+    GDALTransformerFunc pfnTransformer = nullptr;
+    void *hTransformArg = nullptr;
+    bool bHasGotErr = false;
     for( int iSrc = 0; iSrc < nSrcCount; iSrc++ )
     {
         GDALDatasetH hSrcDS;
@@ -2439,19 +2475,18 @@ GDALDatasetH GDALWarpDirect( const char *pszDest, GDALDatasetH hDstDS,
             return nullptr;
         }
 
-        pfnTransformer = GDALGenImgProjTransform;
-
 /* -------------------------------------------------------------------- */
 /*      Determine if we must work with the full-resolution source       */
 /*      dataset, or one of its overview level.                          */
 /* -------------------------------------------------------------------- */
+        pfnTransformer = GDALGenImgProjTransform;
         GDALDataset* poSrcDS = static_cast<GDALDataset*>(hSrcDS);
         GDALDataset* poSrcOvrDS = nullptr;
         int nOvCount = poSrcDS->GetRasterBand(1)->GetOverviewCount();
         if( psOptions->nOvLevel <= -2 && nOvCount > 0 )
         {
             double dfTargetRatio = 0;
-            if( bOutputBoundsAndResSetByUser || bExistingOutputFile )
+            if( bFigureoutCorrespondingWindow )
             {
                 // If the user has explicitly set the target bounds and resolution,
                 // or we're updating an existing file, then figure out which
@@ -2715,7 +2750,7 @@ GDALDatasetH GDALWarpDirect( const char *pszDest, GDALDatasetH hDstDS,
 #ifdef USE_PROJ_BASED_VERTICAL_SHIFT_METHOD
         if( !psOptions->bNoVShift )
         {
-            // Can modify both psWO->papszWarpOptions
+            // Can modify psWO->papszWarpOptions
             if( ApplyVerticalShift( hWrkSrcDS, psOptions, psWO ) )
             {
                 bUseApproxTransformer = false;
@@ -3151,6 +3186,28 @@ GDALWarpCreateOutput( int nSrcCount, GDALDatasetH *pahSrcDS, const char *pszFile
 
     double dfResFromSourceAndTargetExtent = std::numeric_limits<double>::infinity();
 
+/* -------------------------------------------------------------------- */
+/*      Establish list of files of output dataset if it already exists. */
+/* -------------------------------------------------------------------- */
+    std::set<std::string> oSetExistingDestFiles;
+    {
+        CPLPushErrorHandler(CPLQuietErrorHandler);
+        const char* const apszAllowedDrivers[] = { pszFormat, nullptr };
+        auto poExistingOutputDS = std::unique_ptr<GDALDataset>(
+            GDALDataset::Open(pszFilename, GDAL_OF_RASTER, apszAllowedDrivers));
+        if( poExistingOutputDS )
+        {
+            char** papszFileList = poExistingOutputDS->GetFileList();
+            for( char** papszIter = papszFileList; papszIter && *papszIter; ++papszIter )
+            {
+                oSetExistingDestFiles.insert(CPLString(*papszIter).replaceAll('\\', '/'));
+            }
+            CSLDestroy(papszFileList);
+        }
+        CPLPopErrorHandler();
+    }
+    std::set<std::string> oSetExistingDestFilesFoundInSource;
+
     for( int iSrc = 0; iSrc < nSrcCount; iSrc++ )
     {
 /* -------------------------------------------------------------------- */
@@ -3163,6 +3220,36 @@ GDALWarpCreateOutput( int nSrcCount, GDALDatasetH *pahSrcDS, const char *pszFile
             if( hCT != nullptr )
                 GDALDestroyColorTable( hCT );
             return nullptr;
+        }
+
+/* -------------------------------------------------------------------- */
+/*      Check if the source dataset shares some files with the dest one.*/
+/* -------------------------------------------------------------------- */
+        if( !oSetExistingDestFiles.empty() )
+        {
+            // We need to reopen in a temporary dataset for the particular
+            // case of overwritten a .tif.ovr file from a .tif
+            // If we probe the file list of the .tif, it will then open the
+            // .tif.ovr !
+            auto poSrcDS = GDALDataset::FromHandle(hSrcDS);
+            const char* const apszAllowedDrivers[] = {
+                poSrcDS->GetDriver() ? poSrcDS->GetDriver()->GetDescription() : nullptr, nullptr };
+            auto poSrcDSTmp = std::unique_ptr<GDALDataset>(
+                GDALDataset::Open(poSrcDS->GetDescription(), GDAL_OF_RASTER, apszAllowedDrivers));
+            if( poSrcDSTmp )
+            {
+                char** papszFileList = poSrcDSTmp->GetFileList();
+                for( char** papszIter = papszFileList; papszIter && *papszIter; ++papszIter )
+                {
+                    CPLString osFilename(*papszIter);
+                    osFilename.replaceAll('\\', '/');
+                    if( oSetExistingDestFiles.find(osFilename) != oSetExistingDestFiles.end() )
+                    {
+                        oSetExistingDestFilesFoundInSource.insert(osFilename);
+                    }
+                }
+                CSLDestroy(papszFileList);
+            }
         }
 
         if( eDT == GDT_Unknown )
@@ -3469,6 +3556,21 @@ GDALWarpCreateOutput( int nSrcCount, GDALDatasetH *pahSrcDS, const char *pszFile
             GDALDestroyGenImgProjTransformer( hTransformArg );
         }
     }
+
+    // If the source file(s) and the dest one share some files in common,
+    // only remove the files that are *not* in common
+    if( !oSetExistingDestFilesFoundInSource.empty() )
+    {
+        for( const std::string& osFilename: oSetExistingDestFiles )
+        {
+            if( oSetExistingDestFilesFoundInSource.find(osFilename) ==
+                                    oSetExistingDestFilesFoundInSource.end() )
+            {
+                VSIUnlink(osFilename.c_str());
+            }
+        }
+    }
+
 
     if( std::isfinite(dfResFromSourceAndTargetExtent) )
     {

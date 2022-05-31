@@ -11,7 +11,8 @@ const WGS84 =
   'GEOGCS["WGS_84",DATUM["WGS_1984",SPHEROID["WGS_84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["Degree",0.0174532925199433],AXIS["Longitude",EAST],AXIS["Latitude",NORTH]]'
 
 describe('gdal.Geometry', () => {
-  afterEach(global.gc)
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  afterEach(global.gc!)
 
   describe('toJSON()', () => {
     it('should return valid result', () => {
@@ -1000,20 +1001,18 @@ describe('gdal.Geometry', () => {
         assert.equal(result.getArea(), 150)
       })
     })
-    if (gdal.bundled) {
-      it('makeValid', () => {
-        const json = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'makeValid.json'), 'utf-8'))
-        const invalid = gdal.Geometry.fromGeoJson(json)
-        const valid = invalid.makeValid()
-        assert.instanceOf(valid, gdal.GeometryCollection)
-        assert.closeTo((valid as gdal.GeometryCollection).getArea(), 0.012428372488501122, 1e-6)
-      })
-      it('makeValidAsync', () => {
-        const json = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'makeValid.json'), 'utf-8'))
-        const invalid = gdal.Geometry.fromGeoJson(json)
-        const valid = invalid.makeValidAsync()
-        return assert.eventually.instanceOf(valid, gdal.GeometryCollection)
-      })
-    }
+    it('with bundled GDAL, makeValid', () => {
+      const json = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'makeValid.json'), 'utf-8'))
+      const invalid = gdal.Geometry.fromGeoJson(json)
+      const valid = invalid.makeValid()
+      assert.instanceOf(valid, gdal.GeometryCollection)
+      assert.closeTo((valid as gdal.GeometryCollection).getArea(), 0.012428372488501122, 1e-6)
+    })
+    it('with bundled GDAL, makeValidAsync', () => {
+      const json = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'makeValid.json'), 'utf-8'))
+      const invalid = gdal.Geometry.fromGeoJson(json)
+      const valid = invalid.makeValidAsync()
+      return assert.eventually.instanceOf(valid, gdal.GeometryCollection)
+    })
   })
 })

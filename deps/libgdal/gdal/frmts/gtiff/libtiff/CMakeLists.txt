@@ -122,7 +122,7 @@ endif ()
 
 if (GDAL_USE_ZSTD)
   target_compile_definitions(libtiff PRIVATE -DZSTD_SUPPORT)
-  gdal_target_link_libraries(libtiff PRIVATE ${ZSTD_LIBRARIES})
+  gdal_target_link_libraries(libtiff PRIVATE ${ZSTD_TARGET})
 endif ()
 
 if (GDAL_USE_WEBP)
@@ -146,5 +146,5 @@ if (MSVC)
 endif ()
 
 set_target_properties(libtiff PROPERTIES CXX_STANDARD 11)
-set_property(TARGET libtiff PROPERTY POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS})
+set_property(TARGET libtiff PROPERTY POSITION_INDEPENDENT_CODE ${GDAL_OBJECT_LIBRARIES_POSITION_INDEPENDENT_CODE})
 target_sources(${GDAL_LIB_TARGET_NAME} PRIVATE $<TARGET_OBJECTS:libtiff>)

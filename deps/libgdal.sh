@@ -6,7 +6,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR/libgdal"
 
 GDAL_VERSION=3.5.0
-GDAL_VERSION_SUFFIX=git0
+GDAL_VERSION_SUFFIX=
 dir_gdal=./gdal
 dir_formats_gyp=./gyp-formats
 dir_gyp_templates=./gyp-templates
@@ -38,7 +38,7 @@ done
 GDAL_FORMATS="gtiff hfa aigrid aaigrid ceos ceos2 iso8211 xpm
 	sdts raw dted mem jdem envisat elas fit vrt usgsdem l1b
 	nitf bmp pcidsk airsar rs2 ilwis rmf leveller sgi srtmhgt
-	idrisi gsg ingr ers jaxapalsar dimap gff cosar pds adrg
+	idrisi gsg ers jaxapalsar dimap gff cosar pds adrg
 	coasp tsx terragen blx til r northwood saga xyz hf2
 	kmlsuperoverlay ctg zmap ngsgeoid iris map
 	jpeg openjpeg png mbtiles wms wmts hdf5 grib netcdf wcs
@@ -46,8 +46,8 @@ GDAL_FORMATS="gtiff hfa aigrid aaigrid ceos ceos2 iso8211 xpm
 	${OPT_GDAL_FORMATS:-}"
 
 OGR_FORMATS="shape vrt avc geojson mem mitab kml gpx
-	dxf csv edigeo geoconcept georss gml gmt gpsbabel gtm
-	idrisi dgn openfilegdb pds pgdump rec s57 sdts
+	dxf csv edigeo geoconcept georss gml gmt gpsbabel
+	idrisi dgn openfilegdb pds pgdump s57 sdts
 	svg sxf ntf wasp sqlite gpkg mvt osm flatgeobuf carto"
 
 mkdir -p $dir_formats_gyp

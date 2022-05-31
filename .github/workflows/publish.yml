@@ -3,7 +3,7 @@ name: Github packages publish
 on: workflow_dispatch
 
 jobs:
-  publish-linux:
+  publish-linux-glibc223:
 
     runs-on: ubuntu-latest
 
@@ -13,11 +13,30 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js 14.x
+    - name: Use Node.js 16.x
       uses: actions/setup-node@v1
       with:
-        node-version: 14.x
+        node-version: 16.x
     - run: npm run container publish ubuntu:16.04 ${{ matrix.node-version }}
+      env:
+        NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.NODE_PRE_GYP_GITHUB_TOKEN }}
+
+
+  publish-linux-glibc228:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18 ]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 16.x
+    - run: npm run container publish debian:buster ${{ matrix.node-version }}
       env:
         NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.NODE_PRE_GYP_GITHUB_TOKEN }}
 
@@ -28,7 +47,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 12.x, 14.x, 16.x, 17.x ]
+        node-version: [ 12.x, 14.x, 16.x, 17.x, 18.x ]
         platforms: [ windows-2019, macos-10.15 ]
 
     steps:
@@ -38,6 +57,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install --ignore-scripts
+    - run: npm install node-gyp
     - run: npx @mapbox/node-pre-gyp configure
     - run: npx @mapbox/node-pre-gyp build -j max
     - run: npm test

@@ -35,7 +35,7 @@
 
 #include "tiledb_headers.h"
 
-CPL_CVSID("$Id: tiledbdataset.cpp  $")
+CPL_CVSID("$Id$")
 
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -1418,7 +1418,8 @@ GDALDataset *TileDBDataset::Open( GDALOpenInfo * poOpenInfo )
         else
         {
             CPLError( CE_Failure, CPLE_AppDefined,
-                "Wrong number of dimensions %li expected 2 or 3.", dims.size() );
+                "Wrong number of dimensions %d: expected 2 or 3.",
+                static_cast<int>(dims.size()) );
             return nullptr;
         }
 

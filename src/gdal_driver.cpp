@@ -121,7 +121,7 @@ NAN_GETTER(Driver::descriptionGetter) {
 }
 
 /**
- * @throws Error
+ * @throws {Error}
  * @method deleteDataset
  * @instance
  * @memberof Driver
@@ -148,7 +148,7 @@ auto DatasetRval = [](GDALDataset *ds, const GetFromPersistentFunc &) { return D
 /**
  * Create a new dataset with this driver.
  *
- * @throws Error
+ * @throws {Error}
  * @method create
  * @instance
  * @memberof Driver
@@ -160,16 +160,16 @@ auto DatasetRval = [](GDALDataset *ds, const GetFromPersistentFunc &) { return D
  * @param {number} [band_count=0]
  * @param {number} [data_type=GDT_Byte] pixel data type (ignored for
  * vector datasets) (see {@link GDT|data types}
- * @param {string[]|object} [creation_options] An array or object containing
+ * @param {StringOptions} [creation_options] An array or object containing
  * driver-specific dataset creation options
- * @throws
+ * @throws {Error}
  * @return {Dataset}
  */
 
 /**
  * Asynchronously create a new dataset with this driver.
  *
- * @throws Error
+ * @throws {Error}
  * @method createAsync
  * @instance
  * @memberof Driver
@@ -181,10 +181,10 @@ auto DatasetRval = [](GDALDataset *ds, const GetFromPersistentFunc &) { return D
  * @param {number} [band_count=0]
  * @param {number} [data_type=GDT_Byte] pixel data type (ignored for
  * vector datasets) (see {@link GDT|data types}
- * @param {string[]|object} [creation_options] An array or object containing
+ * @param {StringOptions} [creation_options] An array or object containing
  * driver-specific dataset creation options
  * @param {callback<Dataset>} [callback=undefined]
- * @throws
+ * @throws {Error}
  * @return {Promise<Dataset>}
  */
 GDAL_ASYNCABLE_DEFINE(Driver::create) {
@@ -200,6 +200,7 @@ GDAL_ASYNCABLE_DEFINE(Driver::create) {
 
   if (info.Length() < 3) {
     if (info.Length() > 1 && options->parse(info[1])) {
+      Nan::ThrowError("Failed parsing options");
       return; // error parsing string list
     }
   } else {
@@ -240,13 +241,13 @@ GDAL_ASYNCABLE_DEFINE(Driver::create) {
 /**
  * Create a copy of a dataset.
  *
- * @throws Error
+ * @throws {Error}
  * @method createCopy
  * @instance
  * @memberof Driver
  * @param {string} filename
  * @param {Dataset} src
- * @param {string[]|object} [options=null] An array or object containing driver-specific dataset creation options
+ * @param {StringOptions} [options=null] An array or object containing driver-specific dataset creation options
  * @param {boolean} [strict=false] strict mode
  * @param {CreateOptions} [jsoptions] additional options
  * @param {ProgressCb} [jsoptions.progress_cb]
@@ -256,13 +257,13 @@ GDAL_ASYNCABLE_DEFINE(Driver::create) {
 /**
  * Asynchronously create a copy of a dataset.
  *
- * @throws Error
+ * @throws {Error}
  * @method createCopyAsync
  * @instance
  * @memberof Driver
  * @param {string} filename
  * @param {Dataset} src
- * @param {string[]|object} [options=null] An array or object containing driver-specific dataset creation options
+ * @param {StringOptions} [options=null] An array or object containing driver-specific dataset creation options
  * @param {boolean} [strict=false] strict mode
  * @param {CreateOptions} [jsoptions] additional options
  * @param {ProgressCb} [jsoptions.progress_cb]
@@ -297,6 +298,7 @@ GDAL_ASYNCABLE_DEFINE(Driver::createCopy) {
 
   options = new StringList;
   if (info.Length() > 2 && options->parse(info[2])) {
+    Nan::ThrowError("Failed parsing options");
     return; // error parsing string list
   }
 
@@ -329,7 +331,7 @@ GDAL_ASYNCABLE_DEFINE(Driver::createCopy) {
 /**
  * Copy the files of a dataset.
  *
- * @throws Error
+ * @throws {Error}
  * @method copyFiles
  * @instance
  * @memberof Driver
@@ -356,7 +358,7 @@ NAN_METHOD(Driver::copyFiles) {
 /**
  * Renames the dataset.
  *
- * @throws Error
+ * @throws {Error}
  * @method rename
  * @instance
  * @memberof Driver
@@ -383,7 +385,7 @@ NAN_METHOD(Driver::rename) {
 /**
  * Returns metadata about the driver.
  *
- * @throws Error
+ * @throws {Error}
  * @method getMetadata
  * @instance
  * @memberof Driver
@@ -407,26 +409,28 @@ NAN_METHOD(Driver::getMetadata) {
 /**
  * Opens a dataset.
  *
- * @throws Error
+ * @throws {Error}
  * @method open
  * @instance
  * @memberof Driver
  * @param {string} path
  * @param {string} [mode="r"] The mode to use to open the file: `"r"` or
  * `"r+"`
+ * @param {StringOptions} [options] Driver-specific open options
  * @return {Dataset}
  */
 
 /**
  * Opens a dataset.
  *
- * @throws Error
+ * @throws {Error}
  * @method openAsync
  * @instance
  * @memberof Driver
  * @param {string} path
  * @param {string} [mode="r"] The mode to use to open the file: `"r"` or
  * `"r+"`
+ * @param {StringOptions} [options] Driver-specific open options
  * @param {callback<Dataset>} [callback=undefined]
  * @return {Promise<Dataset>}
  */
@@ -447,14 +451,21 @@ GDAL_ASYNCABLE_DEFINE(Driver::open) {
     return;
   }
 
+  StringList *options = new StringList;
+  if (info.Length() > 2 && options->parse(info[2])) {
+    Nan::ThrowError("Failed parsing options");
+    return; // error parsing string list
+  }
+
   GDALDriver *raw = driver->getGDALDriver();
 
   GDALAsyncableJob<GDALDataset *> job(0);
   job.persist(driver->handle());
-  job.main = [raw, path, access](const GDALExecutionProgress &) {
+  job.main = [raw, path, access, options](const GDALExecutionProgress &) {
+    std::unique_ptr<StringList> options_ptr(options);
     const char *driver_list[2] = {raw->GetDescription(), nullptr};
     CPLErrorReset();
-    GDALDataset *ds = (GDALDataset *)GDALOpenEx(path.c_str(), access, driver_list, NULL, NULL);
+    GDALDataset *ds = (GDALDataset *)GDALOpenEx(path.c_str(), access, driver_list, options->get(), NULL);
     if (!ds) throw CPLGetLastErrorMsg();
     return ds;
   };

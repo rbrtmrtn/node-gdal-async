@@ -3,11 +3,19 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+and this project adh
 
-# [3.5.0] WIP
- - GDAL 3.5.0-git
- - PROJ 8.2.1
+## [3.5.1]
+ - Fix #27, building for Electron fails on Windows
+
+# [3.5.0] 2022-05-18
+
+### Added
+ - GDAL 3.5.0
+ - PROJ 9.0.0
+ - NetCDF 4.8.1
+ - GEOS 3.10.2
+ - Node 18 support
  - API documentation now uses `documentation.js` with `documentation-polyglot`
  - Add `gdal.addPixelFunc` for registering a native code pixel function
  - Add `gdal.toPixelFunc` and `gdal.createPixelFunc` allowing to use a JavaScript function as a pixel function
@@ -15,11 +23,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - `gdal.calcAsync` can now call a progress callback
  - Add `gdal.buildVRT` and `gdal.rasterize`, library versions of the GDAL CLI tools
  - Add `gdal.wrapVRT` allowing wrapping a regular Dataset inside a VRT Dataset
+ - Support using driver-specific open options in `gdal.Driver.open`
 
-## [3.4.2] WIP
- - Fix #27, building for Electron fails on Windows
+### Changed
+ - All `gdal.Driver` methods now throw an exception if the parsing of the driver-specific options fails
+
+## [3.4.3] 2021-05-04
+
+### Added
+ - Bundled GDAL 3.4.3
+
+## [3.4.2] 2021-03-15
+
+### Added
+ - Bundled GDAL 3.4.2
+
+### Changed
  - Fix #27, rebuilding by `npm --build-from-source` fails
- - Support the ArchLinux Node.js 17 ABI - see https://github.com/nodejs/node/issues/41410
  - Fix #25, always close open Datasets when the process exits
  - `gdal.calcAsync` now correctly returns a rejected Promise instead of triggering an uncatchable error when handling an exception in the user-supplied transformation function
  - Fix #26, some methods do not check the passed object class

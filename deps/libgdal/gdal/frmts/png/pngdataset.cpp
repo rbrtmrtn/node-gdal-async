@@ -50,7 +50,7 @@
 
 #include <algorithm>
 
-CPL_CVSID("$Id: pngdataset.cpp  $")
+CPL_CVSID("$Id$")
 
 // Note: Callers must provide blocks in increasing Y order.
 // Disclaimer (E. Rouault): this code is not production ready at all. A lot of
@@ -1446,8 +1446,8 @@ PNGDataset::CreateCopy( const char * pszFilename, GDALDataset *poSrcDS,
     if( fpImage == nullptr )
     {
         CPLError( CE_Failure, CPLE_OpenFailed,
-                  "Unable to create png file %s.\n",
-                  pszFilename );
+                  "Unable to create png file %s: %s\n",
+                  pszFilename, VSIStrerror(errno) );
         return nullptr;
     }
 
@@ -2443,8 +2443,8 @@ GDALDataset *PNGDataset::Create
     if( poDS->m_fpImage == NULL )
     {
         CPLError( CE_Failure, CPLE_OpenFailed,
-                  "Unable to create PNG file %s.\n",
-                  pszFilename );
+                  "Unable to create PNG file %s: %s\n",
+                  pszFilename, VSIStrerror(errno) );
         delete poDS;
         return NULL;
     }

@@ -107,7 +107,7 @@ set(CPL_SOURCES
 add_library(cpl OBJECT ${CPL_SOURCES})
 target_sources(${GDAL_LIB_TARGET_NAME} PRIVATE $<TARGET_OBJECTS:cpl>)
 target_compile_options(cpl PRIVATE ${GDAL_CXX_WARNING_FLAGS} ${WFLAG_OLD_STYLE_CAST} ${WFLAG_EFFCXX})
-set_property(TARGET cpl PROPERTY POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS})
+set_property(TARGET cpl PROPERTY POSITION_INDEPENDENT_CODE ${GDAL_OBJECT_LIBRARIES_POSITION_INDEPENDENT_CODE})
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.16)
   # Part of those files have CPL_CVSID() which break UNITY_BUILD
   set_property(TARGET cpl PROPERTY SKIP_UNITY_BUILD_INCLUSION ON)
@@ -123,6 +123,13 @@ if ((EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/cpl_config.h") AND NOT ("${CMAKE_CURREN
       "${CMAKE_CURRENT_SOURCE_DIR}/cpl_config.h was found, and likely conflicts with ${CMAKE_CURRENT_BINARY_DIR}/cpl_config.h"
     )
 endif ()
+
+file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}/${GDAL_RESOURCE_PATH}" INST_DATA_PATH)
+target_compile_definitions(cpl PRIVATE INST_DATA="${INST_DATA_PATH}")
+
+if(CMAKE_INSTALL_FULL_SYSCONFDIR)
+    target_compile_definitions(cpl PRIVATE SYSCONFDIR="${CMAKE_INSTALL_FULL_SYSCONFDIR}")
+endif()
 
 if (WIN32)
   target_sources(cpl PRIVATE cpl_vsil_win32.cpp)
@@ -156,7 +163,7 @@ endif ()
 
 # Now external libraries
 if (NOT GDAL_USE_JSONC_INTERNAL)
-  gdal_target_link_libraries(cpl PRIVATE ${JSONC_LIBRARIES})
+  gdal_target_link_libraries(cpl PRIVATE ${JSONC_TARGET})
 endif ()
 
 if (NOT GDAL_USE_ZLIB_INTERNAL)
@@ -257,7 +264,7 @@ endif ()
 
 if (GDAL_USE_ZSTD)
   target_compile_definitions(cpl PRIVATE -DHAVE_ZSTD)
-  gdal_target_link_libraries(cpl PRIVATE ${ZSTD_LIBRARIES})
+  gdal_target_link_libraries(cpl PRIVATE ${ZSTD_TARGET})
 endif ()
 
 if (GDAL_USE_LIBLZMA)

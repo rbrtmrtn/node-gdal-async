@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: gdal_alg_priv.h  $
+ * $Id$
  *
  * Project:  GDAL Image Processing Algorithms
  * Purpose:  Prototypes and definitions for various GDAL based algorithms:
@@ -34,6 +34,8 @@
 
 #ifndef DOXYGEN_SKIP
 
+#include <cstdint>
+
 #include "gdal_alg.h"
 #include "ogr_spatialref.h"
 
@@ -60,7 +62,12 @@ typedef struct {
     int nPixelSpace;
     GSpacing nLineSpace;
     GSpacing nBandSpace;
-    const double *padfBurnValue;
+    GDALDataType eBurnValueType;
+    union
+    {
+        const std::int64_t* int64_values;
+        const double *double_values;
+    } burnValues;
     GDALBurnValueSrc eBurnValueSource;
     GDALRasterMergeAlg eMergeAlg;
 } GDALRasterizeInfo;
@@ -146,10 +153,10 @@ public:
 
 struct IntEqualityTest
 {
-    bool operator()(GInt32 a, GInt32 b) const { return a == b; }
+    bool operator()(std::int64_t a, std::int64_t b) const { return a == b; }
 };
 
-typedef GDALRasterPolygonEnumeratorT<GInt32, IntEqualityTest> GDALRasterPolygonEnumerator;
+typedef GDALRasterPolygonEnumeratorT<std::int64_t, IntEqualityTest> GDALRasterPolygonEnumerator;
 
 typedef void* (*GDALTransformDeserializeFunc)( CPLXMLNode *psTree );
 
@@ -180,18 +187,22 @@ int GDALTransformLonLatToDestApproxTransformer(void* hTransformArg,
 bool GDALTransformIsTranslationOnPixelBoundaries(GDALTransformerFunc pfnTransformer,
                                                  void                *pTransformerArg);
 
+typedef struct _CPLQuadTree CPLQuadTree;
+
 typedef struct {
     GDALTransformerInfo sTI;
 
     bool        bReversed;
+    double      dfOversampleFactor;
 
     // Map from target georef coordinates back to geolocation array
     // pixel line coordinates.  Built only if needed.
-    size_t      nBackMapWidth;
-    size_t      nBackMapHeight;
+    int         nBackMapWidth;
+    int         nBackMapHeight;
     double      adfBackMapGeoTransform[6];  // Maps georef to pixel/line.
-    float       *pafBackMapX;
-    float       *pafBackMapY;
+
+    bool        bUseArray;
+    void       *pAccessors;
 
     // Geolocation bands.
     GDALDatasetH     hDS_X;
@@ -201,10 +212,8 @@ typedef struct {
     int              bSwapXY;
 
     // Located geolocation data.
-    size_t           nGeoLocXSize;
-    size_t           nGeoLocYSize;
-    double           *padfGeoLocX;
-    double           *padfGeoLocY;
+    int              nGeoLocXSize;
+    int              nGeoLocYSize;
     double           dfMinX;
     double           dfYAtMinX;
     double           dfMinY;
@@ -222,6 +231,10 @@ typedef struct {
     double           dfPIXEL_STEP;
     double           dfLINE_OFFSET;
     double           dfLINE_STEP;
+
+    bool             bOriginIsTopLeftCorner;
+    bool             bGeographicSRSWithMinus180Plus180LongRange;
+    CPLQuadTree     *hQuadTree;
 
     char **          papszGeolocationInfo;
 
@@ -304,6 +317,11 @@ bool GDALComputeAreaOfInterest(OGRSpatialReference* poSRS,
                                double& dfEastLongitudeDeg,
                                double& dfNorthLatitudeDeg );
 
+void *GDALCreateGeoLocTransformerEx( GDALDatasetH hBaseDS,
+                                     char **papszGeolocationInfo,
+                                     int bReversed,
+                                     const char* pszSourceDataset,
+                                     CSLConstList papszTransformOptions );
 
 #endif /* #ifndef DOXYGEN_SKIP */
 

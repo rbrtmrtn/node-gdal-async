@@ -55,7 +55,7 @@
 
 // #define IMMEDIATE_OPENING 1
 
-CPL_CVSID("$Id: ogrshapedatasource.cpp  $")
+CPL_CVSID("$Id$")
 
 constexpr int knREFRESH_LOCK_FILE_DELAY_SEC = 10;
 
@@ -1114,7 +1114,7 @@ OGRLayer * OGRShapeDataSource::ExecuteSQL( const char *pszStatement,
 {
     if( EQUAL(pszStatement, "UNCOMPRESS") )
     {
-        UncompressIfNeeded();
+        CPL_IGNORE_RET_VAL(UncompressIfNeeded());
         return nullptr;
     }
 

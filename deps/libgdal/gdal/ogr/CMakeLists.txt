@@ -53,7 +53,6 @@ add_library(
   gml2ogrgeometry.cpp
   ogr_expat.cpp
   ogrpgeogeometry.cpp
-  ogrgeomediageometry.cpp
   ogr_geocoding.cpp
   ogrgeomfielddefn.cpp
   ograpispy.cpp
@@ -76,7 +75,7 @@ include(GdalStandardIncludes)
 gdal_standard_includes(ogr)
 target_compile_options(ogr PRIVATE ${GDAL_CXX_WARNING_FLAGS} ${WFLAG_OLD_STYLE_CAST} ${WFLAG_EFFCXX})
 target_include_directories(ogr PRIVATE $<TARGET_PROPERTY:ogr_geojson,SOURCE_DIR> $<TARGET_PROPERTY:ogr_MEM,SOURCE_DIR>)
-set_property(TARGET ogr PROPERTY POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS})
+set_property(TARGET ogr PROPERTY POSITION_INDEPENDENT_CODE ${GDAL_OBJECT_LIBRARIES_POSITION_INDEPENDENT_CODE})
 target_sources(${GDAL_LIB_TARGET_NAME} PRIVATE $<TARGET_OBJECTS:ogr>)
 
 if (GDAL_USE_ZLIB_INTERNAL)
@@ -94,7 +93,7 @@ gdal_target_link_libraries(ogr PRIVATE PROJ::proj)
 # External libs then
 if (GDAL_USE_GEOS)
   target_compile_definitions(ogr PRIVATE -DHAVE_GEOS=1)
-  gdal_target_link_libraries(ogr PRIVATE ${GEOS_LIBRARIES})
+  gdal_target_link_libraries(ogr PRIVATE ${GEOS_TARGET})
 endif ()
 
 if (GDAL_USE_SFCGAL)
@@ -123,7 +122,7 @@ endif ()
 
 if (GDAL_USE_EXPAT)
   target_compile_definitions(ogr PRIVATE -DHAVE_EXPAT)
-  gdal_target_link_libraries(ogr PRIVATE ${EXPAT_LIBRARIES})
+  gdal_target_link_libraries(ogr PRIVATE ${EXPAT_TARGET})
 endif ()
 
 if (GDAL_USE_XERCESC)
@@ -133,7 +132,7 @@ if (GDAL_USE_XERCESC)
 endif ()
 
 if (NOT GDAL_USE_JSONC_INTERNAL)
-  gdal_target_link_libraries(ogr PRIVATE ${JSONC_LIBRARIES})
+  gdal_target_link_libraries(ogr PRIVATE ${JSONC_TARGET})
 endif ()
 
 include(TargetPublicHeader)

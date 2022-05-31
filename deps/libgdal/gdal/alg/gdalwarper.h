@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: gdalwarper.h  $
+ * $Id$
  *
  * Project:  GDAL High Performance Warper
  * Purpose:  Prototypes, and definitions for warping related work.
@@ -429,7 +429,7 @@ public:
 
     bool                bApplyVerticalShift = false;
 
-    double              dfMultFactorVerticalShit = 1.0;
+    double              dfMultFactorVerticalShift = 1.0;
 /*! @endcond */
 
                        GDALWarpKernel();

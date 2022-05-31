@@ -54,7 +54,7 @@ target_include_directories(
   PRIVATE $<TARGET_PROPERTY:ogrsf_generic,SOURCE_DIR> $<TARGET_PROPERTY:ogr_geojson,SOURCE_DIR>
           $<TARGET_PROPERTY:gdal_GTIFF,SOURCE_DIR> $<TARGET_PROPERTY:gdal_MEM,SOURCE_DIR>
           $<TARGET_PROPERTY:gdal_vrt,SOURCE_DIR>)
-set_property(TARGET gcore PROPERTY POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS})
+set_property(TARGET gcore PROPERTY POSITION_INDEPENDENT_CODE ${GDAL_OBJECT_LIBRARIES_POSITION_INDEPENDENT_CODE})
 
 if (NOT DEFINED GDAL_RESOURCE_PATH)
   message(FATAL_ERROR "GDAL_RESOURCE_PATH not set")
@@ -104,7 +104,7 @@ add_subdirectory(mdreader)
 
 # External libs now
 if (NOT GDAL_USE_JSONC_INTERNAL)
-  gdal_target_link_libraries(gcore PRIVATE ${JSONC_LIBRARIES})
+  gdal_target_link_libraries(gcore PRIVATE ${JSONC_TARGET})
 endif ()
 
 if (NOT DEFINED OGR_ENABLE_DRIVER_SQLITE)
@@ -128,7 +128,7 @@ if (GDAL_USE_LIBXML2)
 endif ()
 if (GDAL_USE_GEOS)
   target_compile_definitions(gcore PRIVATE -DHAVE_GEOS)
-  gdal_target_link_libraries(gcore PRIVATE ${GEOS_LIBRARIES})
+  gdal_target_link_libraries(gcore PRIVATE ${GEOS_TARGET})
 endif ()
 
 gdal_target_link_libraries(gcore PRIVATE PROJ::proj)
@@ -153,7 +153,7 @@ target_public_header(
   gdal_priv.h
   gdal_proxy.h
   gdal_rat.h
+  gdalcachedpixelaccessor.h
   rawdataset.h
   gdalgeorefpamdataset.h
-  gdal_mdreader.h
-  gdal_pam.h)
+  gdal_mdreader.h)

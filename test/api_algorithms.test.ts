@@ -7,7 +7,8 @@ import * as chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
 
 describe('gdal', () => {
-  afterEach(global.gc)
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  afterEach(global.gc!)
 
   describe('contourGenerate()', () => {
     let src: gdal.Dataset, srcband: gdal.RasterBand, dst: gdal.Dataset, lyr: gdal.Layer
@@ -54,10 +55,10 @@ describe('gdal', () => {
         elevField: 1
       })
 
-      assert(lyr.features.count() > 0, 'features were created')
+      assert.isTrue(lyr.features.count() > 0, 'features were created')
 
       lyr.features.forEach((feature) => {
-        assert(
+        assert.isTrue(
           (feature.fields.get('elev') - offset) % interval === 0,
           'contour used correct interval / base'
         )
@@ -76,7 +77,7 @@ describe('gdal', () => {
         elevField: 1
       })
 
-      assert(lyr.features.count() > 0, 'features were created')
+      assert.isTrue(lyr.features.count() > 0, 'features were created')
 
       const actual_levels = [] as number[]
 
