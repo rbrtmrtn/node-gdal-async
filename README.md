@@ -228,7 +228,7 @@ Amazon Linux will be supported starting from `gdal-async@3.3.4`. There is no sha
 
 ### Using with Electron
 
-Refer to the provided example in `examples/electron`. `gdal-async`, as well as all other Nan-based native modules, is not compatible with Electron on Windows due to [#29893](https://github.com/electron/electron/issues/29893). Also `https` is not supported when running in Electron.
+Refer to the provided example in `examples/electron`. Prepare for some very rough edge on Windows due to [#29893](https://github.com/electron/electron/issues/29893). Also `https` is not supported when running in Electron.
 
 ## Known issues
 
