@@ -2,37 +2,38 @@
 #define __NODE_GDAL_LINESTRING_POINTS_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "../nan-wrapper.h"
+#include <napi.h>
 
 // gdal
 #include <gdal_priv.h>
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 // LineString.children
 
 namespace node_gdal {
 
-class LineStringPoints : public Nan::ObjectWrap {
+class LineStringPoints : public Napi::ObjectWrap<LineStringPoints> {
     public:
-  static Nan::Persistent<FunctionTemplate> constructor;
+  static Napi::FunctionReference constructor;
 
-  static void Initialize(Local<Object> target);
-  static NAN_METHOD(New);
-  static Local<Value> New(Local<Value> geom);
-  static NAN_METHOD(toString);
+  static void Initialize(Napi::Object target);
+  static Napi::Value New(const Napi::CallbackInfo &info);
+  static Napi::Value New(Napi::Value geom);
+  static Napi::Value toString(const Napi::CallbackInfo &info);
 
-  static NAN_METHOD(add);
-  static NAN_METHOD(get);
-  static NAN_METHOD(set);
-  static NAN_METHOD(count);
-  static NAN_METHOD(reverse);
-  static NAN_METHOD(resize);
+  static Napi::Value add(const Napi::CallbackInfo &info);
+  static Napi::Value get(const Napi::CallbackInfo &info);
+  static Napi::Value set(const Napi::CallbackInfo &info);
+  static Napi::Value count(const Napi::CallbackInfo &info);
+  static Napi::Value reverse(const Napi::CallbackInfo &info);
+  static Napi::Value resize(const Napi::CallbackInfo &info);
 
   LineStringPoints();
 

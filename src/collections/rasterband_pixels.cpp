@@ -8,17 +8,16 @@
 
 namespace node_gdal {
 
-Nan::Persistent<FunctionTemplate> RasterBandPixels::constructor;
+Napi::FunctionReference RasterBandPixels::constructor;
 
-void RasterBandPixels::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void RasterBandPixels::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(RasterBandPixels::New);
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("RasterBandPixels").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, RasterBandPixels::New);
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
-  Nan__SetPrototypeAsyncableMethod(lcons, "get", get);
+  lcons->SetClassName(Napi::String::New(env, "RasterBandPixels"));
+
+  InstanceMethod("toString", &toString), Nan__SetPrototypeAsyncableMethod(lcons, "get", get);
   Nan__SetPrototypeAsyncableMethod(lcons, "set", set);
   Nan__SetPrototypeAsyncableMethod(lcons, "read", read);
   Nan__SetPrototypeAsyncableMethod(lcons, "write", write);
@@ -28,23 +27,23 @@ void RasterBandPixels::Initialize(Local<Object> target) {
 
   ATTR_DONT_ENUM(lcons, "band", bandGetter, READ_ONLY_SETTER);
 
-  Nan::Set(target, Nan::New("RasterBandPixels").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  (target).Set(Napi::String::New(env, "RasterBandPixels"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
 
-RasterBandPixels::RasterBandPixels() : Nan::ObjectWrap() {
+RasterBandPixels::RasterBandPixels() : Napi::ObjectWrap<RasterBandPixels>() {
 }
 
 RasterBandPixels::~RasterBandPixels() {
 }
 
-RasterBand *RasterBandPixels::parent(const Nan::FunctionCallbackInfo<v8::Value> &info) {
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  RasterBand *band = Nan::ObjectWrap::Unwrap<RasterBand>(parent);
+RasterBand *RasterBandPixels::parent(const Napi::CallbackInfo &info) {
+  Napi::Object parent = Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  RasterBand *band = parent.Unwrap<RasterBand>();
   if (!band->isAlive()) {
-    Nan::ThrowError("RasterBand object has already been destroyed");
+    Napi::Error::New(env, "RasterBand object has already been destroyed").ThrowAsJavaScriptException();
+
     return nullptr;
   }
   return band;
@@ -65,41 +64,41 @@ RasterBand *RasterBandPixels::parent(const Nan::FunctionCallbackInfo<v8::Value> 
  *
  * @class RasterBandPixels
  */
-NAN_METHOD(RasterBandPixels::New) {
+Napi::Value RasterBandPixels::New(const Napi::CallbackInfo &info) {
 
   if (!info.IsConstructCall()) {
-    Nan::ThrowError("Cannot call constructor as function, you need to use 'new' keyword");
-    return;
+    Napi::Error::New(env, "Cannot call constructor as function, you need to use 'new' keyword")
+      .ThrowAsJavaScriptException();
+    return env.Null();
   }
-  if (info[0]->IsExternal()) {
-    Local<External> ext = info[0].As<External>();
+  if (info[0].IsExternal()) {
+    Napi::External ext = info[0].As<Napi::External>();
     void *ptr = ext->Value();
     RasterBandPixels *f = static_cast<RasterBandPixels *>(ptr);
     f->Wrap(info.This());
-    info.GetReturnValue().Set(info.This());
+    return info.This();
     return;
   } else {
-    Nan::ThrowError("Cannot create RasterBandPixels directly");
-    return;
+    Napi::Error::New(env, "Cannot create RasterBandPixels directly").ThrowAsJavaScriptException();
+    return env.Null();
   }
 }
 
-Local<Value> RasterBandPixels::New(Local<Value> band_obj) {
-  Nan::EscapableHandleScope scope;
+Napi::Value RasterBandPixels::New(Napi::Value band_obj) {
+  Napi::Env env = band_obj.Env();
+  Napi::EscapableHandleScope scope(env);
 
   RasterBandPixels *wrapped = new RasterBandPixels();
 
-  v8::Local<v8::Value> ext = Nan::New<External>(wrapped);
-  v8::Local<v8::Object> obj =
-    Nan::NewInstance(Nan::GetFunction(Nan::New(RasterBandPixels::constructor)).ToLocalChecked(), 1, &ext)
-      .ToLocalChecked();
-  Nan::SetPrivate(obj, Nan::New("parent_").ToLocalChecked(), band_obj);
+  Napi::Value ext = Napi::External::New(env, wrapped);
+  Napi::Object obj = Napi::NewInstance(Napi::GetFunction(Napi::New(env, RasterBandPixels::constructor)), 1, &ext);
+  Napi::SetPrivate(obj, Napi::String::New(env, "parent_"), band_obj);
 
   return scope.Escape(obj);
 }
 
-NAN_METHOD(RasterBandPixels::toString) {
-  info.GetReturnValue().Set(Nan::New("RasterBandPixels").ToLocalChecked());
+Napi::Value RasterBandPixels::toString(const Napi::CallbackInfo &info) {
+  return Napi::String::New(env, "RasterBandPixels");
 }
 
 /**
@@ -148,7 +147,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::get) {
     return val;
   };
 
-  job.rval = [](double val, const GetFromPersistentFunc &) { return Nan::New<Number>(val); };
+  job.rval = [](double val, const GetFromPersistentFunc &) { return Napi::Number::New(env, val); };
   job.run(info, async, 2);
 }
 
@@ -199,14 +198,15 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::set) {
     return err;
   };
 
-  job.rval = [](CPLErr r, const GetFromPersistentFunc &) { return Nan::Undefined(); };
+  job.rval = [](CPLErr r, const GetFromPersistentFunc &) { return env.Undefined(); };
   job.run(info, async, 3);
 }
 
-inline GDALRIOResampleAlg parseResamplingAlg(Local<Value> value) {
-  if (value->IsUndefined() || value->IsNull()) { return GRIORA_NearestNeighbour; }
-  if (!value->IsString()) { throw "resampling property must be a string"; }
-  std::string name = *Nan::Utf8String(value);
+inline GDALRIOResampleAlg parseResamplingAlg(Napi::Value value) {
+  Napi::Env env = value.Env();
+  if (value.IsNull() || value.IsNull()) { return GRIORA_NearestNeighbour; }
+  if (!value.IsString()) { throw "resampling property must be a string"; }
+  std::string name = value.As<Napi::String>().Utf8Value().c_str();
 
   if (name == "NearestNeighbor") { return GRIORA_NearestNeighbour; }
   if (name == "NearestNeighbour") { return GRIORA_NearestNeighbour; }
@@ -330,9 +330,9 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::read) {
   int pixel_space, line_space;
   int size, length, offset;
   void *data;
-  Local<Value> array;
-  Local<Object> obj;
-  Nan::Callback *cb = nullptr;
+  Napi::Value array;
+  Napi::Object obj;
+  Napi::FunctionReference *cb = nullptr;
   GDALDataType type;
 
   NODE_ARG_INT(0, "x_offset", x);
@@ -350,12 +350,12 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::read) {
   NODE_ARG_OPT_STR(7, "data_type", type_name);
   if (!type_name.empty()) { type = GDALGetDataTypeByName(type_name.c_str()); }
 
-  if (!info[4]->IsUndefined() && !info[4]->IsNull()) {
+  if (!info[4].IsUndefined() && !info[4].IsNull()) {
     NODE_ARG_OBJECT(4, "data", obj);
     type = TypedArray::Identify(obj);
     if (type == GDT_Unknown) {
-      Nan::ThrowError("Invalid array");
-      return;
+      Napi::Error::New(env, "Invalid array").ThrowAsJavaScriptException();
+      return env.Null();
     }
   }
 
@@ -369,15 +369,15 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::read) {
   try {
     resampling = parseResamplingAlg(info[10]);
   } catch (const char *e) {
-    Nan::ThrowError(e);
-    return;
+    Napi::Error::New(env, e).ThrowAsJavaScriptException();
+    return env.Null();
   }
   offset = 0;
   NODE_ARG_INT_OPT(12, "offset", offset);
 
   if (findLowest(buffer_w, buffer_h, pixel_space, line_space, offset) < 0) {
-    Nan::ThrowError("has to write before the start of the TypedArray");
-    return;
+    Napi::Error::New(env, "has to write before the start of the TypedArray").ThrowAsJavaScriptException();
+    return env.Null();
   }
   size = findHighest(buffer_w, buffer_h, pixel_space, line_space, offset) + 1;
   // length (elements) = size / bytes_per_pixel + 1 more if it is not a perfect fit
@@ -386,10 +386,10 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::read) {
   // create array if no array was passed
   if (obj.IsEmpty()) {
     array = TypedArray::New(type, length);
-    if (array.IsEmpty() || !array->IsObject()) {
+    if (array.IsEmpty() || !array.IsObject()) {
       return; // TypedArray::New threw an error
     }
-    obj = array.As<Object>();
+    obj = array.As<Napi::Object>();
   }
 
   data = TypedArray::Validate(obj, type, length);
@@ -489,9 +489,9 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::write) {
   int pixel_space, line_space;
   int size, length, offset;
   void *data;
-  Local<Object> passed_array;
+  Napi::Object passed_array;
   GDALDataType type;
-  Nan::Callback *cb = nullptr;
+  Napi::FunctionReference *cb = nullptr;
 
   NODE_ARG_INT(0, "x_offset", x);
   NODE_ARG_INT(1, "y_offset", y);
@@ -506,8 +506,8 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::write) {
 
   type = TypedArray::Identify(passed_array);
   if (type == GDT_Unknown) {
-    Nan::ThrowError("Invalid array");
-    return;
+    Napi::Error::New(env, "Invalid array").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   bytes_per_pixel = GDALGetDataTypeSize(type) / 8;
@@ -520,8 +520,8 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::write) {
   NODE_ARG_INT_OPT(10, "offset", offset);
 
   if (findLowest(buffer_w, buffer_h, pixel_space, line_space, offset) < 0) {
-    Nan::ThrowError("has to read before the start of the TypedArray");
-    return;
+    Napi::Error::New(env, "has to read before the start of the TypedArray").ThrowAsJavaScriptException();
+    return env.Null();
   }
   size = findHighest(buffer_w, buffer_h, pixel_space, line_space, offset) + 1;
   // length (elements) = size / bytes_per_pixel + 1 more if it is not a perfect fit
@@ -603,18 +603,18 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::readBlock) {
 
   GDALDataType type = band->get()->GetRasterDataType();
 
-  Local<Value> array;
-  Local<Object> obj;
+  Napi::Value array;
+  Napi::Object obj;
 
-  if (info.Length() > 2 && !info[2]->IsUndefined() && !info[2]->IsNull()) {
+  if (info.Length() > 2 && !info[2].IsUndefined() && !info[2].IsNull()) {
     NODE_ARG_OBJECT(2, "data", obj);
     array = obj;
   } else {
     array = TypedArray::New(type, w * h);
-    if (array.IsEmpty() || !array->IsObject()) {
+    if (array.IsEmpty() || !array.IsObject()) {
       return; // TypedArray::New threw an error
     }
-    obj = array.As<Object>();
+    obj = array.As<Napi::Object>();
   }
 
   void *data = TypedArray::Validate(obj, type, w * h);
@@ -675,7 +675,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::writeBlock) {
   NODE_ARG_INT(0, "block_x_offset", x);
   NODE_ARG_INT(1, "block_y_offset", y);
 
-  Local<Object> obj;
+  Napi::Object obj;
   NODE_ARG_OBJECT(2, "data", obj);
 
   // validate array
@@ -694,7 +694,7 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::writeBlock) {
     if (err) { throw CPLGetLastErrorMsg(); }
     return err;
   };
-  job.rval = [](CPLErr r, const GetFromPersistentFunc &) { return Nan::Undefined(); };
+  job.rval = [](CPLErr r, const GetFromPersistentFunc &) { return env.Undefined(); };
   job.run(info, async, 3);
 }
 
@@ -749,11 +749,11 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::clampBlock) {
     return r;
   };
   job.rval = [](xy r, const GetFromPersistentFunc &) {
-    Nan::EscapableHandleScope scope;
-    Local<Object> result = Nan::New<Object>();
-    Nan::Set(result, Nan::New("x").ToLocalChecked(), Nan::New<Integer>(r.x));
-    Nan::Set(result, Nan::New("y").ToLocalChecked(), Nan::New<Integer>(r.y));
-    return scope.Escape(result.As<Value>());
+    Napi::EscapableHandleScope scope(env);
+    Napi::Object result = Napi::Object::New(env);
+    (result).Set(Napi::String::New(env, "x"), Napi::Number::New(env, r.x));
+    (result).Set(Napi::String::New(env, "y"), Napi::Number::New(env, r.y));
+    return scope.Escape(result.As<Napi::Value>());
   };
   job.run(info, async, 2);
 }
@@ -768,8 +768,8 @@ GDAL_ASYNCABLE_DEFINE(RasterBandPixels::clampBlock) {
  * @memberof RasterBandPixels
  * @type {RasterBand}
  */
-NAN_GETTER(RasterBandPixels::bandGetter) {
-  info.GetReturnValue().Set(Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked());
+Napi::Value RasterBandPixels::bandGetter(const Napi::CallbackInfo &info) {
+  return Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_"));
 }
 
 } // namespace node_gdal

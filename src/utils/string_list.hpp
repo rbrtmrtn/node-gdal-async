@@ -3,12 +3,13 @@
 #define __STRING_LIST_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 
 // nan
-#include "../nan-wrapper.h"
+#include <napi.h>
 
-using namespace v8;
+using namespace Napi;
 
 namespace node_gdal {
 
@@ -22,7 +23,7 @@ namespace node_gdal {
 
 class StringList {
     public:
-  int parse(Local<Value> value);
+  int parse(Napi::Value value);
 
   StringList();
   ~StringList();

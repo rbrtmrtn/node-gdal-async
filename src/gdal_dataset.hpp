@@ -2,11 +2,12 @@
 #define __NODE_GDAL_DATASET_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "nan-wrapper.h"
+#include <napi.h>
 
 // gdal
 #include <gdal_priv.h>
@@ -16,8 +17,8 @@
 
 #include "async.hpp"
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 // > GDAL 2.0 : a wrapper for GDALDataset
 // < GDAL 2.0 : a wrapper for either a GDALDataset or OGRDataSource that behaves
@@ -25,37 +26,37 @@ using namespace node;
 
 namespace node_gdal {
 
-class Dataset : public Nan::ObjectWrap {
+class Dataset : public Napi::ObjectWrap<Dataset> {
     public:
-  static Nan::Persistent<FunctionTemplate> constructor;
-  static void Initialize(Local<Object> target);
-  static NAN_METHOD(New);
-  static Local<Value> New(GDALDataset *ds, GDALDataset *parent = nullptr);
-  static NAN_METHOD(toString);
+  static Napi::FunctionReference constructor;
+  static void Initialize(Napi::Object target);
+  static Napi::Value New(const Napi::CallbackInfo &info);
+  static Napi::Value New(GDALDataset *ds, GDALDataset *parent = nullptr);
+  static Napi::Value toString(const Napi::CallbackInfo &info);
   GDAL_ASYNCABLE_DECLARE(flush);
   GDAL_ASYNCABLE_DECLARE(getMetadata);
   GDAL_ASYNCABLE_DECLARE(setMetadata);
-  static NAN_METHOD(getFileList);
-  static NAN_METHOD(getGCPProjection);
-  static NAN_METHOD(getGCPs);
-  static NAN_METHOD(setGCPs);
+  static Napi::Value getFileList(const Napi::CallbackInfo &info);
+  static Napi::Value getGCPProjection(const Napi::CallbackInfo &info);
+  static Napi::Value getGCPs(const Napi::CallbackInfo &info);
+  static Napi::Value setGCPs(const Napi::CallbackInfo &info);
   GDAL_ASYNCABLE_DECLARE(executeSQL);
-  static NAN_METHOD(testCapability);
+  static Napi::Value testCapability(const Napi::CallbackInfo &info);
   GDAL_ASYNCABLE_DECLARE(buildOverviews);
-  static NAN_METHOD(close);
+  static Napi::Value close(const Napi::CallbackInfo &info);
 
-  static NAN_GETTER(bandsGetter);
+  Napi::Value bandsGetter(const Napi::CallbackInfo &info);
   GDAL_ASYNCABLE_GETTER_DECLARE(rasterSizeGetter);
   GDAL_ASYNCABLE_GETTER_DECLARE(srsGetter);
-  static NAN_GETTER(driverGetter);
+  Napi::Value driverGetter(const Napi::CallbackInfo &info);
   GDAL_ASYNCABLE_GETTER_DECLARE(geoTransformGetter);
-  static NAN_GETTER(descriptionGetter);
-  static NAN_GETTER(layersGetter);
-  static NAN_GETTER(rootGetter);
-  static NAN_GETTER(uidGetter);
+  Napi::Value descriptionGetter(const Napi::CallbackInfo &info);
+  Napi::Value layersGetter(const Napi::CallbackInfo &info);
+  Napi::Value rootGetter(const Napi::CallbackInfo &info);
+  Napi::Value uidGetter(const Napi::CallbackInfo &info);
 
-  static NAN_SETTER(srsSetter);
-  static NAN_SETTER(geoTransformSetter);
+  void srsSetter(const Napi::CallbackInfo &info, const Napi::Value &value);
+  void geoTransformSetter(const Napi::CallbackInfo &info, const Napi::Value &value);
 
   Dataset(GDALDataset *ds);
   inline GDALDataset *get() {

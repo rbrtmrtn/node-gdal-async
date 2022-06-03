@@ -2,11 +2,12 @@
 #define __NODE_GDAL_DRIVER_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "nan-wrapper.h"
+#include <napi.h>
 
 // gdal
 #include <gdal_priv.h>
@@ -16,8 +17,8 @@
 
 #include "async.hpp"
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 // > GDAL 2.0 : a wrapper for GDALDriver
 // < GDAL 2.0 : a wrapper for either a GDALDriver or OGRSFDriver that behaves
@@ -25,22 +26,22 @@ using namespace node;
 //
 namespace node_gdal {
 
-class Driver : public Nan::ObjectWrap {
+class Driver : public Napi::ObjectWrap<Driver> {
     public:
-  static Nan::Persistent<FunctionTemplate> constructor;
-  static void Initialize(Local<Object> target);
-  static NAN_METHOD(New);
-  static Local<Value> New(GDALDriver *driver);
-  static NAN_METHOD(toString);
+  static Napi::FunctionReference constructor;
+  static void Initialize(Napi::Object target);
+  static Napi::Value New(const Napi::CallbackInfo &info);
+  static Napi::Value New(GDALDriver *driver);
+  static Napi::Value toString(const Napi::CallbackInfo &info);
   GDAL_ASYNCABLE_DECLARE(open);
   GDAL_ASYNCABLE_DECLARE(create);
   GDAL_ASYNCABLE_DECLARE(createCopy);
-  static NAN_METHOD(deleteDataset);
-  static NAN_METHOD(rename);
+  static Napi::Value deleteDataset(const Napi::CallbackInfo &info);
+  static Napi::Value rename(const Napi::CallbackInfo &info);
   GDAL_ASYNCABLE_DECLARE(copyFiles);
-  static NAN_METHOD(getMetadata);
+  static Napi::Value getMetadata(const Napi::CallbackInfo &info);
 
-  static NAN_GETTER(descriptionGetter);
+  Napi::Value descriptionGetter(const Napi::CallbackInfo &info);
 
   Driver();
   Driver(GDALDriver *driver);

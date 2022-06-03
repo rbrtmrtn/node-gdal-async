@@ -10,24 +10,24 @@
 
 namespace node_gdal {
 
-Nan::Persistent<FunctionTemplate> SimpleCurve::constructor;
+Napi::FunctionReference SimpleCurve::constructor;
 
-void SimpleCurve::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void SimpleCurve::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(SimpleCurve::New);
-  lcons->Inherit(Nan::New(Geometry::constructor));
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("SimpleCurve").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, SimpleCurve::New);
+  lcons->Inherit(Napi::New(env, Geometry::constructor));
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
-  Nan::SetPrototypeMethod(lcons, "getLength", getLength);
-  Nan::SetPrototypeMethod(lcons, "value", value);
-  Nan::SetPrototypeMethod(lcons, "addSubLineString", addSubLineString);
+  lcons->SetClassName(Napi::String::New(env, "SimpleCurve"));
+
+  InstanceMethod("toString", &toString),
+  InstanceMethod("getLength", &getLength),
+  InstanceMethod("value", &value),
+  InstanceMethod("addSubLineString", &addSubLineString),
 
   ATTR(lcons, "points", pointsGetter, READ_ONLY_SETTER);
 
-  Nan::Set(target, Nan::New("SimpleCurve").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  (target).Set(Napi::String::New(env, "SimpleCurve"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
@@ -39,12 +39,13 @@ void SimpleCurve::Initialize(Local<Object> target) {
  * @class SimpleCurve
  * @extends Geometry
  */
-NAN_METHOD(SimpleCurve::New) {
-  Nan::ThrowError("SimpleCurve is an abstract class and cannot be instantiated");
+Napi::Value SimpleCurve::New(const Napi::CallbackInfo& info) {
+  Napi::Error::New(env, "SimpleCurve is an abstract class and cannot be instantiated").ThrowAsJavaScriptException();
+
 }
 
-NAN_METHOD(SimpleCurve::toString) {
-  info.GetReturnValue().Set(Nan::New("SimpleCurve").ToLocalChecked());
+Napi::Value SimpleCurve::toString(const Napi::CallbackInfo& info) {
+  return Napi::String::New(env, "SimpleCurve");
 }
 
 /**
@@ -56,9 +57,9 @@ NAN_METHOD(SimpleCurve::toString) {
  * @param {number} distance
  * @return {Point}
  */
-NAN_METHOD(SimpleCurve::value) {
+Napi::Value SimpleCurve::value(const Napi::CallbackInfo& info) {
 
-  SimpleCurve *geom = Nan::ObjectWrap::Unwrap<SimpleCurve>(info.This());
+  SimpleCurve *geom = info.This().Unwrap<SimpleCurve>();
 
   OGRPoint *pt = new OGRPoint();
   double dist;
@@ -67,7 +68,7 @@ NAN_METHOD(SimpleCurve::value) {
 
   geom->this_->Value(dist, pt);
 
-  info.GetReturnValue().Set(Point::New(pt));
+  return Point::New(pt);
 }
 
 /**
@@ -89,8 +90,8 @@ NODE_WRAPPED_METHOD_WITH_RESULT(SimpleCurve, getLength, Number, get_Length);
  * @memberof Geometry
  * @type {LineStringPoints}
  */
-NAN_GETTER(SimpleCurve::pointsGetter) {
-  info.GetReturnValue().Set(Nan::GetPrivate(info.This(), Nan::New("points_").ToLocalChecked()).ToLocalChecked());
+Napi::Value SimpleCurve::pointsGetter(const Napi::CallbackInfo& info) {
+  return Napi::GetPrivate(info.This(), Napi::String::New(env, "points_"));
 }
 
 /**
@@ -110,9 +111,9 @@ NAN_GETTER(SimpleCurve::pointsGetter) {
  * last vertex of the other LineString
  * @return {void}
  */
-NAN_METHOD(SimpleCurve::addSubLineString) {
+Napi::Value SimpleCurve::addSubLineString(const Napi::CallbackInfo& info) {
 
-  SimpleCurve *geom = Nan::ObjectWrap::Unwrap<SimpleCurve>(info.This());
+  SimpleCurve *geom = info.This().Unwrap<SimpleCurve>();
   LineString *other;
   int start = 0;
   int end = -1;
@@ -124,8 +125,8 @@ NAN_METHOD(SimpleCurve::addSubLineString) {
   int n = other->get()->getNumPoints();
 
   if (start < 0 || end < -1 || start >= n || end >= n) {
-    Nan::ThrowRangeError("Invalid start or end index for LineString");
-    return;
+    Napi::RangeError::New(env, "Invalid start or end index for LineString").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   geom->this_->addSubLineString(other->get(), start, end);

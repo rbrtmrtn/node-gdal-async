@@ -2,39 +2,40 @@
 #define __NODE_OGR_FEATURE_DEFN_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "nan-wrapper.h"
+#include <napi.h>
 
 // ogr
 #include <ogrsf_frmts.h>
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 namespace node_gdal {
 
-class FeatureDefn : public Nan::ObjectWrap {
+class FeatureDefn : public Napi::ObjectWrap<FeatureDefn> {
     public:
-  static Nan::Persistent<FunctionTemplate> constructor;
-  static void Initialize(Local<Object> target);
-  static NAN_METHOD(New);
-  static Local<Value> New(OGRFeatureDefn *def);
-  static Local<Value> New(OGRFeatureDefn *def, bool owned);
-  static NAN_METHOD(toString);
-  static NAN_METHOD(clone);
+  static Napi::FunctionReference constructor;
+  static void Initialize(Napi::Object target);
+  static Napi::Value New(const Napi::CallbackInfo &info);
+  static Napi::Value New(OGRFeatureDefn *def);
+  static Napi::Value New(OGRFeatureDefn *def, bool owned);
+  static Napi::Value toString(const Napi::CallbackInfo &info);
+  static Napi::Value clone(const Napi::CallbackInfo &info);
 
-  static NAN_GETTER(fieldsGetter);
-  static NAN_GETTER(nameGetter);
-  static NAN_GETTER(geomTypeGetter);
-  static NAN_GETTER(geomIgnoredGetter);
-  static NAN_GETTER(styleIgnoredGetter);
+  Napi::Value fieldsGetter(const Napi::CallbackInfo &info);
+  Napi::Value nameGetter(const Napi::CallbackInfo &info);
+  Napi::Value geomTypeGetter(const Napi::CallbackInfo &info);
+  Napi::Value geomIgnoredGetter(const Napi::CallbackInfo &info);
+  Napi::Value styleIgnoredGetter(const Napi::CallbackInfo &info);
 
-  static NAN_SETTER(geomTypeSetter);
-  static NAN_SETTER(geomIgnoredSetter);
-  static NAN_SETTER(styleIgnoredSetter);
+  void geomTypeSetter(const Napi::CallbackInfo &info, const Napi::Value &value);
+  void geomIgnoredSetter(const Napi::CallbackInfo &info, const Napi::Value &value);
+  void styleIgnoredSetter(const Napi::CallbackInfo &info, const Napi::Value &value);
 
   FeatureDefn();
   FeatureDefn(OGRFeatureDefn *def);

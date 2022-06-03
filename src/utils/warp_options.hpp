@@ -3,10 +3,11 @@
 #define __WARP_OPTIONS_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 
 // nan
-#include "../nan-wrapper.h"
+#include <napi.h>
 
 // gdal
 #include <gdal_priv.h>
@@ -16,7 +17,7 @@
 #include "number_list.hpp"
 #include "string_list.hpp"
 
-using namespace v8;
+using namespace Napi;
 
 namespace node_gdal {
 
@@ -43,8 +44,8 @@ namespace node_gdal {
 
 class WarpOptions {
     public:
-  int parse(Local<Value> value);
-  int parseResamplingAlg(Local<Value> value);
+  int parse(Napi::Value value);
+  int parseResamplingAlg(Napi::Value value);
 
   WarpOptions();
   ~WarpOptions();
@@ -55,7 +56,7 @@ class WarpOptions {
   inline bool useMultithreading() {
     return multi;
   }
-  inline std::vector<Local<Object>> datasetObjects() {
+  inline std::vector<Napi::Object> datasetObjects() {
     return {src_obj, dst_obj};
   }
   inline std::vector<long> datasetUids() {
@@ -64,8 +65,8 @@ class WarpOptions {
 
     private:
   GDALWarpOptions *options;
-  Local<Object> src_obj;
-  Local<Object> dst_obj;
+  Napi::Object src_obj;
+  Napi::Object dst_obj;
   Dataset *src;
   Dataset *dst;
   StringList additional_options;

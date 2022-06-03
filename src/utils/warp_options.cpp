@@ -26,16 +26,18 @@ WarpOptions::~WarpOptions() {
   if (dst_nodata) delete dst_nodata;
 }
 
-int WarpOptions::parseResamplingAlg(Local<Value> value) {
-  if (value->IsUndefined() || value->IsNull()) {
+int WarpOptions::parseResamplingAlg(Napi::Value value) {
+  Napi::Env env = value.Env();
+  if (value.IsNull() || value.IsNull()) {
     options->eResampleAlg = GRA_NearestNeighbour;
     return 0;
   }
-  if (!value->IsString()) {
-    Nan::ThrowTypeError("resampling property must be a string");
+  if (!value.IsString()) {
+    Napi::TypeError::New(env, "resampling property must be a string").ThrowAsJavaScriptException();
+
     return 1;
   }
-  std::string name = *Nan::Utf8String(value);
+  std::string name = value.As<Napi::String>().Utf8Value().c_str();
 
   if (name == "NearestNeighbor") {
     options->eResampleAlg = GRA_NearestNeighbour;
@@ -70,7 +72,8 @@ int WarpOptions::parseResamplingAlg(Local<Value> value) {
     return 0;
   }
 
-  Nan::ThrowError("Invalid resampling algorithm");
+  Napi::Error::New(env, "Invalid resampling algorithm").ThrowAsJavaScriptException();
+
   return 1;
 }
 
@@ -92,165 +95,185 @@ int WarpOptions::parseResamplingAlg(Local<Value> value) {
  *   blend: double
  * }
  */
-int WarpOptions::parse(Local<Value> value) {
-  Nan::HandleScope scope;
+int WarpOptions::parse(Napi::Value value) {
+  Napi::Env env = value.Env();
+  Napi::HandleScope scope(env);
 
-  if (!value->IsObject() || value->IsNull()) Nan::ThrowTypeError("Warp options must be an object");
+  if (!value.IsObject() || value.IsNull())
+    Napi::TypeError::New(env, "Warp options must be an object").ThrowAsJavaScriptException();
 
-  Local<Object> obj = value.As<Object>();
-  Local<Value> prop;
+  Napi::Object obj = value.As<Napi::Object>();
+  Napi::Value prop;
 
-  if (
-    Nan::HasOwnProperty(obj, Nan::New("options").ToLocalChecked()).FromMaybe(false) &&
-    additional_options.parse(Nan::Get(obj, Nan::New("options").ToLocalChecked()).ToLocalChecked())) {
+  if (obj.HasOwnProperty("options") && additional_options.parse((obj).Get(Napi::String::New(env, "options")))) {
     return 1; // error parsing string list
   }
 
   options->papszWarpOptions = additional_options.get();
 
-  if (Nan::HasOwnProperty(obj, Nan::New("memoryLimit").ToLocalChecked()).FromMaybe(false)) {
-    prop = Nan::Get(obj, Nan::New("memoryLimit").ToLocalChecked()).ToLocalChecked();
-    if (prop->IsNumber()) {
-      options->dfWarpMemoryLimit = Nan::To<int32_t>(prop).ToChecked();
-    } else if (!prop->IsUndefined() && !prop->IsNull()) {
-      Nan::ThrowTypeError("memoryLimit property must be an integer");
+  if (obj.HasOwnProperty("memoryLimit")) {
+    prop = (obj).Get(Napi::String::New(env, "memoryLimit"));
+    if (prop.IsNumber()) {
+      options->dfWarpMemoryLimit = prop.As<Napi::Number>().Int32Value();
+    } else if (!prop.IsNull() && !prop.IsNull()) {
+      Napi::TypeError::New(env, "memoryLimit property must be an integer").ThrowAsJavaScriptException();
+
       return 1;
     }
   }
-  if (Nan::HasOwnProperty(obj, Nan::New("resampling").ToLocalChecked()).FromMaybe(false)) {
-    prop = Nan::Get(obj, Nan::New("resampling").ToLocalChecked()).ToLocalChecked();
+  if (obj.HasOwnProperty("resampling")) {
+    prop = (obj).Get(Napi::String::New(env, "resampling"));
     if (parseResamplingAlg(prop)) {
       return 1; // error parsing resampling algorithm
     }
   }
-  if (Nan::HasOwnProperty(obj, Nan::New("src").ToLocalChecked()).FromMaybe(false)) {
-    prop = Nan::Get(obj, Nan::New("src").ToLocalChecked()).ToLocalChecked();
-    if (prop->IsObject() && !prop->IsNull() && Nan::New(Dataset::constructor)->HasInstance(prop)) {
-      this->src_obj = prop.As<Object>();
-      this->src = Nan::ObjectWrap::Unwrap<Dataset>(this->src_obj);
+  if (obj.HasOwnProperty("src")) {
+    prop = (obj).Get(Napi::String::New(env, "src"));
+    if (prop.IsObject() && !prop.IsNull() && prop.ToObject().InstanceOf(Dataset::constructor.Value())) {
+      this->src_obj = prop.As<Napi::Object>();
+      this->src = Dataset::Unwrap(this->src_obj);
 #if GDAL_VERSION_MAJOR == 2 && GDAL_VERSION_MINOR < 3
       options->hSrcDS = static_cast<GDALDatasetH>(this->src->get());
 #else
       options->hSrcDS = GDALDataset::ToHandle(this->src->get());
 #endif
       if (!options->hSrcDS) {
-        Nan::ThrowError("src dataset already closed");
+        Napi::Error::New(env, "src dataset already closed").ThrowAsJavaScriptException();
+
         return 1;
       }
     } else {
-      Nan::ThrowTypeError("src property must be a Dataset object");
+      Napi::TypeError::New(env, "src property must be a Dataset object").ThrowAsJavaScriptException();
+
       return 1;
     }
   } else {
-    Nan::ThrowError("Warp options must include a source dataset");
+    Napi::Error::New(env, "Warp options must include a source dataset").ThrowAsJavaScriptException();
+
     return 1;
   }
-  if (Nan::HasOwnProperty(obj, Nan::New("dst").ToLocalChecked()).FromMaybe(false)) {
-    prop = Nan::Get(obj, Nan::New("dst").ToLocalChecked()).ToLocalChecked();
-    if (prop->IsObject() && !prop->IsNull() && Nan::New(Dataset::constructor)->HasInstance(prop)) {
-      this->dst_obj = prop.As<Object>();
-      this->dst = Nan::ObjectWrap::Unwrap<Dataset>(this->dst_obj);
+  if (obj.HasOwnProperty("dst")) {
+    prop = (obj).Get(Napi::String::New(env, "dst"));
+    if (prop.IsObject() && !prop.IsNull() && prop.ToObject().InstanceOf(Dataset::constructor.Value())) {
+      this->dst_obj = prop.As<Napi::Object>();
+      this->dst = Dataset::Unwrap(this->dst_obj);
 #if GDAL_VERSION_MAJOR == 2 && GDAL_VERSION_MINOR < 3
       options->hDstDS = static_cast<GDALDatasetH>(this->dst->get());
 #else
       options->hDstDS = GDALDataset::ToHandle(this->dst->get());
 #endif
       if (!options->hDstDS) {
-        Nan::ThrowError("dst dataset already closed");
+        Napi::Error::New(env, "dst dataset already closed").ThrowAsJavaScriptException();
+
         return 1;
       }
-    } else if (!prop->IsUndefined() && !prop->IsNull()) {
-      Nan::ThrowTypeError("dst property must be a Dataset object");
+    } else if (!prop.IsNull() && !prop.IsNull()) {
+      Napi::TypeError::New(env, "dst property must be a Dataset object").ThrowAsJavaScriptException();
+
       return 1;
     }
   }
-  if (Nan::HasOwnProperty(obj, Nan::New("srcBands").ToLocalChecked()).FromMaybe(false)) {
-    prop = Nan::Get(obj, Nan::New("srcBands").ToLocalChecked()).ToLocalChecked();
+  if (obj.HasOwnProperty("srcBands")) {
+    prop = (obj).Get(Napi::String::New(env, "srcBands"));
     if (src_bands.parse(prop)) {
       return 1; // error parsing number list
     }
     options->panSrcBands = src_bands.get();
     options->nBandCount = src_bands.length();
   }
-  if (Nan::HasOwnProperty(obj, Nan::New("dstBands").ToLocalChecked()).FromMaybe(false)) {
-    prop = Nan::Get(obj, Nan::New("dstBands").ToLocalChecked()).ToLocalChecked();
+  if (obj.HasOwnProperty("dstBands")) {
+    prop = (obj).Get(Napi::String::New(env, "dstBands"));
     if (dst_bands.parse(prop)) {
       return 1; // error parsing number list
     }
     options->panDstBands = dst_bands.get();
 
     if (!options->panSrcBands) {
-      Nan::ThrowError("srcBands must be provided if dstBands option is used");
+      Napi::Error::New(env, "srcBands must be provided if dstBands option is used").ThrowAsJavaScriptException();
+
       return 1;
     }
     if (dst_bands.length() != options->nBandCount) {
-      Nan::ThrowError("Number of dst bands must equal number of src bands");
+      Napi::Error::New(env, "Number of dst bands must equal number of src bands").ThrowAsJavaScriptException();
+
       return 1;
     }
   }
   if (options->panSrcBands && !options->panDstBands) {
-    Nan::ThrowError("dstBands must be provided if srcBands option is used");
+    Napi::Error::New(env, "dstBands must be provided if srcBands option is used").ThrowAsJavaScriptException();
+
     return 1;
   }
-  if (Nan::HasOwnProperty(obj, Nan::New("srcNodata").ToLocalChecked()).FromMaybe(false)) {
-    prop = Nan::Get(obj, Nan::New("srcNodata").ToLocalChecked()).ToLocalChecked();
-    if (prop->IsNumber()) {
-      src_nodata = new double(Nan::To<double>(prop).ToChecked());
+  if (obj.HasOwnProperty("srcNodata")) {
+    prop = (obj).Get(Napi::String::New(env, "srcNodata"));
+    if (prop.IsNumber()) {
+      src_nodata = new double(prop.As<Napi::Number>().DoubleValue());
       options->padfSrcNoDataReal = src_nodata;
-    } else if (!prop->IsUndefined() && !prop->IsNull()) {
-      Nan::ThrowTypeError("srcNodata property must be a number");
+    } else if (!prop.IsNull() && !prop.IsNull()) {
+      Napi::TypeError::New(env, "srcNodata property must be a number").ThrowAsJavaScriptException();
+
       return 1;
     }
   }
-  if (Nan::HasOwnProperty(obj, Nan::New("dstNodata").ToLocalChecked()).FromMaybe(false)) {
-    prop = Nan::Get(obj, Nan::New("dstNodata").ToLocalChecked()).ToLocalChecked();
-    if (prop->IsNumber()) {
-      dst_nodata = new double(Nan::To<double>(prop).ToChecked());
+  if (obj.HasOwnProperty("dstNodata")) {
+    prop = (obj).Get(Napi::String::New(env, "dstNodata"));
+    if (prop.IsNumber()) {
+      dst_nodata = new double(prop.As<Napi::Number>().DoubleValue());
       options->padfDstNoDataReal = dst_nodata;
-    } else if (!prop->IsUndefined() && !prop->IsNull()) {
-      Nan::ThrowTypeError("dstNodata property must be a number");
+    } else if (!prop.IsNull() && !prop.IsNull()) {
+      Napi::TypeError::New(env, "dstNodata property must be a number").ThrowAsJavaScriptException();
+
       return 1;
     }
   }
-  if (Nan::HasOwnProperty(obj, Nan::New("srcAlphaBand").ToLocalChecked()).FromMaybe(false)) {
-    prop = Nan::Get(obj, Nan::New("srcAlphaBand").ToLocalChecked()).ToLocalChecked();
-    if (prop->IsNumber()) {
-      options->nSrcAlphaBand = Nan::To<int32_t>(prop).ToChecked();
-    } else if (!prop->IsUndefined() && !prop->IsNull()) {
-      Nan::ThrowTypeError("srcAlphaBand property must be an integer");
+  if (obj.HasOwnProperty("srcAlphaBand")) {
+    prop = (obj).Get(Napi::String::New(env, "srcAlphaBand"));
+    if (prop.IsNumber()) {
+      options->nSrcAlphaBand = prop.As<Napi::Number>().Int32Value();
+    } else if (!prop.IsNull() && !prop.IsNull()) {
+      Napi::TypeError::New(env, "srcAlphaBand property must be an integer").ThrowAsJavaScriptException();
+
       return 1;
     }
   }
-  if (Nan::HasOwnProperty(obj, Nan::New("dstAlphaBand").ToLocalChecked()).FromMaybe(false)) {
-    prop = Nan::Get(obj, Nan::New("dstAlphaBand").ToLocalChecked()).ToLocalChecked();
-    if (prop->IsNumber()) {
-      options->nDstAlphaBand = Nan::To<int32_t>(prop).ToChecked();
-    } else if (!prop->IsUndefined() && !prop->IsNull()) {
-      Nan::ThrowTypeError("dstAlphaBand property must be an integer");
+  if (obj.HasOwnProperty("dstAlphaBand")) {
+    prop = (obj).Get(Napi::String::New(env, "dstAlphaBand"));
+    if (prop.IsNumber()) {
+      options->nDstAlphaBand = prop.As<Napi::Number>().Int32Value();
+    } else if (!prop.IsNull() && !prop.IsNull()) {
+      Napi::TypeError::New(env, "dstAlphaBand property must be an integer").ThrowAsJavaScriptException();
+
       return 1;
     }
   }
-  if (Nan::HasOwnProperty(obj, Nan::New("blend").ToLocalChecked()).FromMaybe(false)) {
-    prop = Nan::Get(obj, Nan::New("blend").ToLocalChecked()).ToLocalChecked();
-    if (prop->IsNumber()) {
-      options->dfCutlineBlendDist = Nan::To<double>(prop).ToChecked();
-    } else if (!prop->IsUndefined() && !prop->IsNull()) {
-      Nan::ThrowTypeError("cutline blend distance must be a number");
+  if (obj.HasOwnProperty("blend")) {
+    prop = (obj).Get(Napi::String::New(env, "blend"));
+    if (prop.IsNumber()) {
+      options->dfCutlineBlendDist = prop.As<Napi::Number>().DoubleValue();
+    } else if (!prop.IsNull() && !prop.IsNull()) {
+      Napi::TypeError::New(env, "cutline blend distance must be a number").ThrowAsJavaScriptException();
+
       return 1;
     }
   }
-  if (Nan::HasOwnProperty(obj, Nan::New("cutline").ToLocalChecked()).FromMaybe(false)) {
-    prop = Nan::Get(obj, Nan::New("cutline").ToLocalChecked()).ToLocalChecked();
-    if (prop->IsObject() && !prop->IsNull() && Nan::New(Geometry::constructor)->HasInstance(prop)) {
-      options->hCutline = Nan::ObjectWrap::Unwrap<Geometry>(prop.As<Object>())->get();
-    } else if (!prop->IsUndefined() && !prop->IsNull()) {
-      Nan::ThrowTypeError("cutline property must be a Geometry object");
+  if (obj.HasOwnProperty("cutline")) {
+    prop = (obj).Get(Napi::String::New(env, "cutline"));
+    if (prop.IsObject() && !prop.IsNull() && prop.ToObject().InstanceOf(Geometry::constructor.Value())) {
+      options->hCutline = (Geometry::Unwrap(prop.ToObject())).get();
+    } else if (!prop.IsNull() && !prop.IsNull()) {
+      Napi::TypeError::New(env, "cutline property must be a Geometry object").ThrowAsJavaScriptException();
+
       return 1;
     }
   }
-  if (Nan::HasOwnProperty(obj, Nan::New("multi").ToLocalChecked()).FromMaybe(false)) {
-    prop = Nan::Get(obj, Nan::New("multi").ToLocalChecked()).ToLocalChecked();
-    if (prop->IsTrue()) { multi = true; }
+  if (obj.HasOwnProperty("multi")) {
+    prop = obj.Get("multi");
+    if (!prop.IsBoolean()) {
+      Napi::TypeError::New(env, "multi must be a Boolean").ThrowAsJavaScriptException();
+
+      return 1;
+    }
+    if (prop.ToBoolean()) { multi = true; }
   }
   return 0;
 }

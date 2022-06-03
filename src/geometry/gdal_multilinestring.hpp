@@ -2,32 +2,33 @@
 #define __NODE_OGR_MULTILINESTRING_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "../nan-wrapper.h"
+#include <napi.h>
 
 // ogr
 #include <ogrsf_frmts.h>
 
 #include "gdal_geometrycollectionbase.hpp"
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 namespace node_gdal {
 
 class MultiLineString : public GeometryCollectionBase<MultiLineString, OGRMultiLineString> {
 
     public:
-  static Nan::Persistent<FunctionTemplate> constructor;
+  static Napi::FunctionReference constructor;
   using GeometryCollectionBase<MultiLineString, OGRMultiLineString>::GeometryCollectionBase;
 
-  static void Initialize(Local<Object> target);
+  static void Initialize(Napi::Object target);
   using GeometryCollectionBase<MultiLineString, OGRMultiLineString>::New;
-  static NAN_METHOD(toString);
-  static NAN_METHOD(polygonize);
+  static Napi::Value toString(const Napi::CallbackInfo &info);
+  static Napi::Value polygonize(const Napi::CallbackInfo &info);
 };
 
 } // namespace node_gdal

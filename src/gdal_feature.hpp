@@ -2,43 +2,44 @@
 #define __NODE_OGR_FEATURE_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "nan-wrapper.h"
+#include <napi.h>
 
 // ogr
 #include <ogrsf_frmts.h>
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 namespace node_gdal {
 
-class Feature : public Nan::ObjectWrap {
+class Feature : public Napi::ObjectWrap<Feature> {
     public:
-  static Nan::Persistent<FunctionTemplate> constructor;
-  static void Initialize(Local<Object> target);
-  static NAN_METHOD(New);
-  static Local<Value> New(OGRFeature *feature);
-  static Local<Value> New(OGRFeature *feature, bool owned);
-  static NAN_METHOD(toString);
-  static NAN_METHOD(getGeometry);
-  //	static NAN_METHOD(setGeometryDirectly);
-  static NAN_METHOD(setGeometry);
-  //  static NAN_METHOD(stealGeometry);
-  static NAN_METHOD(clone);
-  static NAN_METHOD(equals);
-  static NAN_METHOD(getFieldDefn);
-  static NAN_METHOD(setFrom);
-  static NAN_METHOD(destroy);
+  static Napi::FunctionReference constructor;
+  static void Initialize(Napi::Object target);
+  static Napi::Value New(const Napi::CallbackInfo &info);
+  static Napi::Value New(OGRFeature *feature);
+  static Napi::Value New(OGRFeature *feature, bool owned);
+  static Napi::Value toString(const Napi::CallbackInfo &info);
+  static Napi::Value getGeometry(const Napi::CallbackInfo &info);
+  //	static Napi::Value setGeometryDirectly(const Napi::CallbackInfo& info);
+  static Napi::Value setGeometry(const Napi::CallbackInfo &info);
+  //  static Napi::Value stealGeometry(const Napi::CallbackInfo& info);
+  static Napi::Value clone(const Napi::CallbackInfo &info);
+  static Napi::Value equals(const Napi::CallbackInfo &info);
+  static Napi::Value getFieldDefn(const Napi::CallbackInfo &info);
+  static Napi::Value setFrom(const Napi::CallbackInfo &info);
+  static Napi::Value destroy(const Napi::CallbackInfo &info);
 
-  static NAN_GETTER(fieldsGetter);
-  static NAN_GETTER(fidGetter);
-  static NAN_GETTER(defnGetter);
+  Napi::Value fieldsGetter(const Napi::CallbackInfo &info);
+  Napi::Value fidGetter(const Napi::CallbackInfo &info);
+  Napi::Value defnGetter(const Napi::CallbackInfo &info);
 
-  static NAN_SETTER(fidSetter);
+  void fidSetter(const Napi::CallbackInfo &info, const Napi::Value &value);
 
   Feature();
   Feature(OGRFeature *feature);

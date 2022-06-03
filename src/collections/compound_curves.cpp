@@ -7,26 +7,26 @@
 
 namespace node_gdal {
 
-Nan::Persistent<FunctionTemplate> CompoundCurveCurves::constructor;
+Napi::FunctionReference CompoundCurveCurves::constructor;
 
-void CompoundCurveCurves::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void CompoundCurveCurves::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(CompoundCurveCurves::New);
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("CompoundCurveCurves").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, CompoundCurveCurves::New);
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
-  Nan::SetPrototypeMethod(lcons, "count", count);
-  Nan::SetPrototypeMethod(lcons, "get", get);
-  Nan::SetPrototypeMethod(lcons, "add", add);
+  lcons->SetClassName(Napi::String::New(env, "CompoundCurveCurves"));
 
-  Nan::Set(target, Nan::New("CompoundCurveCurves").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  InstanceMethod("toString", &toString),
+  InstanceMethod("count", &count),
+  InstanceMethod("get", &get),
+  InstanceMethod("add", &add),
+
+  (target).Set(Napi::String::New(env, "CompoundCurveCurves"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
 
-CompoundCurveCurves::CompoundCurveCurves() : Nan::ObjectWrap() {
+CompoundCurveCurves::CompoundCurveCurves() : Napi::ObjectWrap<CompoundCurveCurves>(){
 }
 
 CompoundCurveCurves::~CompoundCurveCurves() {
@@ -37,41 +37,42 @@ CompoundCurveCurves::~CompoundCurveCurves() {
  *
  * @class CompoundCurveCurves
  */
-NAN_METHOD(CompoundCurveCurves::New) {
+Napi::Value CompoundCurveCurves::New(const Napi::CallbackInfo& info) {
 
   if (!info.IsConstructCall()) {
-    Nan::ThrowError("Cannot call constructor as function, you need to use 'new' keyword");
-    return;
+    Napi::Error::New(env, "Cannot call constructor as function, you need to use 'new' keyword").ThrowAsJavaScriptException();
+    return env.Null();
   }
-  if (info[0]->IsExternal()) {
-    Local<External> ext = info[0].As<External>();
+  if (info[0].IsExternal()) {
+    Napi::External ext = info[0].As<Napi::External>();
     void *ptr = ext->Value();
     CompoundCurveCurves *geom = static_cast<CompoundCurveCurves *>(ptr);
     geom->Wrap(info.This());
-    info.GetReturnValue().Set(info.This());
+    return info.This();
     return;
   } else {
-    Nan::ThrowError("Cannot create CompoundCurveCurves directly");
-    return;
+    Napi::Error::New(env, "Cannot create CompoundCurveCurves directly").ThrowAsJavaScriptException();
+    return env.Null();
   }
 }
 
-Local<Value> CompoundCurveCurves::New(Local<Value> geom) {
-  Nan::EscapableHandleScope scope;
+Napi::Value CompoundCurveCurves::New(Napi::Value geom) {
+  Napi::Env env = geom.Env();
+  Napi::EscapableHandleScope scope(env);
 
   CompoundCurveCurves *wrapped = new CompoundCurveCurves();
 
-  v8::Local<v8::Value> ext = Nan::New<External>(wrapped);
-  v8::Local<v8::Object> obj =
-    Nan::NewInstance(Nan::GetFunction(Nan::New(CompoundCurveCurves::constructor)).ToLocalChecked(), 1, &ext)
-      .ToLocalChecked();
-  Nan::SetPrivate(obj, Nan::New("parent_").ToLocalChecked(), geom);
+  Napi::Value ext = Napi::External::New(env, wrapped);
+  Napi::Object obj =
+    Napi::NewInstance(Napi::GetFunction(Napi::New(env, CompoundCurveCurves::constructor)), 1, &ext)
+      ;
+  Napi::SetPrivate(obj, Napi::String::New(env, "parent_"), geom);
 
   return scope.Escape(obj);
 }
 
-NAN_METHOD(CompoundCurveCurves::toString) {
-  info.GetReturnValue().Set(Nan::New("CompoundCurveCurves").ToLocalChecked());
+Napi::Value CompoundCurveCurves::toString(const Napi::CallbackInfo& info) {
+  return Napi::String::New(env, "CompoundCurveCurves");
 }
 
 /**
@@ -82,13 +83,13 @@ NAN_METHOD(CompoundCurveCurves::toString) {
  * @memberof CompoundCurveCurves
  * @return {number}
  */
-NAN_METHOD(CompoundCurveCurves::count) {
+Napi::Value CompoundCurveCurves::count(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  CompoundCurve *geom = Nan::ObjectWrap::Unwrap<CompoundCurve>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  CompoundCurve *geom = parent.Unwrap<CompoundCurve>();
 
-  info.GetReturnValue().Set(Nan::New<Integer>(geom->get()->getNumCurves()));
+  return Napi::Number::New(env, geom->get()->getNumCurves());
 }
 
 /**
@@ -106,19 +107,20 @@ NAN_METHOD(CompoundCurveCurves::count) {
  * @throws {Error}
  * @return {CompoundCurve|SimpleCurve}
  */
-NAN_METHOD(CompoundCurveCurves::get) {
+Napi::Value CompoundCurveCurves::get(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  CompoundCurve *geom = Nan::ObjectWrap::Unwrap<CompoundCurve>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  CompoundCurve *geom = parent.Unwrap<CompoundCurve>();
 
   int i;
   NODE_ARG_INT(0, "index", i);
 
   if (i >= 0 && i < geom->get()->getNumCurves())
-    info.GetReturnValue().Set(Geometry::New(geom->get()->getCurve(i), false));
+    return Geometry::New(geom->get()->getCurve(i), false);
   else
-    Nan::ThrowRangeError("Invalid curve requested");
+    Napi::RangeError::New(env, "Invalid curve requested").ThrowAsJavaScriptException();
+
 }
 
 /**
@@ -144,46 +146,46 @@ NAN_METHOD(CompoundCurveCurves::get) {
  * @memberof CompoundCurveCurves
  * @param {SimpleCurve|SimpleCurve[]} curves
  */
-NAN_METHOD(CompoundCurveCurves::add) {
+Napi::Value CompoundCurveCurves::add(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  CompoundCurve *geom = Nan::ObjectWrap::Unwrap<CompoundCurve>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  CompoundCurve *geom = parent.Unwrap<CompoundCurve>();
 
   SimpleCurve *ring;
 
   if (info.Length() < 1) {
-    Nan::ThrowError("curve(s) must be given");
-    return;
+    Napi::Error::New(env, "curve(s) must be given").ThrowAsJavaScriptException();
+    return env.Null();
   }
-  if (info[0]->IsArray()) {
+  if (info[0].IsArray()) {
     // set from array of geometry objects
-    Local<Array> array = info[0].As<Array>();
+    Napi::Array array = info[0].As<Napi::Array>();
     int length = array->Length();
     for (int i = 0; i < length; i++) {
-      Local<Value> element = Nan::Get(array, i).ToLocalChecked();
+      Napi::Value element = (array).Get(i);
       if (IS_WRAPPED(element, SimpleCurve)) {
-        ring = Nan::ObjectWrap::Unwrap<SimpleCurve>(element.As<Object>());
+        ring = element.As<Napi::Object>().Unwrap<SimpleCurve>();
         OGRErr err = geom->get()->addCurve(ring->get());
         if (err) {
           NODE_THROW_OGRERR(err);
           return;
         }
       } else {
-        Nan::ThrowError("All array elements must be SimpleCurves");
-        return;
+        Napi::Error::New(env, "All array elements must be SimpleCurves").ThrowAsJavaScriptException();
+        return env.Null();
       }
     }
   } else if (IS_WRAPPED(info[0], SimpleCurve)) {
-    ring = Nan::ObjectWrap::Unwrap<SimpleCurve>(info[0].As<Object>());
+    ring = info[0].As<Napi::Object>().Unwrap<SimpleCurve>();
     OGRErr err = geom->get()->addCurve(ring->get());
     if (err) {
       NODE_THROW_OGRERR(err);
       return;
     }
   } else {
-    Nan::ThrowError("curve(s) must be a SimpleCurve or array of SimpleCurves");
-    return;
+    Napi::Error::New(env, "curve(s) must be a SimpleCurve or array of SimpleCurves").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   return;

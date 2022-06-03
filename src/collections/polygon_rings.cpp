@@ -6,26 +6,26 @@
 
 namespace node_gdal {
 
-Nan::Persistent<FunctionTemplate> PolygonRings::constructor;
+Napi::FunctionReference PolygonRings::constructor;
 
-void PolygonRings::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void PolygonRings::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(PolygonRings::New);
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("PolygonRings").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, PolygonRings::New);
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
-  Nan::SetPrototypeMethod(lcons, "count", count);
-  Nan::SetPrototypeMethod(lcons, "get", get);
-  Nan::SetPrototypeMethod(lcons, "add", add);
+  lcons->SetClassName(Napi::String::New(env, "PolygonRings"));
 
-  Nan::Set(target, Nan::New("PolygonRings").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  InstanceMethod("toString", &toString),
+  InstanceMethod("count", &count),
+  InstanceMethod("get", &get),
+  InstanceMethod("add", &add),
+
+  (target).Set(Napi::String::New(env, "PolygonRings"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
 
-PolygonRings::PolygonRings() : Nan::ObjectWrap() {
+PolygonRings::PolygonRings() : Napi::ObjectWrap<PolygonRings>(){
 }
 
 PolygonRings::~PolygonRings() {
@@ -36,40 +36,41 @@ PolygonRings::~PolygonRings() {
  *
  * @class PolygonRings
  */
-NAN_METHOD(PolygonRings::New) {
+Napi::Value PolygonRings::New(const Napi::CallbackInfo& info) {
 
   if (!info.IsConstructCall()) {
-    Nan::ThrowError("Cannot call constructor as function, you need to use 'new' keyword");
-    return;
+    Napi::Error::New(env, "Cannot call constructor as function, you need to use 'new' keyword").ThrowAsJavaScriptException();
+    return env.Null();
   }
-  if (info[0]->IsExternal()) {
-    Local<External> ext = info[0].As<External>();
+  if (info[0].IsExternal()) {
+    Napi::External ext = info[0].As<Napi::External>();
     void *ptr = ext->Value();
     PolygonRings *geom = static_cast<PolygonRings *>(ptr);
     geom->Wrap(info.This());
-    info.GetReturnValue().Set(info.This());
+    return info.This();
     return;
   } else {
-    Nan::ThrowError("Cannot create PolygonRings directly");
-    return;
+    Napi::Error::New(env, "Cannot create PolygonRings directly").ThrowAsJavaScriptException();
+    return env.Null();
   }
 }
 
-Local<Value> PolygonRings::New(Local<Value> geom) {
-  Nan::EscapableHandleScope scope;
+Napi::Value PolygonRings::New(Napi::Value geom) {
+  Napi::Env env = geom.Env();
+  Napi::EscapableHandleScope scope(env);
 
   PolygonRings *wrapped = new PolygonRings();
 
-  v8::Local<v8::Value> ext = Nan::New<External>(wrapped);
-  v8::Local<v8::Object> obj =
-    Nan::NewInstance(Nan::GetFunction(Nan::New(PolygonRings::constructor)).ToLocalChecked(), 1, &ext).ToLocalChecked();
-  Nan::SetPrivate(obj, Nan::New("parent_").ToLocalChecked(), geom);
+  Napi::Value ext = Napi::External::New(env, wrapped);
+  Napi::Object obj =
+    Napi::NewInstance(Napi::GetFunction(Napi::New(env, PolygonRings::constructor)), 1, &ext);
+  Napi::SetPrivate(obj, Napi::String::New(env, "parent_"), geom);
 
   return scope.Escape(obj);
 }
 
-NAN_METHOD(PolygonRings::toString) {
-  info.GetReturnValue().Set(Nan::New("PolygonRings").ToLocalChecked());
+Napi::Value PolygonRings::toString(const Napi::CallbackInfo& info) {
+  return Napi::String::New(env, "PolygonRings");
 }
 
 /**
@@ -80,16 +81,16 @@ NAN_METHOD(PolygonRings::toString) {
  * @memberof PolygonRings
  * @return {number}
  */
-NAN_METHOD(PolygonRings::count) {
+Napi::Value PolygonRings::count(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  Polygon *geom = Nan::ObjectWrap::Unwrap<Polygon>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  Polygon *geom = parent.Unwrap<Polygon>();
 
   int i = geom->get()->getExteriorRing() ? 1 : 0;
   i += geom->get()->getNumInteriorRings();
 
-  info.GetReturnValue().Set(Nan::New<Integer>(i));
+  return Napi::Number::New(env, i);
 }
 
 /**
@@ -108,11 +109,11 @@ NAN_METHOD(PolygonRings::count) {
  * @throws {Error}
  * @return {LinearRing}
  */
-NAN_METHOD(PolygonRings::get) {
+Napi::Value PolygonRings::get(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  Polygon *geom = Nan::ObjectWrap::Unwrap<Polygon>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  Polygon *geom = parent.Unwrap<Polygon>();
 
   int i;
   NODE_ARG_INT(0, "index", i);
@@ -127,7 +128,7 @@ NAN_METHOD(PolygonRings::get) {
     NODE_THROW_LAST_CPLERR;
     return;
   }
-  info.GetReturnValue().Set(LinearRing::New(r, false));
+  return LinearRing::New(r, false);
 }
 
 /**
@@ -153,46 +154,46 @@ NAN_METHOD(PolygonRings::get) {
  * @memberof PolygonRings
  * @param {LinearRing|LinearRing[]} rings
  */
-NAN_METHOD(PolygonRings::add) {
+Napi::Value PolygonRings::add(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  Polygon *geom = Nan::ObjectWrap::Unwrap<Polygon>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  Polygon *geom = parent.Unwrap<Polygon>();
 
   LinearRing *ring;
 
   if (info.Length() < 1) {
-    Nan::ThrowError("ring(s) must be given");
-    return;
+    Napi::Error::New(env, "ring(s) must be given").ThrowAsJavaScriptException();
+    return env.Null();
   }
-  if (info[0]->IsArray()) {
+  if (info[0].IsArray()) {
     // set from array of geometry objects
-    Local<Array> array = info[0].As<Array>();
+    Napi::Array array = info[0].As<Napi::Array>();
     int length = array->Length();
     for (int i = 0; i < length; i++) {
-      Local<Value> element = Nan::Get(array, i).ToLocalChecked();
+      Napi::Value element = (array).Get(i);
       if (IS_WRAPPED(element, LinearRing)) {
-        ring = Nan::ObjectWrap::Unwrap<LinearRing>(element.As<Object>());
+        ring = element.As<Napi::Object>().Unwrap<LinearRing>();
         OGRErr err = geom->get()->addRing(ring->get());
         if (err) {
           NODE_THROW_OGRERR(err);
           return;
         }
       } else {
-        Nan::ThrowError("All array elements must be LinearRings");
-        return;
+        Napi::Error::New(env, "All array elements must be LinearRings").ThrowAsJavaScriptException();
+        return env.Null();
       }
     }
   } else if (IS_WRAPPED(info[0], LinearRing)) {
-    ring = Nan::ObjectWrap::Unwrap<LinearRing>(info[0].As<Object>());
+    ring = info[0].As<Napi::Object>().Unwrap<LinearRing>();
     OGRErr err = geom->get()->addRing(ring->get());
     if (err) {
       NODE_THROW_OGRERR(err);
       return;
     }
   } else {
-    Nan::ThrowError("ring(s) must be a LinearRing or array of LinearRings");
-    return;
+    Napi::Error::New(env, "ring(s) must be a LinearRing or array of LinearRings").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   return;

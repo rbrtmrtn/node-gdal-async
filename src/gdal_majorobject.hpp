@@ -2,23 +2,24 @@
 #define __NODE_GDAL_MAJOROBJECT_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "nan-wrapper.h"
+#include <napi.h>
 
 // gdal
 #include <gdal_priv.h>
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 namespace node_gdal {
 
 class MajorObject {
     public:
-  static Local<Object> getMetadata(char **metadata);
+  static Napi::Object getMetadata(char **metadata);
 };
 
 } // namespace node_gdal

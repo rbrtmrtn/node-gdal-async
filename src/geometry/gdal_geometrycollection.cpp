@@ -8,7 +8,7 @@
 
 namespace node_gdal {
 
-Nan::Persistent<FunctionTemplate> GeometryCollection::constructor;
+Napi::FunctionReference GeometryCollection::constructor;
 
 /**
  * A collection of 1 or more geometry objects.
@@ -17,27 +17,27 @@ Nan::Persistent<FunctionTemplate> GeometryCollection::constructor;
  * @class GeometryCollection
  * @extends Geometry
  */
-void GeometryCollection::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void GeometryCollection::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(GeometryCollection::New);
-  lcons->Inherit(Nan::New(Geometry::constructor));
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("GeometryCollection").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, GeometryCollection::New);
+  lcons->Inherit(Napi::New(env, Geometry::constructor));
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
-  Nan::SetPrototypeMethod(lcons, "getArea", getArea);
-  Nan::SetPrototypeMethod(lcons, "getLength", getLength);
+  lcons->SetClassName(Napi::String::New(env, "GeometryCollection"));
+
+  InstanceMethod("toString", &toString),
+  InstanceMethod("getArea", &getArea),
+  InstanceMethod("getLength", &getLength),
 
   ATTR(lcons, "children", childrenGetter, READ_ONLY_SETTER);
 
-  Nan::Set(target, Nan::New("GeometryCollection").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  (target).Set(Napi::String::New(env, "GeometryCollection"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
 
-NAN_METHOD(GeometryCollection::toString) {
-  info.GetReturnValue().Set(Nan::New("GeometryCollection").ToLocalChecked());
+Napi::Value GeometryCollection::toString(const Napi::CallbackInfo& info) {
+  return Napi::String::New(env, "GeometryCollection");
 }
 
 /**
@@ -69,8 +69,8 @@ NODE_WRAPPED_METHOD_WITH_RESULT(GeometryCollection, getLength, Number, get_Lengt
  * @memberof GeometryCollection
  * @type {GeometryCollectionChildren}
  */
-NAN_GETTER(GeometryCollection::childrenGetter) {
-  info.GetReturnValue().Set(Nan::GetPrivate(info.This(), Nan::New("children_").ToLocalChecked()).ToLocalChecked());
+Napi::Value GeometryCollection::childrenGetter(const Napi::CallbackInfo& info) {
+  return Napi::GetPrivate(info.This(), Napi::String::New(env, "children_"));
 }
 
 } // namespace node_gdal

@@ -14,22 +14,19 @@ namespace node_gdal {
 
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
 
-Nan::Persistent<FunctionTemplate> MDArray::constructor;
+Napi::FunctionReference MDArray::constructor;
 
-void MDArray::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void MDArray::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(MDArray::New);
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("MDArray").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, MDArray::New);
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
-  Nan__SetPrototypeAsyncableMethod(lcons, "read", read);
-  Nan::SetPrototypeMethod(lcons, "getView", getView);
-  Nan::SetPrototypeMethod(lcons, "getMask", getMask);
-  Nan::SetPrototypeMethod(lcons, "asDataset", asDataset);
+  lcons->SetClassName(Napi::String::New(env, "MDArray"));
 
-  ATTR_DONT_ENUM(lcons, "_uid", uidGetter, READ_ONLY_SETTER);
+  InstanceMethod("toString", &toString), Nan__SetPrototypeAsyncableMethod(lcons, "read", read);
+  InstanceMethod("getView", &getView), InstanceMethod("getMask", &getMask), InstanceMethod("asDataset", &asDataset),
+
+    ATTR_DONT_ENUM(lcons, "_uid", uidGetter, READ_ONLY_SETTER);
   ATTR(lcons, "srs", srsGetter, READ_ONLY_SETTER);
   ATTR(lcons, "dataType", typeGetter, READ_ONLY_SETTER);
   ATTR(lcons, "length", lengthGetter, READ_ONLY_SETTER);
@@ -41,12 +38,12 @@ void MDArray::Initialize(Local<Object> target) {
   ATTR(lcons, "dimensions", dimensionsGetter, READ_ONLY_SETTER);
   ATTR(lcons, "attributes", attributesGetter, READ_ONLY_SETTER);
 
-  Nan::Set(target, Nan::New("MDArray").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  (target).Set(Napi::String::New(env, "MDArray"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
 
-MDArray::MDArray(std::shared_ptr<GDALMDArray> md) : Nan::ObjectWrap(), uid(0), this_(md) {
+MDArray::MDArray(std::shared_ptr<GDALMDArray> md) : Napi::ObjectWrap<MDArray>(), uid(0), this_(md) {
   LOG("Created MDArray [%p]", md.get());
 }
 
@@ -70,61 +67,62 @@ void MDArray::dispose() {
  *
  * @class MDArray
  */
-NAN_METHOD(MDArray::New) {
+Napi::Value MDArray::New(const Napi::CallbackInfo &info) {
 
   if (!info.IsConstructCall()) {
-    Nan::ThrowError("Cannot call constructor as function, you need to use 'new' keyword");
-    return;
+    Napi::Error::New(env, "Cannot call constructor as function, you need to use 'new' keyword")
+      .ThrowAsJavaScriptException();
+    return env.Null();
   }
 
-  if (info.Length() == 2 && info[0]->IsExternal() && info[1]->IsObject()) {
-    Local<External> ext = info[0].As<External>();
+  if (info.Length() == 2 && info[0].IsExternal() && info[1].IsObject()) {
+    Napi::External ext = info[0].As<Napi::External>();
     void *ptr = ext->Value();
     MDArray *f = static_cast<MDArray *>(ptr);
     f->Wrap(info.This());
 
-    Local<Value> dims = ArrayDimensions::New(info.This(), info[1]);
-    Nan::SetPrivate(info.This(), Nan::New("dims_").ToLocalChecked(), dims);
-    Local<Value> attrs = ArrayAttributes::New(info.This(), info[1]);
-    Nan::SetPrivate(info.This(), Nan::New("attrs_").ToLocalChecked(), attrs);
+    Napi::Value dims = ArrayDimensions::New(info.This(), info[1]);
+    Napi::SetPrivate(info.This(), Napi::String::New(env, "dims_"), dims);
+    Napi::Value attrs = ArrayAttributes::New(info.This(), info[1]);
+    Napi::SetPrivate(info.This(), Napi::String::New(env, "attrs_"), attrs);
 
-    info.GetReturnValue().Set(info.This());
+    return info.This();
     return;
   } else {
-    Nan::ThrowError("Cannot create MDArray directly. Create with dataset instead.");
-    return;
+    Napi::Error::New(env, "Cannot create MDArray directly. Create with dataset instead.").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
-  info.GetReturnValue().Set(info.This());
+  return info.This();
 }
 
-Local<Value> MDArray::New(std::shared_ptr<GDALMDArray> raw, GDALDataset *parent_ds) {
-  Nan::EscapableHandleScope scope;
+Napi::Value MDArray::New(std::shared_ptr<GDALMDArray> raw, GDALDataset *parent_ds) {
+  Napi::EscapableHandleScope scope(env);
 
-  if (!raw) { return scope.Escape(Nan::Null()); }
+  if (!raw) { return scope.Escape(env.Null()); }
   if (object_store.has(raw)) { return scope.Escape(object_store.get(raw)); }
 
   MDArray *wrapped = new MDArray(raw);
 
   // add reference to datasource so datasource doesnt get GC'ed while group is
   // alive
-  Local<Object> ds, group;
+  Napi::Object ds, group;
   if (object_store.has(parent_ds)) {
     ds = object_store.get(parent_ds);
   } else {
     LOG("MDArray's parent dataset disappeared from cache (array = %p, dataset = %p)", raw.get(), parent_ds);
-    Nan::ThrowError("MDArray's parent dataset disappeared from cache");
-    return scope.Escape(Nan::Undefined());
+    Napi::Error::New(env, "MDArray's parent dataset disappeared from cache").ThrowAsJavaScriptException();
+
+    return scope.Escape(env.Undefined());
   }
 
-  Local<Value> ext = Nan::New<External>(wrapped);
-  Local<Value> argv[] = {ext, ds};
-  Local<Object> obj =
-    Nan::NewInstance(Nan::GetFunction(Nan::New(MDArray::constructor)).ToLocalChecked(), 2, argv).ToLocalChecked();
+  Napi::Value ext = Napi::External::New(env, wrapped);
+  Napi::Value argv[] = {ext, ds};
+  Napi::Object obj = Napi::NewInstance(Napi::GetFunction(Napi::New(env, MDArray::constructor)), 2, argv);
 
   size_t dim = raw->GetDimensionCount();
 
-  Dataset *unwrapped_ds = Nan::ObjectWrap::Unwrap<Dataset>(ds);
+  Dataset *unwrapped_ds = ds.Unwrap<Dataset>();
   long parent_uid = unwrapped_ds->uid;
 
   wrapped->uid = object_store.add(raw, wrapped->persistent(), parent_uid);
@@ -132,13 +130,13 @@ Local<Value> MDArray::New(std::shared_ptr<GDALMDArray> raw, GDALDataset *parent_
   wrapped->parent_uid = parent_uid;
   wrapped->dimensions = dim;
 
-  Nan::SetPrivate(obj, Nan::New("ds_").ToLocalChecked(), ds);
+  Napi::SetPrivate(obj, Napi::String::New(env, "ds_"), ds);
 
   return scope.Escape(obj);
 }
 
-NAN_METHOD(MDArray::toString) {
-  info.GetReturnValue().Set(Nan::New("MDArray").ToLocalChecked());
+Napi::Value MDArray::toString(const Napi::CallbackInfo &info) {
+  return Napi::String::New(env, "MDArray");
 }
 
 /* Find the lowest possible element index for the given spans and strides */
@@ -255,8 +253,8 @@ GDAL_ASYNCABLE_DEFINE(MDArray::read) {
 
   NODE_UNWRAP_CHECK(MDArray, info.This(), self);
 
-  Local<Object> options;
-  Local<Array> origin, span, stride;
+  Napi::Object options;
+  Napi::Array origin, span, stride;
   std::string type_name;
   GDALDataType type = GDT_Byte;
   GPtrDiff_t offset = 0;
@@ -277,24 +275,24 @@ GDAL_ASYNCABLE_DEFINE(MDArray::read) {
     gdal_span = NumberArrayToSharedPtr<int64_t, size_t>(span, self->dimensions);
     gdal_stride = NumberArrayToSharedPtr<int64_t, GPtrDiff_t>(stride, self->dimensions);
   } catch (const char *e) {
-    Nan::ThrowError(e);
-    return;
+    Napi::Error::New(env, e).ThrowAsJavaScriptException();
+    return env.Null();
   }
   GPtrDiff_t highest = findHighest(self->dimensions, gdal_span, gdal_stride, offset);
   GPtrDiff_t lowest = findLowest(self->dimensions, gdal_span, gdal_stride, offset);
   size_t length = (highest - (lowest < 0 ? lowest : 0)) + 1;
 
-  Local<String> sym = Nan::New("data").ToLocalChecked();
-  Local<Value> data;
-  Local<Object> array;
-  if (Nan::HasOwnProperty(options, sym).FromMaybe(false)) {
-    data = Nan::Get(options, sym).ToLocalChecked();
-    if (!data->IsUndefined() && !data->IsNull()) {
-      array = data.As<Object>();
+  Napi::String sym = Napi::String::New(env, "data");
+  Napi::Value data;
+  Napi::Object array;
+  if (Napi::HasOwnProperty(options, sym).FromMaybe(false)) {
+    data = (options).Get(sym);
+    if (!data.IsNull() && !data.IsNull()) {
+      array = data.As<Napi::Object>();
       type = node_gdal::TypedArray::Identify(array);
       if (type == GDT_Unknown) {
-        Nan::ThrowError("Invalid array");
-        return;
+        Napi::Error::New(env, "Invalid array").ThrowAsJavaScriptException();
+        return env.Null();
       }
     }
   }
@@ -306,28 +304,28 @@ GDAL_ASYNCABLE_DEFINE(MDArray::read) {
     if (type_name.empty()) {
       auto exType = gdal_mdarray->GetDataType();
       if (exType.GetClass() != GEDTC_NUMERIC) {
-        Nan::ThrowTypeError("Reading of extended data types is not supported yet");
-        return;
+        Napi::TypeError::New(env, "Reading of extended data types is not supported yet").ThrowAsJavaScriptException();
+        return env.Null();
       }
       type = exType.GetNumericDataType();
     }
     data = node_gdal::TypedArray::New(type, length);
-    if (data.IsEmpty() || !data->IsObject()) {
-      Nan::ThrowError("Failed to allocate array");
-      return; // TypedArray::New threw an error
+    if (data.IsEmpty() || !data.IsObject()) {
+      Napi::Error::New(env, "Failed to allocate array").ThrowAsJavaScriptException();
+      return env.Null(); // TypedArray::New threw an error
     }
-    array = data.As<Object>();
+    array = data.As<Napi::Object>();
   }
 
   if (lowest < 0) {
-    Nan::ThrowRangeError("Will have to read before the start of the array");
-    return;
+    Napi::RangeError::New(env, "Will have to read before the start of the array").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   void *buffer = node_gdal::TypedArray::Validate(array, type, length);
   if (!buffer) {
-    Nan::ThrowError("Failed to allocate array");
-    return; // TypedArray::Validate threw an error
+    Napi::Error::New(env, "Failed to allocate array").ThrowAsJavaScriptException();
+    return env.Null(); // TypedArray::Validate threw an error
   }
 
   GDALAsyncableJob<bool> job(self->parent_uid);
@@ -366,7 +364,7 @@ GDAL_ASYNCABLE_DEFINE(MDArray::read) {
  * @param {string} view
  * @return {MDArray}
  */
-NAN_METHOD(MDArray::getView) {
+Napi::Value MDArray::getView(const Napi::CallbackInfo &info) {
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   GDAL_RAW_CHECK(std::shared_ptr<GDALMDArray>, array, raw);
 
@@ -376,11 +374,11 @@ NAN_METHOD(MDArray::getView) {
   CPLErrorReset();
   std::shared_ptr<GDALMDArray> view = raw->GetView(viewExpr);
   if (view == nullptr) {
-    Nan::ThrowError(CPLGetLastErrorMsg());
-    return;
+    Napi::Error::New(env, CPLGetLastErrorMsg()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  Local<Value> obj = New(view, array->parent_ds);
-  info.GetReturnValue().Set(obj);
+  Napi::Value obj = New(view, array->parent_ds);
+  return obj;
 }
 
 /**
@@ -396,7 +394,7 @@ NAN_METHOD(MDArray::getView) {
  * @throws {Error}
  * @return {MDArray}
  */
-NAN_METHOD(MDArray::getMask) {
+Napi::Value MDArray::getMask(const Napi::CallbackInfo &info) {
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   GDAL_RAW_CHECK(std::shared_ptr<GDALMDArray>, array, raw);
 
@@ -404,11 +402,11 @@ NAN_METHOD(MDArray::getMask) {
   CPLErrorReset();
   std::shared_ptr<GDALMDArray> mask = raw->GetMask(NULL);
   if (mask == nullptr) {
-    Nan::ThrowError(CPLGetLastErrorMsg());
-    return;
+    Napi::Error::New(env, CPLGetLastErrorMsg()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  Local<Value> obj = New(mask, array->parent_ds);
-  info.GetReturnValue().Set(obj);
+  Napi::Value obj = New(mask, array->parent_ds);
+  return obj;
 }
 
 /**
@@ -424,7 +422,7 @@ NAN_METHOD(MDArray::getMask) {
  * @throws {Error}
  * @return {Dataset}
  */
-NAN_METHOD(MDArray::asDataset) {
+Napi::Value MDArray::asDataset(const Napi::CallbackInfo &info) {
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   GDAL_RAW_CHECK(std::shared_ptr<GDALMDArray>, array, raw);
 
@@ -439,11 +437,11 @@ NAN_METHOD(MDArray::asDataset) {
   CPLErrorReset();
   GDALDataset *ds = raw->AsClassicDataset(x, y);
   if (ds == nullptr) {
-    Nan::ThrowError(CPLGetLastErrorMsg());
-    return;
+    Napi::Error::New(env, CPLGetLastErrorMsg()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  Local<Value> obj = Dataset::New(ds, array->parent_ds);
-  info.GetReturnValue().Set(obj);
+  Napi::Value obj = Dataset::New(ds, array->parent_ds);
+  return obj;
 }
 
 /**
@@ -456,17 +454,17 @@ NAN_METHOD(MDArray::asDataset) {
  * @memberof MDArray
  * @type {SpatialReference}
  */
-NAN_GETTER(MDArray::srsGetter) {
+Napi::Value MDArray::srsGetter(const Napi::CallbackInfo &info) {
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   GDAL_RAW_CHECK(std::shared_ptr<GDALMDArray>, array, raw);
   GDAL_LOCK_PARENT(array);
   std::shared_ptr<OGRSpatialReference> srs = raw->GetSpatialRef();
   if (srs == nullptr) {
-    info.GetReturnValue().Set(Nan::Null());
+    return env.Null();
     return;
   }
 
-  info.GetReturnValue().Set(SpatialReference::New(srs.get(), false));
+  return SpatialReference::New(srs.get(), false);
 }
 
 /**
@@ -478,15 +476,15 @@ NAN_GETTER(MDArray::srsGetter) {
  * @memberof MDArray
  * @type {number}
  */
-NAN_GETTER(MDArray::offsetGetter) {
+Napi::Value MDArray::offsetGetter(const Napi::CallbackInfo &info) {
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   bool hasOffset = false;
   GDAL_LOCK_PARENT(array);
   double result = array->this_->GetOffset(&hasOffset);
   if (hasOffset)
-    info.GetReturnValue().Set(Nan::New<Number>(result));
+    return Napi::Number::New(env, result);
   else
-    info.GetReturnValue().Set(Nan::New<Number>(0));
+    return Napi::Number::New(env, 0);
 }
 
 /**
@@ -498,15 +496,15 @@ NAN_GETTER(MDArray::offsetGetter) {
  * @memberof MDArray
  * @type {number}
  */
-NAN_GETTER(MDArray::scaleGetter) {
+Napi::Value MDArray::scaleGetter(const Napi::CallbackInfo &info) {
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   bool hasScale = false;
   GDAL_LOCK_PARENT(array);
   double result = array->this_->GetScale(&hasScale);
   if (hasScale)
-    info.GetReturnValue().Set(Nan::New<Number>(result));
+    return Napi::Number::New(env, result);
   else
-    info.GetReturnValue().Set(Nan::New<Number>(1));
+    return Napi::Number::New(env, 1);
 }
 
 /**
@@ -518,17 +516,17 @@ NAN_GETTER(MDArray::scaleGetter) {
  * @memberof MDArray
  * @type {number|null}
  */
-NAN_GETTER(MDArray::noDataValueGetter) {
+Napi::Value MDArray::noDataValueGetter(const Napi::CallbackInfo &info) {
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   bool hasNoData = false;
   GDAL_LOCK_PARENT(array);
   double result = array->this_->GetNoDataValueAsDouble(&hasNoData);
 
   if (hasNoData && !std::isnan(result)) {
-    info.GetReturnValue().Set(Nan::New<Number>(result));
+    return Napi::Number::New(env, result);
     return;
   } else {
-    info.GetReturnValue().Set(Nan::Null());
+    return env.Null();
     return;
   }
 }
@@ -545,11 +543,11 @@ NAN_GETTER(MDArray::noDataValueGetter) {
  * @memberof MDArray
  * @type {string}
  */
-NAN_GETTER(MDArray::unitTypeGetter) {
+Napi::Value MDArray::unitTypeGetter(const Napi::CallbackInfo &info) {
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   GDAL_LOCK_PARENT(array);
   std::string unit = array->this_->GetUnit();
-  info.GetReturnValue().Set(SafeString::New(unit.c_str()));
+  return SafeString::New(unit.c_str());
 }
 
 /**
@@ -560,7 +558,7 @@ NAN_GETTER(MDArray::unitTypeGetter) {
  * @memberof MDArray
  * @type {string}
  */
-NAN_GETTER(MDArray::typeGetter) {
+Napi::Value MDArray::typeGetter(const Napi::CallbackInfo &info) {
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   GDAL_RAW_CHECK(std::shared_ptr<GDALMDArray>, array, raw);
   GDAL_LOCK_PARENT(array);
@@ -570,9 +568,9 @@ NAN_GETTER(MDArray::typeGetter) {
     case GEDTC_NUMERIC: r = GDALGetDataTypeName(type.GetNumericDataType()); break;
     case GEDTC_STRING: r = "String"; break;
     case GEDTC_COMPOUND: r = "Compound"; break;
-    default: Nan::ThrowError("Invalid attribute type"); return;
+    default: Napi::Error::New(env, "Invalid attribute type").ThrowAsJavaScriptException(); return;
   }
-  info.GetReturnValue().Set(SafeString::New(r));
+  return SafeString::New(r);
 }
 
 /**
@@ -583,8 +581,8 @@ NAN_GETTER(MDArray::typeGetter) {
  * @memberof MDArray
  * @type {GroupDimensions}
  */
-NAN_GETTER(MDArray::dimensionsGetter) {
-  info.GetReturnValue().Set(Nan::GetPrivate(info.This(), Nan::New("dims_").ToLocalChecked()).ToLocalChecked());
+Napi::Value MDArray::dimensionsGetter(const Napi::CallbackInfo &info) {
+  return Napi::GetPrivate(info.This(), Napi::String::New(env, "dims_"));
 }
 
 /**
@@ -595,8 +593,8 @@ NAN_GETTER(MDArray::dimensionsGetter) {
  * @memberof MDArray
  * @type {ArrayAttributes}
  */
-NAN_GETTER(MDArray::attributesGetter) {
-  info.GetReturnValue().Set(Nan::GetPrivate(info.This(), Nan::New("attrs_").ToLocalChecked()).ToLocalChecked());
+Napi::Value MDArray::attributesGetter(const Napi::CallbackInfo &info) {
+  return Napi::GetPrivate(info.This(), Napi::String::New(env, "attrs_"));
 }
 
 /**
@@ -607,12 +605,12 @@ NAN_GETTER(MDArray::attributesGetter) {
  * @memberof MDArray
  * @type {string}
  */
-NAN_GETTER(MDArray::descriptionGetter) {
+Napi::Value MDArray::descriptionGetter(const Napi::CallbackInfo &info) {
   NODE_UNWRAP_CHECK(MDArray, info.This(), array);
   GDAL_RAW_CHECK(std::shared_ptr<GDALMDArray>, array, raw);
   GDAL_LOCK_PARENT(array);
   std::string description = raw->GetFullName();
-  info.GetReturnValue().Set(SafeString::New(description.c_str()));
+  return SafeString::New(description.c_str());
 }
 
 /**
@@ -627,9 +625,9 @@ NAN_GETTER(MDArray::descriptionGetter) {
  */
 NODE_WRAPPED_GETTER_WITH_RESULT_LOCKED(MDArray, lengthGetter, Number, GetTotalElementsCount);
 
-NAN_GETTER(MDArray::uidGetter) {
-  MDArray *ds = Nan::ObjectWrap::Unwrap<MDArray>(info.This());
-  info.GetReturnValue().Set(Nan::New((int)ds->uid));
+Napi::Value MDArray::uidGetter(const Napi::CallbackInfo &info) {
+  MDArray *ds = info.This().Unwrap<MDArray>();
+  return Napi::New(env, (int)ds->uid);
 }
 
 #endif

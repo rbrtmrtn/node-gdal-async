@@ -2,41 +2,42 @@
 #define __NODE_GDAL_COLORTABLE_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "../nan-wrapper.h"
+#include <napi.h>
 
 // gdal
 #include <gdal_priv.h>
 
 #include "../async.hpp"
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 namespace node_gdal {
 
-class ColorTable : public Nan::ObjectWrap {
+class ColorTable : public Napi::ObjectWrap<ColorTable> {
     public:
-  static Nan::Persistent<FunctionTemplate> constructor;
+  static Napi::FunctionReference constructor;
 
-  static void Initialize(Local<Object> target);
-  static NAN_METHOD(New);
-  static Local<Value> New(GDALColorTable *raw, Local<Value> band);
-  static Local<Value> New(GDALColorTable *raw);
-  static NAN_METHOD(toString);
+  static void Initialize(Napi::Object target);
+  static Napi::Value New(const Napi::CallbackInfo &info);
+  static Napi::Value New(GDALColorTable *raw, Napi::Value band);
+  static Napi::Value New(GDALColorTable *raw);
+  static Napi::Value toString(const Napi::CallbackInfo &info);
 
-  static NAN_METHOD(isSame);
-  static NAN_METHOD(clone);
-  static NAN_METHOD(get);
-  static NAN_METHOD(count);
-  static NAN_METHOD(set);
-  static NAN_METHOD(ramp);
+  static Napi::Value isSame(const Napi::CallbackInfo &info);
+  static Napi::Value clone(const Napi::CallbackInfo &info);
+  static Napi::Value get(const Napi::CallbackInfo &info);
+  static Napi::Value count(const Napi::CallbackInfo &info);
+  static Napi::Value set(const Napi::CallbackInfo &info);
+  static Napi::Value ramp(const Napi::CallbackInfo &info);
 
-  static NAN_GETTER(interpretationGetter);
-  static NAN_GETTER(bandGetter);
+  Napi::Value interpretationGetter(const Napi::CallbackInfo &info);
+  Napi::Value bandGetter(const Napi::CallbackInfo &info);
 
   ColorTable(GDALColorTable *, long);
   inline GDALColorTable *get() {

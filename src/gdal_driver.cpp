@@ -8,35 +8,35 @@
 
 namespace node_gdal {
 
-Nan::Persistent<FunctionTemplate> Driver::constructor;
+Napi::FunctionReference Driver::constructor;
 
-void Driver::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void Driver::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(Driver::New);
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("Driver").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, Driver::New);
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
+  lcons->SetClassName(Napi::String::New(env, "Driver"));
+
+  InstanceMethod("toString", &toString),
   Nan__SetPrototypeAsyncableMethod(lcons, "open", open);
   Nan__SetPrototypeAsyncableMethod(lcons, "create", create);
   Nan__SetPrototypeAsyncableMethod(lcons, "createCopy", createCopy);
-  Nan::SetPrototypeMethod(lcons, "deleteDataset", deleteDataset);
-  Nan::SetPrototypeMethod(lcons, "rename", rename);
-  Nan::SetPrototypeMethod(lcons, "copyFiles", copyFiles);
-  Nan::SetPrototypeMethod(lcons, "getMetadata", getMetadata);
+  InstanceMethod("deleteDataset", &deleteDataset),
+  InstanceMethod("rename", &rename),
+  InstanceMethod("copyFiles", &copyFiles),
+  InstanceMethod("getMetadata", &getMetadata),
 
   ATTR(lcons, "description", descriptionGetter, READ_ONLY_SETTER);
 
-  Nan::Set(target, Nan::New("Driver").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  (target).Set(Napi::String::New(env, "Driver"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
 
-Driver::Driver(GDALDriver *driver) : Nan::ObjectWrap(), this_gdaldriver(driver) {
+Driver::Driver(GDALDriver *driver) : Napi::ObjectWrap<Driver>(), this_gdaldriver(driver) {
   LOG("Created GDAL Driver [%p]", driver);
 }
-Driver::Driver() : Nan::ObjectWrap(), this_gdaldriver(0) {
+Driver::Driver() : Napi::ObjectWrap<Driver>(), this_gdaldriver(0) {
 }
 
 Driver::~Driver() {
@@ -63,37 +63,37 @@ void Driver::dispose() {
  *
  * @class Driver
  */
-NAN_METHOD(Driver::New) {
+Napi::Value Driver::New(const Napi::CallbackInfo& info) {
 
   if (!info.IsConstructCall()) {
-    Nan::ThrowError("Cannot call constructor as function, you need to use 'new' keyword");
-    return;
+    Napi::Error::New(env, "Cannot call constructor as function, you need to use 'new' keyword").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
-  if (info[0]->IsExternal()) {
-    Local<External> ext = info[0].As<External>();
+  if (info[0].IsExternal()) {
+    Napi::External ext = info[0].As<Napi::External>();
     void *ptr = ext->Value();
     Driver *f = static_cast<Driver *>(ptr);
     f->Wrap(info.This());
 
-    info.GetReturnValue().Set(info.This());
+    return info.This();
     return;
   } else {
-    Nan::ThrowError("Cannot create Driver directly");
-    return;
+    Napi::Error::New(env, "Cannot create Driver directly").ThrowAsJavaScriptException();
+    return env.Null();
   }
 }
 
-Local<Value> Driver::New(GDALDriver *driver) {
-  Nan::EscapableHandleScope scope;
+Napi::Value Driver::New(GDALDriver *driver) {
+  Napi::EscapableHandleScope scope(env);
 
-  if (!driver) { return scope.Escape(Nan::Null()); }
+  if (!driver) { return scope.Escape(env.Null()); }
   if (object_store.has(driver)) { return scope.Escape(object_store.get(driver)); }
 
   Driver *wrapped = new Driver(driver);
-  Local<Value> ext = Nan::New<External>(wrapped);
-  Local<Object> obj =
-    Nan::NewInstance(Nan::GetFunction(Nan::New(Driver::constructor)).ToLocalChecked(), 1, &ext).ToLocalChecked();
+  Napi::Value ext = Napi::External::New(env, wrapped);
+  Napi::Object obj =
+    Napi::NewInstance(Napi::GetFunction(Napi::New(env, Driver::constructor)), 1, &ext);
 
   // LOG("ADDING DRIVER TO CACHE [%p]", driver);
   wrapped->uid = object_store.add(driver, wrapped->persistent(), 0);
@@ -102,8 +102,8 @@ Local<Value> Driver::New(GDALDriver *driver) {
   return scope.Escape(obj);
 }
 
-NAN_METHOD(Driver::toString) {
-  info.GetReturnValue().Set(Nan::New("Driver").ToLocalChecked());
+Napi::Value Driver::toString(const Napi::CallbackInfo& info) {
+  return Napi::String::New(env, "Driver");
 }
 
 /**
@@ -114,10 +114,10 @@ NAN_METHOD(Driver::toString) {
  * @memberof Driver
  * @type {string}
  */
-NAN_GETTER(Driver::descriptionGetter) {
-  Driver *driver = Nan::ObjectWrap::Unwrap<Driver>(info.This());
+Napi::Value Driver::descriptionGetter(const Napi::CallbackInfo& info) {
+  Driver *driver = info.This().Unwrap<Driver>();
 
-  info.GetReturnValue().Set(SafeString::New(driver->getGDALDriver()->GetDescription()));
+  return SafeString::New(driver->getGDALDriver()->GetDescription());
 }
 
 /**
@@ -127,12 +127,12 @@ NAN_GETTER(Driver::descriptionGetter) {
  * @memberof Driver
  * @param {string} filename
  */
-NAN_METHOD(Driver::deleteDataset) {
+Napi::Value Driver::deleteDataset(const Napi::CallbackInfo& info) {
 
   std::string name("");
   NODE_ARG_STR(0, "dataset name", name);
 
-  Driver *driver = Nan::ObjectWrap::Unwrap<Driver>(info.This());
+  Driver *driver = info.This().Unwrap<Driver>();
 
   CPLErr err = driver->getGDALDriver()->Delete(name.c_str());
   if (err) {
@@ -188,7 +188,7 @@ auto DatasetRval = [](GDALDataset *ds, const GetFromPersistentFunc &) { return D
  * @return {Promise<Dataset>}
  */
 GDAL_ASYNCABLE_DEFINE(Driver::create) {
-  Driver *driver = Nan::ObjectWrap::Unwrap<Driver>(info.This());
+  Driver *driver = info.This().Unwrap<Driver>();
 
   std::string filename;
   unsigned int x_size = 0, y_size = 0, n_bands = 0;
@@ -200,8 +200,8 @@ GDAL_ASYNCABLE_DEFINE(Driver::create) {
 
   if (info.Length() < 3) {
     if (info.Length() > 1 && options->parse(info[1])) {
-      Nan::ThrowError("Failed parsing options");
-      return; // error parsing string list
+      Napi::Error::New(env, "Failed parsing options").ThrowAsJavaScriptException();
+      return env.Null(); // error parsing string list
     }
   } else {
     NODE_ARG_INT(1, "x size", x_size);
@@ -209,8 +209,8 @@ GDAL_ASYNCABLE_DEFINE(Driver::create) {
     NODE_ARG_INT_OPT(3, "number of bands", n_bands);
     NODE_ARG_OPT_STR(4, "data type", type_name);
     if (info.Length() > 5 && options->parse(info[5])) {
-      Nan::ThrowError("Failed parsing options");
-      return; // error parsing string list
+      Napi::Error::New(env, "Failed parsing options").ThrowAsJavaScriptException();
+      return env.Null(); // error parsing string list
     }
     if (!type_name.empty()) { type = GDALGetDataTypeByName(type_name.c_str()); }
   }
@@ -271,11 +271,11 @@ GDAL_ASYNCABLE_DEFINE(Driver::create) {
  * @return {Promise<Dataset>}
  */
 GDAL_ASYNCABLE_DEFINE(Driver::createCopy) {
-  Driver *driver = Nan::ObjectWrap::Unwrap<Driver>(info.This());
+  Driver *driver = info.This().Unwrap<Driver>();
 
   if (!driver->isAlive()) {
-    Nan::ThrowError("Driver object has already been destroyed");
-    return;
+    Napi::Error::New(env, "Driver object has already been destroyed").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   std::string filename;
@@ -286,27 +286,27 @@ GDAL_ASYNCABLE_DEFINE(Driver::createCopy) {
 
   // NODE_ARG_STR(1, "source dataset", src_dataset)
   if (info.Length() < 2) {
-    Nan::ThrowError("source dataset must be provided");
-    return;
+    Napi::Error::New(env, "source dataset must be provided").ThrowAsJavaScriptException();
+    return env.Null();
   }
   if (IS_WRAPPED(info[1], Dataset)) {
-    src_dataset = Nan::ObjectWrap::Unwrap<Dataset>(info[1].As<Object>());
+    src_dataset = info[1].As<Napi::Object>().Unwrap<Dataset>();
   } else {
-    Nan::ThrowError("source dataset must be a Dataset object");
-    return;
+    Napi::Error::New(env, "source dataset must be a Dataset object").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   options = new StringList;
   if (info.Length() > 2 && options->parse(info[2])) {
-    Nan::ThrowError("Failed parsing options");
-    return; // error parsing string list
+    Napi::Error::New(env, "Failed parsing options").ThrowAsJavaScriptException();
+    return env.Null(); // error parsing string list
   }
 
   bool strict = false;
   NODE_ARG_BOOL_OPT(3, "strict", strict);
 
-  Local<Object> jsoptions;
-  Nan::Callback *progress_cb = nullptr;
+  Napi::Object jsoptions;
+  Napi::FunctionReference *progress_cb = nullptr;
   NODE_ARG_OBJECT_OPT(4, "jsoptions", jsoptions);
   if (!jsoptions.IsEmpty()) NODE_CB_FROM_OBJ_OPT(jsoptions, "progress_cb", progress_cb);
 
@@ -338,8 +338,8 @@ GDAL_ASYNCABLE_DEFINE(Driver::createCopy) {
  * @param {string} name_old New name for the dataset.
  * @param {string} name_new Old name of the dataset.
  */
-NAN_METHOD(Driver::copyFiles) {
-  Driver *driver = Nan::ObjectWrap::Unwrap<Driver>(info.This());
+Napi::Value Driver::copyFiles(const Napi::CallbackInfo& info) {
+  Driver *driver = info.This().Unwrap<Driver>();
   std::string old_name;
   std::string new_name;
 
@@ -365,8 +365,8 @@ NAN_METHOD(Driver::copyFiles) {
  * @param {string} new_name New name for the dataset.
  * @param {string} old_name Old name of the dataset.
  */
-NAN_METHOD(Driver::rename) {
-  Driver *driver = Nan::ObjectWrap::Unwrap<Driver>(info.This());
+Napi::Value Driver::rename(const Napi::CallbackInfo& info) {
+  Driver *driver = info.This().Unwrap<Driver>();
   std::string old_name;
   std::string new_name;
 
@@ -392,10 +392,10 @@ NAN_METHOD(Driver::rename) {
  * @param {string} [domain]
  * @return {any}
  */
-NAN_METHOD(Driver::getMetadata) {
-  Driver *driver = Nan::ObjectWrap::Unwrap<Driver>(info.This());
+Napi::Value Driver::getMetadata(const Napi::CallbackInfo& info) {
+  Driver *driver = info.This().Unwrap<Driver>();
 
-  Local<Object> result;
+  Napi::Object result;
 
   std::string domain("");
   NODE_ARG_OPT_STR(0, "domain", domain);
@@ -403,7 +403,7 @@ NAN_METHOD(Driver::getMetadata) {
   GDALDriver *raw = driver->getGDALDriver();
   char **md = raw->GetMetadata(domain.empty() ? NULL : domain.c_str());
   result = MajorObject::getMetadata(md);
-  info.GetReturnValue().Set(result);
+  return result;
 }
 
 /**
@@ -435,7 +435,7 @@ NAN_METHOD(Driver::getMetadata) {
  * @return {Promise<Dataset>}
  */
 GDAL_ASYNCABLE_DEFINE(Driver::open) {
-  Driver *driver = Nan::ObjectWrap::Unwrap<Driver>(info.This());
+  Driver *driver = info.This().Unwrap<Driver>();
 
   std::string path;
   std::string mode = "r";
@@ -447,14 +447,14 @@ GDAL_ASYNCABLE_DEFINE(Driver::open) {
   if (mode == "r+") {
     access = GA_Update;
   } else if (mode != "r") {
-    Nan::ThrowError("Invalid open mode. Must be \"r\" or \"r+\"");
-    return;
+    Napi::Error::New(env, "Invalid open mode. Must be \"r\" or \"r+\"").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   StringList *options = new StringList;
   if (info.Length() > 2 && options->parse(info[2])) {
-    Nan::ThrowError("Failed parsing options");
-    return; // error parsing string list
+    Napi::Error::New(env, "Failed parsing options").ThrowAsJavaScriptException();
+    return env.Null(); // error parsing string list
   }
 
   GDALDriver *raw = driver->getGDALDriver();

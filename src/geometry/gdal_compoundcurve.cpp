@@ -9,27 +9,27 @@
 
 namespace node_gdal {
 
-Nan::Persistent<FunctionTemplate> CompoundCurve::constructor;
+Napi::FunctionReference CompoundCurve::constructor;
 
-void CompoundCurve::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void CompoundCurve::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(CompoundCurve::New);
-  lcons->Inherit(Nan::New(Geometry::constructor));
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("CompoundCurve").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, CompoundCurve::New);
+  lcons->Inherit(Napi::New(env, Geometry::constructor));
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
+  lcons->SetClassName(Napi::String::New(env, "CompoundCurve"));
+
+  InstanceMethod("toString", &toString),
 
   ATTR(lcons, "curves", curvesGetter, READ_ONLY_SETTER);
 
-  Nan::Set(target, Nan::New("CompoundCurve").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  (target).Set(Napi::String::New(env, "CompoundCurve"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
 
-void CompoundCurve::SetPrivate(Nan::ADDON_REGISTER_FUNCTION_ARGS_TYPE _this, v8::Local<v8::Value> value) {
-  Nan::SetPrivate(_this, Nan::New("curves_").ToLocalChecked(), value);
+void CompoundCurve::SetPrivate(Napi::ADDON_REGISTER_FUNCTION_ARGS_TYPE _this, Napi::Value value) {
+  Napi::SetPrivate(_this, Napi::String::New(env, "curves_"), value);
 };
 
 /**
@@ -46,8 +46,8 @@ void CompoundCurve::SetPrivate(Nan::ADDON_REGISTER_FUNCTION_ARGS_TYPE _this, v8:
  * @extends Geometry
  */
 
-NAN_METHOD(CompoundCurve::toString) {
-  info.GetReturnValue().Set(Nan::New("CompoundCurve").ToLocalChecked());
+Napi::Value CompoundCurve::toString(const Napi::CallbackInfo& info) {
+  return Napi::String::New(env, "CompoundCurve");
 }
 
 /**
@@ -59,8 +59,8 @@ NAN_METHOD(CompoundCurve::toString) {
  * @memberof CompoundCurve
  * @type {CompoundCurveCurves}
  */
-NAN_GETTER(CompoundCurve::curvesGetter) {
-  info.GetReturnValue().Set(Nan::GetPrivate(info.This(), Nan::New("curves_").ToLocalChecked()).ToLocalChecked());
+Napi::Value CompoundCurve::curvesGetter(const Napi::CallbackInfo& info) {
+  return Napi::GetPrivate(info.This(), Napi::String::New(env, "curves_"));
 }
 
 } // namespace node_gdal

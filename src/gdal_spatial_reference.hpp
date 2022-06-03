@@ -2,19 +2,20 @@
 #define __NODE_OGR_SPATIALREFERENCE_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "nan-wrapper.h"
+#include <napi.h>
 
 // ogr
 #include <ogrsf_frmts.h>
 
 #include "async.hpp"
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 namespace node_gdal {
 
@@ -24,55 +25,55 @@ typedef char OGRChar;
 typedef const char OGRChar;
 #endif
 
-class SpatialReference : public Nan::ObjectWrap {
+class SpatialReference : public Napi::ObjectWrap<SpatialReference> {
     public:
-  static Nan::Persistent<FunctionTemplate> constructor;
-  static void Initialize(Local<Object> target);
+  static Napi::FunctionReference constructor;
+  static void Initialize(Napi::Object target);
 
-  static NAN_METHOD(New);
-  static Local<Value> New(OGRSpatialReference *srs);
-  static Local<Value> New(OGRSpatialReference *srs, bool owned);
-  static NAN_METHOD(toString);
-  static NAN_METHOD(clone);
-  static NAN_METHOD(cloneGeogCS);
-  static NAN_METHOD(exportToWKT);
-  static NAN_METHOD(exportToPrettyWKT);
-  static NAN_METHOD(exportToProj4);
-  static NAN_METHOD(exportToXML);
-  static NAN_METHOD(setWellKnownGeogCS);
-  static NAN_METHOD(morphToESRI);
-  static NAN_METHOD(morphFromESRI);
-  static NAN_METHOD(EPSGTreatsAsLatLong);
-  static NAN_METHOD(EPSGTreatsAsNorthingEasting);
-  static NAN_METHOD(getLinearUnits);
-  static NAN_METHOD(getAngularUnits);
-  static NAN_METHOD(isGeocentric);
-  static NAN_METHOD(isGeographic);
-  static NAN_METHOD(isProjected);
-  static NAN_METHOD(isLocal);
-  static NAN_METHOD(isVertical);
-  static NAN_METHOD(isCompound);
-  static NAN_METHOD(isSameGeogCS);
-  static NAN_METHOD(isSameVertCS);
-  static NAN_METHOD(isSame);
-  static NAN_METHOD(autoIdentifyEPSG);
-  static NAN_METHOD(getAuthorityCode);
-  static NAN_METHOD(getAuthorityName);
-  static NAN_METHOD(getAttrValue);
-  static NAN_METHOD(validate);
+  static Napi::Value New(const Napi::CallbackInfo &info);
+  static Napi::Value New(OGRSpatialReference *srs);
+  static Napi::Value New(OGRSpatialReference *srs, bool owned);
+  static Napi::Value toString(const Napi::CallbackInfo &info);
+  static Napi::Value clone(const Napi::CallbackInfo &info);
+  static Napi::Value cloneGeogCS(const Napi::CallbackInfo &info);
+  static Napi::Value exportToWKT(const Napi::CallbackInfo &info);
+  static Napi::Value exportToPrettyWKT(const Napi::CallbackInfo &info);
+  static Napi::Value exportToProj4(const Napi::CallbackInfo &info);
+  static Napi::Value exportToXML(const Napi::CallbackInfo &info);
+  static Napi::Value setWellKnownGeogCS(const Napi::CallbackInfo &info);
+  static Napi::Value morphToESRI(const Napi::CallbackInfo &info);
+  static Napi::Value morphFromESRI(const Napi::CallbackInfo &info);
+  static Napi::Value EPSGTreatsAsLatLong(const Napi::CallbackInfo &info);
+  static Napi::Value EPSGTreatsAsNorthingEasting(const Napi::CallbackInfo &info);
+  static Napi::Value getLinearUnits(const Napi::CallbackInfo &info);
+  static Napi::Value getAngularUnits(const Napi::CallbackInfo &info);
+  static Napi::Value isGeocentric(const Napi::CallbackInfo &info);
+  static Napi::Value isGeographic(const Napi::CallbackInfo &info);
+  static Napi::Value isProjected(const Napi::CallbackInfo &info);
+  static Napi::Value isLocal(const Napi::CallbackInfo &info);
+  static Napi::Value isVertical(const Napi::CallbackInfo &info);
+  static Napi::Value isCompound(const Napi::CallbackInfo &info);
+  static Napi::Value isSameGeogCS(const Napi::CallbackInfo &info);
+  static Napi::Value isSameVertCS(const Napi::CallbackInfo &info);
+  static Napi::Value isSame(const Napi::CallbackInfo &info);
+  static Napi::Value autoIdentifyEPSG(const Napi::CallbackInfo &info);
+  static Napi::Value getAuthorityCode(const Napi::CallbackInfo &info);
+  static Napi::Value getAuthorityName(const Napi::CallbackInfo &info);
+  static Napi::Value getAttrValue(const Napi::CallbackInfo &info);
+  static Napi::Value validate(const Napi::CallbackInfo &info);
 
   GDAL_ASYNCABLE_DECLARE(fromUserInput);
-  static NAN_METHOD(fromWKT);
-  static NAN_METHOD(fromProj4);
-  static NAN_METHOD(fromEPSG);
-  static NAN_METHOD(fromEPSGA);
-  static NAN_METHOD(fromESRI);
-  static NAN_METHOD(fromWMSAUTO);
-  static NAN_METHOD(fromXML);
-  static NAN_METHOD(fromURN);
+  static Napi::Value fromWKT(const Napi::CallbackInfo &info);
+  static Napi::Value fromProj4(const Napi::CallbackInfo &info);
+  static Napi::Value fromEPSG(const Napi::CallbackInfo &info);
+  static Napi::Value fromEPSGA(const Napi::CallbackInfo &info);
+  static Napi::Value fromESRI(const Napi::CallbackInfo &info);
+  static Napi::Value fromWMSAUTO(const Napi::CallbackInfo &info);
+  static Napi::Value fromXML(const Napi::CallbackInfo &info);
+  static Napi::Value fromURN(const Napi::CallbackInfo &info);
   GDAL_ASYNCABLE_DECLARE(fromCRSURL);
   GDAL_ASYNCABLE_DECLARE(fromURL);
-  static NAN_METHOD(fromMICoordSys);
+  static Napi::Value fromMICoordSys(const Napi::CallbackInfo &info);
 
   SpatialReference();
   SpatialReference(OGRSpatialReference *srs);

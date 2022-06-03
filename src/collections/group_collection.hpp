@@ -2,11 +2,12 @@
 #define __NODE_GDAL_BASEGROUP_COLLECTION_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "../nan-wrapper.h"
+#include <napi.h>
 
 // gdal
 #include <gdal_priv.h>
@@ -17,68 +18,68 @@
 
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 namespace node_gdal {
 
 template <typename SELF, typename GDALOBJ, typename GDALPARENT, typename NODEOBJ, typename NODEPARENT>
-class GroupCollection : public Nan::ObjectWrap {
+class GroupCollection : public Napi::ObjectWrap<GroupCollection> {
     public:
   static constexpr const char *_className = "GroupCollection<abstract>";
-  static void Initialize(Local<Object> target) {
-    Nan::HandleScope scope;
+  static void Initialize(Napi::Object target) {
+    Napi::HandleScope scope(env);
 
-    Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(SELF::New);
-    lcons->InstanceTemplate()->SetInternalFieldCount(1);
-    lcons->SetClassName(Nan::New(SELF::_className).ToLocalChecked());
+    Napi::FunctionReference lcons = Napi::Function::New(env, SELF::New);
 
-    Nan::SetPrototypeMethod(lcons, "toString", toString);
-    Nan__SetPrototypeAsyncableMethod(lcons, "count", count);
+    lcons->SetClassName(Napi::New(env, SELF::_className));
+
+    InstanceMethod("toString", &toString), Nan__SetPrototypeAsyncableMethod(lcons, "count", count);
     Nan__SetPrototypeAsyncableMethod(lcons, "get", get);
 
     ATTR_DONT_ENUM(lcons, "ds", dsGetter, READ_ONLY_SETTER);
     ATTR_DONT_ENUM(lcons, "parent", parentGetter, READ_ONLY_SETTER);
     ATTR(lcons, "names", namesGetter, READ_ONLY_SETTER);
 
-    Nan::Set(target, Nan::New(SELF::_className).ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+    (target).Set(Napi::New(env, SELF::_className), Napi::GetFunction(lcons));
 
     SELF::constructor.Reset(lcons);
   }
 
-  static NAN_METHOD(toString) {
-    info.GetReturnValue().Set(Nan::New(SELF::_className).ToLocalChecked());
+  static Napi::Value toString(const Napi::CallbackInfo &info) {
+    return Napi::New(env, SELF::_className);
   }
 
-  static NAN_METHOD(New) {
+  static Napi::Value New(const Napi::CallbackInfo &info) {
 
     if (!info.IsConstructCall()) {
-      Nan::ThrowError("Cannot call constructor as function, you need to use 'new' keyword");
-      return;
+      Napi::Error::New(env, "Cannot call constructor as function, you need to use 'new' keyword")
+        .ThrowAsJavaScriptException();
+      return env.Null();
     }
-    if (info[0]->IsExternal()) {
-      Local<External> ext = info[0].As<External>();
+    if (info[0].IsExternal()) {
+      Napi::External ext = info[0].As<Napi::External>();
       void *ptr = ext->Value();
       SELF *f = static_cast<SELF *>(ptr);
       f->Wrap(info.This());
-      info.GetReturnValue().Set(info.This());
+      return info.This();
       return;
     } else {
-      Nan::ThrowError("Cannot create GroupCollection directly");
-      return;
+      Napi::Error::New(env, "Cannot create GroupCollection directly").ThrowAsJavaScriptException();
+      return env.Null();
     }
   }
 
-  static Local<Value> New(Local<Value> parent, Local<Value> parent_ds) {
-    Nan::EscapableHandleScope scope;
+  static Napi::Value New(Napi::Value parent, Napi::Value parent_ds) {
+    Napi::Env env = parent.Env();
+    Napi::EscapableHandleScope scope(env);
 
     SELF *wrapped = new SELF();
 
-    Local<Value> ext = Nan::New<External>(wrapped);
-    Local<Object> obj =
-      Nan::NewInstance(Nan::GetFunction(Nan::New(SELF::constructor)).ToLocalChecked(), 1, &ext).ToLocalChecked();
-    Nan::SetPrivate(obj, Nan::New("parent_ds_").ToLocalChecked(), parent_ds);
-    Nan::SetPrivate(obj, Nan::New("parent_").ToLocalChecked(), parent);
+    Napi::Value ext = Napi::External::New(env, wrapped);
+    Napi::Object obj = Napi::NewInstance(Napi::GetFunction(Napi::New(env, SELF::constructor)), 1, &ext);
+    Napi::SetPrivate(obj, Napi::String::New(env, "parent_ds_"), parent_ds);
+    Napi::SetPrivate(obj, Napi::String::New(env, "parent_"), parent);
 
     return scope.Escape(obj);
   }
@@ -98,10 +99,8 @@ class GroupCollection : public Nan::ObjectWrap {
 
   GDAL_ASYNCABLE_TEMPLATE(get) {
 
-    Local<Object> parent_ds =
-      Nan::GetPrivate(info.This(), Nan::New("parent_ds_").ToLocalChecked()).ToLocalChecked().As<Object>();
-    Local<Object> parent_obj =
-      Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
+    Napi::Object parent_ds = Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_ds_")).As<Napi::Object>();
+    Napi::Object parent_obj = Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
     NODE_UNWRAP_CHECK(Dataset, parent_ds, ds);
     NODE_UNWRAP_CHECK(NODEPARENT, parent_obj, parent);
 
@@ -130,10 +129,8 @@ class GroupCollection : public Nan::ObjectWrap {
 
   GDAL_ASYNCABLE_TEMPLATE(count) {
 
-    Local<Object> parent_ds =
-      Nan::GetPrivate(info.This(), Nan::New("parent_ds_").ToLocalChecked()).ToLocalChecked().As<Object>();
-    Local<Object> parent_obj =
-      Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
+    Napi::Object parent_ds = Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_ds_")).As<Napi::Object>();
+    Napi::Object parent_obj = Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
     NODE_UNWRAP_CHECK(Dataset, parent_ds, ds);
     NODE_UNWRAP_CHECK(NODEPARENT, parent_obj, parent);
 
@@ -145,43 +142,41 @@ class GroupCollection : public Nan::ObjectWrap {
       int r = SELF::__count(raw);
       return r;
     };
-    job.rval = [](int r, const GetFromPersistentFunc &) { return Nan::New<Number>(r); };
+    job.rval = [](int r, const GetFromPersistentFunc &) { return Napi::Number::New(env, r); };
     job.run(info, async, 0);
   }
 
-  static NAN_GETTER(namesGetter) {
+  Napi::Value namesGetter(const Napi::CallbackInfo &info) {
 
-    Local<Object> parent_ds =
-      Nan::GetPrivate(info.This(), Nan::New("parent_ds_").ToLocalChecked()).ToLocalChecked().As<Object>();
-    Dataset *ds = Nan::ObjectWrap::Unwrap<Dataset>(parent_ds);
+    Napi::Object parent_ds = Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_ds_")).As<Napi::Object>();
+    Dataset *ds = parent_ds.Unwrap<Dataset>();
 
-    Local<Object> parent_obj =
-      Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-    NODEPARENT *parent = Nan::ObjectWrap::Unwrap<NODEPARENT>(parent_obj);
+    Napi::Object parent_obj = Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+    NODEPARENT *parent = parent_obj.Unwrap<NODEPARENT>();
 
     if (!ds->isAlive()) {
-      Nan::ThrowError("Dataset object has already been destroyed");
-      return;
+      Napi::Error::New(env, "Dataset object has already been destroyed").ThrowAsJavaScriptException();
+      return env.Null();
     }
 
     std::vector<std::string> names = SELF::__getNames(parent->get());
 
-    Local<Array> results = Nan::New<Array>(0);
+    Napi::Array results = Napi::Array::New(env, 0);
     int i = 0;
-    for (std::string &n : names) { Nan::Set(results, i++, SafeString::New(n.c_str())); }
+    for (std::string &n : names) { (results).Set(i++, SafeString::New(n.c_str())); }
 
-    info.GetReturnValue().Set(results);
+    return results;
   }
 
-  static NAN_GETTER(parentGetter) {
-    info.GetReturnValue().Set(Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked());
+  Napi::Value parentGetter(const Napi::CallbackInfo &info) {
+    return Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_"));
   }
 
-  static NAN_GETTER(dsGetter) {
-    info.GetReturnValue().Set(Nan::GetPrivate(info.This(), Nan::New("parent_ds_").ToLocalChecked()).ToLocalChecked());
+  Napi::Value dsGetter(const Napi::CallbackInfo &info) {
+    return Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_ds_"));
   }
 
-  GroupCollection() : Nan::ObjectWrap() {
+  GroupCollection() : Napi::ObjectWrap<GroupCollection>() {
   }
 
     protected:

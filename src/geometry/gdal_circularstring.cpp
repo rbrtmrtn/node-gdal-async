@@ -11,19 +11,19 @@
 
 namespace node_gdal {
 
-Nan::Persistent<FunctionTemplate> CircularString::constructor;
+Napi::FunctionReference CircularString::constructor;
 
-void CircularString::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void CircularString::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(CircularString::New);
-  lcons->Inherit(Nan::New(SimpleCurve::constructor));
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("CircularString").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, CircularString::New);
+  lcons->Inherit(Napi::New(env, SimpleCurve::constructor));
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
+  lcons->SetClassName(Napi::String::New(env, "CircularString"));
 
-  Nan::Set(target, Nan::New("CircularString").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  InstanceMethod("toString", &toString),
+
+  (target).Set(Napi::String::New(env, "CircularString"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
@@ -42,8 +42,8 @@ void CircularString::Initialize(Local<Object> target) {
  * @extends SimpleCurve
  */
 
-NAN_METHOD(CircularString::toString) {
-  info.GetReturnValue().Set(Nan::New("CircularString").ToLocalChecked());
+Napi::Value CircularString::toString(const Napi::CallbackInfo& info) {
+  return Napi::String::New(env, "CircularString");
 }
 
 } // namespace node_gdal

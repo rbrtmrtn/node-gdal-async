@@ -23,74 +23,66 @@
 
 namespace node_gdal {
 
-Nan::Persistent<FunctionTemplate> Geometry::constructor;
+Napi::FunctionReference Geometry::constructor;
 
-void Geometry::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void Geometry::Initialize(Napi::Object target) {
+  Napi::Env env = target.Env();
+  Napi::FunctionReference *lcons = new Napi::FunctionReference();
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(Geometry::New);
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("Geometry").ToLocalChecked());
+  Napi::InstanceWrap<Geometry>::InstanceMethod(
+    "getName", &Geometry::getName, static_cast<napi_property_attributes>(napi_writable | napi_configurable));
 
-  // Nan::SetMethod(constructor, "fromWKBType", Geometry::create);
-  Nan__SetAsyncableMethod(lcons, "fromWKT", Geometry::createFromWkt);
-  Nan__SetAsyncableMethod(lcons, "fromWKB", Geometry::createFromWkb);
-  Nan__SetAsyncableMethod(lcons, "fromGeoJson", Geometry::createFromGeoJson);
-  Nan__SetAsyncableMethod(lcons, "fromGeoJsonBuffer", Geometry::createFromGeoJsonBuffer);
-  Nan::SetMethod(lcons, "getName", Geometry::getName);
-  Nan::SetMethod(lcons, "getConstructor", Geometry::getConstructor);
-
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
-  Nan__SetPrototypeAsyncableMethod(lcons, "toKML", exportToKML);
-  Nan__SetPrototypeAsyncableMethod(lcons, "toGML", exportToGML);
-  Nan__SetPrototypeAsyncableMethod(lcons, "toJSON", exportToJSON);
-  Nan__SetPrototypeAsyncableMethod(lcons, "toWKT", exportToWKT);
-  Nan__SetPrototypeAsyncableMethod(lcons, "toWKB", exportToWKB);
-  Nan__SetPrototypeAsyncableMethod(lcons, "isEmpty", isEmpty);
-  Nan__SetPrototypeAsyncableMethod(lcons, "isValid", isValid);
-  Nan__SetPrototypeAsyncableMethod(lcons, "isSimple", isSimple);
-  Nan__SetPrototypeAsyncableMethod(lcons, "isRing", isRing);
-  Nan::SetPrototypeMethod(lcons, "clone", clone);
-  Nan__SetPrototypeAsyncableMethod(lcons, "empty", empty);
-  Nan__SetPrototypeAsyncableMethod(lcons, "closeRings", closeRings);
-  Nan__SetPrototypeAsyncableMethod(lcons, "intersects", intersects);
-  Nan__SetPrototypeAsyncableMethod(lcons, "equals", equals);
-  Nan__SetPrototypeAsyncableMethod(lcons, "disjoint", disjoint);
-  Nan__SetPrototypeAsyncableMethod(lcons, "touches", touches);
-  Nan__SetPrototypeAsyncableMethod(lcons, "crosses", crosses);
-  Nan__SetPrototypeAsyncableMethod(lcons, "within", within);
-  Nan__SetPrototypeAsyncableMethod(lcons, "contains", contains);
-  Nan__SetPrototypeAsyncableMethod(lcons, "overlaps", overlaps);
-  Nan__SetPrototypeAsyncableMethod(lcons, "boundary", boundary);
-  Nan__SetPrototypeAsyncableMethod(lcons, "distance", distance);
-  Nan__SetPrototypeAsyncableMethod(lcons, "convexHull", convexHull);
-  Nan__SetPrototypeAsyncableMethod(lcons, "buffer", buffer);
-  Nan__SetPrototypeAsyncableMethod(lcons, "intersection", intersection);
-  Nan__SetPrototypeAsyncableMethod(lcons, "union", unionGeometry);
-  Nan__SetPrototypeAsyncableMethod(lcons, "difference", difference);
-  Nan__SetPrototypeAsyncableMethod(lcons, "symDifference", symDifference);
-  Nan__SetPrototypeAsyncableMethod(lcons, "centroid", centroid);
-  Nan__SetPrototypeAsyncableMethod(lcons, "simplify", simplify);
-  Nan__SetPrototypeAsyncableMethod(lcons, "simplifyPreserveTopology", simplifyPreserveTopology);
-  Nan::SetPrototypeMethod(lcons, "segmentize", segmentize);
-  Nan__SetPrototypeAsyncableMethod(lcons, "swapXY", swapXY);
-  Nan__SetPrototypeAsyncableMethod(lcons, "getEnvelope", getEnvelope);
-  Nan__SetPrototypeAsyncableMethod(lcons, "getEnvelope3D", getEnvelope3D);
-  Nan__SetPrototypeAsyncableMethod(lcons, "flattenTo2D", flattenTo2D);
-  Nan__SetPrototypeAsyncableMethod(lcons, "transform", transform);
-  Nan__SetPrototypeAsyncableMethod(lcons, "transformTo", transformTo);
+  Napi::Function cons = DefineClass(env, "Geometry", {
+    InstanceAsyncableMethod("fromWKT", createFromWkt), InstanceAsyncableMethod("fromWKB", createFromWkb),
+      InstanceAsyncableMethod("fromGeoJson", createFromGeoJson),
+      InstanceAsyncableMethod("fromGeoJsonBuffer", createFromGeoJsonBuffer),
+      InstanceMethod<&getName>("getName", static_cast<napi_property_attributes>(napi_writable | napi_configurable)),
+      InstanceMethod<&getConstructor>(
+        "getConstructor", static_cast<napi_property_attributes>(napi_writable | napi_configurable)),
+      InstanceMethod<&toString>("toString", static_cast<napi_property_attributes>(napi_writable | napi_configurable)),
+      PrototypeAsyncableMethod("toKML", exportToKML), PrototypeAsyncableMethod("toGML", exportToGML),
+      PrototypeAsyncableMethod("toJSON", exportToJSON), PrototypeAsyncableMethod("toWKT", exportToWKT),
+      PrototypeAsyncableMethod("toWKB", exportToWKB), PrototypeAsyncableMethod("isEmpty", isEmpty),
+      PrototypeAsyncableMethod("isValid", isValid), PrototypeAsyncableMethod("isSimple", isSimple),
+      PrototypeAsyncableMethod("isRing", isRing), InstanceMethod("clone", &clone),
+      PrototypeAsyncableMethod("empty", empty), PrototypeAsyncableMethod("closeRings", closeRings),
+      PrototypeAsyncableMethod("intersects", intersects), PrototypeAsyncableMethod("equals", equals),
+      PrototypeAsyncableMethod("disjoint", disjoint), PrototypeAsyncableMethod("touches", touches),
+      PrototypeAsyncableMethod("crosses", crosses), PrototypeAsyncableMethod("within", within),
+      PrototypeAsyncableMethod("contains", contains), PrototypeAsyncableMethod("overlaps", overlaps),
+      PrototypeAsyncableMethod("boundary", boundary), PrototypeAsyncableMethod("distance", distance),
+      PrototypeAsyncableMethod("convexHull", convexHull), PrototypeAsyncableMethod("buffer", buffer),
+      PrototypeAsyncableMethod("intersection", intersection), PrototypeAsyncableMethod("union", unionGeometry),
+      PrototypeAsyncableMethod("difference", difference), PrototypeAsyncableMethod("symDifference", symDifference),
+      PrototypeAsyncableMethod("centroid", centroid), PrototypeAsyncableMethod("simplify", simplify),
+      PrototypeAsyncableMethod("simplifyPreserveTopology", simplifyPreserveTopology),
+      InstanceMethod("segmentize", &segmentize), PrototypeAsyncableMethod("swapXY", swapXY),
+      PrototypeAsyncableMethod("getEnvelope", getEnvelope), PrototypeAsyncableMethod("getEnvelope3D", getEnvelope3D),
+      PrototypeAsyncableMethod("flattenTo2D", flattenTo2D), PrototypeAsyncableMethod("transform", transform),
+      PrototypeAsyncableMethod("transformTo", transformTo),
 #if GDAL_VERSION_MAJOR >= 3
-  Nan__SetPrototypeAsyncableMethod(lcons, "makeValid", makeValid);
+      PrototypeAsyncableMethod("makeValid", makeValid),
 #endif
+      InstanceAccessor(
+        "srs",
+        &srsGetter,
+        &srsSetter,
+        static_cast<napi_property_attributes>(napi_writable | napi_configurable | napi_enumerable)),
 
-  ATTR(lcons, "srs", srsGetter, srsSetter);
-  ATTR(lcons, "wkbSize", wkbSizeGetter, READ_ONLY_SETTER);
-  ATTR(lcons, "dimension", dimensionGetter, READ_ONLY_SETTER);
-  ATTR(lcons, "coordinateDimension", coordinateDimensionGetter, coordinateDimensionSetter);
-  ATTR(lcons, "wkbType", typeGetter, READ_ONLY_SETTER);
-  ATTR(lcons, "name", nameGetter, READ_ONLY_SETTER);
+      InstanceMethod<&wkbSizeGetter>(
+        "wkbSize", static_cast<napi_property_attributes>(napi_writable | napi_configurable)),
 
-  Nan::Set(target, Nan::New("Geometry").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+      InstanceAccessor("dimension", &dimensionGetter, nullptr, napi_enumerable),
+      InstanceAccessor(
+        "coordinateDimension",
+        &coordinateDimensionGetter,
+        &coordinateDimensionSetter,
+        static_cast<napi_property_attributes>(napi_writable | napi_configurable | napi_enumerable)),
+      InstanceAccessor("wkbType", &Geometry::typeGetter, nullptr, napi_enumerable),
+      InstanceAccessor("name", &Geometry::nameGetter, nullptr, napi_enumerable)
+  });
+
+  (target).Set(Napi::String::New(env, "Geometry"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
@@ -100,21 +92,22 @@ void Geometry::Initialize(Local<Object> target) {
  *
  * @class Geometry
  */
-NAN_METHOD(Geometry::New) {
+Napi::Value Geometry::New(const Napi::CallbackInfo &info) {
   Geometry *f;
 
   if (!info.IsConstructCall()) {
-    Nan::ThrowError("Cannot call constructor as function, you need to use 'new' keyword");
-    return;
+    Napi::Error::New(env, "Cannot call constructor as function, you need to use 'new' keyword")
+      .ThrowAsJavaScriptException();
+    return env.Null();
   }
 
-  if (info[0]->IsExternal()) {
-    Local<External> ext = info[0].As<External>();
+  if (info[0].IsExternal()) {
+    Napi::External ext = info[0].As<Napi::External>();
     void *ptr = ext->Value();
     f = static_cast<Geometry *>(ptr);
 
   } else {
-    Nan::ThrowError(
+    Napi::ThrowError(
       "Geometry doesnt have a constructor, use Geometry.fromWKT(), Geometry.fromWKB() or type-specific constructor. ie. new ogr.Point()");
     return;
     // OGRwkbGeometryType geometry_type;
@@ -124,13 +117,13 @@ NAN_METHOD(Geometry::New) {
   }
 
   f->Wrap(info.This());
-  info.GetReturnValue().Set(info.This());
+  return info.This();
 }
 
-Local<Value> Geometry::New(OGRGeometry *geom, bool owned) {
-  Nan::EscapableHandleScope scope;
+Napi::Value Geometry::New(OGRGeometry *geom, bool owned) {
+  Napi::EscapableHandleScope scope(env);
 
-  if (!geom) { return scope.Escape(Nan::Null()); }
+  if (!geom) { return scope.Escape(env.Null()); }
 
   OGRwkbGeometryType type = getGeometryType_fixed(geom);
   type = wkbFlatten(type);
@@ -148,7 +141,9 @@ Local<Value> Geometry::New(OGRGeometry *geom, bool owned) {
     case wkbCompoundCurve: return scope.Escape(CompoundCurve::New(static_cast<OGRCompoundCurve *>(geom), owned));
     case wkbCircularString: return scope.Escape(CircularString::New(static_cast<OGRCircularString *>(geom), owned));
     case wkbMultiCurve: return scope.Escape(MultiCurve::New(static_cast<OGRMultiCurve *>(geom), owned));
-    default: Nan::ThrowError("Tried to create unsupported geometry type"); return scope.Escape(Nan::Undefined());
+    default:
+      Napi::Error::New(env, "Tried to create unsupported geometry type").ThrowAsJavaScriptException();
+      return scope.Escape(env.Undefined());
   }
 }
 
@@ -167,11 +162,11 @@ OGRwkbGeometryType Geometry::getGeometryType_fixed(OGRGeometry *geom) {
   return type;
 }
 
-NAN_METHOD(Geometry::toString) {
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+Napi::Value Geometry::toString(const Napi::CallbackInfo &info) {
+  Geometry *geom = info.This().Unwrap<Geometry>();
   std::ostringstream ss;
   ss << "Geometry (" << geom->this_->getGeometryName() << ")";
-  info.GetReturnValue().Set(Nan::New(ss.str().c_str()).ToLocalChecked());
+  return Napi::New(env, ss.str().c_str());
 }
 
 /**
@@ -631,9 +626,9 @@ NODE_WRAPPED_ASYNC_METHOD_WITH_OGRERR_RESULT_1_WRAPPED_PARAM(
  * @memberof Geometry
  * @return {Geometry}
  */
-NAN_METHOD(Geometry::clone) {
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
-  info.GetReturnValue().Set(Geometry::New(geom->this_->clone()));
+Napi::Value Geometry::clone(const Napi::CallbackInfo &info) {
+  Geometry *geom = info.This().Unwrap<Geometry>();
+  return Geometry::New(geom->this_->clone());
 }
 
 /**
@@ -659,7 +654,7 @@ NAN_METHOD(Geometry::clone) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::convexHull) {
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
   OGRGeometry *gdal_geom = geom->this_;
   GDALAsyncableJob<OGRGeometry *> job(0);
   job.main = [gdal_geom](const GDALExecutionProgress &) {
@@ -695,7 +690,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::convexHull) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::boundary) {
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
   OGRGeometry *gdal_geom = geom->this_;
   GDALAsyncableJob<OGRGeometry *> job(0);
   job.main = [gdal_geom](const GDALExecutionProgress &) {
@@ -733,8 +728,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::boundary) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::intersection) {
-
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
   Geometry *x = NULL;
 
   NODE_ARG_WRAPPED(0, "geometry to use for intersection", Geometry, x);
@@ -777,8 +771,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::intersection) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::unionGeometry) {
-
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
   Geometry *x = NULL;
 
   NODE_ARG_WRAPPED(0, "geometry to use for union", Geometry, x);
@@ -821,8 +814,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::unionGeometry) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::difference) {
-
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
   Geometry *x = NULL;
 
   NODE_ARG_WRAPPED(0, "geometry to use for difference", Geometry, x);
@@ -865,8 +857,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::difference) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::symDifference) {
-
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
   Geometry *x = NULL;
 
   NODE_ARG_WRAPPED(0, "geometry to use for symDifference", Geometry, x);
@@ -909,8 +900,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::symDifference) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::simplify) {
-
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
   double tolerance;
 
   NODE_ARG_DOUBLE(0, "tolerance", tolerance);
@@ -952,8 +942,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::simplify) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::simplifyPreserveTopology) {
-
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
   double tolerance;
 
   NODE_ARG_DOUBLE(0, "tolerance", tolerance);
@@ -997,14 +986,13 @@ GDAL_ASYNCABLE_DEFINE(Geometry::simplifyPreserveTopology) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::buffer) {
-
   double distance;
   int number_of_segments = 30;
 
   NODE_ARG_DOUBLE(0, "distance", distance);
   NODE_ARG_INT_OPT(1, "number of segments", number_of_segments);
 
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
 
   OGRGeometry *gdal_geom = geom->this_;
 
@@ -1044,8 +1032,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::buffer) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::makeValid) {
-
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
   OGRGeometry *gdal_geom = geom->this_;
   GDALAsyncableJob<OGRGeometry *> job(0);
   job.main = [gdal_geom](const GDALExecutionProgress &) {
@@ -1082,8 +1069,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::makeValid) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKT) {
-
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
 
   OGRGeometry *gdal_geom = geom->this_;
   uv_sem_t *async_lock = geom->async_lock;
@@ -1103,7 +1089,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKT) {
       CPLFree(text);
       return r;
     }
-    return Nan::Undefined().As<Value>();
+    return env.Undefined().As<Napi::Value>();
   };
 
   job.run(info, async, 0);
@@ -1136,8 +1122,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKT) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKB) {
-
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
 
   size_t size = geom->this_->WkbSize();
 
@@ -1150,8 +1135,8 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKB) {
   } else if (order == "LSB") {
     byte_order = wkbNDR;
   } else {
-    Nan::ThrowError("byte order must be 'MSB' or 'LSB'");
-    return;
+    Napi::Error::New(env, "byte order must be 'MSB' or 'LSB'").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   // wkb variant
@@ -1163,14 +1148,14 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKB) {
   } else if (variant == "ISO") {
     wkb_variant = wkbVariantIso;
   } else {
-    Nan::ThrowError("variant must be 'OGC' or 'ISO'");
-    return;
+    Napi::Error::New(env, "variant must be 'OGC' or 'ISO'").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   unsigned char *data = (unsigned char *)malloc(size);
   if (data == nullptr) {
-    Nan::ThrowError("Failed allocating memory");
-    return;
+    Napi::Error::New(env, "Failed allocating memory").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   OGRGeometry *gdal_geom = geom->this_;
@@ -1187,22 +1172,22 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKB) {
     return data;
   };
 
-  Nan::AdjustExternalMemory(size);
+  Napi::AdjustExternalMemory(size);
 
   job.rval = [size](unsigned char *data, const GetFromPersistentFunc &) {
-    Nan::EscapableHandleScope scope;
+    Napi::EscapableHandleScope scope(env);
     int *hint = new int{static_cast<int>(size)};
-    Local<Value> result = Nan::NewBuffer(
-                            reinterpret_cast<char *>(data),
-                            size,
-                            [](char *data, void *hint) {
-                              int *size = reinterpret_cast<int *>(hint);
-                              Nan::AdjustExternalMemory(-(*size));
-                              delete size;
-                              free(data);
-                            },
-                            hint)
-                            .ToLocalChecked();
+    Napi::Value result = Napi::Buffer<char>::New(
+      env,
+      reinterpret_cast<char *>(data),
+      size,
+      [](char *data, void *hint) {
+        int *size = reinterpret_cast<int *>(hint);
+        Napi::AdjustExternalMemory(-(*size));
+        delete size;
+        free(data);
+      },
+      hint);
     return scope.Escape(result);
   };
   job.run(info, async, 2);
@@ -1231,8 +1216,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToWKB) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::exportToKML) {
-
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
 
   OGRGeometry *gdal_geom = geom->this_;
   uv_sem_t *async_lock = geom->async_lock;
@@ -1247,11 +1231,11 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToKML) {
   };
   job.rval = [](char *text, const GetFromPersistentFunc &) {
     if (text) {
-      Local<Value> result = Nan::New(text).ToLocalChecked();
+      Napi::Value result = Napi::New(env, text);
       CPLFree(text);
       return result;
     }
-    return Nan::Undefined().As<Value>();
+    return env.Undefined().As<Napi::Value>();
   };
   job.run(info, async, 0);
 }
@@ -1279,8 +1263,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToKML) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::exportToGML) {
-
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
 
   OGRGeometry *gdal_geom = geom->this_;
   uv_sem_t *async_lock = geom->async_lock;
@@ -1295,11 +1278,11 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToGML) {
   };
   job.rval = [](char *text, const GetFromPersistentFunc &) {
     if (text) {
-      Local<Value> result = Nan::New(text).ToLocalChecked();
+      Napi::Value result = Napi::New(env, text);
       CPLFree(text);
       return result;
     }
-    return Nan::Undefined().As<Value>();
+    return env.Undefined().As<Napi::Value>();
   };
   job.run(info, async, 0);
 }
@@ -1327,8 +1310,7 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToGML) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::exportToJSON) {
-
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
 
   OGRGeometry *gdal_geom = geom->this_;
   uv_sem_t *async_lock = geom->async_lock;
@@ -1343,11 +1325,11 @@ GDAL_ASYNCABLE_DEFINE(Geometry::exportToJSON) {
   };
   job.rval = [](char *text, const GetFromPersistentFunc &) {
     if (text) {
-      Local<Value> result = Nan::New(text).ToLocalChecked();
+      Napi::Value result = Napi::New(env, text);
       CPLFree(text);
       return result;
     }
-    return Nan::Undefined().As<Value>();
+    return env.Undefined().As<Napi::Value>();
   };
   job.run(info, async, 0);
 }
@@ -1378,9 +1360,9 @@ GDAL_ASYNCABLE_DEFINE(Geometry::centroid) {
   // The Centroid method wants the caller to create the point to fill in.
   // Instead of requiring the caller to create the point geometry to fill in, we
   // new up an OGRPoint and put the result into it and return that.
-  Nan::HandleScope scope;
+  Napi::HandleScope scope(env);
 
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
 
   OGRGeometry *gdal_geom = geom->this_;
   uv_sem_t *async_lock = geom->async_lock;
@@ -1423,9 +1405,9 @@ GDAL_ASYNCABLE_DEFINE(Geometry::getEnvelope) {
   // returns object containing boundaries until complete OGREnvelope binding is
   // built
 
-  Nan::HandleScope scope;
+  Napi::HandleScope scope(env);
 
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
 
   OGRGeometry *gdal_geom = geom->this_;
   uv_sem_t *async_lock = geom->async_lock;
@@ -1440,11 +1422,11 @@ GDAL_ASYNCABLE_DEFINE(Geometry::getEnvelope) {
   };
 
   job.rval = [](OGREnvelope *envelope, const GetFromPersistentFunc &) {
-    Local<Object> obj = Nan::New<Object>();
-    Nan::Set(obj, Nan::New("minX").ToLocalChecked(), Nan::New<Number>(envelope->MinX));
-    Nan::Set(obj, Nan::New("maxX").ToLocalChecked(), Nan::New<Number>(envelope->MaxX));
-    Nan::Set(obj, Nan::New("minY").ToLocalChecked(), Nan::New<Number>(envelope->MinY));
-    Nan::Set(obj, Nan::New("maxY").ToLocalChecked(), Nan::New<Number>(envelope->MaxY));
+    Napi::Object obj = Napi::Object::New(env);
+    (obj).Set(Napi::String::New(env, "minX"), Napi::Number::New(env, envelope->MinX));
+    (obj).Set(Napi::String::New(env, "maxX"), Napi::Number::New(env, envelope->MaxX));
+    (obj).Set(Napi::String::New(env, "minY"), Napi::Number::New(env, envelope->MinY));
+    (obj).Set(Napi::String::New(env, "maxY"), Napi::Number::New(env, envelope->MaxY));
     delete envelope;
     return obj;
   };
@@ -1475,9 +1457,9 @@ GDAL_ASYNCABLE_DEFINE(Geometry::getEnvelope3D) {
   // returns object containing boundaries until complete OGREnvelope binding is
   // built
 
-  Nan::HandleScope scope;
+  Napi::HandleScope scope(env);
 
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+  Geometry *geom = info.This().Unwrap<Geometry>();
 
   OGRGeometry *gdal_geom = geom->this_;
   uv_sem_t *async_lock = geom->async_lock;
@@ -1492,13 +1474,13 @@ GDAL_ASYNCABLE_DEFINE(Geometry::getEnvelope3D) {
   };
 
   job.rval = [](OGREnvelope3D *envelope, const GetFromPersistentFunc &) {
-    Local<Object> obj = Nan::New<Object>();
-    Nan::Set(obj, Nan::New("minX").ToLocalChecked(), Nan::New<Number>(envelope->MinX));
-    Nan::Set(obj, Nan::New("maxX").ToLocalChecked(), Nan::New<Number>(envelope->MaxX));
-    Nan::Set(obj, Nan::New("minY").ToLocalChecked(), Nan::New<Number>(envelope->MinY));
-    Nan::Set(obj, Nan::New("maxY").ToLocalChecked(), Nan::New<Number>(envelope->MaxY));
-    Nan::Set(obj, Nan::New("minZ").ToLocalChecked(), Nan::New<Number>(envelope->MinZ));
-    Nan::Set(obj, Nan::New("maxZ").ToLocalChecked(), Nan::New<Number>(envelope->MaxZ));
+    Napi::Object obj = Napi::Object::New(env);
+    obj.Set(Napi::String::New(env, "minX"), Napi::Number::New(env, envelope->MinX));
+    obj.Set(Napi::String::New(env, "maxX"), Napi::Number::New(env, envelope->MaxX));
+    obj.Set(Napi::String::New(env, "minY"), Napi::Number::New(env, envelope->MinY));
+    obj.Set(Napi::String::New(env, "maxY"), Napi::Number::New(env, envelope->MaxY));
+    obj.Set(Napi::String::New(env, "minZ"), Napi::Number::New(env, envelope->MinZ));
+    obj.Set(Napi::String::New(env, "maxZ"), Napi::Number::New(env, envelope->MaxZ));
     delete envelope;
     return obj;
   };
@@ -1558,7 +1540,6 @@ NODE_WRAPPED_ASYNC_METHOD(Geometry, flattenTo2D, flattenTo2D);
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::createFromWkt) {
-
   std::string *wkt_string = new std::string;
   SpatialReference *srs = NULL;
 
@@ -1610,19 +1591,18 @@ GDAL_ASYNCABLE_DEFINE(Geometry::createFromWkt) {
  */
 
 GDAL_ASYNCABLE_DEFINE(Geometry::createFromWkb) {
-
   std::string wkb_string;
   SpatialReference *srs = NULL;
 
-  Local<Object> wkb_obj;
+  Napi::Object wkb_obj;
   NODE_ARG_OBJECT(0, "wkb", wkb_obj);
   NODE_ARG_WRAPPED_OPT(1, "srs", SpatialReference, srs);
 
-  std::string obj_type = *Nan::Utf8String(wkb_obj->GetConstructorName());
+  std::string obj_type = wkb_obj->GetConstructorName(.As<Napi::String>().Utf8Value().c_str());
 
   if (obj_type != "Buffer" && obj_type != "Uint8Array") {
-    Nan::ThrowError("Argument must be a buffer object");
-    return;
+    Napi::Error::New(env, "Argument must be a buffer object").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   unsigned char *data = (unsigned char *)Buffer::Data(wkb_obj);
@@ -1679,23 +1659,22 @@ GDAL_ASYNCABLE_DEFINE(Geometry::createFromWkb) {
  */
 GDAL_ASYNCABLE_DEFINE(Geometry::createFromGeoJson) {
 #if GDAL_VERSION_MAJOR == 2 && GDAL_VERSION_MINOR < 3
-  Nan::ThrowError("GDAL < 2.3 does not support parsing GeoJSON directly");
-  return;
+  Napi::Error::New(env, "GDAL < 2.3 does not support parsing GeoJSON directly").ThrowAsJavaScriptException();
+  return env.Null();
 #else
-
-  Local<Object> geo_obj;
+  Napi::Object geo_obj;
   NODE_ARG_OBJECT(0, "geojson", geo_obj);
 
   // goes to text to pass it in, there isn't a performant way to
   // go from v8 JSON -> CPLJSON anyways
-  Nan::JSON NanJSON;
-  Nan::MaybeLocal<String> result = NanJSON.Stringify(geo_obj);
+  Napi::JSON NanJSON;
+  Napi::MaybeNapi::String result = NanJSON.Stringify(geo_obj);
   if (result.IsEmpty()) {
-    Nan::ThrowError("Invalid GeoJSON");
-    return;
+    Napi::Error::New(env, "Invalid GeoJSON").ThrowAsJavaScriptException();
+    return env.Null();
   }
-  Local<String> stringified = result.ToLocalChecked();
-  std::string *val = new std::string(*Nan::Utf8String(stringified));
+  Napi::String stringified = result;
+  std::string *val = new std::string(stringified.As<Napi::String>().Utf8Value().c_str());
 
   GDALAsyncableJob<OGRGeometry *> job(0);
   job.main = [val](const GDALExecutionProgress &) {
@@ -1738,19 +1717,19 @@ GDAL_ASYNCABLE_DEFINE(Geometry::createFromGeoJson) {
 
 GDAL_ASYNCABLE_DEFINE(Geometry::createFromGeoJsonBuffer) {
 #if GDAL_VERSION_MAJOR == 2 && GDAL_VERSION_MINOR < 3
-  Nan::ThrowError("GDAL < 2.3 does not support parsing GeoJSON directly");
-  return;
+  Napi::Error::New(env, "GDAL < 2.3 does not support parsing GeoJSON directly").ThrowAsJavaScriptException();
+  return env.Null();
 #else
   std::string geojson_string;
 
-  Local<Object> geojson_obj;
+  Napi::Object geojson_obj;
   NODE_ARG_OBJECT(0, "geojson", geojson_obj);
 
-  std::string obj_type = *Nan::Utf8String(geojson_obj->GetConstructorName());
+  std::string obj_type = geojson_obj->GetConstructorName(.As<Napi::String>().Utf8Value().c_str());
 
   if (obj_type != "Buffer" && obj_type != "Uint8Array") {
-    Nan::ThrowError("Argument must be a buffer object");
-    return;
+    Napi::Error::New(env, "Argument must be a buffer object").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   char *data = Buffer::Data(geojson_obj);
@@ -1783,12 +1762,11 @@ GDAL_ASYNCABLE_DEFINE(Geometry::createFromGeoJsonBuffer) {
  * @param {number} type WKB geometry type {@link wkbGeometryType|available options}
  * @return {Geometry}
  */
-NAN_METHOD(Geometry::create) {
-
+Napi::Value Geometry::create(const Napi::CallbackInfo &info) {
   OGRwkbGeometryType type = wkbUnknown;
   NODE_ARG_ENUM(0, "type", OGRwkbGeometryType, type);
 
-  info.GetReturnValue().Set(Geometry::New(OGRGeometryFactory::createGeometry(type), true));
+  return Geometry::New(OGRGeometryFactory::createGeometry(type), true);
 }
 
 /**
@@ -1798,21 +1776,21 @@ NAN_METHOD(Geometry::create) {
  * @memberof Geometry
  * @type {SpatialReference|null}
  */
-NAN_GETTER(Geometry::srsGetter) {
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
-  info.GetReturnValue().Set(SpatialReference::New(geom->this_->getSpatialReference(), false));
+Napi::Value Geometry::srsGetter(const Napi::CallbackInfo &info) {
+  Geometry *geom = info.This().Unwrap<Geometry>();
+  return SpatialReference::New(geom->this_->getSpatialReference(), false);
 }
 
-NAN_SETTER(Geometry::srsSetter) {
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+void Geometry::srsSetter(const Napi::CallbackInfo &info, const Napi::Value &value) {
+  Geometry *geom = info.This().Unwrap<Geometry>();
 
   OGRSpatialReference *srs = NULL;
   if (IS_WRAPPED(value, SpatialReference)) {
-    SpatialReference *srs_obj = Nan::ObjectWrap::Unwrap<SpatialReference>(value.As<Object>());
+    SpatialReference *srs_obj = value.As<Napi::Object>().Unwrap<SpatialReference>();
     srs = srs_obj->get();
-  } else if (!value->IsNull() && !value->IsUndefined()) {
-    Nan::ThrowError("srs must be SpatialReference object");
-    return;
+  } else if (!value.IsNull() && !value.IsNull()) {
+    Napi::Error::New(env, "srs must be SpatialReference object").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   geom->this_->assignSpatialReference(srs);
@@ -1826,9 +1804,9 @@ NAN_SETTER(Geometry::srsSetter) {
  * @memberof Geometry
  * @type {string}
  */
-NAN_GETTER(Geometry::nameGetter) {
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
-  info.GetReturnValue().Set(SafeString::New(geom->this_->getGeometryName()));
+Napi::Value Geometry::nameGetter(const Napi::CallbackInfo &info) {
+  Geometry *geom = info.This().Unwrap<Geometry>();
+  return SafeString::New(geom->this_->getGeometryName());
 }
 
 /**
@@ -1850,9 +1828,9 @@ NAN_GETTER(Geometry::nameGetter) {
  * @memberof Geometry
  * @type {number}
  */
-NAN_GETTER(Geometry::typeGetter) {
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
-  info.GetReturnValue().Set(Nan::New<Integer>(getGeometryType_fixed(geom->this_)));
+Napi::Value Geometry::typeGetter(const Napi::CallbackInfo &info) {
+  Geometry *geom = info.This().Unwrap<Geometry>();
+  return Napi::Number::New(env, getGeometryType_fixed(geom->this_));
 }
 
 /**
@@ -1863,9 +1841,9 @@ NAN_GETTER(Geometry::typeGetter) {
  * @memberof Geometry
  * @type {number}
  */
-NAN_GETTER(Geometry::wkbSizeGetter) {
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
-  info.GetReturnValue().Set(Nan::New<Integer>(static_cast<int>(geom->this_->WkbSize())));
+Napi::Value Geometry::wkbSizeGetter(const Napi::CallbackInfo &info) {
+  Geometry *geom = info.This().Unwrap<Geometry>();
+  return Napi::Number::New(env, static_cast<int>(geom->this_->WkbSize()));
 }
 
 /**
@@ -1876,9 +1854,9 @@ NAN_GETTER(Geometry::wkbSizeGetter) {
  * @memberof Geometry
  * @type {number}
  */
-NAN_GETTER(Geometry::dimensionGetter) {
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
-  info.GetReturnValue().Set(Nan::New<Integer>(geom->this_->getDimension()));
+Napi::Value Geometry::dimensionGetter(const Napi::CallbackInfo &info) {
+  Geometry *geom = info.This().Unwrap<Geometry>();
+  return Napi::Number::New(env, geom->this_->getDimension());
 }
 
 /**
@@ -1888,47 +1866,44 @@ NAN_GETTER(Geometry::dimensionGetter) {
  * @memberof Geometry
  * @type {number}
  */
-NAN_GETTER(Geometry::coordinateDimensionGetter) {
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
-  info.GetReturnValue().Set(Nan::New<Integer>(geom->this_->getCoordinateDimension()));
+Napi::Value Geometry::coordinateDimensionGetter(const Napi::CallbackInfo &info) {
+  Geometry *geom = info.This().Unwrap<Geometry>();
+  return Napi::Number::New(env, geom->this_->getCoordinateDimension());
 }
 
-NAN_SETTER(Geometry::coordinateDimensionSetter) {
-  Geometry *geom = Nan::ObjectWrap::Unwrap<Geometry>(info.This());
+void Geometry::coordinateDimensionSetter(const Napi::CallbackInfo &info, const Napi::Value &value) {
+  Geometry *geom = info.This().Unwrap<Geometry>();
 
-  if (!value->IsInt32()) {
-    Nan::ThrowError("coordinateDimension must be an integer");
-    return;
+  if (!value.IsNumber()) {
+    Napi::Error::New(env, "coordinateDimension must be an integer").ThrowAsJavaScriptException();
+    return env.Null();
   }
-  int dim = Nan::To<int64_t>(value).ToChecked();
+  int dim = value.As<Napi::Number>().Int64Value().ToChecked();
   if (dim != 2 && dim != 3) {
-    Nan::ThrowError("coordinateDimension must be 2 or 3");
-    return;
+    Napi::Error::New(env, "coordinateDimension must be 2 or 3").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   geom->this_->setCoordinateDimension(dim);
 }
 
-Local<Value> Geometry::getConstructor(OGRwkbGeometryType type) {
-  Nan::EscapableHandleScope scope;
+Napi::Value Geometry::_getConstructor(OGRwkbGeometryType type) {
+  Napi::EscapableHandleScope scope(env);
 
   type = wkbFlatten(type);
   switch (type) {
-    case wkbPoint: return scope.Escape(Nan::GetFunction(Nan::New(Point::constructor)).ToLocalChecked());
-    case wkbLineString: return scope.Escape(Nan::GetFunction(Nan::New(LineString::constructor)).ToLocalChecked());
-    case wkbLinearRing: return scope.Escape(Nan::GetFunction(Nan::New(LinearRing::constructor)).ToLocalChecked());
-    case wkbPolygon: return scope.Escape(Nan::GetFunction(Nan::New(Polygon::constructor)).ToLocalChecked());
-    case wkbGeometryCollection:
-      return scope.Escape(Nan::GetFunction(Nan::New(GeometryCollection::constructor)).ToLocalChecked());
-    case wkbMultiPoint: return scope.Escape(Nan::GetFunction(Nan::New(MultiPoint::constructor)).ToLocalChecked());
-    case wkbMultiLineString:
-      return scope.Escape(Nan::GetFunction(Nan::New(MultiLineString::constructor)).ToLocalChecked());
-    case wkbMultiPolygon: return scope.Escape(Nan::GetFunction(Nan::New(MultiPolygon::constructor)).ToLocalChecked());
-    case wkbCircularString:
-      return scope.Escape(Nan::GetFunction(Nan::New(CircularString::constructor)).ToLocalChecked());
-    case wkbCompoundCurve: return scope.Escape(Nan::GetFunction(Nan::New(CompoundCurve::constructor)).ToLocalChecked());
-    case wkbMultiCurve: return scope.Escape(Nan::GetFunction(Nan::New(MultiCurve::constructor)).ToLocalChecked());
-    default: return scope.Escape(Nan::Null());
+    case wkbPoint: return scope.Escape(Napi::GetFunction(Napi::New(env, Point::constructor)));
+    case wkbLineString: return scope.Escape(Napi::GetFunction(Napi::New(env, LineString::constructor)));
+    case wkbLinearRing: return scope.Escape(Napi::GetFunction(Napi::New(env, LinearRing::constructor)));
+    case wkbPolygon: return scope.Escape(Napi::GetFunction(Napi::New(env, Polygon::constructor)));
+    case wkbGeometryCollection: return scope.Escape(Napi::GetFunction(Napi::New(env, GeometryCollection::constructor)));
+    case wkbMultiPoint: return scope.Escape(Napi::GetFunction(Napi::New(env, MultiPoint::constructor)));
+    case wkbMultiLineString: return scope.Escape(Napi::GetFunction(Napi::New(env, MultiLineString::constructor)));
+    case wkbMultiPolygon: return scope.Escape(Napi::GetFunction(Napi::New(env, MultiPolygon::constructor)));
+    case wkbCircularString: return scope.Escape(Napi::GetFunction(Napi::New(env, CircularString::constructor)));
+    case wkbCompoundCurve: return scope.Escape(Napi::GetFunction(Napi::New(env, CompoundCurve::constructor)));
+    case wkbMultiCurve: return scope.Escape(Napi::GetFunction(Napi::New(env, MultiCurve::constructor)));
+    default: return scope.Escape(env.Null());
   }
 }
 
@@ -1943,10 +1918,10 @@ Local<Value> Geometry::getConstructor(OGRwkbGeometryType type) {
  * @param {number} type WKB geometry type {@link wkbGeometryType|available options}
  * @return {Function}
  */
-NAN_METHOD(Geometry::getConstructor) {
+Napi::Value Geometry::getConstructor(const Napi::CallbackInfo &info) {
   OGRwkbGeometryType type;
   NODE_ARG_ENUM(0, "wkbType", OGRwkbGeometryType, type);
-  info.GetReturnValue().Set(getConstructor(type));
+  return _getConstructor(type);
 }
 
 /**
@@ -1960,10 +1935,10 @@ NAN_METHOD(Geometry::getConstructor) {
  * @param {number} type WKB geometry type {@link wkbGeometryType|available options}
  * @return {string}
  */
-NAN_METHOD(Geometry::getName) {
+Napi::Value Geometry::getName(const Napi::CallbackInfo &info) {
   OGRwkbGeometryType type;
   NODE_ARG_ENUM(0, "wkbType", OGRwkbGeometryType, type);
-  info.GetReturnValue().Set(SafeString::New(OGRGeometryTypeToName(type)));
+  return SafeString::New(OGRGeometryTypeToName(type));
 }
 
 } // namespace node_gdal

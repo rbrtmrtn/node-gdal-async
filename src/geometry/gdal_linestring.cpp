@@ -10,19 +10,19 @@
 
 namespace node_gdal {
 
-Nan::Persistent<FunctionTemplate> LineString::constructor;
+Napi::FunctionReference LineString::constructor;
 
-void LineString::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void LineString::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(LineString::New);
-  lcons->Inherit(Nan::New(SimpleCurve::constructor));
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("LineString").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, LineString::New);
+  lcons->Inherit(Napi::New(env, SimpleCurve::constructor));
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
+  lcons->SetClassName(Napi::String::New(env, "LineString"));
 
-  Nan::Set(target, Nan::New("LineString").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  InstanceMethod("toString", &toString),
+
+  (target).Set(Napi::String::New(env, "LineString"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
@@ -41,8 +41,8 @@ void LineString::Initialize(Local<Object> target) {
  * @extends SimpleCurve
  */
 
-NAN_METHOD(LineString::toString) {
-  info.GetReturnValue().Set(Nan::New("LineString").ToLocalChecked());
+Napi::Value LineString::toString(const Napi::CallbackInfo& info) {
+  return Napi::String::New(env, "LineString");
 }
 
 } // namespace node_gdal

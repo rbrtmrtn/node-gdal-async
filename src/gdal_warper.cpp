@@ -6,7 +6,7 @@
 
 namespace node_gdal {
 
-void Warper::Initialize(Local<Object> target) {
+void Warper::Initialize(Napi::Object target) {
   Nan__SetAsyncableMethod(target, "reprojectImage", reprojectImage);
   Nan__SetAsyncableMethod(target, "suggestedWarpOutput", suggestedWarpOutput);
 }
@@ -240,8 +240,8 @@ CPLErr GDALReprojectImageMulti(
  */
 GDAL_ASYNCABLE_DEFINE(Warper::reprojectImage) {
 
-  Local<Object> obj;
-  Local<Value> prop;
+  Napi::Object obj;
+  Napi::Value prop;
 
   auto options = std::make_shared<WarpOptions>();
   GDALWarpOptions *opts;
@@ -250,7 +250,7 @@ GDAL_ASYNCABLE_DEFINE(Warper::reprojectImage) {
   SpatialReference *s_srs;
   SpatialReference *t_srs;
   double maxError = 0;
-  Nan::Callback *progress_cb = nullptr;
+  Napi::FunctionReference *progress_cb = nullptr;
 
   NODE_ARG_OBJECT(0, "Warp options", obj);
 
@@ -260,8 +260,8 @@ GDAL_ASYNCABLE_DEFINE(Warper::reprojectImage) {
     opts = options->get();
   }
   if (!opts->hDstDS) {
-    Nan::ThrowTypeError("dst Dataset must be provided");
-    return;
+    Napi::TypeError::New(env, "dst Dataset must be provided").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   NODE_WRAPPED_FROM_OBJ(obj, "s_srs", SpatialReference, s_srs);
@@ -271,14 +271,14 @@ GDAL_ASYNCABLE_DEFINE(Warper::reprojectImage) {
 
   char *s_srs_wkt, *t_srs_wkt;
   if (s_srs->get()->exportToWkt(&s_srs_wkt)) {
-    Nan::ThrowError("Error converting s_srs to WKT");
-    return;
+    Napi::Error::New(env, "Error converting s_srs to WKT").ThrowAsJavaScriptException();
+    return env.Null();
   }
   s_srs_str = std::string(s_srs_wkt);
   CPLFree(s_srs_wkt);
   if (t_srs->get()->exportToWkt(&t_srs_wkt)) {
-    Nan::ThrowError("Error converting t_srs to WKT");
-    return;
+    Napi::Error::New(env, "Error converting t_srs to WKT").ThrowAsJavaScriptException();
+    return env.Null();
   }
   t_srs_str = std::string(t_srs_wkt);
   CPLFree(t_srs_wkt);
@@ -326,7 +326,7 @@ GDAL_ASYNCABLE_DEFINE(Warper::reprojectImage) {
     };
   }
 
-  job.rval = [](CPLErr r, const GetFromPersistentFunc &) { return Nan::Undefined(); };
+  job.rval = [](CPLErr r, const GetFromPersistentFunc &) { return env.Undefined(); };
   job.run(info, async, 1);
 }
 
@@ -378,8 +378,8 @@ GDAL_ASYNCABLE_DEFINE(Warper::reprojectImage) {
  */
 GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
 
-  Local<Object> obj;
-  Local<Value> prop;
+  Napi::Object obj;
+  Napi::Value prop;
 
   Dataset *ds;
   SpatialReference *s_srs;
@@ -388,21 +388,21 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
 
   NODE_ARG_OBJECT(0, "Warp options", obj);
 
-  if (Nan::HasOwnProperty(obj, Nan::New("src").ToLocalChecked()).FromMaybe(false)) {
-    prop = Nan::Get(obj, Nan::New("src").ToLocalChecked()).ToLocalChecked();
-    if (prop->IsObject() && !prop->IsNull() && Nan::New(Dataset::constructor)->HasInstance(prop)) {
-      ds = Nan::ObjectWrap::Unwrap<Dataset>(prop.As<Object>());
+  if (Napi::HasOwnProperty(obj, Napi::String::New(env, "src")).FromMaybe(false)) {
+    prop = (obj).Get(Napi::String::New(env, "src"));
+    if (prop.IsObject() && !prop.IsNull() && Napi::New(env, Dataset::constructor)->HasInstance(prop)) {
+      ds = prop.As<Napi::Object>().Unwrap<Dataset>();
       if (!ds->get()) {
-        Nan::ThrowError("src dataset already closed");
-        return;
+        Napi::Error::New(env, "src dataset already closed").ThrowAsJavaScriptException();
+        return env.Null();
       }
     } else {
-      Nan::ThrowTypeError("src property must be a Dataset object");
-      return;
+      Napi::TypeError::New(env, "src property must be a Dataset object").ThrowAsJavaScriptException();
+      return env.Null();
     }
   } else {
-    Nan::ThrowError("src dataset must be provided");
-    return;
+    Napi::Error::New(env, "src dataset must be provided").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   NODE_WRAPPED_FROM_OBJ(obj, "s_srs", SpatialReference, s_srs);
@@ -411,14 +411,14 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
 
   char *s_srs_wkt, *t_srs_wkt;
   if (s_srs->get()->exportToWkt(&s_srs_wkt)) {
-    Nan::ThrowError("Error converting s_srs to WKT");
-    return;
+    Napi::Error::New(env, "Error converting s_srs to WKT").ThrowAsJavaScriptException();
+    return env.Null();
   }
   std::string s_srs_str = std::string(s_srs_wkt);
   CPLFree(s_srs_wkt);
   if (t_srs->get()->exportToWkt(&t_srs_wkt)) {
-    Nan::ThrowError("Error converting t_srs to WKT");
-    return;
+    Napi::Error::New(env, "Error converting t_srs to WKT").ThrowAsJavaScriptException();
+    return env.Null();
   }
   std::string t_srs_str = std::string(t_srs_wkt);
   CPLFree(t_srs_wkt);
@@ -470,22 +470,22 @@ GDAL_ASYNCABLE_DEFINE(Warper::suggestedWarpOutput) {
   };
 
   job.rval = [](warpOutputResult r, const GetFromPersistentFunc &) {
-    Nan::EscapableHandleScope scope;
-    Local<Array> result_geotransform = Nan::New<Array>();
-    Nan::Set(result_geotransform, 0, Nan::New<Number>(r.geotransform[0]));
-    Nan::Set(result_geotransform, 1, Nan::New<Number>(r.geotransform[1]));
-    Nan::Set(result_geotransform, 2, Nan::New<Number>(r.geotransform[2]));
-    Nan::Set(result_geotransform, 3, Nan::New<Number>(r.geotransform[3]));
-    Nan::Set(result_geotransform, 4, Nan::New<Number>(r.geotransform[4]));
-    Nan::Set(result_geotransform, 5, Nan::New<Number>(r.geotransform[5]));
+    Napi::EscapableHandleScope scope(env);
+    Napi::Array result_geotransform = Napi::Array::New(env);
+    (result_geotransform).Set(0, Napi::Number::New(env, r.geotransform[0]));
+    (result_geotransform).Set(1, Napi::Number::New(env, r.geotransform[1]));
+    (result_geotransform).Set(2, Napi::Number::New(env, r.geotransform[2]));
+    (result_geotransform).Set(3, Napi::Number::New(env, r.geotransform[3]));
+    (result_geotransform).Set(4, Napi::Number::New(env, r.geotransform[4]));
+    (result_geotransform).Set(5, Napi::Number::New(env, r.geotransform[5]));
 
-    Local<Object> result_size = Nan::New<Object>();
-    Nan::Set(result_size, Nan::New("x").ToLocalChecked(), Nan::New<Integer>(r.w));
-    Nan::Set(result_size, Nan::New("y").ToLocalChecked(), Nan::New<Integer>(r.h));
+    Napi::Object result_size = Napi::Object::New(env);
+    (result_size).Set(Napi::String::New(env, "x"), Napi::Number::New(env, r.w));
+    (result_size).Set(Napi::String::New(env, "y"), Napi::Number::New(env, r.h));
 
-    Local<Object> result = Nan::New<Object>();
-    Nan::Set(result, Nan::New("rasterSize").ToLocalChecked(), result_size);
-    Nan::Set(result, Nan::New("geoTransform").ToLocalChecked(), result_geotransform);
+    Napi::Object result = Napi::Object::New(env);
+    (result).Set(Napi::String::New(env, "rasterSize"), result_size);
+    (result).Set(Napi::String::New(env, "geoTransform"), result_geotransform);
 
     return scope.Escape(result);
   };

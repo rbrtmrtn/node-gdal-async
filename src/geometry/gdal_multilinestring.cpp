@@ -10,20 +10,20 @@
 
 namespace node_gdal {
 
-Nan::Persistent<FunctionTemplate> MultiLineString::constructor;
+Napi::FunctionReference MultiLineString::constructor;
 
-void MultiLineString::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void MultiLineString::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(MultiLineString::New);
-  lcons->Inherit(Nan::New(GeometryCollection::constructor));
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("MultiLineString").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, MultiLineString::New);
+  lcons->Inherit(Napi::New(env, GeometryCollection::constructor));
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
-  Nan::SetPrototypeMethod(lcons, "polygonize", polygonize);
+  lcons->SetClassName(Napi::String::New(env, "MultiLineString"));
 
-  Nan::Set(target, Nan::New("MultiLineString").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  InstanceMethod("toString", &toString),
+  InstanceMethod("polygonize", &polygonize),
+
+  (target).Set(Napi::String::New(env, "MultiLineString"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
@@ -34,8 +34,8 @@ void MultiLineString::Initialize(Local<Object> target) {
  * @extends GeometryCollection
  */
 
-NAN_METHOD(MultiLineString::toString) {
-  info.GetReturnValue().Set(Nan::New("MultiLineString").ToLocalChecked());
+Napi::Value MultiLineString::toString(const Napi::CallbackInfo& info) {
+  return Napi::String::New(env, "MultiLineString");
 }
 
 /**
@@ -46,11 +46,11 @@ NAN_METHOD(MultiLineString::toString) {
  * @memberof MultiLineString
  * @return {Polygon}
  */
-NAN_METHOD(MultiLineString::polygonize) {
+Napi::Value MultiLineString::polygonize(const Napi::CallbackInfo& info) {
 
-  MultiLineString *geom = Nan::ObjectWrap::Unwrap<MultiLineString>(info.This());
+  MultiLineString *geom = info.This().Unwrap<MultiLineString>();
 
-  info.GetReturnValue().Set(Geometry::New(geom->this_->Polygonize()));
+  return Geometry::New(geom->this_->Polygonize());
 }
 
 } // namespace node_gdal

@@ -14,16 +14,16 @@ namespace node_gdal {
 
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
 
-Nan::Persistent<FunctionTemplate> Dimension::constructor;
+Napi::FunctionReference Dimension::constructor;
 
-void Dimension::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void Dimension::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(Dimension::New);
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("Dimension").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, Dimension::New);
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
+  lcons->SetClassName(Napi::String::New(env, "Dimension"));
+
+  InstanceMethod("toString", &toString),
 
   ATTR_DONT_ENUM(lcons, "_uid", uidGetter, READ_ONLY_SETTER);
   ATTR(lcons, "size", sizeGetter, READ_ONLY_SETTER);
@@ -31,17 +31,16 @@ void Dimension::Initialize(Local<Object> target) {
   ATTR(lcons, "type", typeGetter, READ_ONLY_SETTER);
   ATTR(lcons, "direction", directionGetter, READ_ONLY_SETTER);
 
-  Nan::Set(target, Nan::New("Dimension").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  (target).Set(Napi::String::New(env, "Dimension"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
 
-Dimension::Dimension(std::shared_ptr<GDALDimension> dimension)
-  : Nan::ObjectWrap(), uid(0), this_(dimension), parent_ds(0) {
+Dimension::Dimension(std::shared_ptr<GDALDimension> dimension) : Napi::ObjectWrap<Dimension>(), uid(0), this_(dimension), parent_ds(0) {
   LOG("Created dimension [%p]", dimension.get());
 }
 
-Dimension::Dimension() : Nan::ObjectWrap(), uid(0), this_(0), parent_ds(0) {
+Dimension::Dimension() : Napi::ObjectWrap<Dimension>(), uid(0), this_(0), parent_ds(0) {
 }
 
 Dimension::~Dimension() {
@@ -64,64 +63,65 @@ void Dimension::dispose() {
  *
  * @class Dimension
  */
-NAN_METHOD(Dimension::New) {
+Napi::Value Dimension::New(const Napi::CallbackInfo& info) {
 
   if (!info.IsConstructCall()) {
-    Nan::ThrowError("Cannot call constructor as function, you need to use 'new' keyword");
-    return;
+    Napi::Error::New(env, "Cannot call constructor as function, you need to use 'new' keyword").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
-  if (info.Length() == 1 && info[0]->IsExternal()) {
-    Local<External> ext = info[0].As<External>();
+  if (info.Length() == 1 && info[0].IsExternal()) {
+    Napi::External ext = info[0].As<Napi::External>();
     void *ptr = ext->Value();
     Dimension *f = static_cast<Dimension *>(ptr);
     f->Wrap(info.This());
 
-    info.GetReturnValue().Set(info.This());
+    return info.This();
     return;
   } else {
-    Nan::ThrowError("Cannot create dimension directly. Create with dataset instead.");
-    return;
+    Napi::Error::New(env, "Cannot create dimension directly. Create with dataset instead.").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
-  info.GetReturnValue().Set(info.This());
+  return info.This();
 }
 
-Local<Value> Dimension::New(std::shared_ptr<GDALDimension> raw, GDALDataset *parent_ds) {
-  Nan::EscapableHandleScope scope;
+Napi::Value Dimension::New(std::shared_ptr<GDALDimension> raw, GDALDataset *parent_ds) {
+  Napi::EscapableHandleScope scope(env);
 
-  if (!raw) { return scope.Escape(Nan::Null()); }
+  if (!raw) { return scope.Escape(env.Null()); }
   if (object_store.has(raw)) { return scope.Escape(object_store.get(raw)); }
 
   Dimension *wrapped = new Dimension(raw);
 
-  Local<Object> ds;
+  Napi::Object ds;
   if (object_store.has(parent_ds)) {
     ds = object_store.get(parent_ds);
   } else {
     LOG("Dimension's parent dataset disappeared from cache (array = %p, dataset = %p)", raw.get(), parent_ds);
-    Nan::ThrowError("Dimension's parent dataset disappeared from cache");
-    return scope.Escape(Nan::Undefined());
+    Napi::Error::New(env, "Dimension's parent dataset disappeared from cache").ThrowAsJavaScriptException();
+
+    return scope.Escape(env.Undefined());
   }
 
-  Local<Value> ext = Nan::New<External>(wrapped);
-  Local<Object> obj =
-    Nan::NewInstance(Nan::GetFunction(Nan::New(Dimension::constructor)).ToLocalChecked(), 1, &ext).ToLocalChecked();
+  Napi::Value ext = Napi::External::New(env, wrapped);
+  Napi::Object obj =
+    Napi::NewInstance(Napi::GetFunction(Napi::New(env, Dimension::constructor)), 1, &ext);
 
-  Dataset *unwrapped_ds = Nan::ObjectWrap::Unwrap<Dataset>(ds);
+  Dataset *unwrapped_ds = ds.Unwrap<Dataset>();
   long parent_uid = unwrapped_ds->uid;
 
   wrapped->uid = object_store.add(raw, wrapped->persistent(), parent_uid);
   wrapped->parent_ds = parent_ds;
   wrapped->parent_uid = parent_uid;
 
-  Nan::SetPrivate(obj, Nan::New("ds_").ToLocalChecked(), ds);
+  Napi::SetPrivate(obj, Napi::String::New(env, "ds_"), ds);
 
   return scope.Escape(obj);
 }
 
-NAN_METHOD(Dimension::toString) {
-  info.GetReturnValue().Set(Nan::New("Dimension").ToLocalChecked());
+Napi::Value Dimension::toString(const Napi::CallbackInfo& info) {
+  return Napi::String::New(env, "Dimension");
 }
 
 /**
@@ -164,9 +164,9 @@ NODE_WRAPPED_GETTER_WITH_STRING_LOCKED(Dimension, directionGetter, GetDirection)
  */
 NODE_WRAPPED_GETTER_WITH_STRING_LOCKED(Dimension, typeGetter, GetType);
 
-NAN_GETTER(Dimension::uidGetter) {
-  Dimension *group = Nan::ObjectWrap::Unwrap<Dimension>(info.This());
-  info.GetReturnValue().Set(Nan::New((int)group->uid));
+Napi::Value Dimension::uidGetter(const Napi::CallbackInfo& info) {
+  Dimension *group = info.This().Unwrap<Dimension>();
+  return Napi::New(env, (int)group->uid);
 }
 
 #endif

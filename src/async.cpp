@@ -27,7 +27,7 @@ int ProgressTrampoline(double dfComplete, const char *pszMessage, void *pProgres
 }
 
 // From async.hpp:
-// typedef Nan::AsyncProgressWorkerBase<GDALProgressInfo> GDALAsyncProgressWorker;
+// typedef Napi::AsyncProgressWorkerBase<GDALProgressInfo> GDALAsyncProgressWorker;
 // typedef GDALAsyncProgressWorker::ExecutionProgress GDALAsyncExecutionProgress;
 // GDALAsyncExecutionProgress is an instance of a NAN templated class, in this case
 // the AsyncWorker is the final owner of the progress_callback
@@ -46,7 +46,7 @@ void GDALExecutionProgress::Send(GDALProgressInfo *info) const {
   auto infoHolder = std::unique_ptr<GDALProgressInfo>(info);
   // async mode -> we are in an aux thread, we can't go back to JS
   // we must enqueue a job on the event loop and wait for the JS world to stop
-  // the enqueuing is in Nan::AsyncWorker, then once the JS world is not running
+  // the enqueuing is in Napi::AsyncWorker, then once the JS world is not running
   // AsyncWorker::HandleProgressCallback will get invoked on the main thread
   if (async) async->Send(info, 1);
   // sync mode -> the JS world is not running, we can go back directly
@@ -55,18 +55,19 @@ void GDALExecutionProgress::Send(GDALProgressInfo *info) const {
 }
 
 // This is the sync execution context, it is the final owner of the progress_callback
-GDALSyncExecutionProgress::GDALSyncExecutionProgress(Nan::Callback *cb) : progress_callback(cb){};
+GDALSyncExecutionProgress::GDALSyncExecutionProgress(Napi::FunctionReference *cb) : progress_callback(cb){};
 GDALSyncExecutionProgress::~GDALSyncExecutionProgress() {
   delete progress_callback;
 };
 
 // Going back to JS in sync mode
 void GDALSyncExecutionProgress::Send(GDALProgressInfo *info) const {
-  Nan::HandleScope scope;
-  v8::Local<v8::Value> argv[] = {Nan::New<Number>(info->complete), SafeString::New(info->message)};
-  Nan::TryCatch try_catch;
-  Nan::Call(progress_callback->GetFunction(), Nan::GetCurrentContext()->Global(), 2, argv);
-  if (try_catch.HasCaught()) throw "sync progress callback exception";
+  Napi::Env env = progress_callback->Env();
+  Napi::HandleScope scope(env);
+
+  // Normally, with NAPI, JS exceptions get automatically converted to C++ exceptions
+  // which also get automatically converted to JS exceptions
+  progress_callback->Call(env.Global(), {Napi::Number::New(env, info->complete), SafeString::New(env, info->message)});
 }
 
 } // namespace node_gdal

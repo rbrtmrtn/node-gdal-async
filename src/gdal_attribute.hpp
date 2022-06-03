@@ -2,11 +2,12 @@
 #define __NODE_GDAL_ATTRIBUTE_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "nan-wrapper.h"
+#include <napi.h>
 
 // gdal
 #include <gdal_priv.h>
@@ -18,21 +19,21 @@
 
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 namespace node_gdal {
 
-class Attribute : public Nan::ObjectWrap {
+class Attribute : public Napi::ObjectWrap<Attribute> {
     public:
-  static Nan::Persistent<FunctionTemplate> constructor;
-  static void Initialize(Local<Object> target);
-  static NAN_METHOD(New);
-  static Local<Value> New(std::shared_ptr<GDALAttribute> group, GDALDataset *parent_ds);
-  static NAN_METHOD(toString);
-  static NAN_GETTER(typeGetter);
-  static NAN_GETTER(valueGetter);
-  static NAN_GETTER(uidGetter);
+  static Napi::FunctionReference constructor;
+  static void Initialize(Napi::Object target);
+  static Napi::Value New(const Napi::CallbackInfo &info);
+  static Napi::Value New(std::shared_ptr<GDALAttribute> group, GDALDataset *parent_ds);
+  static Napi::Value toString(const Napi::CallbackInfo &info);
+  Napi::Value typeGetter(const Napi::CallbackInfo &info);
+  Napi::Value valueGetter(const Napi::CallbackInfo &info);
+  Napi::Value uidGetter(const Napi::CallbackInfo &info);
 
   Attribute();
   Attribute(std::shared_ptr<GDALAttribute> group);

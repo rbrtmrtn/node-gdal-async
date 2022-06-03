@@ -1,17 +1,18 @@
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 
 // nan
-#include "nan-wrapper.h"
+#include <napi.h>
 
 #include <string>
 
 #include "gdal_common.hpp"
 
-using namespace v8;
+using namespace Napi;
 
-NAN_SETTER(READ_ONLY_SETTER) {
-  std::string name = *Nan::Utf8String(property);
+void READ_ONLY_SETTER(const Napi::CallbackInfo &info, const Napi::Value &value) {
+  std::string name = property.As<Napi::String>().Utf8Value().c_str();
   std::string err = name + " is a read-only property";
-  Nan::ThrowError(err.c_str());
+  Napi::Error::New(env, err.c_str()).ThrowAsJavaScriptException();
 }

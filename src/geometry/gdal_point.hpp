@@ -2,38 +2,39 @@
 #define __NODE_OGR_POINT_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "../nan-wrapper.h"
+#include <napi.h>
 
 // ogr
 #include <ogrsf_frmts.h>
 
 #include "gdal_geometrybase.hpp"
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 namespace node_gdal {
 
 class Point : public GeometryBase<Point, OGRPoint> {
     public:
-  static Nan::Persistent<FunctionTemplate> constructor;
+  static Napi::FunctionReference constructor;
   using GeometryBase<Point, OGRPoint>::GeometryBase;
 
-  static void Initialize(Local<Object> target);
-  static NAN_METHOD(New);
+  static void Initialize(Napi::Object target);
+  static Napi::Value New(const Napi::CallbackInfo &info);
   using GeometryBase<Point, OGRPoint>::New;
-  static NAN_METHOD(toString);
+  static Napi::Value toString(const Napi::CallbackInfo &info);
 
-  static NAN_GETTER(xGetter);
-  static NAN_GETTER(yGetter);
-  static NAN_GETTER(zGetter);
-  static NAN_SETTER(xSetter);
-  static NAN_SETTER(ySetter);
-  static NAN_SETTER(zSetter);
+  Napi::Value xGetter(const Napi::CallbackInfo &info);
+  Napi::Value yGetter(const Napi::CallbackInfo &info);
+  Napi::Value zGetter(const Napi::CallbackInfo &info);
+  void xSetter(const Napi::CallbackInfo &info, const Napi::Value &value);
+  void ySetter(const Napi::CallbackInfo &info, const Napi::Value &value);
+  void zSetter(const Napi::CallbackInfo &info, const Napi::Value &value);
 };
 
 } // namespace node_gdal

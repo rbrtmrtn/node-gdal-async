@@ -10,19 +10,19 @@
 
 namespace node_gdal {
 
-Nan::Persistent<FunctionTemplate> MultiPoint::constructor;
+Napi::FunctionReference MultiPoint::constructor;
 
-void MultiPoint::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void MultiPoint::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(MultiPoint::New);
-  lcons->Inherit(Nan::New(GeometryCollection::constructor));
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("MultiPoint").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, MultiPoint::New);
+  lcons->Inherit(Napi::New(env, GeometryCollection::constructor));
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
+  lcons->SetClassName(Napi::String::New(env, "MultiPoint"));
 
-  Nan::Set(target, Nan::New("MultiPoint").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  InstanceMethod("toString", &toString),
+
+  (target).Set(Napi::String::New(env, "MultiPoint"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
@@ -33,8 +33,8 @@ void MultiPoint::Initialize(Local<Object> target) {
  * @extends GeometryCollection
  */
 
-NAN_METHOD(MultiPoint::toString) {
-  info.GetReturnValue().Set(Nan::New("MultiPoint").ToLocalChecked());
+Napi::Value MultiPoint::toString(const Napi::CallbackInfo& info) {
+  return Napi::String::New(env, "MultiPoint");
 }
 
 } // namespace node_gdal

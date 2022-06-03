@@ -2,16 +2,17 @@
 #define __NODE_OGR_GEOMETRYBASE_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "../nan-wrapper.h"
+#include <napi.h>
 
 #include "../gdal_common.hpp"
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 namespace node_gdal {
 
@@ -61,14 +62,15 @@ namespace node_gdal {
 #define UPDATE_AMOUNT_OF_GEOMETRY_MEMORY(geom)                                                                         \
   {                                                                                                                    \
     int new_size = geom->this_->WkbSize();                                                                             \
-    if (geom->owned_) Nan::AdjustExternalMemory(new_size - geom->size_);                                               \
+    if (geom->owned_) Napi::AdjustExternalMemory(new_size - geom->size_);                                              \
     geom->size_ = new_size;                                                                                            \
   }
 
-template <class T, class OGRT> class GeometryBase : public Nan::ObjectWrap {
+template <class T, class OGRT> class GeometryBase : public Napi::ObjectWrap<GeometryBase<T, OGRT>> {
     public:
-  static Local<Value> New(OGRT *geom);
-  static Local<Value> New(OGRT *geom, bool owned);
+  using Napi::InstanceWrap<GeometryBase<T, OGRT>>::InstanceMethod;
+  static Napi::Value New(OGRT *geom);
+  static Napi::Value New(OGRT *geom, bool owned);
 
   GeometryBase();
   GeometryBase(OGRT *geom);
@@ -87,15 +89,15 @@ template <class T, class OGRT> class GeometryBase : public Nan::ObjectWrap {
   uv_sem_t *async_lock;
 };
 
-template <class T, class OGRT> Local<Value> GeometryBase<T, OGRT>::New(OGRT *geom) {
-  Nan::EscapableHandleScope scope;
+template <class T, class OGRT> Napi::Value GeometryBase<T, OGRT>::New(OGRT *geom) {
+  Napi::EscapableHandleScope scope(env);
   return scope.Escape(T::New(geom, true));
 }
 
-template <class T, class OGRT> Local<Value> GeometryBase<T, OGRT>::New(OGRT *geom, bool owned) {
-  Nan::EscapableHandleScope scope;
+template <class T, class OGRT> Napi::Value GeometryBase<T, OGRT>::New(OGRT *geom, bool owned) {
+  Napi::EscapableHandleScope scope(env);
 
-  if (!geom) { return scope.Escape(Nan::Null()); }
+  if (!geom) { return scope.Escape(env.Null()); }
 
   // make a copy of geometry owned by a feature
   // + no need to track when a feature is destroyed
@@ -110,15 +112,15 @@ template <class T, class OGRT> Local<Value> GeometryBase<T, OGRT>::New(OGRT *geo
 
   UPDATE_AMOUNT_OF_GEOMETRY_MEMORY(wrapped);
 
-  Local<Value> ext = Nan::New<External>(wrapped);
-  Local<Object> obj =
-    Nan::NewInstance(Nan::GetFunction(Nan::New(T::constructor)).ToLocalChecked(), 1, &ext).ToLocalChecked();
+  Napi::Value ext = Napi::External::New(env, wrapped);
+  Napi::Object obj = Napi::NewInstance(Napi::GetFunction(Napi::New(env, T::constructor)), 1, &ext);
 
   return scope.Escape(obj);
 }
 
 template <class T, class OGRT>
-GeometryBase<T, OGRT>::GeometryBase(OGRT *geom) : Nan::ObjectWrap(), this_(geom), owned_(true), size_(0) {
+GeometryBase<T, OGRT>::GeometryBase(OGRT *geom)
+  : Napi::ObjectWrap<GeometryBase>(), this_(geom), owned_(true), size_(0) {
   LOG("Created Geometry %s [%p]", typeid(T).name(), geom);
   // The async locks must live outside the V8 memory management,
   // otherwise they won't be accessible from the async threads
@@ -127,7 +129,7 @@ GeometryBase<T, OGRT>::GeometryBase(OGRT *geom) : Nan::ObjectWrap(), this_(geom)
 }
 
 template <class T, class OGRT>
-GeometryBase<T, OGRT>::GeometryBase() : Nan::ObjectWrap(), this_(NULL), owned_(true), size_(0) {
+GeometryBase<T, OGRT>::GeometryBase() : Napi::ObjectWrap<GeometryBase>(), this_(NULL), owned_(true), size_(0) {
   async_lock = new uv_sem_t;
   uv_sem_init(async_lock, 1);
 }
@@ -137,7 +139,7 @@ template <class T, class OGRT> GeometryBase<T, OGRT>::~GeometryBase() {
     LOG("Disposing Geometry %s [%p] (%s)", typeid(T).name(), this_, owned_ ? "owned" : "unowned");
     if (owned_) {
       OGRGeometryFactory::destroyGeometry(this_);
-      Nan::AdjustExternalMemory(-size_);
+      Napi::AdjustExternalMemory(-size_);
     }
     LOG("Disposed Geometry [%p]", this_)
     this_ = NULL;

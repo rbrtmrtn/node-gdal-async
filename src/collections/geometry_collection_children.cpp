@@ -5,27 +5,27 @@
 
 namespace node_gdal {
 
-Nan::Persistent<FunctionTemplate> GeometryCollectionChildren::constructor;
+Napi::FunctionReference GeometryCollectionChildren::constructor;
 
-void GeometryCollectionChildren::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void GeometryCollectionChildren::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(GeometryCollectionChildren::New);
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("GeometryCollectionChildren").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, GeometryCollectionChildren::New);
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
-  Nan::SetPrototypeMethod(lcons, "count", count);
-  Nan::SetPrototypeMethod(lcons, "get", get);
-  Nan::SetPrototypeMethod(lcons, "remove", remove);
-  Nan::SetPrototypeMethod(lcons, "add", add);
+  lcons->SetClassName(Napi::String::New(env, "GeometryCollectionChildren"));
 
-  Nan::Set(target, Nan::New("GeometryCollectionChildren").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  InstanceMethod("toString", &toString),
+  InstanceMethod("count", &count),
+  InstanceMethod("get", &get),
+  InstanceMethod("remove", &remove),
+  InstanceMethod("add", &add),
+
+  (target).Set(Napi::String::New(env, "GeometryCollectionChildren"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
 
-GeometryCollectionChildren::GeometryCollectionChildren() : Nan::ObjectWrap() {
+GeometryCollectionChildren::GeometryCollectionChildren() : Napi::ObjectWrap<GeometryCollectionChildren>(){
 }
 
 GeometryCollectionChildren::~GeometryCollectionChildren() {
@@ -36,41 +36,42 @@ GeometryCollectionChildren::~GeometryCollectionChildren() {
  *
  * @class GeometryCollectionChildren
  */
-NAN_METHOD(GeometryCollectionChildren::New) {
+Napi::Value GeometryCollectionChildren::New(const Napi::CallbackInfo& info) {
 
   if (!info.IsConstructCall()) {
-    Nan::ThrowError("Cannot call constructor as function, you need to use 'new' keyword");
-    return;
+    Napi::Error::New(env, "Cannot call constructor as function, you need to use 'new' keyword").ThrowAsJavaScriptException();
+    return env.Null();
   }
-  if (info[0]->IsExternal()) {
-    Local<External> ext = info[0].As<External>();
+  if (info[0].IsExternal()) {
+    Napi::External ext = info[0].As<Napi::External>();
     void *ptr = ext->Value();
     GeometryCollectionChildren *geom = static_cast<GeometryCollectionChildren *>(ptr);
     geom->Wrap(info.This());
-    info.GetReturnValue().Set(info.This());
+    return info.This();
     return;
   } else {
-    Nan::ThrowError("Cannot create GeometryCollectionChildren directly");
-    return;
+    Napi::Error::New(env, "Cannot create GeometryCollectionChildren directly").ThrowAsJavaScriptException();
+    return env.Null();
   }
 }
 
-Local<Value> GeometryCollectionChildren::New(Local<Value> geom) {
-  Nan::EscapableHandleScope scope;
+Napi::Value GeometryCollectionChildren::New(Napi::Value geom) {
+  Napi::Env env = geom.Env();
+  Napi::EscapableHandleScope scope(env);
 
   GeometryCollectionChildren *wrapped = new GeometryCollectionChildren();
 
-  v8::Local<v8::Value> ext = Nan::New<External>(wrapped);
-  v8::Local<v8::Object> obj =
-    Nan::NewInstance(Nan::GetFunction(Nan::New(GeometryCollectionChildren::constructor)).ToLocalChecked(), 1, &ext)
-      .ToLocalChecked();
-  Nan::SetPrivate(obj, Nan::New("parent_").ToLocalChecked(), geom);
+  Napi::Value ext = Napi::External::New(env, wrapped);
+  Napi::Object obj =
+    Napi::NewInstance(Napi::GetFunction(Napi::New(env, GeometryCollectionChildren::constructor)), 1, &ext)
+      ;
+  Napi::SetPrivate(obj, Napi::String::New(env, "parent_"), geom);
 
   return scope.Escape(obj);
 }
 
-NAN_METHOD(GeometryCollectionChildren::toString) {
-  info.GetReturnValue().Set(Nan::New("GeometryCollectionChildren").ToLocalChecked());
+Napi::Value GeometryCollectionChildren::toString(const Napi::CallbackInfo& info) {
+  return Napi::String::New(env, "GeometryCollectionChildren");
 }
 
 /**
@@ -81,13 +82,13 @@ NAN_METHOD(GeometryCollectionChildren::toString) {
  * @memberof GeometryCollectionChildren
  * @return {number}
  */
-NAN_METHOD(GeometryCollectionChildren::count) {
+Napi::Value GeometryCollectionChildren::count(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  GeometryCollection *geom = Nan::ObjectWrap::Unwrap<GeometryCollection>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  GeometryCollection *geom = parent.Unwrap<GeometryCollection>();
 
-  info.GetReturnValue().Set(Nan::New<Integer>(geom->get()->getNumGeometries()));
+  return Napi::Number::New(env, geom->get()->getNumGeometries());
 }
 
 /**
@@ -100,11 +101,11 @@ NAN_METHOD(GeometryCollectionChildren::count) {
  * @throws {Error}
  * @return {Geometry}
  */
-NAN_METHOD(GeometryCollectionChildren::get) {
+Napi::Value GeometryCollectionChildren::get(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  GeometryCollection *geom = Nan::ObjectWrap::Unwrap<GeometryCollection>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  GeometryCollection *geom = parent.Unwrap<GeometryCollection>();
 
   int i;
   NODE_ARG_INT(0, "index", i);
@@ -114,7 +115,7 @@ NAN_METHOD(GeometryCollectionChildren::get) {
     NODE_THROW_LAST_CPLERR;
     return;
   }
-  info.GetReturnValue().Set(Geometry::New(r, false));
+  return Geometry::New(r, false);
 }
 
 /**
@@ -125,11 +126,11 @@ NAN_METHOD(GeometryCollectionChildren::get) {
  * @memberof GeometryCollectionChildren
  * @param {number} index 0-based index, -1 for all geometries
  */
-NAN_METHOD(GeometryCollectionChildren::remove) {
+Napi::Value GeometryCollectionChildren::remove(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  GeometryCollection *geom = Nan::ObjectWrap::Unwrap<GeometryCollection>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  GeometryCollection *geom = parent.Unwrap<GeometryCollection>();
 
   int i;
   NODE_ARG_INT(0, "index", i);
@@ -162,46 +163,46 @@ NAN_METHOD(GeometryCollectionChildren::remove) {
  * @memberof GeometryCollectionChildren
  * @param {Geometry|Geometry[]} geometry
  */
-NAN_METHOD(GeometryCollectionChildren::add) {
+Napi::Value GeometryCollectionChildren::add(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  GeometryCollection *geom = Nan::ObjectWrap::Unwrap<GeometryCollection>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  GeometryCollection *geom = parent.Unwrap<GeometryCollection>();
 
   Geometry *child;
 
   if (info.Length() < 1) {
-    Nan::ThrowError("child(ren) must be given");
-    return;
+    Napi::Error::New(env, "child(ren) must be given").ThrowAsJavaScriptException();
+    return env.Null();
   }
-  if (info[0]->IsArray()) {
+  if (info[0].IsArray()) {
     // set from array of geometry objects
-    Local<Array> array = info[0].As<Array>();
+    Napi::Array array = info[0].As<Napi::Array>();
     int length = array->Length();
     for (int i = 0; i < length; i++) {
-      Local<Value> element = Nan::Get(array, i).ToLocalChecked();
+      Napi::Value element = (array).Get(i);
       if (IS_WRAPPED(element, Geometry)) {
-        child = Nan::ObjectWrap::Unwrap<Geometry>(element.As<Object>());
+        child = element.As<Napi::Object>().Unwrap<Geometry>();
         OGRErr err = geom->get()->addGeometry(child->get());
         if (err) {
           NODE_THROW_OGRERR(err);
           return;
         }
       } else {
-        Nan::ThrowError("All array elements must be geometry objects");
-        return;
+        Napi::Error::New(env, "All array elements must be geometry objects").ThrowAsJavaScriptException();
+        return env.Null();
       }
     }
   } else if (IS_WRAPPED(info[0], Geometry)) {
-    child = Nan::ObjectWrap::Unwrap<Geometry>(info[0].As<Object>());
+    child = info[0].As<Napi::Object>().Unwrap<Geometry>();
     OGRErr err = geom->get()->addGeometry(child->get());
     if (err) {
       NODE_THROW_OGRERR(err);
       return;
     }
   } else {
-    Nan::ThrowError("child must be a geometry object or array of geometry objects");
-    return;
+    Napi::Error::New(env, "child must be a geometry object or array of geometry objects").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   return;

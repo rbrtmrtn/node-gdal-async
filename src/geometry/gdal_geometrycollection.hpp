@@ -2,17 +2,18 @@
 #define __NODE_OGR_GEOMETRYCOLLECTION_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "../nan-wrapper.h"
+#include <napi.h>
 
 // ogr
 #include <ogrsf_frmts.h>
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 #include "gdal_geometrybase.hpp"
 #include "gdal_geometrycollectionbase.hpp"
@@ -23,16 +24,16 @@ namespace node_gdal {
 class GeometryCollection : public GeometryCollectionBase<GeometryCollection, OGRGeometryCollection> {
 
     public:
-  static Nan::Persistent<FunctionTemplate> constructor;
+  static Napi::FunctionReference constructor;
   using GeometryCollectionBase<GeometryCollection, OGRGeometryCollection>::GeometryCollectionBase;
 
-  static void Initialize(Local<Object> target);
+  static void Initialize(Napi::Object target);
   using GeometryCollectionBase<GeometryCollection, OGRGeometryCollection>::New;
-  static NAN_METHOD(toString);
-  static NAN_METHOD(getArea);
-  static NAN_METHOD(getLength);
+  static Napi::Value toString(const Napi::CallbackInfo &info);
+  static Napi::Value getArea(const Napi::CallbackInfo &info);
+  static Napi::Value getLength(const Napi::CallbackInfo &info);
 
-  static NAN_GETTER(childrenGetter);
+  Napi::Value childrenGetter(const Napi::CallbackInfo &info);
 };
 
 } // namespace node_gdal

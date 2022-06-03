@@ -2,11 +2,12 @@
 #define __NODE_OGR_LINESTRING_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "../nan-wrapper.h"
+#include <napi.h>
 
 // ogr
 #include <ogrsf_frmts.h>
@@ -14,20 +15,20 @@
 #include "gdal_curvebase.hpp"
 #include "../collections/linestring_points.hpp"
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 namespace node_gdal {
 
 class LineString : public CurveBase<LineString, OGRLineString, LineStringPoints> {
 
     public:
-  static Nan::Persistent<FunctionTemplate> constructor;
+  static Napi::FunctionReference constructor;
   using CurveBase<LineString, OGRLineString, LineStringPoints>::CurveBase;
 
-  static void Initialize(Local<Object> target);
+  static void Initialize(Napi::Object target);
   using CurveBase<LineString, OGRLineString, LineStringPoints>::New;
-  static NAN_METHOD(toString);
+  static Napi::Value toString(const Napi::CallbackInfo &info);
 };
 
 } // namespace node_gdal

@@ -14,32 +14,31 @@ namespace node_gdal {
 
 #if GDAL_VERSION_MAJOR > 3 || (GDAL_VERSION_MAJOR == 3 && GDAL_VERSION_MINOR >= 1)
 
-Nan::Persistent<FunctionTemplate> Attribute::constructor;
+Napi::FunctionReference Attribute::constructor;
 
-void Attribute::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void Attribute::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(Attribute::New);
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("Attribute").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, Attribute::New);
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
+  lcons->SetClassName(Napi::String::New(env, "Attribute"));
+
+  InstanceMethod("toString", &toString),
 
   ATTR_DONT_ENUM(lcons, "_uid", uidGetter, READ_ONLY_SETTER);
   ATTR(lcons, "dataType", typeGetter, READ_ONLY_SETTER);
   ATTR(lcons, "value", valueGetter, READ_ONLY_SETTER);
 
-  Nan::Set(target, Nan::New("Attribute").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  (target).Set(Napi::String::New(env, "Attribute"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
 
-Attribute::Attribute(std::shared_ptr<GDALAttribute> attribute)
-  : Nan::ObjectWrap(), uid(0), this_(attribute), parent_ds(0) {
+Attribute::Attribute(std::shared_ptr<GDALAttribute> attribute) : Napi::ObjectWrap<Attribute>(), uid(0), this_(attribute), parent_ds(0) {
   LOG("Created attribute [%p]", attribute.get());
 }
 
-Attribute::Attribute() : Nan::ObjectWrap(), uid(0), this_(0), parent_ds(0) {
+Attribute::Attribute() : Napi::ObjectWrap<Attribute>(), uid(0), this_(0), parent_ds(0) {
 }
 
 Attribute::~Attribute() {
@@ -62,63 +61,64 @@ void Attribute::dispose() {
  *
  * @class Attribute
  */
-NAN_METHOD(Attribute::New) {
+Napi::Value Attribute::New(const Napi::CallbackInfo& info) {
   if (!info.IsConstructCall()) {
-    Nan::ThrowError("Cannot call constructor as function, you need to use 'new' keyword");
-    return;
+    Napi::Error::New(env, "Cannot call constructor as function, you need to use 'new' keyword").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
-  if (info.Length() == 1 && info[0]->IsExternal()) {
-    Local<External> ext = info[0].As<External>();
+  if (info.Length() == 1 && info[0].IsExternal()) {
+    Napi::External ext = info[0].As<Napi::External>();
     void *ptr = ext->Value();
     Attribute *f = static_cast<Attribute *>(ptr);
     f->Wrap(info.This());
 
-    info.GetReturnValue().Set(info.This());
+    return info.This();
     return;
   } else {
-    Nan::ThrowError("Cannot create attribute directly. Create with dataset instead.");
-    return;
+    Napi::Error::New(env, "Cannot create attribute directly. Create with dataset instead.").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
-  info.GetReturnValue().Set(info.This());
+  return info.This();
 }
 
-Local<Value> Attribute::New(std::shared_ptr<GDALAttribute> raw, GDALDataset *parent_ds) {
-  Nan::EscapableHandleScope scope;
+Napi::Value Attribute::New(std::shared_ptr<GDALAttribute> raw, GDALDataset *parent_ds) {
+  Napi::EscapableHandleScope scope(env);
 
-  if (!raw) { return scope.Escape(Nan::Null()); }
+  if (!raw) { return scope.Escape(env.Null()); }
   if (object_store.has(raw)) { return scope.Escape(object_store.get(raw)); }
 
   Attribute *wrapped = new Attribute(raw);
 
-  Local<Object> ds;
+  Napi::Object ds;
   if (object_store.has(parent_ds)) {
     ds = object_store.get(parent_ds);
   } else {
     LOG("Attribute's parent dataset disappeared from cache (array = %p, dataset = %p)", raw.get(), parent_ds);
-    Nan::ThrowError("Attribute's parent dataset disappeared from cache");
-    return scope.Escape(Nan::Undefined());
+    Napi::Error::New(env, "Attribute's parent dataset disappeared from cache").ThrowAsJavaScriptException();
+
+    return scope.Escape(env.Undefined());
   }
 
-  Local<Value> ext = Nan::New<External>(wrapped);
-  Local<Object> obj =
-    Nan::NewInstance(Nan::GetFunction(Nan::New(Attribute::constructor)).ToLocalChecked(), 1, &ext).ToLocalChecked();
+  Napi::Value ext = Napi::External::New(env, wrapped);
+  Napi::Object obj =
+    Napi::NewInstance(Napi::GetFunction(Napi::New(env, Attribute::constructor)), 1, &ext);
 
-  Dataset *unwrapped_ds = Nan::ObjectWrap::Unwrap<Dataset>(ds);
+  Dataset *unwrapped_ds = ds.Unwrap<Dataset>();
   long parent_uid = unwrapped_ds->uid;
 
   wrapped->uid = object_store.add(raw, wrapped->persistent(), parent_uid);
   wrapped->parent_ds = parent_ds;
   wrapped->parent_uid = parent_uid;
 
-  Nan::SetPrivate(obj, Nan::New("ds_").ToLocalChecked(), ds);
+  Napi::SetPrivate(obj, Napi::String::New(env, "ds_"), ds);
 
   return scope.Escape(obj);
 }
 
-NAN_METHOD(Attribute::toString) {
-  info.GetReturnValue().Set(Nan::New("Attribute").ToLocalChecked());
+Napi::Value Attribute::toString(const Napi::CallbackInfo& info) {
+  return Napi::String::New(env, "Attribute");
 }
 
 /**
@@ -131,19 +131,20 @@ NAN_METHOD(Attribute::toString) {
  * @throws {Error}
  * @type {string|number}
  */
-NAN_GETTER(Attribute::valueGetter) {
+Napi::Value Attribute::valueGetter(const Napi::CallbackInfo& info) {
   NODE_UNWRAP_CHECK(Attribute, info.This(), attribute);
   GDAL_RAW_CHECK(std::shared_ptr<GDALAttribute>, attribute, raw);
   GDAL_LOCK_PARENT(attribute);
   GDALExtendedDataType type = raw->GetDataType();
-  Local<Value> r;
+  Napi::Value r;
   switch (type.GetClass()) {
-    case GEDTC_NUMERIC: r = Nan::New<Number>(raw->ReadAsDouble()); break;
+    case GEDTC_NUMERIC: r = Napi::Number::New(env, raw->ReadAsDouble()); break;
     case GEDTC_STRING: r = SafeString::New(raw->ReadAsString()); break;
-    default: Nan::ThrowError("Compound attributes are not supported yet"); return;
+    default: Napi::Error::New(env, "Compound attributes are not supported yet").ThrowAsJavaScriptException();
+ return;
   }
 
-  info.GetReturnValue().Set(r);
+  return r;
 }
 
 /**
@@ -154,7 +155,7 @@ NAN_GETTER(Attribute::valueGetter) {
  * @memberof Attribute
  * @type {string}
  */
-NAN_GETTER(Attribute::typeGetter) {
+Napi::Value Attribute::typeGetter(const Napi::CallbackInfo& info) {
   NODE_UNWRAP_CHECK(Attribute, info.This(), attribute);
   GDAL_RAW_CHECK(std::shared_ptr<GDALAttribute>, attribute, raw);
   GDAL_LOCK_PARENT(attribute);
@@ -164,15 +165,16 @@ NAN_GETTER(Attribute::typeGetter) {
     case GEDTC_NUMERIC: r = GDALGetDataTypeName(type.GetNumericDataType()); break;
     case GEDTC_STRING: r = "String"; break;
     case GEDTC_COMPOUND: r = "Compound"; break;
-    default: Nan::ThrowError("Invalid attribute type"); return;
+    default: Napi::Error::New(env, "Invalid attribute type").ThrowAsJavaScriptException();
+ return;
   }
 
-  info.GetReturnValue().Set(SafeString::New(r));
+  return SafeString::New(r);
 }
 
-NAN_GETTER(Attribute::uidGetter) {
-  Attribute *group = Nan::ObjectWrap::Unwrap<Attribute>(info.This());
-  info.GetReturnValue().Set(Nan::New((int)group->uid));
+Napi::Value Attribute::uidGetter(const Napi::CallbackInfo& info) {
+  Attribute *group = info.This().Unwrap<Attribute>();
+  return Napi::New(env, (int)group->uid);
 }
 
 #endif

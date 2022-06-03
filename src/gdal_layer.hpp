@@ -2,47 +2,48 @@
 #define __NODE_OGR_LAYER_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "nan-wrapper.h"
+#include <napi.h>
 
 // ogr
 #include <ogrsf_frmts.h>
 
 #include "gdal_dataset.hpp"
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 namespace node_gdal {
 
-class Layer : public Nan::ObjectWrap {
+class Layer : public Napi::ObjectWrap<Layer> {
     public:
-  static Nan::Persistent<FunctionTemplate> constructor;
-  static void Initialize(Local<Object> target);
-  static NAN_METHOD(New);
-  static Local<Value> New(OGRLayer *raw, GDALDataset *raw_parent);
-  static Local<Value> New(OGRLayer *raw, GDALDataset *raw_parent, bool result_set);
-  static NAN_METHOD(toString);
-  static NAN_METHOD(getExtent);
-  static NAN_METHOD(setAttributeFilter);
-  static NAN_METHOD(setSpatialFilter);
-  static NAN_METHOD(getSpatialFilter);
-  static NAN_METHOD(testCapability);
+  static Napi::FunctionReference constructor;
+  static void Initialize(Napi::Object target);
+  static Napi::Value New(const Napi::CallbackInfo &info);
+  static Napi::Value New(OGRLayer *raw, GDALDataset *raw_parent);
+  static Napi::Value New(OGRLayer *raw, GDALDataset *raw_parent, bool result_set);
+  static Napi::Value toString(const Napi::CallbackInfo &info);
+  static Napi::Value getExtent(const Napi::CallbackInfo &info);
+  static Napi::Value setAttributeFilter(const Napi::CallbackInfo &info);
+  static Napi::Value setSpatialFilter(const Napi::CallbackInfo &info);
+  static Napi::Value getSpatialFilter(const Napi::CallbackInfo &info);
+  static Napi::Value testCapability(const Napi::CallbackInfo &info);
   GDAL_ASYNCABLE_DECLARE(syncToDisk);
 
-  static NAN_SETTER(dsSetter);
-  static NAN_GETTER(dsGetter);
-  static NAN_GETTER(srsGetter);
-  static NAN_GETTER(featuresGetter);
-  static NAN_GETTER(fieldsGetter);
-  static NAN_GETTER(nameGetter);
-  static NAN_GETTER(fidColumnGetter);
-  static NAN_GETTER(geomColumnGetter);
-  static NAN_GETTER(geomTypeGetter);
-  static NAN_GETTER(uidGetter);
+  void dsSetter(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value dsGetter(const Napi::CallbackInfo &info);
+  Napi::Value srsGetter(const Napi::CallbackInfo &info);
+  Napi::Value featuresGetter(const Napi::CallbackInfo &info);
+  Napi::Value fieldsGetter(const Napi::CallbackInfo &info);
+  Napi::Value nameGetter(const Napi::CallbackInfo &info);
+  Napi::Value fidColumnGetter(const Napi::CallbackInfo &info);
+  Napi::Value geomColumnGetter(const Napi::CallbackInfo &info);
+  Napi::Value geomTypeGetter(const Napi::CallbackInfo &info);
+  Napi::Value uidGetter(const Napi::CallbackInfo &info);
 
   Layer();
   Layer(OGRLayer *ds);

@@ -103,15 +103,24 @@
 	"targets": [
 		{
 			"target_name": "gdal",
+      "cflags!": [ "-fno-exceptions" ],
+      "cflags_cc!": [ "-fno-exceptions" ],
+      "xcode_settings": { "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
+        "CLANG_CXX_LIBRARY": "libc++",
+        "MACOSX_DEPLOYMENT_TARGET": "10.7",
+      },
+      "msvs_settings": {
+        "VCCLCompilerTool": { "ExceptionHandling": 1 },
+      },
 			"type": "loadable_module",
 			"win_delay_load_hook": "false",
 			"product_prefix": "",
 			"product_extension": "node",
 			"sources": [ "<@(sources_node_gdal)" ],
 			"include_dirs": [
+  "<!(node -p \"require('node-addon-api').include_dir\")",
         "include",
-				"<!(node -e \"require('nan')\")"
-			],
+							],
 			"defines": [
 				"PLATFORM='<(OS)'",
 				"_LARGEFILE_SOURCE",
@@ -138,6 +147,7 @@
 					"conditions": [
 						['OS == "win"', {
 							"include_dirs": [
+  "<!(node -p \"require('node-addon-api').include_dir\")",
 								"deps/libgdal/arch/win",
 								"deps/libgdal/gdal",
 								"deps/libgdal/gdal/alg",
@@ -170,6 +180,15 @@
 		},
 		{
 			"target_name": "action_after_build",
+      "cflags!": [ "-fno-exceptions" ],
+      "cflags_cc!": [ "-fno-exceptions" ],
+      "xcode_settings": { "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
+        "CLANG_CXX_LIBRARY": "libc++",
+        "MACOSX_DEPLOYMENT_TARGET": "10.7",
+      },
+      "msvs_settings": {
+        "VCCLCompilerTool": { "ExceptionHandling": 1 },
+      },
 			"type": "none",
 			"dependencies": [ "<(module_name)" ],
 			"conditions": [

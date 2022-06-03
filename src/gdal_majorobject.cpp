@@ -6,10 +6,10 @@
 
 namespace node_gdal {
 
-Local<Object> MajorObject::getMetadata(char **metadata) {
-  Nan::EscapableHandleScope scope;
+Napi::Object MajorObject::getMetadata(char **metadata) {
+  Napi::EscapableHandleScope scope(env);
 
-  Local<Object> result = Nan::New<Object>();
+  Napi::Object result = Napi::Object::New(env);
 
   if (metadata) {
     int i = 0;
@@ -19,7 +19,7 @@ Local<Object> MajorObject::getMetadata(char **metadata) {
       if (i_equal != std::string::npos) {
         std::string key = pair.substr(0, i_equal);
         std::string val = pair.substr(i_equal + 1);
-        Nan::Set(result, Nan::New(key.c_str()).ToLocalChecked(), Nan::New(val.c_str()).ToLocalChecked());
+        (result).Set(Napi::New(env, key.c_str()), Napi::New(env, val.c_str()));
       }
       i++;
     }

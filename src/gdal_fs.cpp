@@ -8,9 +8,9 @@ namespace node_gdal {
  * @namespace fs
  */
 
-void VSI::Initialize(Local<Object> target) {
-  Local<Object> fs = Nan::New<Object>();
-  Nan::Set(target, Nan::New("fs").ToLocalChecked(), fs);
+void VSI::Initialize(Napi::Object target) {
+  Napi::Object fs = Napi::Object::New(env);
+  (target).Set(Napi::String::New(env, "fs"), fs);
   Nan__SetAsyncableMethod(fs, "stat", stat);
   Nan__SetAsyncableMethod(fs, "readDir", readDir);
 }
@@ -130,32 +130,32 @@ GDAL_ASYNCABLE_DEFINE(VSI::stat) {
 
   if (bigint) {
     job.rval = [](VSIStatBufL stat, const GetFromPersistentFunc &) {
-      Nan::EscapableHandleScope scope;
+      Napi::EscapableHandleScope scope(env);
 
-      Local<Object> result = Nan::New<Object>();
-      Nan::Set(result, Nan::New("dev").ToLocalChecked(), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_dev));
-      Nan::Set(result, Nan::New("mode").ToLocalChecked(), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_mode));
-      Nan::Set(result, Nan::New("nlink").ToLocalChecked(), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_nlink));
-      Nan::Set(result, Nan::New("uid").ToLocalChecked(), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_uid));
-      Nan::Set(result, Nan::New("gid").ToLocalChecked(), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_gid));
-      Nan::Set(result, Nan::New("rdev").ToLocalChecked(), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_rdev));
+      Napi::Object result = Napi::Object::New(env);
+      (result).Set(Napi::String::New(env, "dev"), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_dev));
+      (result).Set(Napi::String::New(env, "mode"), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_mode));
+      (result).Set(Napi::String::New(env, "nlink"), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_nlink));
+      (result).Set(Napi::String::New(env, "uid"), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_uid));
+      (result).Set(Napi::String::New(env, "gid"), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_gid));
+      (result).Set(Napi::String::New(env, "rdev"), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_rdev));
 
 #ifndef WIN32
-      Nan::Set(
-        result, Nan::New("blksize").ToLocalChecked(), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_blksize));
-      Nan::Set(result, Nan::New("ino").ToLocalChecked(), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_ino));
-      Nan::Set(result, Nan::New("size").ToLocalChecked(), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_size));
-      Nan::Set(result, Nan::New("blocks").ToLocalChecked(), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_blocks));
+      (
+        result).Set(Napi::String::New(env, "blksize"), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_blksize));
+      (result).Set(Napi::String::New(env, "ino"), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_ino));
+      (result).Set(Napi::String::New(env, "size"), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_size));
+      (result).Set(Napi::String::New(env, "blocks"), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_blocks));
 #else
-      Nan::Set(result, Nan::New("blksize").ToLocalChecked(), Nan::Undefined());
-      Nan::Set(result, Nan::New("ino").ToLocalChecked(), Nan::Undefined());
-      Nan::Set(result, Nan::New("size").ToLocalChecked(), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_size));
-      Nan::Set(result, Nan::New("blocks").ToLocalChecked(), Nan::Undefined());
+      (result).Set(Napi::String::New(env, "blksize"), env.Undefined());
+      (result).Set(Napi::String::New(env, "ino"), env.Undefined());
+      (result).Set(Napi::String::New(env, "size"), v8::BigInt::New(v8::Isolate::GetCurrent(), stat.st_size));
+      (result).Set(Napi::String::New(env, "blocks"), env.Undefined());
 #endif
 
-      Nan::Set(result, Nan::New("atime").ToLocalChecked(), Nan::New<Date>(stat.st_atime * 1000).ToLocalChecked());
-      Nan::Set(result, Nan::New("mtime").ToLocalChecked(), Nan::New<Date>(stat.st_mtime * 1000).ToLocalChecked());
-      Nan::Set(result, Nan::New("ctime").ToLocalChecked(), Nan::New<Date>(stat.st_ctime * 1000).ToLocalChecked());
+      (result).Set(Napi::String::New(env, "atime"), Napi::Date::New(env, stat.st_atime * 1000));
+      (result).Set(Napi::String::New(env, "mtime"), Napi::Date::New(env, stat.st_mtime * 1000));
+      (result).Set(Napi::String::New(env, "ctime"), Napi::Date::New(env, stat.st_ctime * 1000));
 
       return scope.Escape(result);
     };
@@ -164,31 +164,31 @@ GDAL_ASYNCABLE_DEFINE(VSI::stat) {
     // Which other language has floating-point file sizes
     // Anyway, 2^53 bytes ought to be enough for anybody
     job.rval = [](VSIStatBufL stat, const GetFromPersistentFunc &) {
-      Nan::EscapableHandleScope scope;
+      Napi::EscapableHandleScope scope(env);
 
-      Local<Object> result = Nan::New<Object>();
-      Nan::Set(result, Nan::New("dev").ToLocalChecked(), Nan::New<Integer>(static_cast<uint32_t>(stat.st_dev)));
-      Nan::Set(result, Nan::New("mode").ToLocalChecked(), Nan::New<Integer>(stat.st_mode));
-      Nan::Set(result, Nan::New("nlink").ToLocalChecked(), Nan::New<Integer>(static_cast<uint32_t>(stat.st_nlink)));
-      Nan::Set(result, Nan::New("uid").ToLocalChecked(), Nan::New<Integer>(stat.st_uid));
-      Nan::Set(result, Nan::New("gid").ToLocalChecked(), Nan::New<Integer>(stat.st_gid));
-      Nan::Set(result, Nan::New("rdev").ToLocalChecked(), Nan::New<Integer>(static_cast<uint32_t>(stat.st_rdev)));
+      Napi::Object result = Napi::Object::New(env);
+      (result).Set(Napi::String::New(env, "dev"), Napi::Number::New(env, static_cast<uint32_t>(stat.st_dev)));
+      (result).Set(Napi::String::New(env, "mode"), Napi::Number::New(env, stat.st_mode));
+      (result).Set(Napi::String::New(env, "nlink"), Napi::Number::New(env, static_cast<uint32_t>(stat.st_nlink)));
+      (result).Set(Napi::String::New(env, "uid"), Napi::Number::New(env, stat.st_uid));
+      (result).Set(Napi::String::New(env, "gid"), Napi::Number::New(env, stat.st_gid));
+      (result).Set(Napi::String::New(env, "rdev"), Napi::Number::New(env, static_cast<uint32_t>(stat.st_rdev)));
 
 #ifndef WIN32
-      Nan::Set(result, Nan::New("blksize").ToLocalChecked(), Nan::New<Number>(static_cast<double>(stat.st_blksize)));
-      Nan::Set(result, Nan::New("ino").ToLocalChecked(), Nan::New<Number>(static_cast<double>(stat.st_ino)));
-      Nan::Set(result, Nan::New("size").ToLocalChecked(), Nan::New<Number>(static_cast<double>(stat.st_size)));
-      Nan::Set(result, Nan::New("blocks").ToLocalChecked(), Nan::New<Number>(static_cast<double>(stat.st_blocks)));
+      (result).Set(Napi::String::New(env, "blksize"), Napi::Number::New(env, static_cast<double>(stat.st_blksize)));
+      (result).Set(Napi::String::New(env, "ino"), Napi::Number::New(env, static_cast<double>(stat.st_ino)));
+      (result).Set(Napi::String::New(env, "size"), Napi::Number::New(env, static_cast<double>(stat.st_size)));
+      (result).Set(Napi::String::New(env, "blocks"), Napi::Number::New(env, static_cast<double>(stat.st_blocks)));
 #else
-      Nan::Set(result, Nan::New("blksize").ToLocalChecked(), Nan::Undefined());
-      Nan::Set(result, Nan::New("ino").ToLocalChecked(), Nan::Undefined());
-      Nan::Set(result, Nan::New("size").ToLocalChecked(), Nan::New<Number>(static_cast<double>(stat.st_size)));
-      Nan::Set(result, Nan::New("blocks").ToLocalChecked(), Nan::Undefined());
+      (result).Set(Napi::String::New(env, "blksize"), env.Undefined());
+      (result).Set(Napi::String::New(env, "ino"), env.Undefined());
+      (result).Set(Napi::String::New(env, "size"), Napi::Number::New(env, static_cast<double>(stat.st_size)));
+      (result).Set(Napi::String::New(env, "blocks"), env.Undefined());
 #endif
 
-      Nan::Set(result, Nan::New("atime").ToLocalChecked(), Nan::New<Date>(stat.st_atime * 1000).ToLocalChecked());
-      Nan::Set(result, Nan::New("mtime").ToLocalChecked(), Nan::New<Date>(stat.st_mtime * 1000).ToLocalChecked());
-      Nan::Set(result, Nan::New("ctime").ToLocalChecked(), Nan::New<Date>(stat.st_ctime * 1000).ToLocalChecked());
+      (result).Set(Napi::String::New(env, "atime"), Napi::Date::New(env, stat.st_atime * 1000));
+      (result).Set(Napi::String::New(env, "mtime"), Napi::Date::New(env, stat.st_mtime * 1000));
+      (result).Set(Napi::String::New(env, "ctime"), Napi::Date::New(env, stat.st_ctime * 1000));
 
       return scope.Escape(result);
     };
@@ -236,11 +236,11 @@ GDAL_ASYNCABLE_DEFINE(VSI::readDir) {
   };
 
   job.rval = [](char **names, const GetFromPersistentFunc &) {
-    Nan::EscapableHandleScope scope;
-    Local<Array> results = Nan::New<Array>();
+    Napi::EscapableHandleScope scope(env);
+    Napi::Array results = Napi::Array::New(env);
     int i = 0;
     while (names[i] != nullptr) {
-      Nan::Set(results, i, SafeString::New(names[i]));
+      (results).Set(i, SafeString::New(names[i]));
       i++;
     }
     CSLDestroy(names);

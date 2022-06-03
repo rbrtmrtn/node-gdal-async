@@ -24,26 +24,26 @@ Memfile::~Memfile() {
   delete persistent;
 }
 
-void Memfile::weakCallback(const Nan::WeakCallbackInfo<Memfile> &file) {
+void Memfile::weakCallback(const Napi::WeakCallbackInfo<Memfile> &file) {
   Memfile *mem = file.GetParameter();
   memfile_collection.erase(mem->data);
   VSIUnlink(mem->filename.c_str());
   delete mem;
 }
 
-void Memfile::Initialize(Local<Object> target) {
-  Local<Object> vsimem = Nan::New<Object>();
-  Nan::Set(target, Nan::New("vsimem").ToLocalChecked(), vsimem);
-  Nan::SetMethod(vsimem, "_anonymous", Memfile::vsimemAnonymous); // not a public API
-  Nan::SetMethod(vsimem, "set", Memfile::vsimemSet);
-  Nan::SetMethod(vsimem, "release", Memfile::vsimemRelease);
-  Nan::SetMethod(vsimem, "copy", Memfile::vsimemCopy);
+void Memfile::Initialize(Napi::Object target) {
+  Napi::Object vsimem = Napi::Object::New(env);
+  (target).Set(Napi::String::New(env, "vsimem"), vsimem);
+  Napi::SetMethod(vsimem, "_anonymous", Memfile::vsimemAnonymous); // not a public API
+  Napi::SetMethod(vsimem, "set", Memfile::vsimemSet);
+  Napi::SetMethod(vsimem, "release", Memfile::vsimemRelease);
+  Napi::SetMethod(vsimem, "copy", Memfile::vsimemCopy);
 }
 
 // Anonymous buffers are handled by the GC
 // Whenever the JS buffer goes out of scope, the file is deleted
-Memfile *Memfile::get(Local<Object> buffer) {
-  if (!Buffer::HasInstance(buffer)) return nullptr;
+Memfile *Memfile::get(Napi::Object buffer) {
+  if (!buffer.IsBuffer()) return nullptr;
   void *data = Buffer::Data(buffer);
   if (data == nullptr) return nullptr;
   if (memfile_collection.count(data)) return memfile_collection.find(data)->second;
@@ -56,19 +56,19 @@ Memfile *Memfile::get(Local<Object> buffer) {
   if (vsi == nullptr) return nullptr;
   VSIFCloseL(vsi);
 
-  mem->persistent = new Nan::Persistent<Object>(buffer);
-  mem->persistent->SetWeak(mem, weakCallback, Nan::WeakCallbackType::kParameter);
+  mem->persistent = new Napi::ObjectReference(buffer);
+  mem->persistent->SetWeak(mem, weakCallback, Napi::WeakCallbackType::kParameter);
   memfile_collection[data] = mem;
   return mem;
 }
 
 // Named buffers are protected from the GC and are owned by Node
-Memfile *Memfile::get(Local<Object> buffer, const std::string &filename) {
-  if (!Buffer::HasInstance(buffer)) return nullptr;
-  void *data = node::Buffer::Data(buffer);
+Memfile *Memfile::get(Napi::Object buffer, const std::string &filename) {
+  if (!buffer.IsBuffer()) return nullptr;
+  void *data = buffer.As<Napi::Buffer<char>>().Data();
   if (data == nullptr) { return nullptr; }
 
-  size_t len = node::Buffer::Length(buffer);
+  size_t len = buffer.As<Napi::Buffer<char>>().Length();
   Memfile *mem = nullptr;
   mem = new Memfile(data, filename);
 
@@ -76,24 +76,24 @@ Memfile *Memfile::get(Local<Object> buffer, const std::string &filename) {
   if (vsi == nullptr) return nullptr;
   VSIFCloseL(vsi);
 
-  mem->persistent = new Nan::Persistent<Object>(buffer);
+  mem->persistent = new Napi::ObjectReference(buffer);
   memfile_collection[data] = mem;
   return mem;
 }
 
 // GDAL buffers handled by GDAL and are not referenced by node-gdal-async
-bool Memfile::copy(Local<Object> buffer, const std::string &filename) {
-  if (!Buffer::HasInstance(buffer)) return false;
-  void *data = node::Buffer::Data(buffer);
+bool Memfile::copy(Napi::Object buffer, const std::string &filename) {
+  if (!buffer.IsBuffer()) return false;
+  void *data = buffer.As<Napi::Buffer<char>>().Data();
   if (data == nullptr) return false;
 
-  size_t len = node::Buffer::Length(buffer);
+  size_t len = buffer.As<Napi::Buffer<char>>().Length();
 
   void *dataCopy = CPLMalloc(len);
   if (dataCopy == nullptr) return false;
 
   // If you malloc, you adjust external memory too (https://github.com/nodejs/node/issues/40936)
-  Nan::AdjustExternalMemory(len);
+  Napi::AdjustExternalMemory(len);
   memcpy(dataCopy, data, len);
 
   VSILFILE *vsi = VSIFileFromMemBuffer(filename.c_str(), (GByte *)dataCopy, len, 1);
@@ -123,15 +123,16 @@ bool Memfile::copy(Local<Object> buffer, const std::string &filename) {
  * @param {Buffer} data A binary buffer containing the file data
  * @param {string} filename A file name beginning with `/vsimem/`
  */
-NAN_METHOD(Memfile::vsimemSet) {
-  Local<Object> buffer;
+Napi::Value Memfile::vsimemSet(const Napi::CallbackInfo& info) {
+  Napi::Object buffer;
   std::string filename;
 
   NODE_ARG_OBJECT(0, "buffer", buffer);
   NODE_ARG_STR(1, "filename", filename);
 
   Memfile *memfile = Memfile::get(buffer, filename);
-  if (memfile == nullptr) Nan::ThrowError("Failed creating in-memory file");
+  if (memfile == nullptr) Napi::Error::New(env, "Failed creating in-memory file").ThrowAsJavaScriptException();
+
 }
 
 /**
@@ -149,14 +150,15 @@ NAN_METHOD(Memfile::vsimemSet) {
  * @param {Buffer} data A binary buffer containing the file data
  * @param {string} filename A file name beginning with `/vsimem/`
  */
-NAN_METHOD(Memfile::vsimemCopy) {
-  Local<Object> buffer;
+Napi::Value Memfile::vsimemCopy(const Napi::CallbackInfo& info) {
+  Napi::Object buffer;
   std::string filename;
 
   NODE_ARG_OBJECT(0, "buffer", buffer);
   NODE_ARG_STR(1, "filename", filename);
 
-  if (!Memfile::copy(buffer, filename)) Nan::ThrowError("Failed creating in-memory file");
+  if (!Memfile::copy(buffer, filename)) Napi::Error::New(env, "Failed creating in-memory file").ThrowAsJavaScriptException();
+
 }
 
 /*
@@ -164,16 +166,17 @@ NAN_METHOD(Memfile::vsimemCopy) {
  * It is automatically deleted when the Buffer goes out of scope.
  * This is not a public method as it is not always safe.
  */
-NAN_METHOD(Memfile::vsimemAnonymous) {
-  Local<Object> buffer;
+Napi::Value Memfile::vsimemAnonymous(const Napi::CallbackInfo& info) {
+  Napi::Object buffer;
 
   NODE_ARG_OBJECT(0, "buffer", buffer);
 
   Memfile *memfile = Memfile::get(buffer);
   if (memfile == nullptr)
-    Nan::ThrowError("Failed creating in-memory file");
+    Napi::Error::New(env, "Failed creating in-memory file").ThrowAsJavaScriptException();
+
   else
-    info.GetReturnValue().Set(Nan::New<String>(memfile->filename).ToLocalChecked());
+    return Napi::String::New(env, memfile->filename);
 }
 
 /**
@@ -197,7 +200,7 @@ NAN_METHOD(Memfile::vsimemAnonymous) {
  * @throws {Error}
  * @return {Buffer} A binary buffer containing all the data
  */
-NAN_METHOD(Memfile::vsimemRelease) {
+Napi::Value Memfile::vsimemRelease(const Napi::CallbackInfo& info) {
   vsi_l_offset len;
   std::string filename;
   NODE_ARG_STR(0, "filename", filename);
@@ -216,7 +219,7 @@ NAN_METHOD(Memfile::vsimemRelease) {
     Memfile *mem = memfile_collection.find(data)->second;
     memfile_collection.erase(mem->data);
     VSIUnlink(mem->filename.c_str());
-    info.GetReturnValue().Set(Nan::New(*mem->persistent));
+    return Napi::New(env, *mem->persistent);
     delete mem;
   } else {
     // the file has been created by GDAL and the buffer is owned by GDAL
@@ -226,17 +229,17 @@ NAN_METHOD(Memfile::vsimemRelease) {
     // Alas we can't take the address of a capturing lambda
     // so we fall back to doing this like it was back in the day
     int *hint = new int{static_cast<int>(len)};
-    info.GetReturnValue().Set(Nan::NewBuffer(
+    return Napi::Buffer<char>::New(env, 
                                 static_cast<char *>(data),
                                 static_cast<size_t>(len),
                                 [](char *data, void *hint) {
-                                  int *len = reinterpret_cast<int *>(hint);
-                                  Nan::AdjustExternalMemory(-(*len));
+                                  int *len = reinterpret_cast<int *>(hint;
+                                  Napi::AdjustExternalMemory(-(*len));
                                   delete len;
                                   CPLFree(data);
                                 },
                                 hint)
-                                .ToLocalChecked());
+                                );
   }
 }
 

@@ -9,20 +9,20 @@
 
 namespace node_gdal {
 
-Nan::Persistent<FunctionTemplate> MultiCurve::constructor;
+Napi::FunctionReference MultiCurve::constructor;
 
-void MultiCurve::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void MultiCurve::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(MultiCurve::New);
-  lcons->Inherit(Nan::New(GeometryCollection::constructor));
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("MultiCurve").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, MultiCurve::New);
+  lcons->Inherit(Napi::New(env, GeometryCollection::constructor));
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
-  Nan::SetPrototypeMethod(lcons, "polygonize", polygonize);
+  lcons->SetClassName(Napi::String::New(env, "MultiCurve"));
 
-  Nan::Set(target, Nan::New("MultiCurve").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  InstanceMethod("toString", &toString),
+  InstanceMethod("polygonize", &polygonize),
+
+  (target).Set(Napi::String::New(env, "MultiCurve"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
@@ -33,8 +33,8 @@ void MultiCurve::Initialize(Local<Object> target) {
  * @extends GeometryCollection
  */
 
-NAN_METHOD(MultiCurve::toString) {
-  info.GetReturnValue().Set(Nan::New("MultiCurve").ToLocalChecked());
+Napi::Value MultiCurve::toString(const Napi::CallbackInfo& info) {
+  return Napi::String::New(env, "MultiCurve");
 }
 
 /**
@@ -45,11 +45,11 @@ NAN_METHOD(MultiCurve::toString) {
  * @memberof MultiCurve
  * @return {Polygon}
  */
-NAN_METHOD(MultiCurve::polygonize) {
+Napi::Value MultiCurve::polygonize(const Napi::CallbackInfo& info) {
 
-  MultiCurve *geom = Nan::ObjectWrap::Unwrap<MultiCurve>(info.This());
+  MultiCurve *geom = info.This().Unwrap<MultiCurve>();
 
-  info.GetReturnValue().Set(Geometry::New(geom->this_->Polygonize()));
+  return Geometry::New(geom->this_->Polygonize());
 }
 
 } // namespace node_gdal

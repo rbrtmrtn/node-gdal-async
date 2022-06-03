@@ -2,11 +2,12 @@
 #define __NODE_OGR_CURVE_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "../nan-wrapper.h"
+#include <napi.h>
 
 // ogr
 #include <ogrsf_frmts.h>
@@ -14,25 +15,25 @@
 #include "gdal_curvebase.hpp"
 #include "../collections/linestring_points.hpp"
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 namespace node_gdal {
 
 class SimpleCurve : public CurveBase<SimpleCurve, OGRSimpleCurve, LineStringPoints> {
 
     public:
-  static Nan::Persistent<FunctionTemplate> constructor;
+  static Napi::FunctionReference constructor;
   using CurveBase<SimpleCurve, OGRSimpleCurve, LineStringPoints>::CurveBase;
 
-  static void Initialize(Local<Object> target);
-  static NAN_METHOD(New);
-  static NAN_METHOD(toString);
-  static NAN_METHOD(value);
-  static NAN_METHOD(getLength);
-  static NAN_METHOD(addSubLineString);
+  static void Initialize(Napi::Object target);
+  static Napi::Value New(const Napi::CallbackInfo &info);
+  static Napi::Value toString(const Napi::CallbackInfo &info);
+  static Napi::Value value(const Napi::CallbackInfo &info);
+  static Napi::Value getLength(const Napi::CallbackInfo &info);
+  static Napi::Value addSubLineString(const Napi::CallbackInfo &info);
 
-  static NAN_GETTER(pointsGetter);
+  Napi::Value pointsGetter(const Napi::CallbackInfo &info);
 };
 
 } // namespace node_gdal

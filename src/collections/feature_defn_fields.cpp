@@ -5,33 +5,33 @@
 
 namespace node_gdal {
 
-Nan::Persistent<FunctionTemplate> FeatureDefnFields::constructor;
+Napi::FunctionReference FeatureDefnFields::constructor;
 
-void FeatureDefnFields::Initialize(Local<Object> target) {
-  Nan::HandleScope scope;
+void FeatureDefnFields::Initialize(Napi::Object target) {
+  Napi::HandleScope scope(env);
 
-  Local<FunctionTemplate> lcons = Nan::New<FunctionTemplate>(FeatureDefnFields::New);
-  lcons->InstanceTemplate()->SetInternalFieldCount(1);
-  lcons->SetClassName(Nan::New("FeatureDefnFields").ToLocalChecked());
+  Napi::FunctionReference lcons = Napi::Function::New(env, FeatureDefnFields::New);
 
-  Nan::SetPrototypeMethod(lcons, "toString", toString);
-  Nan::SetPrototypeMethod(lcons, "count", count);
-  Nan::SetPrototypeMethod(lcons, "get", get);
-  Nan::SetPrototypeMethod(lcons, "remove", remove);
-  Nan::SetPrototypeMethod(lcons, "getNames", getNames);
-  Nan::SetPrototypeMethod(lcons, "indexOf", indexOf);
-  Nan::SetPrototypeMethod(lcons, "reorder", reorder);
-  Nan::SetPrototypeMethod(lcons, "add", add);
-  // Nan::SetPrototypeMethod(lcons, "alter", alter);
+  lcons->SetClassName(Napi::String::New(env, "FeatureDefnFields"));
+
+  InstanceMethod("toString", &toString),
+  InstanceMethod("count", &count),
+  InstanceMethod("get", &get),
+  InstanceMethod("remove", &remove),
+  InstanceMethod("getNames", &getNames),
+  InstanceMethod("indexOf", &indexOf),
+  InstanceMethod("reorder", &reorder),
+  InstanceMethod("add", &add),
+  // InstanceMethod("alter", &alter),
 
   ATTR_DONT_ENUM(lcons, "featureDefn", featureDefnGetter, READ_ONLY_SETTER);
 
-  Nan::Set(target, Nan::New("FeatureDefnFields").ToLocalChecked(), Nan::GetFunction(lcons).ToLocalChecked());
+  (target).Set(Napi::String::New(env, "FeatureDefnFields"), Napi::GetFunction(lcons));
 
   constructor.Reset(lcons);
 }
 
-FeatureDefnFields::FeatureDefnFields() : Nan::ObjectWrap() {
+FeatureDefnFields::FeatureDefnFields() : Napi::ObjectWrap<FeatureDefnFields>(){
 }
 
 FeatureDefnFields::~FeatureDefnFields() {
@@ -42,41 +42,42 @@ FeatureDefnFields::~FeatureDefnFields() {
  *
  * @class FeatureDefnFields
  */
-NAN_METHOD(FeatureDefnFields::New) {
+Napi::Value FeatureDefnFields::New(const Napi::CallbackInfo& info) {
 
   if (!info.IsConstructCall()) {
-    Nan::ThrowError("Cannot call constructor as function, you need to use 'new' keyword");
-    return;
+    Napi::Error::New(env, "Cannot call constructor as function, you need to use 'new' keyword").ThrowAsJavaScriptException();
+    return env.Null();
   }
-  if (info[0]->IsExternal()) {
-    Local<External> ext = info[0].As<External>();
+  if (info[0].IsExternal()) {
+    Napi::External ext = info[0].As<Napi::External>();
     void *ptr = ext->Value();
     FeatureDefnFields *feature_def = static_cast<FeatureDefnFields *>(ptr);
     feature_def->Wrap(info.This());
-    info.GetReturnValue().Set(info.This());
+    return info.This();
     return;
   } else {
-    Nan::ThrowError("Cannot create FeatureDefnFields directly");
-    return;
+    Napi::Error::New(env, "Cannot create FeatureDefnFields directly").ThrowAsJavaScriptException();
+    return env.Null();
   }
 }
 
-Local<Value> FeatureDefnFields::New(Local<Value> feature_defn) {
-  Nan::EscapableHandleScope scope;
+Napi::Value FeatureDefnFields::New(Napi::Value feature_defn) {
+  Napi::Env env = feature_defn.Env();
+  Napi::EscapableHandleScope scope(env);
 
   FeatureDefnFields *wrapped = new FeatureDefnFields();
 
-  v8::Local<v8::Value> ext = Nan::New<External>(wrapped);
-  v8::Local<v8::Object> obj =
-    Nan::NewInstance(Nan::GetFunction(Nan::New(FeatureDefnFields::constructor)).ToLocalChecked(), 1, &ext)
-      .ToLocalChecked();
-  Nan::SetPrivate(obj, Nan::New("parent_").ToLocalChecked(), feature_defn);
+  Napi::Value ext = Napi::External::New(env, wrapped);
+  Napi::Object obj =
+    Napi::NewInstance(Napi::GetFunction(Napi::New(env, FeatureDefnFields::constructor)), 1, &ext)
+      ;
+  Napi::SetPrivate(obj, Napi::String::New(env, "parent_"), feature_defn);
 
   return scope.Escape(obj);
 }
 
-NAN_METHOD(FeatureDefnFields::toString) {
-  info.GetReturnValue().Set(Nan::New("FeatureDefnFields").ToLocalChecked());
+Napi::Value FeatureDefnFields::toString(const Napi::CallbackInfo& info) {
+  return Napi::String::New(env, "FeatureDefnFields");
 }
 
 /**
@@ -87,17 +88,17 @@ NAN_METHOD(FeatureDefnFields::toString) {
  * @memberof FeatureDefnFields
  * @return {number}
  */
-NAN_METHOD(FeatureDefnFields::count) {
+Napi::Value FeatureDefnFields::count(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  FeatureDefn *feature_def = Nan::ObjectWrap::Unwrap<FeatureDefn>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  FeatureDefn *feature_def = parent.Unwrap<FeatureDefn>();
   if (!feature_def->isAlive()) {
-    Nan::ThrowError("FeatureDefn object already destroyed");
-    return;
+    Napi::Error::New(env, "FeatureDefn object already destroyed").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
-  info.GetReturnValue().Set(Nan::New<Integer>(feature_def->get()->GetFieldCount()));
+  return Napi::Number::New(env, feature_def->get()->GetFieldCount());
 }
 
 /**
@@ -109,20 +110,20 @@ NAN_METHOD(FeatureDefnFields::count) {
  * @param {string} name
  * @return {number} Index or `-1` if not found.
  */
-NAN_METHOD(FeatureDefnFields::indexOf) {
+Napi::Value FeatureDefnFields::indexOf(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  FeatureDefn *feature_def = Nan::ObjectWrap::Unwrap<FeatureDefn>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  FeatureDefn *feature_def = parent.Unwrap<FeatureDefn>();
   if (!feature_def->isAlive()) {
-    Nan::ThrowError("FeatureDefn object already destroyed");
-    return;
+    Napi::Error::New(env, "FeatureDefn object already destroyed").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   std::string name("");
   NODE_ARG_STR(0, "field name", name);
 
-  info.GetReturnValue().Set(Nan::New<Integer>(feature_def->get()->GetFieldIndex(name.c_str())));
+  return Napi::Number::New(env, feature_def->get()->GetFieldIndex(name.c_str()));
 }
 
 /**
@@ -135,19 +136,19 @@ NAN_METHOD(FeatureDefnFields::indexOf) {
  * @throws {Error}
  * @return {FieldDefn}
  */
-NAN_METHOD(FeatureDefnFields::get) {
+Napi::Value FeatureDefnFields::get(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  FeatureDefn *feature_def = Nan::ObjectWrap::Unwrap<FeatureDefn>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  FeatureDefn *feature_def = parent.Unwrap<FeatureDefn>();
   if (!feature_def->isAlive()) {
-    Nan::ThrowError("FeatureDefn object already destroyed");
-    return;
+    Napi::Error::New(env, "FeatureDefn object already destroyed").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   if (info.Length() < 1) {
-    Nan::ThrowError("Field index or name must be given");
-    return;
+    Napi::Error::New(env, "Field index or name must be given").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   int field_index;
@@ -156,7 +157,7 @@ NAN_METHOD(FeatureDefnFields::get) {
   CPLErrorReset();
   auto r = feature_def->get()->GetFieldDefn(field_index);
   if (r == nullptr) { throw CPLGetLastErrorMsg(); }
-  info.GetReturnValue().Set(FieldDefn::New(r));
+  return FieldDefn::New(r);
 }
 
 /**
@@ -167,25 +168,25 @@ NAN_METHOD(FeatureDefnFields::get) {
  * @memberof FeatureDefnFields
  * @return {string[]} List of field names.
  */
-NAN_METHOD(FeatureDefnFields::getNames) {
+Napi::Value FeatureDefnFields::getNames(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  FeatureDefn *feature_def = Nan::ObjectWrap::Unwrap<FeatureDefn>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  FeatureDefn *feature_def = parent.Unwrap<FeatureDefn>();
   if (!feature_def->isAlive()) {
-    Nan::ThrowError("FeatureDefn object already destroyed");
-    return;
+    Napi::Error::New(env, "FeatureDefn object already destroyed").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   int n = feature_def->get()->GetFieldCount();
-  Local<Array> result = Nan::New<Array>(n);
+  Napi::Array result = Napi::Array::New(env, n);
 
   for (int i = 0; i < n; i++) {
     OGRFieldDefn *field_def = feature_def->get()->GetFieldDefn(i);
-    Nan::Set(result, i, SafeString::New(field_def->GetNameRef()));
+    (result).Set(i, SafeString::New(field_def->GetNameRef()));
   }
 
-  info.GetReturnValue().Set(result);
+  return result;
 }
 
 /**
@@ -197,19 +198,19 @@ NAN_METHOD(FeatureDefnFields::getNames) {
  * @throws {Error}
  * @param {string|number} key Field name or index
  */
-NAN_METHOD(FeatureDefnFields::remove) {
+Napi::Value FeatureDefnFields::remove(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  FeatureDefn *feature_def = Nan::ObjectWrap::Unwrap<FeatureDefn>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  FeatureDefn *feature_def = parent.Unwrap<FeatureDefn>();
   if (!feature_def->isAlive()) {
-    Nan::ThrowError("FeatureDefn object already destroyed");
-    return;
+    Napi::Error::New(env, "FeatureDefn object already destroyed").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   if (info.Length() < 1) {
-    Nan::ThrowError("Field index or name must be given");
-    return;
+    Napi::Error::New(env, "Field index or name must be given").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   int field_index;
@@ -233,41 +234,41 @@ NAN_METHOD(FeatureDefnFields::remove) {
  * @throws {Error}
  * @param {FieldDefn|FieldDefn[]} fields
  */
-NAN_METHOD(FeatureDefnFields::add) {
+Napi::Value FeatureDefnFields::add(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  FeatureDefn *feature_def = Nan::ObjectWrap::Unwrap<FeatureDefn>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  FeatureDefn *feature_def = parent.Unwrap<FeatureDefn>();
   if (!feature_def->isAlive()) {
-    Nan::ThrowError("FeatureDefn object already destroyed");
-    return;
+    Napi::Error::New(env, "FeatureDefn object already destroyed").ThrowAsJavaScriptException();
+    return env.Null();
   }
   if (info.Length() < 1) {
-    Nan::ThrowError("field definition(s) must be given");
-    return;
+    Napi::Error::New(env, "field definition(s) must be given").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   FieldDefn *field_def;
 
-  if (info[0]->IsArray()) {
-    Local<Array> array = info[0].As<Array>();
+  if (info[0].IsArray()) {
+    Napi::Array array = info[0].As<Napi::Array>();
     int n = array->Length();
     for (int i = 0; i < n; i++) {
-      Local<Value> element = Nan::Get(array, i).ToLocalChecked();
+      Napi::Value element = (array).Get(i);
       if (IS_WRAPPED(element, FieldDefn)) {
-        field_def = Nan::ObjectWrap::Unwrap<FieldDefn>(element.As<Object>());
+        field_def = element.As<Napi::Object>().Unwrap<FieldDefn>();
         feature_def->get()->AddFieldDefn(field_def->get());
       } else {
-        Nan::ThrowError("All array elements must be FieldDefn objects");
-        return;
+        Napi::Error::New(env, "All array elements must be FieldDefn objects").ThrowAsJavaScriptException();
+        return env.Null();
       }
     }
   } else if (IS_WRAPPED(info[0], FieldDefn)) {
-    field_def = Nan::ObjectWrap::Unwrap<FieldDefn>(info[0].As<Object>());
+    field_def = info[0].As<Napi::Object>().Unwrap<FieldDefn>();
     feature_def->get()->AddFieldDefn(field_def->get());
   } else {
-    Nan::ThrowError("field definition(s) must be a FieldDefn object or array of FieldDefn objects");
-    return;
+    Napi::Error::New(env, "field definition(s) must be a FieldDefn object or array of FieldDefn objects").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   return;
@@ -287,42 +288,42 @@ NAN_METHOD(FeatureDefnFields::add) {
  * @throws {Error}
  * @param {number[]} map An array representing the new field order.
  */
-NAN_METHOD(FeatureDefnFields::reorder) {
+Napi::Value FeatureDefnFields::reorder(const Napi::CallbackInfo& info) {
 
-  Local<Object> parent =
-    Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked().As<Object>();
-  FeatureDefn *feature_def = Nan::ObjectWrap::Unwrap<FeatureDefn>(parent);
+  Napi::Object parent =
+    Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_")).As<Napi::Object>();
+  FeatureDefn *feature_def = parent.Unwrap<FeatureDefn>();
   if (!feature_def->isAlive()) {
-    Nan::ThrowError("FeatureDefn object already destroyed");
-    return;
+    Napi::Error::New(env, "FeatureDefn object already destroyed").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
-  Local<Array> field_map = Nan::New<Array>(0);
+  Napi::Array field_map = Napi::Array::New(env, 0);
   NODE_ARG_ARRAY(0, "field map", field_map);
 
   int n = feature_def->get()->GetFieldCount();
   OGRErr err = 0;
 
   if ((int)field_map->Length() != n) {
-    Nan::ThrowError("Array length must match field count");
-    return;
+    Napi::Error::New(env, "Array length must match field count").ThrowAsJavaScriptException();
+    return env.Null();
   }
 
   int *field_map_array = new int[n];
 
   for (int i = 0; i < n; i++) {
-    Local<Value> val = Nan::Get(field_map, i).ToLocalChecked();
-    if (!val->IsNumber()) {
+    Napi::Value val = (field_map).Get(i);
+    if (!val.IsNumber()) {
       delete[] field_map_array;
-      Nan::ThrowError("Array must only contain integers");
-      return;
+      Napi::Error::New(env, "Array must only contain integers").ThrowAsJavaScriptException();
+      return env.Null();
     }
 
-    int key = Nan::To<int64_t>(val).ToChecked();
+    int key = val.As<Napi::Number>().Int64Value().ToChecked();
     if (key < 0 || key >= n) {
       delete[] field_map_array;
-      Nan::ThrowError("Values must be between 0 and field count - 1");
-      return;
+      Napi::Error::New(env, "Values must be between 0 and field count - 1").ThrowAsJavaScriptException();
+      return env.Null();
     }
 
     field_map_array[i] = key;
@@ -349,8 +350,8 @@ NAN_METHOD(FeatureDefnFields::reorder) {
  * @memberof FeatureDefnFields
  * @type {FeatureDefn}
  */
-NAN_GETTER(FeatureDefnFields::featureDefnGetter) {
-  info.GetReturnValue().Set(Nan::GetPrivate(info.This(), Nan::New("parent_").ToLocalChecked()).ToLocalChecked());
+Napi::Value FeatureDefnFields::featureDefnGetter(const Napi::CallbackInfo& info) {
+  return Napi::GetPrivate(info.This(), Napi::String::New(env, "parent_"));
 }
 
 } // namespace node_gdal

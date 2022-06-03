@@ -2,11 +2,12 @@
 #define __GDAL_UTILS_H__
 
 // node
-#include <node.h>
+#include <napi.h>
+#include <uv.h>
 #include <node_object_wrap.h>
 
 // nan
-#include "nan-wrapper.h"
+#include <napi.h>
 
 // gdal
 #include <gdal_alg.h>
@@ -18,8 +19,8 @@
 
 #include "async.hpp"
 
-using namespace v8;
-using namespace node;
+using namespace Napi;
+using namespace Napi;
 
 // Methods and classes from gdal_utils.h
 // https://gdal.org/development/rfc/rfc59.1_utilities_as_a_library.html
@@ -27,7 +28,7 @@ using namespace node;
 namespace node_gdal {
 namespace Utils {
 
-void Initialize(Local<Object> target);
+void Initialize(Napi::Object target);
 
 GDAL_ASYNCABLE_GLOBAL(info);
 GDAL_ASYNCABLE_GLOBAL(translate);
